@@ -326,7 +326,7 @@ export default function ContactSection() {
             <div>
               <h4 className="text-xl font-bold text-primary mb-4">Siga-nos</h4>
               <div className="flex space-x-4">
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
+                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#2c8587] text-[#ffffff] ml-[2px] mr-[2px]">
                   <Facebook className="h-4 w-4" />
                 </a>
                 <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
