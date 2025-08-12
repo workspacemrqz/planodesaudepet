@@ -62,7 +62,7 @@ export default {
           ring: "var(--sidebar-ring)",
         },
         // UNIPET PLAN specific colors
-        "unipet-dark": "#0E0E0E",
+        "unipet-dark": "#277F80",
         "unipet-primary": "#EAA42A", 
         "unipet-white": "#FFFFFF",
         "unipet-light": "#F2F2F2",
