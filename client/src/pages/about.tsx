@@ -48,7 +48,7 @@ export default function About() {
             />
           </div>
           <div>
-            <h2 className="text-3xl font-bold mb-6 text-[#060606]">Nossa História</h2>
+            <h2 className="text-3xl font-bold mb-6 text-[#e1ac33]">Nossa História</h2>
             <p className="text-[#101010] text-lg mb-6 leading-relaxed">
               A UNIPET PLAN nasceu do amor pelos animais e da necessidade de tornar 
               os cuidados veterinários mais acessíveis para todas as famílias brasileiras. 
