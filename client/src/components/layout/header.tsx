@@ -40,7 +40,7 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
-            <Button className="unipet-button-primary">
+            <Button className="unipet-button-primary text-[#ffffff]">
               Contratar Agora
             </Button>
           </nav>
@@ -75,7 +75,7 @@ export default function Header() {
                       {item.name}
                     </Link>
                   ))}
-                  <Button className="unipet-button-primary mt-6">
+                  <Button className="unipet-button-primary text-[#ffffff] mt-6">
                     Contratar Agora
                   </Button>
                 </nav>
