@@ -69,20 +69,18 @@ export default function Contact() {
     <main className="pt-24 pb-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-16 bg-[#F8FAFC] py-12 rounded-2xl">
-          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#060606]">
-              Entre em <span className="text-primary">contato</span>
-            </h1>
-            <p className="text-xl text-[#101010]">
-              Tire suas dúvidas ou solicite uma cotação personalizada
-            </p>
-          </div>
+        <div className="mb-16 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            Entre em <span className="text-primary">contato</span>
+          </h1>
+          <p className="text-xl text-white/90">
+            Tire suas dúvidas ou solicite uma cotação personalizada
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="bg-white shadow-xl border-none">
+          <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
             <CardHeader>
               <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
             </CardHeader>
@@ -266,7 +264,7 @@ export default function Contact() {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-bold text-primary mb-6">Outras Formas de Contato</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">Outras Formas de Contato</h2>
               
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
@@ -274,8 +272,8 @@ export default function Contact() {
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">Telefone</div>
-                    <div className="text-muted-foreground">0800 123 4567</div>
+                    <div className="font-semibold text-white">Telefone</div>
+                    <div className="text-white/80">0800 123 4567</div>
                   </div>
                 </div>
 
@@ -284,8 +282,8 @@ export default function Contact() {
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">E-mail</div>
-                    <div className="text-muted-foreground">contato@unipetplan.com.br</div>
+                    <div className="font-semibold text-white">E-mail</div>
+                    <div className="text-white/80">contato@unipetplan.com.br</div>
                   </div>
                 </div>
 
@@ -294,15 +292,15 @@ export default function Contact() {
                     <MessageSquare className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">WhatsApp</div>
-                    <div className="text-muted-foreground">(11) 99999-9999</div>
+                    <div className="font-semibold text-white">WhatsApp</div>
+                    <div className="text-white/80">(11) 99999-9999</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Service Hours */}
-            <Card className="bg-white shadow-xl border-none">
+            <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
               <CardHeader>
                 <CardTitle className="text-xl text-primary flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
@@ -329,7 +327,7 @@ export default function Contact() {
 
             {/* Social Media */}
             <div>
-              <h3 className="text-xl font-bold text-primary mb-4">Siga-nos</h3>
+              <h3 className="text-xl font-bold text-white mb-4">Siga-nos</h3>
               <div className="flex space-x-4">
                 <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
                   <Facebook className="h-4 w-4" />

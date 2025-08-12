@@ -7,9 +7,9 @@ export default function AboutSection() {
   ];
 
   return (
-    <section className="py-20 bg-[#F8FAFC]">
+    <section className="py-20 bg-gradient-to-br from-primary/5 to-primary/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white p-8 rounded-2xl shadow-xl">
+        <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-primary/10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#060606]">
