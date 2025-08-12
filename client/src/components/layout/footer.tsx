@@ -85,22 +85,22 @@ export default function Footer() {
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-primary" />
                 <div>
-                  <div className="text-[#060606] font-semibold">Telefone</div>
-                  <div className="text-[#060606]">0800 123 4567</div>
+                  <div className="text-white font-semibold">Telefone</div>
+                  <div className="text-white">0800 123 4567</div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-primary" />
                 <div>
-                  <div className="text-[#060606] font-semibold">E-mail</div>
-                  <div className="text-[#060606]">contato@unipetplan.com.br</div>
+                  <div className="text-white font-semibold">E-mail</div>
+                  <div className="text-white">contato@unipetplan.com.br</div>
                 </div>
               </div>
               <div className="flex items-start space-x-2">
                 <MessageSquare className="h-4 w-4 text-primary mt-1" />
                 <div>
-                  <div className="text-[#060606] font-semibold">WhatsApp</div>
-                  <div className="text-[#060606]">(11) 99999-9999</div>
+                  <div className="text-white font-semibold">WhatsApp</div>
+                  <div className="text-white">(11) 99999-9999</div>
                 </div>
               </div>
             </div>

@@ -83,7 +83,7 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'}`}>
+            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'} shadow-lg flex flex-col h-full`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-primary text-white">
@@ -101,8 +101,8 @@ export default function PlansSection() {
                 <p className="text-muted-foreground">{plan.description}</p>
               </CardHeader>
               
-              <CardContent>
-                <ul className="space-y-4 mb-8">
+              <CardContent className="flex flex-col flex-grow">
+                <ul className="space-y-4 mb-8 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-3">
                       <Check className="h-4 w-4 text-primary flex-shrink-0" />
@@ -112,7 +112,7 @@ export default function PlansSection() {
                 </ul>
                 
                 <Button 
-                  className="w-full bg-[#E1AC33] text-white"
+                  className="w-full bg-[#E1AC33] text-white mt-auto"
                 >
                   Contratar Plano
                 </Button>
@@ -123,7 +123,7 @@ export default function PlansSection() {
 
         {/* Local Plans CTA */}
         <div className="mt-16 text-center">
-          <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30">
+          <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30 shadow-lg">
             <CardContent className="pt-8">
               <h3 className="text-2xl font-bold text-primary mb-4">Planos Locais com Menos Burocracia</h3>
               <p className="text-white text-lg mb-6">

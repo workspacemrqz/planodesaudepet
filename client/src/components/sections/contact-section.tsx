@@ -77,7 +77,7 @@ export default function ContactSection() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="unipet-card">
+          <Card className="unipet-card shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
             </CardHeader>
@@ -269,8 +269,8 @@ export default function ContactSection() {
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">Telefone</div>
-                    <div className="text-muted-foreground">0800 123 4567</div>
+                    <div className="font-semibold text-[#060606]">Telefone</div>
+                    <div className="text-[#060606]">0800 123 4567</div>
                   </div>
                 </div>
 
@@ -279,8 +279,8 @@ export default function ContactSection() {
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">E-mail</div>
-                    <div className="text-muted-foreground">contato@unipetplan.com.br</div>
+                    <div className="font-semibold text-[#060606]">E-mail</div>
+                    <div className="text-[#060606]">contato@unipetplan.com.br</div>
                   </div>
                 </div>
 
@@ -289,15 +289,15 @@ export default function ContactSection() {
                     <MessageSquare className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">WhatsApp</div>
-                    <div className="text-muted-foreground">(11) 99999-9999</div>
+                    <div className="font-semibold text-[#060606]">WhatsApp</div>
+                    <div className="text-[#060606]">(11) 99999-9999</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card">
+            <Card className="unipet-card shadow-lg">
               <CardHeader>
                 <CardTitle className="text-xl text-primary flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
