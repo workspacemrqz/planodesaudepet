@@ -49,10 +49,10 @@ export default function Features() {
     <section className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
             Por que escolher a <span className="text-primary">UNIPET PLAN?</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
             Oferecemos o melhor cuidado para seu pet com praticidade e confiança
           </p>
         </div>
@@ -62,11 +62,11 @@ export default function Features() {
             const Icon = feature.icon;
             return (
               <div key={index} className="text-center">
-                <div className="bg-primary/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Icon className="h-8 w-8 text-primary" />
+                <div className="bg-primary/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Icon className="h-8 w-8 text-primary" strokeWidth={2} />
                 </div>
-                <h3 className="text-xl font-semibold text-primary mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                <p className="text-white/80 leading-relaxed">{feature.description}</p>
               </div>
             );
           })}
