@@ -32,18 +32,18 @@ export default function Testimonials() {
   );
 
   return (
-    <section className="py-20 bg-secondary/50">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#060606]">
             O que nossos <span className="text-primary">clientes dizem</span>
           </h2>
-          <p className="text-xl text-muted-foreground">Depoimentos reais de quem confia na UNIPET PLAN</p>
+          <p className="text-xl text-[#101010]">Depoimentos reais de quem confia na UNIPET PLAN</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="unipet-card">
+            <Card key={index} className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm">
               <CardContent className="pt-8">
                 <div className="flex items-center mb-6">
                   <img 
@@ -53,11 +53,11 @@ export default function Testimonials() {
                   />
                   <div className="ml-4">
                     <h4 className="font-semibold text-primary">{testimonial.name}</h4>
-                    <p className="text-muted-foreground text-sm">{testimonial.location}</p>
+                    <p className="text-[#101010] text-sm">{testimonial.location}</p>
                   </div>
                 </div>
                 {renderStars()}
-                <p className="text-muted-foreground italic">
+                <p className="text-[#060606] italic">
                   "{testimonial.testimonial}"
                 </p>
               </CardContent>

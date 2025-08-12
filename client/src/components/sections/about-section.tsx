@@ -7,19 +7,19 @@ export default function AboutSection() {
   ];
 
   return (
-    <section className="py-20">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#060606]">
               Sobre a <span className="text-primary">UNIPET PLAN</span>
             </h2>
-            <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
+            <p className="text-[#101010] text-lg mb-6 leading-relaxed">
               Somos uma empresa brasileira especializada em planos de saúde para pets, 
               comprometida em oferecer o melhor cuidado veterinário com preços acessíveis 
               e atendimento humanizado.
             </p>
-            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+            <p className="text-[#101010] text-lg mb-8 leading-relaxed">
               Nossa missão é garantir que todos os pets tenham acesso a cuidados de saúde 
               de qualidade, proporcionando tranquilidade às famílias brasileiras que amam 
               seus animais de estimação.
@@ -30,7 +30,7 @@ export default function AboutSection() {
               {stats.map((stat, index) => (
                 <div key={index}>
                   <div className="text-3xl font-bold text-primary mb-2">{stat.value}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
+                  <div className="text-[#101010]">{stat.label}</div>
                 </div>
               ))}
             </div>
