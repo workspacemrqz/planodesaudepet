@@ -84,7 +84,7 @@ export default function Contact() {
             <CardHeader>
               <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="bg-[#277677]">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
