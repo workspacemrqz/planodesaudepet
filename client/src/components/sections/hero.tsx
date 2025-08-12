@@ -52,7 +52,8 @@ export default function Hero() {
                 Ver Planos
               </Button>
               <Button 
-                className="unipet-button-secondary text-lg px-8 py-3 text-[#ffffff] !text-[#ffffff] hover:!text-[#ffffff]"
+                variant="outline" 
+                className="text-lg px-8 py-3 text-[#ffffff] !text-[#ffffff] hover:!text-[#ffffff]"
               >
                 Solicitar Cotação
               </Button>
