@@ -32,9 +32,9 @@ export default function Testimonials() {
   );
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-[#F8FAFC]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 bg-white p-8 rounded-2xl shadow-lg">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#060606]">
             O que nossos <span className="text-primary">clientes dizem</span>
           </h2>
@@ -43,7 +43,7 @@ export default function Testimonials() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm">
+            <Card key={index} className="bg-white border border-gray-200 rounded-2xl shadow-xl">
               <CardContent className="pt-8">
                 <div className="flex items-center mb-6">
                   <img 

@@ -49,9 +49,9 @@ export default function PlansSection() {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-[#F8FAFC]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 bg-white p-8 rounded-2xl shadow-lg">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#060606]">
             Escolha o <span className="text-primary">plano ideal</span> para seu pet
           </h2>
@@ -123,10 +123,10 @@ export default function PlansSection() {
 
         {/* Local Plans CTA */}
         <div className="mt-16 text-center">
-          <Card className="unipet-gradient max-w-4xl mx-auto">
+          <Card className="bg-white max-w-4xl mx-auto shadow-xl">
             <CardContent className="pt-8">
               <h3 className="text-2xl font-bold text-primary mb-4">Planos Locais com Menos Burocracia</h3>
-              <p className="text-muted-foreground text-lg mb-6">
+              <p className="text-[#101010] text-lg mb-6">
                 Oferecemos também planos regionais com processo simplificado e atendimento personalizado para sua região.
               </p>
               <Button className="unipet-button-primary text-lg px-8 py-3">
