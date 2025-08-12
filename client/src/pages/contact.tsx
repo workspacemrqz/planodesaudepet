@@ -80,11 +80,11 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
+          <Card className="unipet-card shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
             </CardHeader>
-            <CardContent className="bg-[#277677]">
+            <CardContent className="p-6 pt-0">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
@@ -251,7 +251,7 @@ export default function Contact() {
 
                   <Button 
                     type="submit" 
-                    className="w-full unipet-button-primary text-lg py-3"
+                    className="w-full unipet-button-primary text-lg py-3 text-[#ffffff]"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Enviando..." : "Solicitar Cotação Gratuita"}
@@ -300,7 +300,7 @@ export default function Contact() {
             </div>
 
             {/* Service Hours */}
-            <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
+            <Card className="unipet-card shadow-lg">
               <CardHeader>
                 <CardTitle className="text-xl text-primary flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
