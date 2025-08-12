@@ -48,12 +48,12 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="unipet-button-primary text-lg px-8 py-3">
+              <Button className="unipet-button-primary text-white text-lg px-8 py-3">
                 Ver Planos
               </Button>
               <Button 
                 variant="outline" 
-                className="unipet-button-secondary text-lg px-8 py-3"
+                className="unipet-button-secondary text-white text-lg px-8 py-3"
               >
                 Solicitar Cotação
               </Button>
@@ -74,7 +74,7 @@ export default function Hero() {
             {/* Floating Stats Card */}
             <Card className="absolute -bottom-6 -left-6 bg-card/95 backdrop-blur-sm shadow-xl">
               <CardContent className="pt-6">
-                <div className="text-2xl font-bold text-primary mb-1">50.000+</div>
+                <div className="text-2xl font-bold text-[#277677] mb-1">50.000+</div>
                 <div className="text-muted-foreground text-sm">Pets protegidos</div>
               </CardContent>
             </Card>

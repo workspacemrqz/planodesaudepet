@@ -103,7 +103,7 @@ export default function Features() {
               })}
             </div>
             
-            <Button className="unipet-button-primary">
+            <Button className="unipet-button-primary text-white">
               Encontrar Unidade Próxima
             </Button>
           </div>

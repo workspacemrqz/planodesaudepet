@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Heart, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import { Heart, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, MessageSquare } from "lucide-react";
 
 export default function Footer() {
   const quickLinks = [
@@ -19,7 +19,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-secondary border-t border-border py-12">
+    <footer className="bg-[#277677] border-t border-border py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -32,17 +32,17 @@ export default function Footer() {
               Cuidando da saúde do seu pet com carinho, qualidade e preços acessíveis.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Facebook className="h-5 w-5" />
+              <a href="#" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors">
+                <Facebook className="h-4 w-4" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Instagram className="h-5 w-5" />
+              <a href="#" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors">
+                <Instagram className="h-4 w-4" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="h-5 w-5" />
+              <a href="#" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors">
+                <Linkedin className="h-4 w-4" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Youtube className="h-5 w-5" />
+              <a href="#" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors">
+                <Youtube className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -84,15 +84,24 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground">0800 123 4567</span>
+                <div>
+                  <div className="text-[#060606] font-semibold">Telefone</div>
+                  <div className="text-[#060606]">0800 123 4567</div>
+                </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground">contato@unipetplan.com.br</span>
+                <div>
+                  <div className="text-[#060606] font-semibold">E-mail</div>
+                  <div className="text-[#060606]">contato@unipetplan.com.br</div>
+                </div>
               </div>
               <div className="flex items-start space-x-2">
-                <MapPin className="h-4 w-4 text-primary mt-1" />
-                <span className="text-muted-foreground">São Paulo, SP<br />Cobertura Nacional</span>
+                <MessageSquare className="h-4 w-4 text-primary mt-1" />
+                <div>
+                  <div className="text-[#060606] font-semibold">WhatsApp</div>
+                  <div className="text-[#060606]">(11) 99999-9999</div>
+                </div>
               </div>
             </div>
           </div>

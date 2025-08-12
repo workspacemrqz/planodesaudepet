@@ -86,7 +86,7 @@ export default function PlansSection() {
             <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card hover:border-primary/50'} transition-colors duration-300`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground">
+                  <Badge className="bg-primary text-white">
                     Mais Popular
                   </Badge>
                 </div>
@@ -112,7 +112,7 @@ export default function PlansSection() {
                 </ul>
                 
                 <Button 
-                  className={`w-full ${plan.popular ? 'unipet-button-primary' : 'bg-muted hover:bg-primary hover:text-primary-foreground'} transition-colors duration-200`}
+                  className="w-full bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-white hover:-translate-y-1 transition-all duration-300 hover:shadow-lg"
                 >
                   Contratar Plano
                 </Button>
@@ -126,10 +126,10 @@ export default function PlansSection() {
           <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30">
             <CardContent className="pt-8">
               <h3 className="text-2xl font-bold text-primary mb-4">Planos Locais com Menos Burocracia</h3>
-              <p className="text-[#101010] text-lg mb-6">
+              <p className="text-white text-lg mb-6">
                 Oferecemos também planos regionais com processo simplificado e atendimento personalizado para sua região.
               </p>
-              <Button className="unipet-button-primary text-lg px-8 py-3">
+              <Button className="unipet-button-primary text-white text-lg px-8 py-3">
                 Consultar Planos Locais
               </Button>
             </CardContent>
