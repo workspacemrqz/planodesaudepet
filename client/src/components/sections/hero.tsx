@@ -53,7 +53,7 @@ export default function Hero() {
               </Button>
               <Button 
                 variant="outline" 
-                className="unipet-button-secondary text-white text-lg px-8 py-3"
+                className="unipet-button-secondary text-lg px-8 py-3 text-[#ffffff]"
               >
                 Solicitar Cotação
               </Button>
