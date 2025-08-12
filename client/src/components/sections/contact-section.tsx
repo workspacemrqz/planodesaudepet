@@ -248,7 +248,7 @@ export default function ContactSection() {
 
                   <Button 
                     type="submit" 
-                    className="w-full unipet-button-primary text-lg py-3"
+                    className="w-full unipet-button-primary text-lg py-3 text-[#ffffff]"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Enviando..." : "Solicitar Cotação Gratuita"}
