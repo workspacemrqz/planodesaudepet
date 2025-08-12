@@ -43,7 +43,7 @@ export default function Testimonials() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-gradient-to-br from-gray-50 to-white border border-primary/20 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <Card key={index} className="bg-gradient-to-br from-gray-50 to-white border border-primary/20 rounded-2xl shadow-lg">
               <CardContent className="pt-8">
                 <div className="flex items-center mb-6">
                   <img 

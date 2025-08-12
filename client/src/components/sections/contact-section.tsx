@@ -326,16 +326,16 @@ export default function ContactSection() {
             <div>
               <h4 className="text-xl font-bold text-primary mb-4">Siga-nos</h4>
               <div className="flex space-x-4">
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
+                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
                   <Facebook className="h-4 w-4" />
                 </a>
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
+                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
                   <Instagram className="h-4 w-4" />
                 </a>
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
+                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
                   <Linkedin className="h-4 w-4" />
                 </a>
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
+                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
                   <Youtube className="h-4 w-4" />
                 </a>
               </div>

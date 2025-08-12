@@ -83,7 +83,7 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card hover:border-primary/50'} transition-colors duration-300`}>
+            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-primary text-white">
@@ -112,7 +112,7 @@ export default function PlansSection() {
                 </ul>
                 
                 <Button 
-                  className="w-full bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-white hover:-translate-y-1 transition-all duration-300 hover:shadow-lg"
+                  className="w-full bg-[#E1AC33] text-white"
                 >
                   Contratar Plano
                 </Button>
