@@ -52,7 +52,7 @@ export default function Testimonials() {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div className="ml-4">
-                    <h4 className="font-semibold text-primary">{testimonial.name}</h4>
+                    <h4 className="font-semibold text-[#060606]">{testimonial.name}</h4>
                     <p className="text-[#101010] text-sm">{testimonial.location}</p>
                   </div>
                 </div>
