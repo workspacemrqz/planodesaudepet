@@ -308,7 +308,7 @@ export default function Contact() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2 text-[#101010]">
+                <div className="space-y-2 text-white">
                   <div className="flex justify-between">
                     <span>Segunda a Sexta:</span>
                     <span>8h às 18h</span>
