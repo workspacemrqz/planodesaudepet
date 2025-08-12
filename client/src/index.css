@@ -107,6 +107,6 @@
   }
   
   .unipet-button-secondary {
-    @apply border-2 border-primary text-primary;
+    @apply border-2 border-primary;
   }
 }
