@@ -55,7 +55,7 @@ export default function About() {
               Fundada por veterinários e especialistas em seguros, nossa empresa une 
               conhecimento técnico e paixão pelo bem-estar animal.
             </p>
-            <p className="text-[#101010] text-lg leading-relaxed">
+            <p className="text-lg leading-relaxed text-[#ffffff]">
               Desde o início, nosso objetivo é simples: oferecer planos de saúde 
               para pets que sejam completos, acessíveis e sem burocracias desnecessárias. 
               Acreditamos que todo pet merece cuidados de qualidade, independentemente 
