@@ -300,15 +300,15 @@ export default function Contact() {
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
-              <CardHeader>
-                <CardTitle className="text-xl text-primary flex items-center">
+            <Card className="unipet-card shadow-lg rounded-xl border-none">
+              <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
+                <CardTitle className="text-xl flex items-center tracking-tight text-[#277677] text-[20px] font-semibold">
                   <Clock className="h-5 w-5 mr-2" />
                   Horário de Atendimento
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-white">
+              <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
+                <div className="space-y-2 text-[#302e2b]">
                   <div className="flex justify-between">
                     <span>Segunda a Sexta:</span>
                     <span>8h às 18h</span>
@@ -319,7 +319,7 @@ export default function Contact() {
                   </div>
                   <div className="flex justify-between">
                     <span>Emergências:</span>
-                    <span className="text-primary font-semibold">24h todos os dias</span>
+                    <span className="font-semibold text-[#277677]">24h todos os dias</span>
                   </div>
                 </div>
               </CardContent>
