@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Edit, CreditCard, Star, Check } from "lucide-react";
+import { Edit, CreditCard, Star, Check, Trash2 } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -67,6 +67,20 @@ export default function PlansTab() {
     },
   });
 
+  const deletePlanMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/admin/plans/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
+      toast({ title: "Plano removido com sucesso!" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao remover plano", variant: "destructive" });
+    },
+  });
+
   const handleEdit = (plan: Plan) => {
     setEditingPlan(plan);
     form.reset({
@@ -79,6 +93,12 @@ export default function PlansTab() {
     });
     setFeaturesInput(plan.features.join('\n'));
     setIsDialogOpen(true);
+  };
+
+  const handleDelete = (plan: Plan) => {
+    if (confirm(`Tem certeza que deseja remover o plano "${plan.name}"?`)) {
+      deletePlanMutation.mutate(plan.id);
+    }
   };
 
   const onSubmit = (data: PlanFormData) => {
@@ -113,14 +133,11 @@ export default function PlansTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-semibold text-[#FBF9F7]">Gerenciar Planos</h3>
-          <p className="text-sm text-[#FBF9F7]">
-            Edite os 3 planos de seguro disponíveis no site
-          </p>
-        </div>
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
+          Gerenciar Planos
+        </h3>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -263,56 +280,40 @@ export default function PlansTab() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 pl-[0px] pr-[0px]">
+      <div className="space-y-4">
         {plans?.map((plan) => (
-          <Card key={plan.id} className={`relative transition-all duration-300 hover:shadow-2xl ${plan.isPopular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2 md:transform md:scale-105' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
-            {plan.isPopular && (
-              <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-[#E1AC33] text-[#FBF9F7] px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold">
-                  Mais Popular
-                </Badge>
+          <div key={plan.id} className="border border-[#2F8585] rounded-lg bg-[#145759] p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h3 className="text-[#FBF9F7] font-medium">{plan.name}</h3>
+                {plan.isPopular && (
+                  <Badge className="bg-[#E1AC33] text-[#FBF9F7] text-xs mt-1">
+                    Mais Popular
+                  </Badge>
+                )}
               </div>
-            )}
-            
-            <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6">
-              <CardTitle className="tracking-tight sm:text-2xl lg:text-3xl font-bold text-[#277677] sm:mb-4 text-[26px] mt-[0px] mb-[0px] pt-[4px] pb-[4px]">{plan.name}</CardTitle>
-              <div className="mb-3 sm:mb-4">
-                <span className="sm:text-3xl lg:text-4xl font-bold text-[#277677] text-[28px]">R${plan.priceNormal}</span>
-                <span className="text-sm sm:text-base lg:text-lg font-medium text-[#302e2b]">/mês</span>
+              <div className="flex items-center gap-1">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleEdit(plan)}
+                  className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585] hover:text-[#FBF9F7] transition-none"
+                  data-testid={`button-edit-plan-${plan.id}`}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleDelete(plan)}
+                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] hover:text-[#2F8585] transition-none"
+                  data-testid={`button-delete-plan-${plan.id}`}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
-              <div className="mb-2">
-                <span className="text-lg font-medium text-[#302e2b]">R${plan.priceWithCopay}/mês</span>
-                <span className="text-sm text-[#302e2b]/70"> (com coparticipação)</span>
-              </div>
-              <div className="bg-[#277677]/10 px-3 sm:px-4 py-2 sm:py-3 rounded-xl">
-                <p className="text-[#277677] font-medium text-sm sm:text-base lg:text-lg">{plan.description}</p>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="px-4 sm:px-6 pb-6 sm:pb-8">
-              <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
-                    <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <Button
-                onClick={() => handleEdit(plan)}
-                className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
-                  plan.isPopular 
-                    ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
-                    : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
-                }`}
-                data-testid={`button-edit-plan-${plan.id}`}
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Editar Plano {plan.name}
-              </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
