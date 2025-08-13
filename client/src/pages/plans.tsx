@@ -67,36 +67,32 @@ export default function Plans() {
   ];
 
   return (
-    <main className="pt-24 pb-20 text-[#fbf9f7] bg-[#2c8587]" style={{backgroundColor: '#277677'}}>
+    <main className="pt-24 pb-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="md:text-4xl mb-4 text-[#fbf9f7] text-[40px] font-bold">
-            Escolha o <span className="text-primary">plano ideal</span> para seu pet
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Nossos <span className="text-primary">Planos</span>
           </h1>
-          <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[24px] font-medium">
-            Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Escolha o plano ideal para seu pet. Oferecemos opções com e sem coparticipação.
           </p>
         </div>
 
         {/* Plan Toggle */}
         <div className="flex justify-center mb-12">
-          <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7]">
+          <div className="bg-secondary p-1 rounded-lg">
             <Button
+              variant={!showCopay ? "default" : "ghost"}
               onClick={() => setShowCopay(false)}
-              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${!showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
-              style={{ transition: 'none' }}
-              onMouseEnter={(e) => { e.preventDefault(); }}
-              onMouseLeave={(e) => { e.preventDefault(); }}
+              className="px-6 py-2"
             >
               Sem Coparticipação
             </Button>
             <Button
+              variant={showCopay ? "default" : "ghost"}
               onClick={() => setShowCopay(true)}
-              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
-              style={{ transition: 'none' }}
-              onMouseEnter={(e) => { e.preventDefault(); }}
-              onMouseLeave={(e) => { e.preventDefault(); }}
+              className="px-6 py-2"
             >
               Com Coparticipação
             </Button>
@@ -106,38 +102,38 @@ export default function Plans() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? (plan.name === 'Intermediário' ? 'border-[#ffc440] border-3 shadow-2xl transform scale-105 ring-2 ring-[#ffc440]/30 hover:scale-110 hover:shadow-3xl hover:ring-4 hover:ring-[#ffc440]/50 plano-padrao-destaque plano-destaque-glow' : 'border-primary border-2') : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Intermediário' ? 'bg-[#FBF9F7]' : 'bg-[#fbf9f7]'} transition-all duration-300 cursor-pointer`}>
+            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card hover:border-primary/50'} transition-colors duration-300`}>
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                  <Badge className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent animate-pulse ${plan.name === 'Intermediário' ? 'bg-gradient-to-r from-[#ffc440] to-[#ffb800] text-[#fbf9f7] shadow-lg' : 'bg-[#ffc440] text-[#fbf9f7]'}`}>
-                    {plan.name === 'Intermediário' ? '⭐ MAIS POPULAR ⭐' : 'Mais Popular'}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-primary text-primary-foreground">
+                    Mais Popular
                   </Badge>
                 </div>
               )}
               
-              <CardHeader className={`text-center pb-4 rounded-t-lg ${plan.name === 'Intermediário' ? 'bg-[#FBF9F7] text-[#E1AC33]' : 'bg-[#fbf9f7] text-[#e1ac33]'}`}>
-                <CardTitle className={`font-semibold tracking-tight mb-2 text-[30px] ${plan.name === 'Intermediário' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>{plan.name}</CardTitle>
-                <div className={`text-4xl font-bold mb-2 ${plan.name === 'Intermediário' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>
+              <CardHeader className="text-center pb-4 rounded-t-lg">
+                <CardTitle className="text-2xl text-primary mb-2">{plan.name}</CardTitle>
+                <div className="text-4xl font-bold mb-2">
                   R${plan.price}
-                  <span className={`text-lg font-normal ${plan.name === 'Intermediário' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>/mês</span>
+                  <span className="text-lg font-normal text-muted-foreground">/mês</span>
                 </div>
-                <div className="px-4 py-2 rounded-xl bg-[#e8e8e8]">
-                  <p className={`font-medium ${plan.name === 'Intermediário' ? 'text-[#E1AC33]' : 'text-[#277677]'}`}>{plan.description}</p>
+                <div className="bg-[#F3EEE8] px-4 py-2 rounded-xl">
+                  <p className="text-[#277677] font-medium">{plan.description}</p>
                 </div>
               </CardHeader>
               
-              <CardContent className={`flex flex-col flex-grow ${plan.name === 'Intermediário' ? 'text-[#E1AC33] bg-[#FBF9F7]' : 'text-[#277677]'}`}>
-                <ul className="space-y-4 mb-8 flex-grow">
+              <CardContent>
+                <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-3">
-                      <Check className={`h-4 w-4 flex-shrink-0 ${plan.name === 'Intermediário' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
-                      <span className="text-[17px] font-normal text-[#302e2b]">{feature}</span>
+                      <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                      <span className="text-muted-foreground text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
                 <Button 
-                  className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 px-4 py-2 w-full mt-auto text-[16px] ${plan.name === 'Intermediário' ? 'bg-[#E1AC33] text-[#FBF9F7]' : 'bg-[#32989a] text-white'}`}
+                  className={`w-full ${plan.popular ? 'unipet-button-primary' : 'bg-secondary hover:bg-primary hover:text-primary-foreground'} transition-colors duration-200`}
                 >
                   Contratar Plano {plan.name}
                 </Button>
@@ -147,14 +143,36 @@ export default function Plans() {
         </div>
 
         {/* Additional Information */}
-        <div className="text-center">
-          <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30 shadow-lg">
-            <CardContent className="pt-8">
-              <h3 className="font-bold mb-4 text-[#fbf9f7] text-[30px]">Planos Locais com Menos Burocracia</h3>
-              <p className="mb-6 text-[#fbf9f7] text-[18px] font-normal">
-                Oferecemos também planos regionais com processo simplificado e atendimento personalizado para sua região.
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card className="unipet-card">
+            <CardHeader>
+              <CardTitle className="text-primary">Informações Gerais</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">Carência</h4>
+                <p className="text-muted-foreground text-sm">Todos os planos têm início imediato, sem período de carência.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Limites de Uso</h4>
+                <p className="text-muted-foreground text-sm">Consulte os limites específicos de cada serviço no contrato do plano escolhido.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Coparticipação</h4>
+                <p className="text-muted-foreground text-sm">Nos planos com coparticipação, você paga uma taxa reduzida por alguns procedimentos.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="unipet-card">
+            <CardHeader>
+              <CardTitle className="text-primary">Planos Locais</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.
               </p>
-              <Button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 unipet-button-primary text-lg px-8 py-3 bg-[#e1ac33] text-[#fbf9f7]">
+              <Button className="unipet-button-primary">
                 Consultar Planos Locais
               </Button>
             </CardContent>
