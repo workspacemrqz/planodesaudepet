@@ -462,8 +462,8 @@ export default function NetworkUnitsTab() {
       </div>
       <div className="space-y-4">
         {units?.map((unit) => (
-          <div key={unit.id} className="border border-[#2F8585] rounded-lg bg-[#145759] p-4">
-            <div className="flex items-center justify-between">
+          <div key={unit.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+            <div className="flex items-center justify-between py-4">
               <div className="flex-1">
                 <h3 className="text-[#FBF9F7] font-medium">{unit.name}</h3>
               </div>

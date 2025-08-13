@@ -282,8 +282,8 @@ export default function PlansTab() {
 
       <div className="space-y-4">
         {plans?.map((plan) => (
-          <div key={plan.id} className="border border-[#2F8585] rounded-lg bg-[#145759] p-4">
-            <div className="flex items-center justify-between">
+          <div key={plan.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+            <div className="flex items-center justify-between py-4">
               <div className="flex-1">
                 <h3 className="text-[#FBF9F7] font-medium">{plan.name}</h3>
                 {plan.isPopular && (
