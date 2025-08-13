@@ -98,31 +98,7 @@ export default function NetworkUnitsTab() {
     },
   });
 
-  // Upload image mutation
-  const uploadImageMutation = useMutation({
-    mutationFn: async ({ unitId, imageURL }: { unitId: string, imageURL: string }) => {
-      const response = await apiRequest("PUT", `/api/admin/network-units/${unitId}/image`, { imageURL });
-      return await response.json();
-    },
-    onSuccess: (data) => {
-      // Update the preview with the normalized object path
-      if (data.objectPath) {
-        setUploadedImageUrl(data.objectPath);
-      }
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
-      toast({
-        title: "Sucesso",
-        description: "Imagem atualizada com sucesso",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erro",
-        description: "Erro ao atualizar imagem",
-        variant: "destructive",
-      });
-    },
-  });
+
 
   const handleImageUpload = async (file: File) => {
     setIsUploading(true);
@@ -146,17 +122,8 @@ export default function NetworkUnitsTab() {
         throw new Error('Upload failed');
       }
       
-      // Set the uploaded image URL for preview
+      // Set the uploaded image URL for preview only
       setUploadedImageUrl(uploadURL);
-      
-      // If editing a unit, update the image immediately with the presigned URL
-      // The server will convert it to the proper object path
-      if (editingUnit) {
-        uploadImageMutation.mutate({ 
-          unitId: editingUnit.id, 
-          imageURL: uploadURL 
-        });
-      }
       
     } catch (error) {
       console.error('Upload error:', error);
