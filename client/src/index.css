@@ -75,12 +75,12 @@
 }
 
 [data-testid^="button-edit-faq"] {
-  background-color: #2d8486 !important;
+  background-color: #2c8486 !important;
   color: #fbf9f7 !important;
 }
 
 [data-testid^="button-delete-faq"] {
-  background-color: #f5f3f1 !important;
+  background-color: #fbf9f7 !important;
   color: #2c8486 !important;
 }
 
