@@ -78,29 +78,66 @@ body:has([data-testid="button-logout"]) [data-testid^="tab-"]:hover,
 body:has([data-testid="button-logout"]) [data-testid^="input-"],
 body:has([data-testid="button-logout"]) [data-testid^="input-"]:hover,
 body:has([data-testid="button-logout"]) [data-testid^="textarea-"],
-body:has([data-testid="button-logout"]) [data-testid^="textarea-"]:hover {
+body:has([data-testid="button-logout"]) [data-testid^="textarea-"]:hover,
+body:has([data-testid="button-logout"]) div,
+body:has([data-testid="button-logout"]) div:hover,
+body:has([data-testid="button-logout"]) span,
+body:has([data-testid="button-logout"]) span:hover,
+body:has([data-testid="button-logout"]) [class*="bg-"],
+body:has([data-testid="button-logout"]) [class*="bg-"]:hover {
   transition: none !important;
   animation: none !important;
   transform: none !important;
 }
 
-/* Disable hover effects for all interactive elements on admin page */
-body:has([data-testid="button-logout"]) button:hover,
-body:has([data-testid="button-logout"]) [role="tab"]:hover,
-body:has([data-testid="button-logout"]) .card:hover,
-body:has([data-testid="button-logout"]) [data-testid^="button-"]:hover {
+/* Prevent transparency and preserve original colors on hover */
+body:has([data-testid="button-logout"]) *:hover {
+  opacity: 1 !important;
   background-color: inherit !important;
   color: inherit !important;
   border-color: inherit !important;
   box-shadow: inherit !important;
-  opacity: inherit !important;
 }
 
+/* Specific fixes for admin elements */
+body:has([data-testid="button-logout"]) [class*="bg-[#145759]"]:hover,
+body:has([data-testid="button-logout"]) [class*="bg-[#2F8585]"]:hover,
+body:has([data-testid="button-logout"]) [class*="bg-[#FBF9F7]"]:hover,
+body:has([data-testid="button-logout"]) [class*="bg-[#E1AC33]"]:hover,
+body:has([data-testid="button-logout"]) [class*="bg-[#277677]"]:hover {
+  opacity: 1 !important;
+}
+
+/* Prevent all hover opacity changes in admin */
+body:has([data-testid="button-logout"]) *,
+body:has([data-testid="button-logout"]) *:hover,
+body:has([data-testid="button-logout"]) *:focus,
+body:has([data-testid="button-logout"]) *:active {
+  opacity: 1 !important;
+}
+
+/* Specific button color preservation */
 [data-testid^="button-delete-faq"],
 [data-testid^="button-delete-faq"]:hover {
   background-color: #FBF9F7 !important;
   color: #2F8585 !important;
   transform: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+[data-testid^="button-edit-"],
+[data-testid^="button-edit-"]:hover {
+  background-color: #2F8585 !important;
+  color: #FBF9F7 !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+[data-testid^="button-add-"],
+[data-testid^="button-add-"]:hover {
+  background-color: #145759 !important;
+  color: #FBF9F7 !important;
   opacity: 1 !important;
   transition: none !important;
 }
