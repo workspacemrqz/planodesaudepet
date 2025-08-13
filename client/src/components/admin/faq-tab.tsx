@@ -281,7 +281,7 @@ export default function FaqTab() {
                 setEditingItem(null);
                 form.reset();
               }}
-              className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#277677]"
+              className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#fbf9f7]"
               data-testid="button-add-faq"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -301,12 +301,13 @@ export default function FaqTab() {
                   name="question"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[#277677]">Pergunta</FormLabel>
+                      <FormLabel className="text-[#FBF9F7]">Pergunta</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="Digite a pergunta..." 
                           {...field}
-                          data-testid="input-faq-question" 
+                          data-testid="input-faq-question"
+                          className="bg-[#195d5e] text-white placeholder:text-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
@@ -318,13 +319,14 @@ export default function FaqTab() {
                   name="answer"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[#277677]">Resposta</FormLabel>
+                      <FormLabel className="text-[#FBF9F7]">Resposta</FormLabel>
                       <FormControl>
                         <Textarea 
                           placeholder="Digite a resposta..." 
                           rows={4}
                           {...field}
-                          data-testid="textarea-faq-answer" 
+                          data-testid="textarea-faq-answer"
+                          className="bg-[#195d5e] text-white placeholder:text-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
