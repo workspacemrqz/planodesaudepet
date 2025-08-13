@@ -83,7 +83,7 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'} shadow-lg flex flex-col h-full bg-[#fbf9f7]`}>
+            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#E1AC33]' : 'bg-[#fbf9f7]'}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-primary text-white">
@@ -92,29 +92,29 @@ export default function PlansSection() {
                 </div>
               )}
               
-              <CardHeader className="text-center pb-4 bg-[#fbf9f7] text-[#e1ac33] rounded-t-lg">
-                <CardTitle className="font-semibold tracking-tight mb-2 text-[#32989a] text-[30px]">{plan.name}</CardTitle>
-                <div className="text-4xl font-bold mb-2 text-[#32989a]">
+              <CardHeader className={`text-center pb-4 rounded-t-lg ${plan.name === 'Padrão' ? 'bg-[#E1AC33] text-[#FBF9F7]' : 'bg-[#fbf9f7] text-[#e1ac33]'}`}>
+                <CardTitle className={`font-semibold tracking-tight mb-2 text-[30px] ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#32989a]'}`}>{plan.name}</CardTitle>
+                <div className={`text-4xl font-bold mb-2 ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#32989a]'}`}>
                   R${plan.price}
-                  <span className="text-lg font-normal text-[#32989a]">/mês</span>
+                  <span className={`text-lg font-normal ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#32989a]'}`}>/mês</span>
                 </div>
-                <div className="bg-[#F3EEE8] px-4 py-2 rounded-xl">
-                  <p className="text-[#277677] font-medium">{plan.description}</p>
+                <div className={`px-4 py-2 rounded-xl ${plan.name === 'Padrão' ? 'bg-[#FBF9F7]' : 'bg-[#F3EEE8]'}`}>
+                  <p className={`font-medium ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`}>{plan.description}</p>
                 </div>
               </CardHeader>
               
-              <CardContent className="flex flex-col flex-grow text-[#277677]">
+              <CardContent className={`flex flex-col flex-grow ${plan.name === 'Padrão' ? 'text-[#FBF9F7] bg-[#E1AC33]' : 'text-[#277677]'}`}>
                 <ul className="space-y-4 mb-8 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-3">
-                      <Check className="h-4 w-4 text-[#277677] flex-shrink-0" />
-                      <span className="text-[#277677] text-[17px] font-normal">{feature}</span>
+                      <Check className={`h-4 w-4 flex-shrink-0 ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#277677]'}`} />
+                      <span className={`text-[17px] font-normal ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#277677]'}`}>{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
                 <Button 
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 px-4 py-2 w-full text-white mt-auto bg-[#32989a] text-[16px]"
+                  className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 px-4 py-2 w-full mt-auto text-[16px] ${plan.name === 'Padrão' ? 'bg-[#FBF9F7] text-[#E1AC33]' : 'bg-[#32989a] text-white'}`}
                 >
                   Contratar Plano {plan.name}
                 </Button>
