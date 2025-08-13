@@ -330,7 +330,7 @@ export default function NetworkUnitsTab() {
                       control={form.control}
                       name="rating"
                       render={({ field }) => (
-                        <FormItem className="space-y-3">
+                        <FormItem className="space-y-3 mt-[40px] mb-[40px]">
                           <div className="flex items-center gap-2">
                             <FormLabel>Avaliação</FormLabel>
                             <span className="font-medium text-[#e1ac33]">{field.value.toFixed(1)}</span>
