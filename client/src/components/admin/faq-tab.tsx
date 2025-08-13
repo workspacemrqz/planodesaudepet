@@ -180,7 +180,7 @@ export default function FaqTab() {
             </DialogHeader>
             
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
                 <FormField
                   control={form.control}
                   name="question"

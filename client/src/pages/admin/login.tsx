@@ -65,7 +65,7 @@ export default function AdminLogin() {
           
           <CardContent className="p-6 bg-[#FBF9F7] rounded-b-xl">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 admin-no-focus">
                 <FormField
                   control={form.control}
                   name="username"

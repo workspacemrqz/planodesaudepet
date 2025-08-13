@@ -48,6 +48,22 @@
   --unipet-light: hsl(0, 0%, 95%);
 }
 
+/* Remove all focus outlines and rings from admin forms */
+.admin-no-focus input:focus,
+.admin-no-focus textarea:focus,
+.admin-no-focus input:focus-visible,
+.admin-no-focus textarea:focus-visible {
+  outline: none !important;
+  ring: none !important;
+  box-shadow: none !important;
+  border-color: #d1d5db !important;
+}
+
+.admin-no-focus input:hover,
+.admin-no-focus textarea:hover {
+  border-color: #d1d5db !important;
+}
+
 .dark {
   --background: hsl(181, 51%, 31%);
   --foreground: hsl(0, 0%, 100%);

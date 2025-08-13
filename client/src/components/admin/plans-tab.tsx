@@ -135,7 +135,7 @@ export default function PlansTab() {
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
               <div className="grid md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -144,7 +144,7 @@ export default function PlansTab() {
                     <FormItem>
                       <FormLabel>Nome do Plano</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
+                        <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -158,7 +158,7 @@ export default function PlansTab() {
                     <FormItem>
                       <FormLabel>Descrição</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Proteção essencial" {...field} data-testid="input-plan-description" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
+                        <Input placeholder="Ex: Proteção essencial" {...field} data-testid="input-plan-description" className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -180,7 +180,7 @@ export default function PlansTab() {
                           {...field}
                           onChange={(e) => field.onChange(Number(e.target.value))}
                           data-testid="input-plan-price-normal"
-                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
+                          className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -217,7 +217,7 @@ export default function PlansTab() {
                   onChange={(e) => setFeaturesInput(e.target.value)}
                   placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
                   rows={6}
-                  className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
+                  className="mt-2 focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none"
                   data-testid="textarea-plan-features"
                 />
               </div>
