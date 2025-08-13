@@ -369,7 +369,7 @@ export default function NetworkUnitsTab() {
                   />
                   
                   {uploadedImageUrl && !isUploading && (
-                    <div className="text-sm text-green-600 bg-green-50 p-2 rounded border">
+                    <div className="text-sm p-2 rounded border bg-[#277677] text-[#ffffff]">
                       ✓ Imagem carregada com sucesso
                     </div>
                   )}
