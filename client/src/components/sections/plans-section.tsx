@@ -52,7 +52,7 @@ export default function PlansSection() {
     <section className="py-20 bg-[#277677]" style={{backgroundColor: '#FBF9F7'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#060606]">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#fbf9f7]">
             Escolha o <span className="text-primary">plano ideal</span> para seu pet
           </h2>
           <p className="text-xl text-[#101010] max-w-2xl mx-auto">
