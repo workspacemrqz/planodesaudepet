@@ -49,7 +49,7 @@ export default function PlansSection() {
   ];
 
   return (
-    <section className="py-20 bg-[#32989a] text-[#fbf9f7]" style={{backgroundColor: '#FBF9F7'}}>
+    <section className="py-20 text-[#fbf9f7] bg-[#2c8587]" style={{backgroundColor: '#FBF9F7'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="md:text-4xl mb-4 text-[#fbf9f7] text-[40px] font-bold">
