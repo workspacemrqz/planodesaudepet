@@ -269,8 +269,8 @@ export default function ContactSection() {
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-[#302e2b]">Telefone</div>
-                    <div className="text-[#302e2b]">0800 123 4567</div>
+                    <div className="font-semibold text-[#FBF9F7]">Telefone</div>
+                    <div className="text-[#FBF9F7]">0800 123 4567</div>
                   </div>
                 </div>
 
@@ -279,8 +279,8 @@ export default function ContactSection() {
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-[#302e2b]">E-mail</div>
-                    <div className="text-[#302e2b]">contato@unipetplan.com.br</div>
+                    <div className="font-semibold text-[#FBF9F7]">E-mail</div>
+                    <div className="text-[#FBF9F7]">contato@unipetplan.com.br</div>
                   </div>
                 </div>
 
@@ -289,23 +289,23 @@ export default function ContactSection() {
                     <MessageSquare className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-[#302e2b]">WhatsApp</div>
-                    <div className="text-[#302e2b]">(11) 99999-9999</div>
+                    <div className="font-semibold text-[#FBF9F7]">WhatsApp</div>
+                    <div className="text-[#FBF9F7]">(11) 99999-9999</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl text-primary flex items-center">
+            <Card className="unipet-card shadow-lg rounded-xl border-none">
+              <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
+                <CardTitle className="text-xl flex items-center tracking-tight text-[#277677] text-[20px] font-semibold">
                   <Clock className="h-5 w-5 mr-2" />
                   Horário de Atendimento
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-muted-foreground">
+              <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
+                <div className="space-y-2 text-[#302e2b]">
                   <div className="flex justify-between">
                     <span>Segunda a Sexta:</span>
                     <span>8h às 18h</span>
@@ -324,18 +324,18 @@ export default function ContactSection() {
 
             {/* Social Media */}
             <div>
-              <h4 className="text-xl font-bold mb-4 text-[#2c8587] bg-[#2a2c3700]">Siga-nos</h4>
+              <h4 className="text-xl font-bold mb-4 text-[#FBF9F7]">Siga-nos</h4>
               <div className="flex space-x-4">
-                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#2c8587] text-[#ffffff]">
+                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#302e2b]">
                   <Facebook className="h-4 w-4" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#2c8587] text-[#ffffff]">
+                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#302e2b]">
                   <Instagram className="h-4 w-4" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#2c8587] text-[#ffffff]">
+                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#302e2b]">
                   <Linkedin className="h-4 w-4" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#2c8587] text-[#ffffff]">
+                <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#302e2b]">
                   <Youtube className="h-4 w-4" />
                 </a>
               </div>
