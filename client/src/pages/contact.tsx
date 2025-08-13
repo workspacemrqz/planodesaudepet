@@ -300,7 +300,7 @@ export default function Contact() {
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card shadow-lg rounded-xl border-none">
+            <Card className="unipet-card shadow-lg rounded-xl border-none w-fit">
               <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
                 <CardTitle className="text-xl flex items-center tracking-tight text-[#277677] text-[20px] font-semibold">
                   <Clock className="h-5 w-5 mr-2" />
