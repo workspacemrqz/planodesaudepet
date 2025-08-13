@@ -100,7 +100,7 @@ export default function About() {
               receba o cuidado que merece, quando precisa.
             </p>
             <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
+              <Card className="backdrop-blur-sm shadow-xl border border-primary/10" style={{backgroundColor: '#FBF9F7'}}>
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold text-primary mb-4">Atendimento Humanizado</h3>
                   <p className="text-[#302e2b]">
@@ -109,7 +109,7 @@ export default function About() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
+              <Card className="backdrop-blur-sm shadow-xl border border-primary/10" style={{backgroundColor: '#FBF9F7'}}>
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold text-primary mb-4">Inovação Constante</h3>
                   <p className="text-[#302e2b]">
