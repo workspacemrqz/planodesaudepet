@@ -83,7 +83,7 @@ function SortableFaqItem({
           >
             <GripVertical className="h-4 w-4 text-gray-400" />
           </div>
-          <AccordionTrigger className="text-left text-[#277677] font-medium hover:no-underline flex-1">
+          <AccordionTrigger className="text-left font-medium hover:no-underline flex-1 text-[#fbf9f7]">
             {item.question}
           </AccordionTrigger>
         </div>
@@ -116,7 +116,7 @@ function SortableFaqItem({
         </div>
       </div>
       <AccordionContent className="text-[#302e2b] pb-4">
-        <div className="pl-9">
+        <div className="pl-9 text-[#fbf9f7]">
           {item.answer}
         </div>
       </AccordionContent>
