@@ -63,7 +63,7 @@ export default function FAQ() {
         </div>
       </section>
       {/* FAQ Section */}
-      <section className="py-16 px-4 bg-[#ded8ce]">
+      <section className="py-16 px-4 bg-[#ded8ce] pl-[20px] pr-[20px]">
         <div className="max-w-4xl mx-auto">
           <Card className="bg-[#FBF9F7] border-none shadow-lg rounded-xl">
             <CardHeader className="text-center pb-8">
