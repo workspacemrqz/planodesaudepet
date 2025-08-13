@@ -141,7 +141,7 @@ export default function Plans() {
       <section className="py-20 bg-[#DED8CE]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-[36px] font-bold mb-4 text-[#277677]">
+            <h2 className="text-[36px] font-bold mb-4 text-[#302e2b]">
               Informações <span className="text-[#E1AC33]">importantes</span>
             </h2>
             <p className="text-[24px] text-[#302e2b] max-w-2xl mx-auto font-medium">
