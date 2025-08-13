@@ -333,7 +333,7 @@ export default function NetworkUnitsTab() {
                         <FormItem className="space-y-3">
                           <div className="flex items-center gap-2">
                             <FormLabel>Avaliação</FormLabel>
-                            <span className="font-medium text-[#277677]">{field.value.toFixed(1)}</span>
+                            <span className="font-medium text-[#e5e7eb]">{field.value.toFixed(1)}</span>
                           </div>
                           <FormControl>
                             <Slider
