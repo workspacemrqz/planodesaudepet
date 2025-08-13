@@ -11,9 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, MapPin, Phone, Star } from "lucide-react";
+import { Plus, Edit, Trash2, MapPin, Phone, Star, Upload } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { ObjectUploader } from "@/components/ObjectUploader";
+import type { UploadResult } from "@uppy/core";
 
 const networkUnitFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -21,7 +23,7 @@ const networkUnitFormSchema = z.object({
   phone: z.string().min(1, "Telefone é obrigatório"),
   rating: z.number().min(10).max(50, "Rating deve ser entre 1.0 e 5.0"),
   services: z.array(z.string()).min(1, "Pelo menos um serviço é obrigatório"),
-  imageUrl: z.string().url("URL da imagem deve ser válida"),
+  imageUrl: z.string().optional(),
 });
 
 type NetworkUnitFormData = z.infer<typeof networkUnitFormSchema>;
@@ -30,6 +32,7 @@ export default function NetworkUnitsTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUnit, setEditingUnit] = useState<NetworkUnit | null>(null);
   const [servicesInput, setServicesInput] = useState("");
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   const { data: units, isLoading } = useQuery<NetworkUnit[]>({
@@ -97,6 +100,57 @@ export default function NetworkUnitsTab() {
     },
   });
 
+  // Upload image mutation
+  const uploadImageMutation = useMutation({
+    mutationFn: async ({ unitId, imageURL }: { unitId: string, imageURL: string }) => {
+      await apiRequest("PUT", `/api/admin/network-units/${unitId}/image`, { imageURL });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
+      toast({
+        title: "Sucesso",
+        description: "Imagem atualizada com sucesso",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar imagem",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Get upload URL for image
+  const handleGetUploadParameters = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/objects/upload");
+      return {
+        method: "PUT" as const,
+        url: response.uploadURL,
+      };
+    } catch (error) {
+      console.error("Error getting upload parameters:", error);
+      throw error;
+    }
+  };
+
+  // Handle upload complete
+  const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+    if (result.successful && result.successful.length > 0) {
+      const uploadedFile = result.successful[0];
+      setUploadedImageUrl(uploadedFile.uploadURL as string);
+      
+      // If editing a unit, update the image immediately
+      if (editingUnit) {
+        uploadImageMutation.mutate({ 
+          unitId: editingUnit.id, 
+          imageURL: uploadedFile.uploadURL as string 
+        });
+      }
+    }
+  };
+
   const handleEdit = (unit: NetworkUnit) => {
     setEditingUnit(unit);
     form.reset({
@@ -108,6 +162,7 @@ export default function NetworkUnitsTab() {
       imageUrl: unit.imageUrl,
     });
     setServicesInput(unit.services.join("\n"));
+    setUploadedImageUrl(unit.imageUrl);
     setIsDialogOpen(true);
   };
 
@@ -123,6 +178,7 @@ export default function NetworkUnitsTab() {
       ...data,
       services,
       isActive: true,
+      imageUrl: uploadedImageUrl || data.imageUrl || "",
     };
 
     if (editingUnit) {
@@ -136,6 +192,7 @@ export default function NetworkUnitsTab() {
     form.reset();
     setServicesInput("");
     setEditingUnit(null);
+    setUploadedImageUrl(null);
   };
 
   if (isLoading) {
@@ -249,19 +306,28 @@ export default function NetworkUnitsTab() {
                   />
                 </div>
 
-                <FormField
-                  control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL da Imagem</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://..." {...field} data-testid="input-unit-image" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                <div className="space-y-3">
+                  <FormLabel>Imagem da Unidade</FormLabel>
+                  <ObjectUploader
+                    maxNumberOfFiles={1}
+                    maxFileSize={5242880} // 5MB limit
+                    onGetUploadParameters={handleGetUploadParameters}
+                    onComplete={handleUploadComplete}
+                    buttonClassName="w-full bg-[#277677] hover:bg-[#1f5a5c] text-white"
+                  >
+                    <div className="flex items-center justify-center gap-2 py-2">
+                      <Upload className="h-4 w-4" />
+                      <span>
+                        {uploadedImageUrl ? "Trocar Imagem" : "Fazer Upload da Imagem"}
+                      </span>
+                    </div>
+                  </ObjectUploader>
+                  {uploadedImageUrl && (
+                    <div className="text-sm text-green-600 bg-green-50 p-2 rounded border">
+                      ✓ Imagem carregada com sucesso
+                    </div>
                   )}
-                />
+                </div>
 
                 <div>
                   <FormLabel>Serviços Disponíveis (um por linha)</FormLabel>

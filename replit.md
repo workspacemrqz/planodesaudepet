@@ -53,7 +53,10 @@ Preferred communication style: Simple, everyday language.
 - **CRUD Operations**: Full Create, Read, Update, Delete functionality for network units management
 - **Data Structure**: Network units include name, address, phone, rating (stored as integer*10), services array, image URL, and active status
 - **UI Consistency**: Admin containers display only unit names with edit/delete buttons matching FAQ component styling
-- **Form Validation**: Complete form with all fields (name, address, phone, rating, services, image URL) available during edit operations
+- **Image Upload System**: Replaced URL text field with real image upload functionality using object storage
+- **Object Storage Integration**: Complete setup with Google Cloud Storage for handling image uploads and serving
+- **Upload Interface**: Modal-based image upload with progress tracking and file validation (5MB limit, images only)
+- **Image Management**: Automatic image URL normalization and database storage integration
 
 ### Authentication and Authorization
 - **Current State**: Basic foundation with user schema defined but not fully implemented

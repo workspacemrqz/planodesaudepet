@@ -8,6 +8,7 @@ import {
   insertFaqItemSchema 
 } from "@shared/schema";
 import { setupAuth, initializeAdminUser } from "./auth";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 // Middleware to check admin authentication
 const requireAdmin = (req: any, res: any, next: any) => {
@@ -207,6 +208,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Erro ao deletar item do FAQ" });
+    }
+  });
+
+  // OBJECT STORAGE ROUTES
+
+  // Get upload URL for images
+  app.post("/api/objects/upload", requireAdmin, async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Erro ao obter URL de upload" });
+    }
+  });
+
+  // Serve uploaded images
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error serving object:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  // Update network unit with uploaded image
+  app.put("/api/admin/network-units/:id/image", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { imageURL } = req.body;
+
+      if (!imageURL) {
+        return res.status(400).json({ error: "imageURL é obrigatório" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = objectStorageService.normalizeObjectEntityPath(imageURL);
+      
+      // Update the network unit with the new image path
+      const unit = await storage.updateNetworkUnit(id, { imageUrl: objectPath });
+      
+      if (!unit) {
+        return res.status(404).json({ error: "Unidade da rede não encontrada" });
+      }
+      
+      res.json({ objectPath });
+    } catch (error) {
+      console.error("Error updating network unit image:", error);
+      res.status(500).json({ error: "Erro interno do servidor" });
     }
   });
 
