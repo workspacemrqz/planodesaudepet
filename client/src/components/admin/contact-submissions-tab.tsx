@@ -39,7 +39,7 @@ export default function ContactSubmissionsTab() {
       <Card>
         <CardContent className="p-6 text-center">
           <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">Nenhum formulário de contato encontrado.</p>
+          <p className="text-[#fbf9f7]">Nenhum formulário de contato encontrado.</p>
         </CardContent>
       </Card>
     );
