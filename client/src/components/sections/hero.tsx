@@ -40,7 +40,7 @@ export default function Hero() {
                 const Icon = benefit.icon;
                 return (
                   <div key={index} className="flex items-center space-x-3">
-                    <Icon className="h-5 w-5 text-primary" />
+                    <Icon className="h-5 w-5 text-[#277677]" />
                     <span className="text-[#302e2b]">{benefit.text}</span>
                   </div>
                 );
