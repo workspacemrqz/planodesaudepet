@@ -135,7 +135,7 @@ export default function PlansSection() {
               <p className="mb-6 text-[#fbf9f7] text-[18px] font-normal">
                 Oferecemos também planos regionais com processo simplificado e atendimento personalizado para sua região.
               </p>
-              <Button className="unipet-button-primary text-white text-lg px-8 py-3">
+              <Button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 unipet-button-primary text-lg px-8 py-3 bg-[#e1ac33] text-[#fbf9f7]">
                 Consultar Planos Locais
               </Button>
             </CardContent>
