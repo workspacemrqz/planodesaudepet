@@ -77,11 +77,11 @@ export default function ContactSection() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="unipet-card shadow-lg">
-            <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff]">
+          <Card className="unipet-card shadow-lg rounded-xl border-none">
+            <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
               <CardTitle className="tracking-tight text-[#277677] text-[26px] font-semibold">Solicitar Cotação</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7]">
+            <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
