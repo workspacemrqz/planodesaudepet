@@ -39,7 +39,7 @@ export default function ContactSubmissionsTab() {
       <Card>
         <CardContent className="p-6 text-center">
           <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-[#fbf9f7]">Nenhum formulário de contato encontrado.</p>
+          <p className="text-[#FBF9F7]">Nenhum formulário de contato encontrado.</p>
         </CardContent>
       </Card>
     );
@@ -67,10 +67,10 @@ export default function ContactSubmissionsTab() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-[#277677]">
+          <h3 className="text-lg font-semibold text-[#FBF9F7]">
             Formulários de Contato
           </h3>
-          <p className="text-sm text-[#302e2b]/70">
+          <p className="text-sm text-[#FBF9F7]/70">
             Total de {submissions.length} formulário{submissions.length !== 1 ? 's' : ''} recebido{submissions.length !== 1 ? 's' : ''}
           </p>
         </div>

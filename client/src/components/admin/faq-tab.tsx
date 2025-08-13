@@ -155,8 +155,8 @@ export default function FaqTab() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-[#277677]">Gerenciar FAQ</h3>
-          <p className="text-sm text-[#302e2b]/70">
+          <h3 className="text-lg font-semibold text-[#FBF9F7]">Gerenciar FAQ</h3>
+          <p className="text-sm text-[#FBF9F7]/70">
             Adicione, edite ou remova perguntas frequentes
           </p>
         </div>
@@ -166,7 +166,7 @@ export default function FaqTab() {
           if (!open) resetForm();
         }}>
           <DialogTrigger asChild>
-            <Button className="bg-[#277677] hover:bg-[#277677]/90" data-testid="button-add-faq">
+            <Button className="hover:bg-[#277677]/90 bg-[#145759] text-[#fbf9f7]" data-testid="button-add-faq">
               <Plus className="h-4 w-4 mr-2" />
               Nova Pergunta
             </Button>
@@ -339,7 +339,7 @@ export default function FaqTab() {
         <Card>
           <CardContent className="p-6 text-center">
             <HelpCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">Nenhuma pergunta cadastrada ainda.</p>
+            <p className="text-[#FBF9F7]">Nenhuma pergunta cadastrada ainda.</p>
           </CardContent>
         </Card>
       )}

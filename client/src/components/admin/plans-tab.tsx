@@ -155,8 +155,8 @@ export default function PlansTab() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-[#fbf9f7]">Gerenciar Planos</h3>
-          <p className="text-sm text-[#fbf9f7]">
+          <h3 className="text-lg font-semibold text-[#FBF9F7]">Gerenciar Planos</h3>
+          <p className="text-sm text-[#FBF9F7]">
             Adicione, edite ou remova planos de seguro
           </p>
         </div>
@@ -166,7 +166,7 @@ export default function PlansTab() {
           if (!open) resetForm();
         }}>
           <DialogTrigger asChild>
-            <Button className="bg-[#277677] hover:bg-[#277677]/90" data-testid="button-add-plan">
+            <Button className="hover:bg-[#277677]/90 text-[#fbf9f7] bg-[#145759]" data-testid="button-add-plan">
               <Plus className="h-4 w-4 mr-2" />
               Novo Plano
             </Button>
@@ -322,7 +322,7 @@ export default function PlansTab() {
               <CardTitle className="text-[#277677] text-xl">{plan.name}</CardTitle>
               <div className="text-2xl font-bold text-[#277677]">
                 <div>R${plan.priceNormal}/mês</div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-[#FBF9F7]">
                   R${plan.priceWithCopay}/mês (com coparticipação)
                 </div>
               </div>
@@ -367,7 +367,7 @@ export default function PlansTab() {
         <Card>
           <CardContent className="p-6 text-center">
             <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-[#fbf9f7]">Nenhum plano cadastrado ainda.</p>
+            <p className="text-[#FBF9F7]">Nenhum plano cadastrado ainda.</p>
           </CardContent>
         </Card>
       )}
