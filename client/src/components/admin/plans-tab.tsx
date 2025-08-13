@@ -184,7 +184,7 @@ export default function PlansTab() {
                     <FormItem>
                       <FormLabel>Nome do Plano</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none" />
+                        <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 focus:outline-none !focus:outline-none" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -198,7 +198,7 @@ export default function PlansTab() {
                     <FormItem>
                       <FormLabel>Descrição</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Proteção essencial" {...field} data-testid="input-plan-description" className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none" />
+                        <Input placeholder="Ex: Proteção essencial" {...field} data-testid="input-plan-description" className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 focus:outline-none !focus:outline-none" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -220,7 +220,7 @@ export default function PlansTab() {
                           {...field}
                           onChange={(e) => field.onChange(Number(e.target.value))}
                           data-testid="input-plan-price-normal"
-                          className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none"
+                          className="focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 focus:outline-none !focus:outline-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -241,7 +241,7 @@ export default function PlansTab() {
                           {...field}
                           onChange={(e) => field.onChange(Number(e.target.value))}
                           data-testid="input-plan-price-copay"
-                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
+                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
@@ -257,7 +257,7 @@ export default function PlansTab() {
                   onChange={(e) => setFeaturesInput(e.target.value)}
                   placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
                   rows={6}
-                  className="mt-2 focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 hover:border-gray-300 !hover:border-gray-300 focus:outline-none !focus:outline-none"
+                  className="mt-2 focus:ring-0 !focus:ring-0 focus:ring-offset-0 !focus:ring-offset-0 focus:border-gray-300 !focus:border-gray-300 focus:outline-none !focus:outline-none"
                   data-testid="textarea-plan-features"
                 />
               </div>
@@ -302,7 +302,7 @@ export default function PlansTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleEdit(plan)}
-                  className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585] hover:text-[#FBF9F7] transition-none"
+                  className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7]"
                   data-testid={`button-edit-plan-${plan.id}`}
                 >
                   <Edit className="h-4 w-4" />
@@ -311,10 +311,10 @@ export default function PlansTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleTogglePopular(plan)}
-                  className={`h-8 w-8 p-0 transition-none ${
+                  className={`h-8 w-8 p-0 ${
                     plan.isPopular 
-                      ? 'bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33]/90 hover:text-[#FBF9F7]' 
-                      : 'bg-[#4B5563] text-[#FBF9F7] hover:bg-[#4B5563]/90 hover:text-[#FBF9F7]'
+                      ? 'bg-[#E1AC33] text-[#FBF9F7]' 
+                      : 'bg-[#4B5563] text-[#FBF9F7]'
                   }`}
                   data-testid={`button-popular-plan-${plan.id}`}
                   title={plan.isPopular ? "Remover como mais popular" : "Marcar como mais popular"}
@@ -325,7 +325,7 @@ export default function PlansTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleDelete(plan)}
-                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] hover:text-[#2F8585] transition-none"
+                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585]"
                   data-testid={`button-delete-plan-${plan.id}`}
                 >
                   <Trash2 className="h-4 w-4" />

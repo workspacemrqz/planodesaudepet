@@ -78,7 +78,7 @@ export default function ContactSubmissionsTab() {
 
       <div className="grid gap-4">
         {submissions.map((submission) => (
-          <Card key={submission.id} className="shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <Card key={submission.id} className="shadow-sm border border-gray-200">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg text-[#277677] flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function ContactSubmissionsTab() {
               <div className="bg-[#277677]/5 p-3 rounded-lg">
                 <div className="text-sm">
                   <span className="font-medium text-[#277677]">Plano de interesse:</span>
-                  <Badge className="ml-2 bg-[#E1AC33] text-[#277677] hover:bg-[#E1AC33]/90">
+                  <Badge className="ml-2 bg-[#E1AC33] text-[#277677]">
                     {getPlanLabel(submission.planInterest)}
                   </Badge>
                 </div>
@@ -154,7 +154,7 @@ export default function ContactSubmissionsTab() {
               <div className="flex gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="bg-[#277677] hover:bg-[#277677]/90 text-white"
+                  className="bg-[#277677] text-white"
                   onClick={() => window.open(`mailto:${submission.email}?subject=Proposta UNIPET PLAN para ${submission.petName}`)}
                   data-testid={`button-email-${submission.id}`}
                 >
@@ -164,7 +164,7 @@ export default function ContactSubmissionsTab() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-[#277677] text-[#277677] hover:bg-[#277677] hover:text-white"
+                  className="border-[#277677] text-[#277677]"
                   onClick={() => window.open(`tel:${submission.phone}`)}
                   data-testid={`button-call-${submission.id}`}
                 >

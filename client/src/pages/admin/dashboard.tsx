@@ -39,7 +39,7 @@ export default function AdminDashboard() {
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="bg-[#fbf9f700] border-[#FBF9F7] text-[#FBF9F7] hover:bg-[#FBF9F7] hover:text-[#277677] transition-colors"
+                className="bg-[#fbf9f700] border-[#FBF9F7] text-[#FBF9F7]"
                 disabled={logoutMutation.isPending}
                 data-testid="button-logout"
               >
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
                 <TabsList className="grid grid-cols-2 lg:grid-cols-4 gap-1 bg-transparent h-auto p-1">
                   <TabsTrigger 
                     value="contact" 
-                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium transition-all"
+                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium"
                     data-testid="tab-contact"
                   >
                     <MessageSquare className="h-4 w-4" />
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
                   
                   <TabsTrigger 
                     value="plans" 
-                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium transition-all"
+                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium"
                     data-testid="tab-plans"
                   >
                     <CreditCard className="h-4 w-4" />
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
                   
                   <TabsTrigger 
                     value="network" 
-                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium transition-all"
+                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium"
                     data-testid="tab-network"
                   >
                     <MapPin className="h-4 w-4" />
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
                   
                   <TabsTrigger 
                     value="faq" 
-                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium transition-all"
+                    className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium"
                     data-testid="tab-faq"
                   >
                     <HelpCircle className="h-4 w-4" />

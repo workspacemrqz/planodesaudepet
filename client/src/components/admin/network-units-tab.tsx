@@ -238,7 +238,7 @@ export default function NetworkUnitsTab() {
           <DialogTrigger asChild>
             <Button 
               onClick={handleNewUnit}
-              className="bg-[#145759] hover:bg-[#145759]/90 text-[#fbf9f7]"
+              className="bg-[#145759] text-[#fbf9f7]"
               data-testid="button-add-unit"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -255,7 +255,7 @@ export default function NetworkUnitsTab() {
             {/* Progress Bar */}
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#E1AC33] h-2 rounded-full transition-all duration-300"
+                className="bg-[#E1AC33] h-2 rounded-full"
                 style={{ width: `${(currentStep / 3) * 100}%` }}
               />
             </div>
@@ -396,7 +396,7 @@ export default function NetworkUnitsTab() {
                         onChange={(e) => setServicesInput(e.target.value)}
                         placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
                         rows={8}
-                        className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
+                        className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
                         data-testid="textarea-unit-services"
                       />
                     </div>
@@ -472,7 +472,7 @@ export default function NetworkUnitsTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleEdit(unit)}
-                  className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585] hover:text-[#FBF9F7] transition-none"
+                  className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7]"
                   data-testid={`button-edit-unit-${unit.id}`}
                 >
                   <Edit className="h-4 w-4" />
@@ -481,7 +481,7 @@ export default function NetworkUnitsTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleDelete(unit)}
-                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] hover:text-[#2F8585] transition-none"
+                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585]"
                   data-testid={`button-delete-unit-${unit.id}`}
                 >
                   <Trash2 className="h-4 w-4" />

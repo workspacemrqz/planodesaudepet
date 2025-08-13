@@ -83,7 +83,7 @@ function SortableFaqItem({
           >
             <GripVertical className="h-4 w-4 text-gray-400" />
           </div>
-          <AccordionTrigger className="text-left font-medium hover:no-underline flex-1 text-[#fbf9f7]">
+          <AccordionTrigger className="text-left font-medium flex-1 text-[#fbf9f7]">
             {item.question}
           </AccordionTrigger>
         </div>
@@ -96,7 +96,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onEdit(item);
             }}
-            className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585] hover:text-[#FBF9F7] transition-none"
+            className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7]"
             data-testid={`button-edit-faq-${item.id}`}
           >
             <Edit className="h-4 w-4" />
@@ -108,7 +108,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onDelete(item);
             }}
-            className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] hover:text-[#2F8585] transition-none"
+            className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585]"
             data-testid={`button-delete-faq-${item.id}`}
           >
             <Trash2 className="h-4 w-4" />
@@ -280,7 +280,7 @@ export default function FaqTab() {
                 setEditingItem(null);
                 form.reset();
               }}
-              className="bg-[#145759] hover:bg-[#145759]/90 text-[#fbf9f7]"
+              className="bg-[#145759] text-[#fbf9f7]"
               data-testid="button-add-faq"
             >
               <Plus className="h-4 w-4 mr-2" />
