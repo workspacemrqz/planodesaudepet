@@ -72,7 +72,7 @@ function SortableFaqItem({
       style={style}
       key={item.id} 
       value={item.id} 
-      className="border rounded-lg px-4 bg-white mt-[10px] mb-[10px]"
+      className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]"
     >
       <div className="flex items-center justify-between pr-2">
         <div className="flex items-center gap-2 flex-1">
@@ -115,7 +115,6 @@ function SortableFaqItem({
           </Button>
         </div>
       </div>
-      
       <AccordionContent className="text-[#302e2b] pb-4">
         <div className="pl-9">
           {item.answer}
