@@ -323,7 +323,7 @@ export default function ContactSection() {
 
             {/* Social Media */}
             <div>
-              <h4 className="text-xl font-bold mb-4 text-[#FBF9F7]">Siga-nos</h4>
+              <h4 className="text-xl font-bold mb-4 text-[#FBF9F7] text-center">Siga-nos</h4>
               <div className="flex space-x-4">
                 <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677]">
                   <Facebook className="h-4 w-4" />
