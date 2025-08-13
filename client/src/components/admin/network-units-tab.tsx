@@ -1,0 +1,391 @@
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { NetworkUnit, InsertNetworkUnit } from "@shared/schema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Edit, Trash2, MapPin, Phone, Star } from "lucide-react";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+const networkUnitFormSchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório"),
+  address: z.string().min(1, "Endereço é obrigatório"),
+  phone: z.string().min(1, "Telefone é obrigatório"),
+  rating: z.number().min(10).max(50, "Rating deve ser entre 1.0 e 5.0"),
+  services: z.array(z.string()).min(1, "Pelo menos um serviço é obrigatório"),
+  imageUrl: z.string().url("URL da imagem deve ser válida"),
+});
+
+type NetworkUnitFormData = z.infer<typeof networkUnitFormSchema>;
+
+export default function NetworkUnitsTab() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingUnit, setEditingUnit] = useState<NetworkUnit | null>(null);
+  const [servicesInput, setServicesInput] = useState("");
+  const { toast } = useToast();
+
+  const { data: units, isLoading } = useQuery<NetworkUnit[]>({
+    queryKey: ["/api/admin/network-units"],
+  });
+
+  const form = useForm<NetworkUnitFormData>({
+    resolver: zodResolver(networkUnitFormSchema),
+    defaultValues: {
+      name: "",
+      address: "",
+      phone: "",
+      rating: 40,
+      services: [],
+      imageUrl: "",
+    },
+  });
+
+  const createUnitMutation = useMutation({
+    mutationFn: async (data: InsertNetworkUnit) => {
+      const response = await apiRequest("POST", "/api/admin/network-units", data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
+      toast({ title: "Unidade criada com sucesso!" });
+      setIsDialogOpen(false);
+      form.reset();
+      setServicesInput("");
+    },
+    onError: () => {
+      toast({ title: "Erro ao criar unidade", variant: "destructive" });
+    },
+  });
+
+  const updateUnitMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<InsertNetworkUnit> }) => {
+      const response = await apiRequest("PUT", `/api/admin/network-units/${id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
+      toast({ title: "Unidade atualizada com sucesso!" });
+      setIsDialogOpen(false);
+      setEditingUnit(null);
+      form.reset();
+      setServicesInput("");
+    },
+    onError: () => {
+      toast({ title: "Erro ao atualizar unidade", variant: "destructive" });
+    },
+  });
+
+  const deleteUnitMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/admin/network-units/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
+      toast({ title: "Unidade removida com sucesso!" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao remover unidade", variant: "destructive" });
+    },
+  });
+
+  const handleEdit = (unit: NetworkUnit) => {
+    setEditingUnit(unit);
+    form.reset({
+      name: unit.name,
+      address: unit.address,
+      phone: unit.phone,
+      rating: unit.rating,
+      services: unit.services,
+      imageUrl: unit.imageUrl,
+    });
+    setServicesInput(unit.services.join("\n"));
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = (unit: NetworkUnit) => {
+    if (confirm(`Tem certeza que deseja remover "${unit.name}"?`)) {
+      deleteUnitMutation.mutate(unit.id);
+    }
+  };
+
+  const onSubmit = (data: NetworkUnitFormData) => {
+    const services = servicesInput.split("\n").filter(s => s.trim().length > 0);
+    const unitData: InsertNetworkUnit = {
+      ...data,
+      services,
+      isActive: true,
+    };
+
+    if (editingUnit) {
+      updateUnitMutation.mutate({ id: editingUnit.id, data: unitData });
+    } else {
+      createUnitMutation.mutate(unitData);
+    }
+  };
+
+  const resetForm = () => {
+    form.reset();
+    setServicesInput("");
+    setEditingUnit(null);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="animate-pulse">
+            <div className="h-80 bg-gray-200 rounded-lg"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-semibold text-[#277677]">Gerenciar Rede Credenciada</h3>
+          <p className="text-sm text-[#302e2b]/70">
+            Adicione, edite ou remova unidades da rede credenciada
+          </p>
+        </div>
+        
+        <Dialog open={isDialogOpen} onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) resetForm();
+        }}>
+          <DialogTrigger asChild>
+            <Button className="bg-[#277677] hover:bg-[#277677]/90" data-testid="button-add-unit">
+              <Plus className="h-4 w-4 mr-2" />
+              Nova Unidade
+            </Button>
+          </DialogTrigger>
+          
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-[#277677]">
+                {editingUnit ? "Editar Unidade" : "Nova Unidade"}
+              </DialogTitle>
+            </DialogHeader>
+            
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nome da Unidade</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex: Hospital Animal's São Paulo" {...field} data-testid="input-unit-name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Endereço</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Endereço completo" {...field} data-testid="textarea-unit-address" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Telefone</FormLabel>
+                        <FormControl>
+                          <Input placeholder="(11) 99999-9999" {...field} data-testid="input-unit-phone" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="rating"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Avaliação (1.0 a 5.0)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            min="10"
+                            max="50"
+                            placeholder="45 (para 4.5)"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            data-testid="input-unit-rating"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                        <p className="text-xs text-gray-500">Digite como número inteiro (45 para 4.5 estrelas)</p>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL da Imagem</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://..." {...field} data-testid="input-unit-image" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div>
+                  <FormLabel>Serviços Disponíveis (um por linha)</FormLabel>
+                  <Textarea
+                    value={servicesInput}
+                    onChange={(e) => setServicesInput(e.target.value)}
+                    placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
+                    rows={6}
+                    className="mt-2"
+                    data-testid="textarea-unit-services"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setIsDialogOpen(false)}
+                    data-testid="button-cancel-unit"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    type="submit"
+                    disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
+                    data-testid="button-save-unit"
+                  >
+                    {editingUnit ? "Atualizar" : "Criar"} Unidade
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {units?.map((unit) => (
+          <Card key={unit.id} className="overflow-hidden">
+            <div className="relative">
+              <img 
+                src={unit.imageUrl} 
+                alt={unit.name}
+                className="w-full h-48 object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=400&h=300&fit=crop";
+                }}
+              />
+              <Badge className="absolute top-2 right-2 bg-[#E1AC33] text-[#277677]">
+                <Star className="h-3 w-3 mr-1" />
+                {(unit.rating / 10).toFixed(1)}
+              </Badge>
+            </div>
+            
+            <CardHeader className="pb-3">
+              <CardTitle className="text-[#277677] text-lg leading-tight">
+                {unit.name}
+              </CardTitle>
+            </CardHeader>
+            
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <div className="flex items-start gap-2 text-sm">
+                  <MapPin className="h-4 w-4 text-[#277677] mt-0.5 flex-shrink-0" />
+                  <span className="text-[#302e2b]">{unit.address}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone className="h-4 w-4 text-[#277677] flex-shrink-0" />
+                  <span className="text-[#302e2b]">{unit.phone}</span>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-[#277677] mb-2">Serviços:</p>
+                <div className="flex flex-wrap gap-1">
+                  {unit.services.slice(0, 3).map((service, index) => (
+                    <Badge 
+                      key={index} 
+                      variant="outline" 
+                      className="text-xs bg-[#277677]/5 text-[#277677] border-[#277677]/20"
+                    >
+                      {service}
+                    </Badge>
+                  ))}
+                  {unit.services.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{unit.services.length - 3} mais
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex gap-2 pt-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleEdit(unit)}
+                  className="flex-1"
+                  data-testid={`button-edit-unit-${unit.id}`}
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Editar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => handleDelete(unit)}
+                  data-testid={`button-delete-unit-${unit.id}`}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {(!units || units.length === 0) && (
+        <Card>
+          <CardContent className="p-6 text-center">
+            <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">Nenhuma unidade cadastrada ainda.</p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
