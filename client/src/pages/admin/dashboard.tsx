@@ -24,16 +24,10 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-[#E1AC33] p-2 rounded-lg">
-                <Shield className="h-6 w-6 text-[#277677]" />
-              </div>
               <div>
                 <h1 className="text-xl font-bold text-[#FBF9F7]">
                   Painel Administrativo
                 </h1>
-                <p className="text-[#FBF9F7]/70 text-sm">
-                  UNIPET PLAN - Sistema de Gerenciamento
-                </p>
               </div>
             </div>
             
@@ -45,7 +39,7 @@ export default function AdminDashboard() {
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="border-[#FBF9F7] text-[#FBF9F7] hover:bg-[#FBF9F7] hover:text-[#277677] transition-colors"
+                className="bg-[#fbf9f700] border-[#FBF9F7] text-[#FBF9F7] hover:bg-[#FBF9F7] hover:text-[#277677] transition-colors"
                 disabled={logoutMutation.isPending}
                 data-testid="button-logout"
               >
