@@ -96,7 +96,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onEdit(item);
             }}
-            className="h-8 w-8 p-0 bg-[#2c8486] text-[#fbf9f7] hover:bg-[#2c8486] hover:text-[#fbf9f7] transition-none"
+            className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585] hover:text-[#FBF9F7] transition-none"
             data-testid={`button-edit-faq-${item.id}`}
           >
             <Edit className="h-4 w-4" />
@@ -108,7 +108,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onDelete(item);
             }}
-            className="h-8 w-8 p-0 bg-[#fbf9f7] text-[#2c8486] hover:bg-[#fbf9f7] hover:text-[#2c8486] transition-none"
+            className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] hover:text-[#2F8585] transition-none"
             data-testid={`button-delete-faq-${item.id}`}
           >
             <Trash2 className="h-4 w-4" />
