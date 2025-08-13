@@ -68,7 +68,7 @@ export default function About() {
         <div className="grid md:grid-cols-4 gap-8 mb-20">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-4xl font-bold text-[#277677] mb-2">{stat.value}</div>
+              <div className="text-4xl font-bold mb-2 text-[#e1ac33]">{stat.value}</div>
               <div className="text-white/90">{stat.label}</div>
             </div>
           ))}
