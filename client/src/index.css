@@ -64,85 +64,45 @@
   border-color: #d1d5db !important;
 }
 
-/* Remove all hover, focus and active effects from admin page */
-body:has([data-testid="button-logout"]) *,
-body:has([data-testid="button-logout"]) *:hover,
-body:has([data-testid="button-logout"]) *:focus,
-body:has([data-testid="button-logout"]) *:active,
-body:has([data-testid="button-logout"]) *:focus-visible {
+/* Remove all hover effects and animations from admin page */
+body:has([data-testid="button-logout"]) button,
+body:has([data-testid="button-logout"]) button:hover,
+body:has([data-testid="button-logout"]) [role="tab"],
+body:has([data-testid="button-logout"]) [role="tab"]:hover,
+body:has([data-testid="button-logout"]) .card,
+body:has([data-testid="button-logout"]) .card:hover,
+body:has([data-testid="button-logout"]) [data-testid^="button-"],
+body:has([data-testid="button-logout"]) [data-testid^="button-"]:hover,
+body:has([data-testid="button-logout"]) [data-testid^="tab-"],
+body:has([data-testid="button-logout"]) [data-testid^="tab-"]:hover,
+body:has([data-testid="button-logout"]) [data-testid^="input-"],
+body:has([data-testid="button-logout"]) [data-testid^="input-"]:hover,
+body:has([data-testid="button-logout"]) [data-testid^="textarea-"],
+body:has([data-testid="button-logout"]) [data-testid^="textarea-"]:hover {
   transition: none !important;
   animation: none !important;
   transform: none !important;
 }
 
-/* Prevent transparency and maintain static appearance */
-body:has([data-testid="button-logout"]) *:hover,
-body:has([data-testid="button-logout"]) *:focus,
-body:has([data-testid="button-logout"]) *:active {
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Complete static appearance lock for all admin elements */
+/* Disable hover effects for all interactive elements on admin page */
 body:has([data-testid="button-logout"]) button:hover,
-body:has([data-testid="button-logout"]) button:focus,
-body:has([data-testid="button-logout"]) button:active,
 body:has([data-testid="button-logout"]) [role="tab"]:hover,
-body:has([data-testid="button-logout"]) [role="tab"]:focus,
-body:has([data-testid="button-logout"]) [role="tab"]:active,
-body:has([data-testid="button-logout"]) [data-testid^="button-"]:hover,
-body:has([data-testid="button-logout"]) [data-testid^="button-"]:focus,
-body:has([data-testid="button-logout"]) [data-testid^="button-"]:active,
-body:has([data-testid="button-logout"]) [data-testid^="tab-"]:hover,
-body:has([data-testid="button-logout"]) [data-testid^="tab-"]:focus,
-body:has([data-testid="button-logout"]) [data-testid^="tab-"]:active,
 body:has([data-testid="button-logout"]) .card:hover,
-body:has([data-testid="button-logout"]) div:hover,
-body:has([data-testid="button-logout"]) span:hover,
-body:has([data-testid="button-logout"]) p:hover {
-  background-color: unset !important;
-  color: unset !important;
-  border-color: unset !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  outline: none !important;
-  transform: none !important;
-  scale: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
+body:has([data-testid="button-logout"]) [data-testid^="button-"]:hover {
+  background-color: inherit !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: inherit !important;
+  opacity: inherit !important;
 }
 
-/* Force specific button colors to remain static */
-body:has([data-testid="button-logout"]) [data-testid="button-logout"]:hover {
-  background-color: rgba(251, 249, 247, 0) !important;
-  color: #FBF9F7 !important;
-  border-color: #FBF9F7 !important;
-}
-
-/* Lock edit buttons appearance */
-body:has([data-testid="button-logout"]) [data-testid^="button-edit-"]:hover {
-  background-color: #2F8585 !important;
-  color: #FBF9F7 !important;
-}
-
-/* Lock delete buttons appearance */
-body:has([data-testid="button-logout"]) [data-testid^="button-delete-"]:hover {
+[data-testid^="button-delete-faq"],
+[data-testid^="button-delete-faq"]:hover {
   background-color: #FBF9F7 !important;
   color: #2F8585 !important;
-}
-
-/* Lock popular/star buttons appearance */
-body:has([data-testid="button-logout"]) [data-testid^="button-popular-"]:hover {
-  background-color: revert !important;
-  color: revert !important;
-}
-
-/* Lock add buttons appearance */
-body:has([data-testid="button-logout"]) [data-testid^="button-add-"]:hover,
-body:has([data-testid="button-logout"]) [data-testid="button-add-unit"]:hover,
-body:has([data-testid="button-logout"]) [data-testid="button-add-faq"]:hover {
-  background-color: #145759 !important;
-  color: #fbf9f7 !important;
+  transform: none !important;
+  opacity: 1 !important;
+  transition: none !important;
 }
 
 .dark {
