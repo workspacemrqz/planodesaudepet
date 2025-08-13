@@ -81,7 +81,7 @@ export default function ContactSection() {
             <CardHeader style={{backgroundColor: '#DED8CE'}}>
               <CardTitle className="text-2xl" style={{color: '#302e2b'}}>Solicitar Cotação</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 pt-0 bg-[#DED8CE] text-[#302e2b]">
+            <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7]">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
