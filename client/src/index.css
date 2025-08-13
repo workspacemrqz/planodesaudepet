@@ -326,4 +326,49 @@
   .contact-form-field label {
     color: #302e2b !important;
   }
+
+  /* Plano Padrão destaque especial */
+  .plano-padrao-destaque {
+    position: relative;
+    background: linear-gradient(135deg, #FBF9F7 0%, #f5f2ed 100%);
+    box-shadow: 0 25px 50px -12px rgba(255, 196, 64, 0.25), 
+                0 0 0 1px rgba(255, 196, 64, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .plano-padrao-destaque::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ffc440, #ffb800, #ffc440);
+    border-radius: inherit;
+    z-index: -1;
+    background-size: 400% 400%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .plano-destaque-glow {
+    animation: glowPulse 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowPulse {
+    from {
+      box-shadow: 0 0 20px rgba(255, 196, 64, 0.3), 
+                  0 0 40px rgba(255, 196, 64, 0.2), 
+                  0 0 60px rgba(255, 196, 64, 0.1);
+    }
+    to {
+      box-shadow: 0 0 30px rgba(255, 196, 64, 0.4), 
+                  0 0 50px rgba(255, 196, 64, 0.3), 
+                  0 0 80px rgba(255, 196, 64, 0.2);
+    }
+  }
 }
