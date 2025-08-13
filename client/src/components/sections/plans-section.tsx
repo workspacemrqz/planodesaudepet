@@ -85,7 +85,7 @@ export default function PlansSection() {
         </div>
 
         {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 pl-[0px] pr-[0px]">
           {plans.map((plan, index) => (
             <Card key={index} className={`relative ${plan.popular ? (plan.name === 'Padrão' ? 'border-[#ffc440] border-2' : 'border-primary border-2') : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#FBF9F7]' : 'bg-[#fbf9f7]'}`}>
               {plan.popular && (
