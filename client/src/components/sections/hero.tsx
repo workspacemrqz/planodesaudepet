@@ -74,7 +74,7 @@ export default function Hero() {
             
             {/* Floating Stats Card */}
             <Card className="absolute -bottom-3 -left-3 sm:-bottom-6 sm:-left-6 bg-card/95 backdrop-blur-sm shadow-xl">
-              <CardContent className="p-3 sm:p-6 pt-3 sm:pt-6 bg-[#2776776e]">
+              <CardContent className="p-3 sm:p-6 sm:pt-6 bg-[#2776776e] pt-[12px] pb-[12px] pl-[12px] pr-[12px] text-center">
                 <div className="text-lg sm:text-2xl font-bold mb-1 text-[#fbf9f7]">50.000+</div>
                 <div className="text-muted-foreground text-xs sm:text-sm">Pets protegidos</div>
               </CardContent>
