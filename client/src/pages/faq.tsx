@@ -53,7 +53,7 @@ export default function FAQ() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
             <HelpCircle className="h-12 w-12 text-[#277677] mr-3" />
-            <h1 className="text-4xl md:text-6xl font-bold text-[#e1ac33]">
+            <h1 className="md:text-6xl font-bold text-[#e1ac33] text-[48px]">
               Perguntas Frequentes
             </h1>
           </div>
