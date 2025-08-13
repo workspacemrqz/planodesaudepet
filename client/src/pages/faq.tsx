@@ -57,13 +57,13 @@ export default function FAQ() {
               Perguntas Frequentes
             </h1>
           </div>
-          <p className="text-xl text-[#302e2b] max-w-2xl mx-auto">
+          <p className="text-xl max-w-2xl mx-auto text-[#fbf9f7]">
             Encontre respostas para as principais dúvidas sobre nossos planos de seguro para pets
           </p>
         </div>
       </section>
       {/* FAQ Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-[#ded8ce]">
         <div className="max-w-4xl mx-auto">
           <Card className="bg-[#FBF9F7] border-none shadow-lg rounded-xl">
             <CardHeader className="text-center pb-8">
