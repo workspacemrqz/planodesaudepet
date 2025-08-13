@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Slider } from "@/components/ui/slider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,7 @@ const networkUnitFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   address: z.string().min(1, "Endereço é obrigatório"),
   phone: z.string().min(1, "Telefone é obrigatório"),
-  rating: z.number().min(10).max(50, "Rating deve ser entre 1.0 e 5.0"),
+  rating: z.number().min(1).max(5, "Rating deve ser entre 1 e 5"),
   services: z.array(z.string()).min(1, "Pelo menos um serviço é obrigatório"),
   imageUrl: z.string().optional(),
 });
@@ -46,7 +47,7 @@ export default function NetworkUnitsTab() {
       name: "",
       address: "",
       phone: "",
-      rating: 40,
+      rating: 4,
       services: [],
       imageUrl: "",
     },
@@ -142,7 +143,7 @@ export default function NetworkUnitsTab() {
       name: "",
       address: "",
       phone: "",
-      rating: 40,
+      rating: 4,
       services: [],
       imageUrl: "",
     });
@@ -159,7 +160,7 @@ export default function NetworkUnitsTab() {
       name: unit.name,
       address: unit.address,
       phone: unit.phone,
-      rating: unit.rating,
+      rating: unit.rating / 10, // Convert from stored format (10-50) to display format (1-5)
       services: unit.services,
       imageUrl: unit.imageUrl,
     });
@@ -201,6 +202,7 @@ export default function NetworkUnitsTab() {
     const services = servicesInput.split("\n").filter(s => s.trim().length > 0);
     const unitData: InsertNetworkUnit = {
       ...data,
+      rating: data.rating * 10, // Convert from display format (1-5) to stored format (10-50)
       services,
       isActive: true,
       imageUrl: uploadedImageUrl || data.imageUrl || "",
@@ -328,18 +330,25 @@ export default function NetworkUnitsTab() {
                       control={form.control}
                       name="rating"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Avaliação (1.0 a 5.0)</FormLabel>
+                        <FormItem className="space-y-3">
+                          <FormLabel>Avaliação</FormLabel>
                           <FormControl>
-                            <Input
-                              type="number"
-                              min="10"
-                              max="50"
-                              step="1"
-                              {...field}
-                              onChange={(e) => field.onChange(Number(e.target.value))}
-                              data-testid="input-unit-rating"
-                            />
+                            <div className="space-y-2">
+                              <Slider
+                                min={1}
+                                max={5}
+                                step={0.1}
+                                value={[field.value]}
+                                onValueChange={(values) => field.onChange(values[0])}
+                                className="w-full"
+                                data-testid="slider-unit-rating"
+                              />
+                              <div className="flex justify-between text-sm text-gray-500">
+                                <span>1</span>
+                                <span className="font-medium text-[#277677]">{field.value.toFixed(1)}</span>
+                                <span>5</span>
+                              </div>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
