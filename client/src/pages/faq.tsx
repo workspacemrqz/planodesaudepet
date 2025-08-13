@@ -53,11 +53,11 @@ export default function FAQ() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
             <HelpCircle className="h-12 w-12 text-[#277677] mr-3" />
-            <h1 className="text-[48px] font-bold text-[#e1ac33]">
+            <h1 className="font-bold text-[#e1ac33] text-[30px]">
               Perguntas Frequentes
             </h1>
           </div>
-          <p className="text-[20px] font-normal max-w-2xl mx-auto text-[#fbf9f7]">
+          <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
             Encontre respostas para as principais dúvidas sobre nossos planos de seguro para pets
           </p>
         </div>

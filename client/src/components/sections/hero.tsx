@@ -27,7 +27,7 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full pl-[20px] pr-[20px]">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div className="order-2 lg:order-1">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 text-[#277677] leading-tight">
+            <h1 className="sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 text-[#277677] text-[28px]">
               Cuidado completo para o seu <span className="text-primary">melhor amigo</span>
             </h1>
             <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-[#302e2b] font-normal">
