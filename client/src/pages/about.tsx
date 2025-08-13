@@ -25,7 +25,7 @@ export default function About() {
 
   return (
     <main className="pt-32 pb-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         {/* Header */}
         <div className="mb-16 text-center">
           <h1 className="text-[48px] font-bold mb-4 text-white">
