@@ -11,11 +11,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, MapPin, Phone, Star, Upload } from "lucide-react";
+import { Plus, Edit, Trash2, MapPin, Phone, Star } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { ObjectUploader } from "@/components/ObjectUploader";
-import type { UploadResult } from "@uppy/core";
+import { SimpleImageUploader } from "@/components/SimpleImageUploader";
 
 const networkUnitFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -33,6 +32,7 @@ export default function NetworkUnitsTab() {
   const [editingUnit, setEditingUnit] = useState<NetworkUnit | null>(null);
   const [servicesInput, setServicesInput] = useState("");
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
   const { data: units, isLoading } = useQuery<NetworkUnit[]>({
@@ -121,33 +121,53 @@ export default function NetworkUnitsTab() {
     },
   });
 
-  // Get upload URL for image
-  const handleGetUploadParameters = async () => {
+  // Handle file selection and upload
+  const handleFileSelect = async (file: File) => {
+    setIsUploading(true);
+    
     try {
+      // Get upload URL
       const response = await apiRequest("POST", "/api/objects/upload");
-      return {
-        method: "PUT" as const,
-        url: response.uploadURL,
-      };
-    } catch (error) {
-      console.error("Error getting upload parameters:", error);
-      throw error;
-    }
-  };
-
-  // Handle upload complete
-  const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
-    if (result.successful && result.successful.length > 0) {
-      const uploadedFile = result.successful[0];
-      setUploadedImageUrl(uploadedFile.uploadURL as string);
+      const uploadURL = response.uploadURL;
+      
+      // Upload file directly to storage
+      const uploadResponse = await fetch(uploadURL, {
+        method: "PUT",
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+      
+      if (!uploadResponse.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      // Set the uploaded image URL
+      setUploadedImageUrl(uploadURL);
       
       // If editing a unit, update the image immediately
       if (editingUnit) {
         uploadImageMutation.mutate({ 
           unitId: editingUnit.id, 
-          imageURL: uploadedFile.uploadURL as string 
+          imageURL: uploadURL 
         });
       }
+      
+      toast({
+        title: "Sucesso",
+        description: "Imagem carregada com sucesso",
+      });
+      
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar imagem",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -193,6 +213,7 @@ export default function NetworkUnitsTab() {
     setServicesInput("");
     setEditingUnit(null);
     setUploadedImageUrl(null);
+    setIsUploading(false);
   };
 
   if (isLoading) {
@@ -308,21 +329,13 @@ export default function NetworkUnitsTab() {
 
                 <div className="space-y-3">
                   <FormLabel>Imagem da Unidade</FormLabel>
-                  <ObjectUploader
-                    maxNumberOfFiles={1}
-                    maxFileSize={5242880} // 5MB limit
-                    onGetUploadParameters={handleGetUploadParameters}
-                    onComplete={handleUploadComplete}
-                    buttonClassName="w-full bg-[#277677] hover:bg-[#1f5a5c] text-white"
-                  >
-                    <div className="flex items-center justify-center gap-2 py-2">
-                      <Upload className="h-4 w-4" />
-                      <span>
-                        {uploadedImageUrl ? "Trocar Imagem" : "Fazer Upload da Imagem"}
-                      </span>
-                    </div>
-                  </ObjectUploader>
-                  {uploadedImageUrl && (
+                  <SimpleImageUploader
+                    onFileSelect={handleFileSelect}
+                    isUploading={isUploading}
+                    hasImage={!!uploadedImageUrl}
+                    buttonClassName="w-full bg-[#277677] hover:bg-[#1f5a5c] text-white disabled:opacity-50"
+                  />
+                  {uploadedImageUrl && !isUploading && (
                     <div className="text-sm text-green-600 bg-green-50 p-2 rounded border">
                       ✓ Imagem carregada com sucesso
                     </div>
