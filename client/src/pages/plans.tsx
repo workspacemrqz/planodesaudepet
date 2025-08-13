@@ -111,7 +111,7 @@ export default function Plans() {
                 </div>
               )}
               
-              <CardHeader className="text-center pb-4">
+              <CardHeader className="text-center pb-4 rounded-t-lg">
                 <CardTitle className="text-2xl text-primary mb-2">{plan.name}</CardTitle>
                 <div className="text-4xl font-bold mb-2">
                   R${plan.price}

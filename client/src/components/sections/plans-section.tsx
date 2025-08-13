@@ -92,7 +92,7 @@ export default function PlansSection() {
                 </div>
               )}
               
-              <CardHeader className="text-center pb-4 bg-[#fbf9f7] text-[#e1ac33]">
+              <CardHeader className="text-center pb-4 bg-[#fbf9f7] text-[#e1ac33] rounded-t-lg">
                 <CardTitle className="font-semibold tracking-tight mb-2 text-[#32989a] text-[30px]">{plan.name}</CardTitle>
                 <div className="text-4xl font-bold mb-2 text-[#32989a]">
                   R${plan.price}
