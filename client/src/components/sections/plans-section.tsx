@@ -108,7 +108,7 @@ export default function PlansSection() {
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-3">
                       <Check className={`h-4 w-4 flex-shrink-0 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
-                      <span className={`text-[17px] font-normal ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`}>{feature}</span>
+                      <span className="text-[17px] font-normal text-[#302e2b]">{feature}</span>
                     </li>
                   ))}
                 </ul>
