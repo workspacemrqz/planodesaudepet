@@ -57,7 +57,7 @@ export default function Features() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-16 sm:mb-20 px-4 sm:px-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-16 sm:mb-20 px-4 sm:px-0 pl-[0px] pr-[0px]">
           {mainFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
