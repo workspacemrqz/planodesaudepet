@@ -51,7 +51,7 @@ export default function Plans() {
   return (
     <main>
       {/* Plans Section */}
-      <section className="py-20 text-[#fbf9f7] bg-[#277677]">
+      <section className="pt-32 pb-20 text-[#fbf9f7] bg-[#277677]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-[48px] mb-4 text-[#fbf9f7] font-bold">
