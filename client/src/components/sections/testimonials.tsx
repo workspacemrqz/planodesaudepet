@@ -35,7 +35,7 @@ export default function Testimonials() {
     <section className="py-20" style={{backgroundColor: '#FBF9F7'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#060606]">
+          <h2 className="md:text-4xl font-bold mb-4 text-[#fbf9f7] text-[40px]">
             O que nossos <span className="text-primary">clientes dizem</span>
           </h2>
           <p className="text-xl text-[#101010]">Depoimentos reais de quem confia na UNIPET PLAN</p>
