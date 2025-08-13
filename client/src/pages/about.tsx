@@ -28,10 +28,10 @@ export default function About() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="text-[48px] font-bold mb-4 text-white">
+          <h1 className="font-bold mb-4 text-white text-[30px]">
             Sobre a <span className="text-[#e1ac33]">UNIPET PLAN</span>
           </h1>
-          <p className="text-[20px] font-normal text-white/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="font-normal text-white/90 max-w-3xl mx-auto text-[18px]">
             Somos uma empresa brasileira especializada em planos de saúde para pets, 
             comprometida em oferecer o melhor cuidado veterinário com preços acessíveis 
             e atendimento humanizado.

@@ -100,11 +100,11 @@ export default function Network() {
       <section className="relative pt-32 pb-20 px-4 pl-[20px] pr-[20px]">
         <div className="max-w-6xl mx-auto text-center">
           <div className="mb-6">
-            <h1 className="text-[48px] font-bold text-[#277677]">
+            <h1 className="font-bold text-[#277677] text-[30px]">
               Rede Credenciada
             </h1>
           </div>
-          <p className="text-[20px] font-normal text-[#302e2b] max-w-3xl mx-auto mb-8">
+          <p className="font-normal text-[#302e2b] max-w-3xl mx-auto mb-8 text-[18px]">
             Mais de 200 unidades Hospital Animal's em todo o Brasil, com atendimento 24 horas 
             e os melhores profissionais para cuidar do seu pet
           </p>
