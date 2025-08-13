@@ -50,7 +50,7 @@ export default function Features() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#302e2b]">
-            Por que escolher a <span className="text-primary">UNIPET PLAN?</span>
+            Por que escolher a <span className="text-[#277677]">UNIPET PLAN?</span>
           </h2>
           <p className="text-xl text-[#302e2b] max-w-2xl mx-auto">
             Oferecemos o melhor cuidado para seu pet com praticidade e confiança
