@@ -261,7 +261,7 @@ export default function ContactSection() {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h3 className="text-2xl font-bold text-primary mb-6">Outras Formas de Contato</h3>
+              <h3 className="text-2xl font-bold mb-6 text-[#fbf9f7]">Outras Formas de Contato</h3>
               
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
