@@ -117,7 +117,9 @@ export default function Plans() {
                   R${plan.price}
                   <span className="text-lg font-normal text-muted-foreground">/mês</span>
                 </div>
-                <p className="text-muted-foreground">{plan.description}</p>
+                <div className="bg-[#F3EEE8] px-4 py-2 rounded-lg">
+                  <p className="text-[#277677] font-medium">{plan.description}</p>
+                </div>
               </CardHeader>
               
               <CardContent>
