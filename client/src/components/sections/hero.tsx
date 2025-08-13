@@ -48,12 +48,13 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="unipet-button-primary text-white text-lg px-8 py-3">
+              <Button 
+                className="text-lg px-8 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full"
+              >
                 Ver Planos
               </Button>
               <Button 
-                variant="outline" 
-                className="text-lg px-8 py-3 text-[#ffffff] !text-[#ffffff] hover:!text-[#ffffff]"
+                className="text-lg px-8 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full"
               >
                 Solicitar Cotação
               </Button>
