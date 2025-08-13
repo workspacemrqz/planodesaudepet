@@ -104,11 +104,11 @@ export default function NetworkUnitsTab() {
   const handleImageUpload = async (file: File) => {
     setIsUploading(true);
     try {
-      // Get presigned URL
+      // Get presigned URL and object path
       const uploadResponse = await fetch('/api/objects/upload', {
         method: 'POST',
       });
-      const { uploadURL } = await uploadResponse.json();
+      const { uploadURL, objectPath } = await uploadResponse.json();
       
       // Upload to object storage
       const putResponse = await fetch(uploadURL, {
@@ -123,8 +123,8 @@ export default function NetworkUnitsTab() {
         throw new Error('Upload failed');
       }
       
-      // Set the uploaded image URL for preview only
-      setUploadedImageUrl(uploadURL);
+      // Set the object path for preview and storage
+      setUploadedImageUrl(objectPath);
       
     } catch (error) {
       console.error('Upload error:', error);
