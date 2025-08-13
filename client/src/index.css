@@ -117,6 +117,23 @@
     background-color: #DED8CE !important;
     color: #302e2b !important;
     border-color: #c7c1b7 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+  }
+
+  .contact-form-field input:focus,
+  .contact-form-field textarea:focus,
+  .contact-form-field button[role="combobox"]:focus,
+  .contact-form-field input:focus-visible,
+  .contact-form-field textarea:focus-visible,
+  .contact-form-field button[role="combobox"]:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+    border-color: #c7c1b7 !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
   }
 
   .contact-form-field input::placeholder,
