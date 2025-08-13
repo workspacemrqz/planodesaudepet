@@ -11,39 +11,151 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Plus, Edit, Trash2, HelpCircle, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Edit, Trash2, HelpCircle, GripVertical } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import {
+  CSS,
+} from '@dnd-kit/utilities';
 
 const faqItemFormSchema = z.object({
   question: z.string().min(1, "Pergunta é obrigatória"),
   answer: z.string().min(1, "Resposta é obrigatória"),
-  displayOrder: z.number().min(1, "Ordem deve ser maior que 0"),
 });
 
 type FaqItemFormData = z.infer<typeof faqItemFormSchema>;
+
+// Componente sortable para cada item FAQ
+function SortableFaqItem({ 
+  item, 
+  onEdit, 
+  onDelete 
+}: { 
+  item: FaqItem; 
+  onEdit: (item: FaqItem) => void; 
+  onDelete: (item: FaqItem) => void; 
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <AccordionItem 
+      ref={setNodeRef} 
+      style={style}
+      key={item.id} 
+      value={item.id} 
+      className="border rounded-lg px-4 bg-white mt-[10px] mb-[10px]"
+    >
+      <div className="flex items-center justify-between pr-2">
+        <div className="flex items-center gap-2 flex-1">
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
+          >
+            <GripVertical className="h-4 w-4 text-gray-400" />
+          </div>
+          <AccordionTrigger className="text-left text-[#277677] font-medium hover:no-underline flex-1">
+            {item.question}
+          </AccordionTrigger>
+        </div>
+        
+        <div className="flex items-center gap-1 ml-4">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(item);
+            }}
+            className="h-8 w-8 p-0 bg-[#2d8486] text-[#fbf9f7]"
+            data-testid={`button-edit-faq-${item.id}`}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(item);
+            }}
+            className="h-8 w-8 p-0 bg-[#f5f3f1] text-[#2c8486] hover:text-red-700 hover:bg-red-50"
+            data-testid={`button-delete-faq-${item.id}`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      
+      <AccordionContent className="text-[#302e2b] pb-4">
+        <div className="pl-9">
+          {item.answer}
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
 
 export default function FaqTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<FaqItem | null>(null);
   const { toast } = useToast();
 
-  const { data: faqItems, isLoading } = useQuery<FaqItem[]>({
+  const { data: faqItems = [], isLoading } = useQuery<FaqItem[]>({
     queryKey: ["/api/admin/faq"],
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const form = useForm<FaqItemFormData>({
     resolver: zodResolver(faqItemFormSchema),
     defaultValues: {
       question: "",
       answer: "",
-      displayOrder: 1,
     },
   });
 
   const createItemMutation = useMutation({
     mutationFn: async (data: InsertFaqItem) => {
-      const response = await apiRequest("POST", "/api/admin/faq", data);
+      // Determinar nova ordem baseado no número atual de itens
+      const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
+      const itemData = { ...data, displayOrder: maxOrder + 1 };
+      
+      const response = await apiRequest("POST", "/api/admin/faq", itemData);
       return response.json();
     },
     onSuccess: () => {
@@ -88,12 +200,47 @@ export default function FaqTab() {
     },
   });
 
+  // Mutation para reordenar itens
+  const reorderMutation = useMutation({
+    mutationFn: async (updates: { id: string; displayOrder: number }[]) => {
+      const promises = updates.map(update => 
+        apiRequest("PUT", `/api/admin/faq/${update.id}`, { displayOrder: update.displayOrder })
+      );
+      await Promise.all(promises);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
+      toast({ title: "Ordem atualizada com sucesso!" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao atualizar ordem", variant: "destructive" });
+    },
+  });
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id && faqItems) {
+      const oldIndex = faqItems.findIndex(item => item.id === active.id);
+      const newIndex = faqItems.findIndex(item => item.id === over?.id);
+      
+      const reorderedItems = arrayMove(faqItems, oldIndex, newIndex);
+      
+      // Atualizar displayOrder baseado na nova ordem
+      const updates = reorderedItems.map((item, index) => ({
+        id: item.id,
+        displayOrder: index + 1,
+      }));
+      
+      reorderMutation.mutate(updates);
+    }
+  };
+
   const handleEdit = (item: FaqItem) => {
     setEditingItem(item);
     form.reset({
       question: item.question,
       answer: item.answer,
-      displayOrder: item.displayOrder,
     });
     setIsDialogOpen(true);
   };
@@ -104,81 +251,49 @@ export default function FaqTab() {
     }
   };
 
-  const handleMoveUp = (item: FaqItem) => {
-    const newOrder = Math.max(1, item.displayOrder - 1);
-    updateItemMutation.mutate({ 
-      id: item.id, 
-      data: { displayOrder: newOrder } 
-    });
-  };
-
-  const handleMoveDown = (item: FaqItem) => {
-    const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [1]));
-    const newOrder = Math.min(maxOrder + 1, item.displayOrder + 1);
-    updateItemMutation.mutate({ 
-      id: item.id, 
-      data: { displayOrder: newOrder } 
-    });
-  };
-
   const onSubmit = (data: FaqItemFormData) => {
-    const itemData: InsertFaqItem = {
-      ...data,
-      isActive: true,
-    };
-
     if (editingItem) {
-      updateItemMutation.mutate({ id: editingItem.id, data: itemData });
+      updateItemMutation.mutate({ id: editingItem.id, data });
     } else {
-      createItemMutation.mutate(itemData);
+      const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
+      createItemMutation.mutate({ ...data, displayOrder: maxOrder + 1, isActive: true });
     }
   };
 
-  const resetForm = () => {
-    form.reset();
-    setEditingItem(null);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="h-16 bg-gray-200 rounded-lg"></div>
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const sortedFaqItems = [...faqItems].sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div>
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-[#FBF9F7]">Gerenciar FAQ</h3>
-          <p className="text-sm text-[#FBF9F7]/70">
-            Adicione, edite ou remova perguntas frequentes
+          <h3 className="text-lg font-semibold text-[#277677] mb-1">
+            Gerenciar FAQ
+          </h3>
+          <p className="text-sm text-[#302e2b]">
+            Arraste e solte para reordenar as perguntas
           </p>
         </div>
         
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="hover:bg-[#277677]/90 bg-[#145759] text-[#fbf9f7]" data-testid="button-add-faq">
+            <Button 
+              onClick={() => {
+                setEditingItem(null);
+                form.reset();
+              }}
+              className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#277677]"
+              data-testid="button-add-faq"
+            >
               <Plus className="h-4 w-4 mr-2" />
-              Nova Pergunta
+              Adicionar Pergunta
             </Button>
           </DialogTrigger>
-          
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle className="text-[#277677]">
                 {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
               </DialogTitle>
             </DialogHeader>
-            
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
                 <FormField
@@ -186,62 +301,40 @@ export default function FaqTab() {
                   name="question"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Pergunta</FormLabel>
+                      <FormLabel className="text-[#277677]">Pergunta</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: O que é um seguro para pets?" {...field} data-testid="input-faq-question" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
+                        <Input 
+                          placeholder="Digite a pergunta..." 
+                          {...field}
+                          data-testid="input-faq-question" 
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
                 <FormField
                   control={form.control}
                   name="answer"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Resposta</FormLabel>
+                      <FormLabel className="text-[#277677]">Resposta</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Explique detalhadamente a resposta..." 
-                          rows={6}
-                          {...field} 
-                          data-testid="textarea-faq-answer"
-                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="displayOrder"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Ordem de Exibição</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          min="1"
-                          placeholder="1" 
+                          placeholder="Digite a resposta..." 
+                          rows={4}
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                          data-testid="input-faq-order"
-                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
+                          data-testid="textarea-faq-answer" 
                         />
                       </FormControl>
                       <FormMessage />
-                      <p className="text-xs text-[#e6e6e6]">Números menores aparecem primeiro</p>
                     </FormItem>
                   )}
                 />
-
                 <div className="flex justify-end gap-2">
                   <Button 
                     type="button" 
-                    variant="outline" 
+                    variant="outline"
                     onClick={() => setIsDialogOpen(false)}
                     data-testid="button-cancel-faq"
                   >
@@ -261,82 +354,42 @@ export default function FaqTab() {
           </DialogContent>
         </Dialog>
       </div>
-      {faqItems && faqItems.length > 0 ? (
+      
+      {isLoading ? (
+        <Card>
+          <CardContent className="p-6 text-center">
+            <div className="text-[#277677]">Carregando perguntas...</div>
+          </CardContent>
+        </Card>
+      ) : faqItems && faqItems.length > 0 ? (
         <div className="space-y-4">
-          <Accordion type="single" collapsible className="w-full">
-            {faqItems.map((item) => (
-              <AccordionItem key={item.id} value={item.id} className="border rounded-lg px-4 bg-white mt-[10px] mb-[10px]">
-                <div className="flex items-center justify-between pr-2">
-                  <AccordionTrigger className="text-left text-[#277677] font-medium hover:no-underline flex-1">
-                    {item.question}
-                  </AccordionTrigger>
-                  
-                  <div className="flex items-center gap-1 ml-4">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMoveUp(item);
-                      }}
-                      className="h-8 w-8 p-0"
-                      data-testid={`button-move-up-${item.id}`}
-                    >
-                      <ArrowUp className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMoveDown(item);
-                      }}
-                      className="h-8 w-8 p-0"
-                      data-testid={`button-move-down-${item.id}`}
-                    >
-                      <ArrowDown className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(item);
-                      }}
-                      className="h-8 w-8 p-0 bg-[#2d8486] text-[#fbf9f7]"
-                      data-testid={`button-edit-faq-${item.id}`}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(item);
-                      }}
-                      className="h-8 w-8 p-0 bg-[#f5f3f1] text-[#2c8486] hover:text-red-700 hover:bg-red-50"
-                      data-testid={`button-delete-faq-${item.id}`}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <AccordionContent className="text-[#302e2b] pb-4">
-                  <div className="pl-9">
-                    {item.answer}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext 
+              items={sortedFaqItems.map(item => item.id)} 
+              strategy={verticalListSortingStrategy}
+            >
+              <Accordion type="single" collapsible className="w-full">
+                {sortedFaqItems.map((item) => (
+                  <SortableFaqItem
+                    key={item.id}
+                    item={item}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </Accordion>
+            </SortableContext>
+          </DndContext>
         </div>
       ) : (
         <Card>
           <CardContent className="p-6 text-center">
-            <HelpCircle className="h-12 w-12 text-[#145759] mx-auto mb-4" />
-            <p className="text-[#FBF9F7]">Nenhuma pergunta cadastrada ainda.</p>
+            <HelpCircle className="h-12 w-12 text-[#277677] mx-auto mb-4" />
+            <p className="text-[#302e2b]">Nenhuma pergunta cadastrada ainda.</p>
           </CardContent>
         </Card>
       )}
