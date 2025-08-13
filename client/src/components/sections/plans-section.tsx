@@ -83,7 +83,7 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#E1AC33]' : 'bg-[#fbf9f7]'}`}>
+            <Card key={index} className={`relative ${plan.popular ? (plan.name === 'Padrão' ? 'border-[#ffc440] border-2' : 'border-primary border-2') : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#E1AC33]' : 'bg-[#fbf9f7]'}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-[#ffc440] text-[#fbf9f7]">
