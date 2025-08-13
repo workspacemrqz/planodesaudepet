@@ -170,9 +170,20 @@ export default function Plans() {
 
             <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7]">
               <h3 className="text-[24px] font-bold text-[#302e2b] mb-6">Planos Locais</h3>
-              <p className="text-[#302e2b] mb-6 text-[16px]">
-                Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.
-              </p>
+              <div className="space-y-6 mb-6">
+                <div>
+                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Cobertura Regional</h4>
+                  <p className="text-[#302e2b] text-[16px]">Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Rede Credenciada Local</h4>
+                  <p className="text-[#302e2b] text-[16px]">Acesso facilitado a veterinários e clínicas parceiras próximas à sua localidade.</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Atendimento Personalizado</h4>
+                  <p className="text-[#302e2b] text-[16px]">Suporte especializado que conhece as particularidades da sua região e necessidades locais.</p>
+                </div>
+              </div>
               <Button 
                 className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7] font-semibold px-8 py-3 text-[18px] rounded-lg h-12"
                 data-testid="button-local-plans"
