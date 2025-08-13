@@ -1,50 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle, Phone, Mail, MessageSquare, Clock, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { type FaqItem } from "@shared/schema";
 
 export default function FAQ() {
-  const faqData = [
-    {
-      question: "O que é um seguro para pets?",
-      answer: "O seguro para pets é um plano de proteção que cobre despesas veterinárias do seu animal de estimação, incluindo consultas, exames, cirurgias e tratamentos. Ele funciona como um plano de saúde, garantindo que seu pet receba os melhores cuidados sem comprometer seu orçamento."
-    },
-    {
-      question: "Quais animais podem ser segurados?",
-      answer: "Aceitamos cães e gatos de todas as raças e portes. O animal deve ter entre 2 meses e 8 anos para contratação inicial do seguro. Animais já segurados continuam cobertos mesmo após os 8 anos."
-    },
-    {
-      question: "Como funciona o reembolso?",
-      answer: "Após o atendimento veterinário, você envia os documentos através do nosso app ou site. Analisamos em até 48 horas e fazemos o reembolso direto na sua conta bancária, respeitando o percentual de cobertura do seu plano."
-    },
-    {
-      question: "Existe carência para usar o seguro?",
-      answer: "Sim, temos carência de 30 dias para doenças e 90 dias para cirurgias eletivas. Para acidentes, a cobertura é imediata após a contratação. Emergências têm carência reduzida de 15 dias."
-    },
-    {
-      question: "Posso escolher qualquer veterinário?",
-      answer: "Sim! Você tem total liberdade para escolher o veterinário ou clínica de sua preferência. Nossa rede credenciada oferece desconto adicional, mas você pode ser atendido em qualquer lugar e solicitar reembolso."
-    },
-    {
-      question: "O que não está coberto pelo seguro?",
-      answer: "Não cobrimos doenças pré-existentes, procedimentos estéticos, reprodução, vacinas de rotina e vermifugação. Também não cobrimos acidentes causados por maus-tratos ou negligência do proprietário."
-    },
-    {
-      question: "Como cancelar o seguro?",
-      answer: "Você pode cancelar a qualquer momento através do nosso app, site ou central de atendimento. O cancelamento é efetivado no próximo vencimento, e você continua coberto até essa data."
-    },
-    {
-      question: "Posso ter mais de um pet no mesmo plano?",
-      answer: "Cada pet precisa de um plano individual, mas oferecemos desconto progressivo: 5% para o segundo pet, 10% para o terceiro e 15% a partir do quarto pet da mesma família."
-    },
-    {
-      question: "Como funciona a idade limite?",
-      answer: "Pets podem ser segurados até os 8 anos de idade. Após essa idade, não aceitamos novos segurados, mas pets já segurados continuam com cobertura vitalícia, com reajuste anual conforme tabela."
-    },
-    {
-      question: "Preciso fazer check-up antes de contratar?",
-      answer: "Para pets até 5 anos, não é necessário check-up prévio. Para pets entre 5 e 8 anos, solicitamos um exame veterinário básico para avaliar o estado geral de saúde antes da contratação."
-    }
-  ];
+  const { data: faqItems = [], isLoading } = useQuery<FaqItem[]>({
+    queryKey: ["/api/faq"],
+  });
 
   return (
     <main className="min-h-screen bg-[#FBF9F7]">
@@ -75,28 +38,34 @@ export default function FAQ() {
               </p>
             </CardHeader>
             <CardContent className="px-6 pb-8">
-              <Accordion type="single" collapsible className="space-y-4">
-                {faqData.map((faq, index) => (
-                  <AccordionItem 
-                    key={index} 
-                    value={`item-${index}`}
-                    className="border border-[#277677]/20 rounded-lg px-4 bg-white"
-                  >
-                    <AccordionTrigger 
-                      className="text-left py-4 hover:no-underline text-[#277677] font-semibold"
-                      data-testid={`faq-question-${index}`}
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-[#277677] text-lg">Carregando perguntas...</div>
+                </div>
+              ) : (
+                <Accordion type="single" collapsible className="space-y-4">
+                  {faqItems.map((faq, index) => (
+                    <AccordionItem 
+                      key={faq.id} 
+                      value={`item-${faq.id}`}
+                      className="border border-[#277677]/20 rounded-lg px-4 bg-white"
                     >
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent 
-                      className="text-[#302e2b] pb-4 leading-relaxed"
-                      data-testid={`faq-answer-${index}`}
-                    >
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                      <AccordionTrigger 
+                        className="text-left py-4 hover:no-underline text-[#277677] font-semibold"
+                        data-testid={`faq-question-${faq.id}`}
+                      >
+                        {faq.question}
+                      </AccordionTrigger>
+                      <AccordionContent 
+                        className="text-[#302e2b] pb-4 leading-relaxed"
+                        data-testid={`faq-answer-${faq.id}`}
+                      >
+                        {faq.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              )}
             </CardContent>
           </Card>
         </div>

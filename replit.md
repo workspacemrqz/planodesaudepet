@@ -37,6 +37,14 @@ Preferred communication style: Simple, everyday language.
 - **Data Models**: Structured contact submissions with fields for name, email, phone, city, pet details, and plan preferences
 - **Admin Interface**: API endpoints for retrieving all contact submissions for administrative review
 
+### FAQ Management System
+- **Database Storage**: Complete FAQ system with database persistence using PostgreSQL
+- **Data Migration**: All existing FAQs from the static page have been imported to the database
+- **Dynamic Content**: FAQ page now dynamically loads content from the database in real-time
+- **Admin Panel**: Full CRUD operations (Create, Read, Update, Delete) for managing FAQ items through the admin interface
+- **Frontend Integration**: Live synchronization between admin changes and public FAQ page display
+- **Data Structure**: FAQ items include question, answer, display order, and active status fields
+
 ### Authentication and Authorization
 - **Current State**: Basic foundation with user schema defined but not fully implemented
 - **Session Management**: Express session configuration prepared for future authentication features
