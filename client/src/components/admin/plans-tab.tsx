@@ -169,7 +169,7 @@ export default function PlansTab() {
       }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-[#277677]">
+            <DialogTitle className="text-[#ffffff]">
               Editar Plano {editingPlan?.name}
             </DialogTitle>
           </DialogHeader>
@@ -262,24 +262,7 @@ export default function PlansTab() {
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="isPopular"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        data-testid="checkbox-plan-popular"
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm font-normal">
-                      Marcar como plano mais popular
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
+
 
               <div className="flex justify-end gap-2">
                 <Button 
