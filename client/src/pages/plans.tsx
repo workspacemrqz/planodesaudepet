@@ -49,10 +49,10 @@ export default function Plans() {
   ];
 
   return (
-    <main className="pt-16" style={{backgroundColor: '#FBF9F7'}}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <section className="py-20">
+    <main>
+      {/* Hero Section */}
+      <section className="min-h-screen flex items-center bg-[#FBF9F7]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#277677]">
               Escolha o <span className="text-[#E1AC33]">plano ideal</span> para seu pet
@@ -84,6 +84,20 @@ export default function Plans() {
                 Com Coparticipação
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Plans Section */}
+      <section className="py-20 text-[#fbf9f7] bg-[#277677]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="md:text-4xl mb-4 text-[#fbf9f7] text-[40px] font-bold">
+              Nossos <span className="text-[#E1AC33]">Planos</span>
+            </h2>
+            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[24px] font-medium">
+              Escolha a proteção ideal para seu melhor amigo
+            </p>
           </div>
 
           {/* Plans Grid */}
@@ -133,55 +147,55 @@ export default function Plans() {
               </Card>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Additional Information Section */}
-        <section className="py-20 bg-[#277677]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-[36px] font-bold mb-4 text-[#FBF9F7]">
-                Informações <span className="text-[#E1AC33]">importantes</span>
-              </h2>
-              <p className="text-[24px] text-[#FBF9F7] max-w-2xl mx-auto font-medium">
-                Tudo que você precisa saber sobre nossos planos
-              </p>
-            </div>
+      {/* Additional Information Section */}
+      <section className="py-20 bg-[#FBF9F7]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-[36px] font-bold mb-4 text-[#277677]">
+              Informações <span className="text-[#E1AC33]">importantes</span>
+            </h2>
+            <p className="text-[24px] text-[#302e2b] max-w-2xl mx-auto font-medium">
+              Tudo que você precisa saber sobre nossos planos
+            </p>
+          </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="bg-[#FBF9F7] rounded-2xl p-8 shadow-xl">
-                <h3 className="text-[24px] font-bold text-[#277677] mb-6">Informações Gerais</h3>
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Carência</h4>
-                    <p className="text-[#302e2b] text-[16px]">Todos os planos têm início imediato, sem período de carência.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Limites de Uso</h4>
-                    <p className="text-[#302e2b] text-[16px]">Consulte os limites específicos de cada serviço no contrato do plano escolhido.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Coparticipação</h4>
-                    <p className="text-[#302e2b] text-[16px]">Nos planos com coparticipação, você paga uma taxa reduzida por alguns procedimentos.</p>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="bg-[#277677] rounded-2xl p-8 shadow-xl">
+              <h3 className="text-[24px] font-bold text-[#FBF9F7] mb-6">Informações Gerais</h3>
+              <div className="space-y-6">
+                <div>
+                  <h4 className="font-semibold mb-2 text-[#FBF9F7] text-[18px]">Carência</h4>
+                  <p className="text-[#FBF9F7] text-[16px]">Todos os planos têm início imediato, sem período de carência.</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2 text-[#FBF9F7] text-[18px]">Limites de Uso</h4>
+                  <p className="text-[#FBF9F7] text-[16px]">Consulte os limites específicos de cada serviço no contrato do plano escolhido.</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2 text-[#FBF9F7] text-[18px]">Coparticipação</h4>
+                  <p className="text-[#FBF9F7] text-[16px]">Nos planos com coparticipação, você paga uma taxa reduzida por alguns procedimentos.</p>
                 </div>
               </div>
+            </div>
 
-              <div className="bg-[#FBF9F7] rounded-2xl p-8 shadow-xl">
-                <h3 className="text-[24px] font-bold text-[#277677] mb-6">Planos Locais</h3>
-                <p className="text-[#302e2b] mb-6 text-[16px]">
-                  Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.
-                </p>
-                <Button 
-                  className="bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7] font-semibold px-8 py-3 text-[18px] rounded-lg h-12"
-                  data-testid="button-local-plans"
-                >
-                  Consultar Planos Locais
-                </Button>
-              </div>
+            <div className="bg-[#277677] rounded-2xl p-8 shadow-xl">
+              <h3 className="text-[24px] font-bold text-[#FBF9F7] mb-6">Planos Locais</h3>
+              <p className="text-[#FBF9F7] mb-6 text-[16px]">
+                Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.
+              </p>
+              <Button 
+                className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7] font-semibold px-8 py-3 text-[18px] rounded-lg h-12"
+                data-testid="button-local-plans"
+              >
+                Consultar Planos Locais
+              </Button>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </main>
   );
 }
