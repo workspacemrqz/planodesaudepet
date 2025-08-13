@@ -79,7 +79,7 @@ function SortableFaqItem({
           <div
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
+            className="cursor-grab active:cursor-grabbing p-1 rounded"
           >
             <GripVertical className="h-4 w-4 text-gray-400" />
           </div>
@@ -96,7 +96,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onEdit(item);
             }}
-            className="h-8 w-8 p-0 bg-[#2d8486] text-[#fbf9f7]"
+            className="h-8 w-8 p-0 bg-[#2d8486] text-[#fbf9f7] hover:bg-[#2d8486]"
             data-testid={`button-edit-faq-${item.id}`}
           >
             <Edit className="h-4 w-4" />
@@ -108,7 +108,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onDelete(item);
             }}
-            className="h-8 w-8 p-0 bg-[#f5f3f1] text-[#2c8486] hover:text-red-700 hover:bg-red-50"
+            className="h-8 w-8 p-0 bg-[#f5f3f1] text-[#2c8486]"
             data-testid={`button-delete-faq-${item.id}`}
           >
             <Trash2 className="h-4 w-4" />
