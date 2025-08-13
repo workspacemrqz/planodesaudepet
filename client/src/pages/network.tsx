@@ -98,7 +98,7 @@ export default function Network() {
   return (
     <main className="min-h-screen bg-[#FBF9F7]">
       {/* Hero Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
             <Hospital className="h-12 w-12 text-[#277677] mr-3" />
