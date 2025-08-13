@@ -264,7 +264,7 @@ export default function FaqTab() {
         <div className="space-y-4">
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item) => (
-              <AccordionItem key={item.id} value={item.id} className="border rounded-lg px-4 bg-white">
+              <AccordionItem key={item.id} value={item.id} className="border rounded-lg px-4 bg-white mt-[10px] mb-[10px]">
                 <div className="flex items-center justify-between pr-2">
                   <AccordionTrigger className="text-left text-[#277677] font-medium hover:no-underline flex-1">
                     {item.question}
