@@ -88,6 +88,54 @@
     font-family: 'Inter', sans-serif;
   }
 
+  /* Mobile-specific viewport fixes */
+  html {
+    overflow-x: hidden;
+  }
+  
+  /* Prevent horizontal scrolling on all devices */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure container responsiveness */
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Mobile text scaling */
+  @media (max-width: 640px) {
+    .text-responsive-sm {
+      font-size: 1.25rem !important; /* 20px */
+      line-height: 1.75rem !important; /* 28px */
+    }
+    
+    .text-responsive-md {
+      font-size: 1.5rem !important; /* 24px */
+      line-height: 2rem !important; /* 32px */
+    }
+    
+    .text-responsive-lg {
+      font-size: 1.875rem !important; /* 30px */
+      line-height: 2.25rem !important; /* 36px */
+    }
+    
+    .text-responsive-xl {
+      font-size: 2.25rem !important; /* 36px */
+      line-height: 2.5rem !important; /* 40px */
+    }
+    
+    .text-responsive-2xl {
+      font-size: 2.5rem !important; /* 40px */
+      line-height: 2.75rem !important; /* 44px */
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold;
   }
@@ -171,6 +219,71 @@
   [data-radix-popper-content-wrapper] [role="listbox"] {
     background-color: #DED8CE !important;
     border-color: #c7c1b7 !important;
+  }
+
+  /* Mobile responsive button sizing */
+  @media (max-width: 640px) {
+    .mobile-touch-target {
+      min-height: 44px !important;
+      min-width: 44px !important;
+      padding: 0.75rem 1rem !important;
+    }
+    
+    .mobile-form-input {
+      min-height: 44px !important;
+      padding: 0.75rem !important;
+      font-size: 1rem !important;
+    }
+    
+    /* Prevent zoom on input focus on iOS */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Mobile spacing adjustments */
+  @media (max-width: 640px) {
+    .mobile-spacing-tight {
+      padding: 1rem !important;
+    }
+    
+    .mobile-spacing-normal {
+      padding: 1.5rem !important;
+    }
+    
+    .mobile-spacing-loose {
+      padding: 2rem !important;
+    }
+    
+    .mobile-gap-sm {
+      gap: 0.5rem !important;
+    }
+    
+    .mobile-gap-md {
+      gap: 1rem !important;
+    }
+    
+    .mobile-gap-lg {
+      gap: 1.5rem !important;
+    }
+  }
+
+  /* Image responsiveness fixes */
+  img {
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+  }
+
+  /* Grid responsive behavior */
+  @media (max-width: 768px) {
+    .grid-mobile-stack > * {
+      grid-column: 1 / -1;
+    }
   }
 
   [data-radix-popper-content-wrapper] [role="option"] {

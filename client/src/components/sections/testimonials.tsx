@@ -34,30 +34,30 @@ export default function Testimonials() {
   return (
     <section className="py-20 text-[#277677] bg-[#ded8ce]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="md:text-4xl font-bold mb-4 text-[40px] text-[#302e2b]">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-[#302e2b] leading-tight">
             O que nossos <span className="text-[#277677]">clientes dizem</span>
           </h2>
-          <p className="text-[24px] text-[#302e2b] font-semibold">Depoimentos reais de quem confia na UNIPET PLAN</p>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] font-semibold px-4">Depoimentos reais de quem confia na UNIPET PLAN</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="rounded-2xl shadow-lg border-0" style={{backgroundColor: '#FBF9F7'}}>
-              <CardContent className="pt-8">
-                <div className="flex items-center mb-6">
+              <CardContent className="pt-6 sm:pt-8 p-4 sm:p-6">
+                <div className="flex items-center mb-4 sm:mb-6">
                   <img 
                     src={testimonial.image} 
                     alt={`${testimonial.name} com seu pet`} 
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
                   />
-                  <div className="ml-4">
-                    <h4 className="font-semibold text-[#302e2b]">{testimonial.name}</h4>
-                    <p className="text-[#302e2b] text-sm">{testimonial.location}</p>
+                  <div className="ml-3 sm:ml-4">
+                    <h4 className="font-semibold text-[#302e2b] text-sm sm:text-base">{testimonial.name}</h4>
+                    <p className="text-[#302e2b] text-xs sm:text-sm">{testimonial.location}</p>
                   </div>
                 </div>
                 {renderStars()}
-                <p className="text-[#302e2b] italic">
+                <p className="text-[#302e2b] italic text-sm sm:text-base leading-relaxed">
                   "{testimonial.testimonial}"
                 </p>
               </CardContent>

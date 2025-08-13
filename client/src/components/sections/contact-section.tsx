@@ -68,23 +68,23 @@ export default function ContactSection() {
   return (
     <section className="py-20" style={{backgroundColor: '#277677'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="font-bold mb-4 text-[#FBF9F7] text-[36px]">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="font-bold mb-4 text-[#FBF9F7] text-2xl sm:text-3xl md:text-4xl lg:text-[36px] leading-tight">
             Entre em <span className="text-[#E1AC33]">contato</span>
           </h2>
-          <p className="text-[24px] text-[#FBF9F7] font-semibold">Tire suas dúvidas ou solicite uma cotação personalizada</p>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#FBF9F7] font-semibold px-4">Tire suas dúvidas ou solicite uma cotação personalizada</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 px-4 sm:px-0">
           {/* Contact Form */}
           <Card className="unipet-card shadow-lg rounded-xl border-none">
-            <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
-              <CardTitle className="tracking-tight text-[#277677] text-[26px] font-semibold">Solicitar Cotação</CardTitle>
+            <CardHeader className="flex flex-col space-y-1.5 p-4 sm:p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
+              <CardTitle className="tracking-tight text-[#277677] text-xl sm:text-2xl lg:text-[26px] font-semibold">Solicitar Cotação</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
+            <CardContent className="p-4 sm:p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="name"
@@ -92,7 +92,7 @@ export default function ContactSection() {
                         <FormItem className="contact-form-field">
                           <FormLabel>Nome Completo</FormLabel>
                           <FormControl>
-                            <Input placeholder="Seu nome completo" {...field} />
+                            <Input placeholder="Seu nome completo" className="mobile-form-input" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -105,7 +105,7 @@ export default function ContactSection() {
                         <FormItem className="contact-form-field">
                           <FormLabel>E-mail</FormLabel>
                           <FormControl>
-                            <Input placeholder="seu@email.com" {...field} />
+                            <Input placeholder="seu@email.com" className="mobile-form-input" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -113,7 +113,7 @@ export default function ContactSection() {
                     />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="phone"
@@ -121,7 +121,7 @@ export default function ContactSection() {
                         <FormItem className="contact-form-field">
                           <FormLabel>Telefone</FormLabel>
                           <FormControl>
-                            <Input placeholder="(11) 99999-9999" {...field} />
+                            <Input placeholder="(11) 99999-9999" className="mobile-form-input" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -134,7 +134,7 @@ export default function ContactSection() {
                         <FormItem className="contact-form-field">
                           <FormLabel>Cidade</FormLabel>
                           <FormControl>
-                            <Input placeholder="Sua cidade" {...field} />
+                            <Input placeholder="Sua cidade" className="mobile-form-input" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -149,14 +149,14 @@ export default function ContactSection() {
                       <FormItem className="contact-form-field">
                         <FormLabel>Nome do Pet</FormLabel>
                         <FormControl>
-                          <Input placeholder="Nome do seu pet" {...field} />
+                          <Input placeholder="Nome do seu pet" className="mobile-form-input" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="animalType"
@@ -165,7 +165,7 @@ export default function ContactSection() {
                           <FormLabel>Tipo de Animal</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="mobile-form-input">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                             </FormControl>
@@ -187,7 +187,7 @@ export default function ContactSection() {
                           <FormLabel>Idade do Pet</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="mobile-form-input">
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                             </FormControl>
@@ -212,7 +212,7 @@ export default function ContactSection() {
                         <FormLabel>Plano de Interesse</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="mobile-form-input">
                               <SelectValue placeholder="Selecione um plano..." />
                             </SelectTrigger>
                           </FormControl>
@@ -238,6 +238,7 @@ export default function ContactSection() {
                           <Textarea 
                             placeholder="Conte-nos mais sobre suas necessidades..."
                             rows={4}
+                            className="mobile-form-input"
                             {...field}
                           />
                         </FormControl>
@@ -248,7 +249,7 @@ export default function ContactSection() {
 
                   <Button 
                     type="submit" 
-                    className="w-full unipet-button-primary text-lg py-3 text-[#ffffff]"
+                    className="w-full unipet-button-primary text-base sm:text-lg py-3 sm:py-4 text-[#ffffff] mobile-touch-target"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Enviando..." : "Solicitar Cotação Gratuita"}
@@ -259,9 +260,9 @@ export default function ContactSection() {
           </Card>
 
           {/* Contact Information */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div>
-              <h3 className="text-2xl font-bold mb-6 text-[#fbf9f7]">Outras Formas de Contato</h3>
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[#fbf9f7]">Outras Formas de Contato</h3>
               
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">

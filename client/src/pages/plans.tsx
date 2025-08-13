@@ -53,22 +53,22 @@ export default function Plans() {
       {/* Plans Section */}
       <section className="pt-32 pb-20 text-[#fbf9f7] bg-[#277677]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-[48px] mb-4 text-[#fbf9f7] font-bold">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-4 text-[#fbf9f7] font-bold leading-tight">
               Nossos <span className="text-[#E1AC33]">Planos</span>
             </h2>
-            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[20px] font-normal mb-8">
+            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-base sm:text-lg md:text-xl font-normal mb-6 sm:mb-8 px-4">
               Escolha a proteção ideal para seu melhor amigo
             </p>
             
             
 
             {/* Plan Toggle */}
-            <div className="flex justify-center mb-12">
-              <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7]">
+            <div className="flex justify-center mb-8 sm:mb-12 px-4">
+              <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7] w-full max-w-md sm:w-auto">
                 <Button
                   onClick={() => setShowCopay(false)}
-                  className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${!showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
+                  className={`px-3 sm:px-6 py-2 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${!showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
                   style={{ transition: 'none' }}
                   onMouseEnter={(e) => { e.preventDefault(); }}
                   data-testid="button-no-copay"
@@ -77,7 +77,7 @@ export default function Plans() {
                 </Button>
                 <Button
                   onClick={() => setShowCopay(true)}
-                  className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
+                  className={`px-3 sm:px-6 py-2 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
                   style={{ transition: 'none' }}
                   onMouseEnter={(e) => { e.preventDefault(); }}
                   data-testid="button-with-copay"
@@ -89,40 +89,40 @@ export default function Plans() {
           </div>
 
           {/* Plans Grid */}
-          <div className="grid md:grid-cols-3 gap-8 mb-20 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-5xl mx-auto px-4 sm:px-0">
             {plans.map((plan, index) => (
-              <Card key={index} className={`relative transition-all duration-300 hover:shadow-2xl ${plan.popular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2 transform scale-105' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
+              <Card key={index} className={`relative transition-all duration-300 hover:shadow-2xl ${plan.popular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2 md:transform md:scale-105' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-[#E1AC33] text-[#FBF9F7] px-4 py-2 text-sm font-semibold">
+                  <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-[#E1AC33] text-[#FBF9F7] px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold">
                       Mais Popular
                     </Badge>
                   </div>
                 )}
                 
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-[32px] font-bold text-[#277677] mb-4">{plan.name}</CardTitle>
-                  <div className="mb-4">
-                    <span className="text-[48px] font-bold text-[#277677]">R${plan.price}</span>
-                    <span className="text-[20px] font-medium text-[#302e2b]">/mês</span>
+                <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6">
+                  <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#277677] mb-3 sm:mb-4">{plan.name}</CardTitle>
+                  <div className="mb-3 sm:mb-4">
+                    <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#277677]">R${plan.price}</span>
+                    <span className="text-sm sm:text-base lg:text-lg font-medium text-[#302e2b]">/mês</span>
                   </div>
-                  <div className="bg-[#277677]/10 px-4 py-3 rounded-xl">
-                    <p className="text-[#277677] font-medium text-[18px]">{plan.description}</p>
+                  <div className="bg-[#277677]/10 px-3 sm:px-4 py-2 sm:py-3 rounded-xl">
+                    <p className="text-[#277677] font-medium text-sm sm:text-base lg:text-lg">{plan.description}</p>
                   </div>
                 </CardHeader>
                 
-                <CardContent className="px-6 pb-8">
-                  <ul className="space-y-4 mb-8 flex-grow">
+                <CardContent className="px-4 sm:px-6 pb-6 sm:pb-8">
+                  <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow">
                     {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center space-x-3">
-                        <Check className={`h-4 w-4 flex-shrink-0 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
-                        <span className="text-[17px] font-normal text-[#302e2b]">{feature}</span>
+                      <li key={featureIndex} className="flex items-start space-x-3">
+                        <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
+                        <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   
                   <Button 
-                    className={`w-full h-12 text-[18px] font-semibold rounded-lg transition-all duration-200 ${
+                    className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
                       plan.popular 
                         ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
                         : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
