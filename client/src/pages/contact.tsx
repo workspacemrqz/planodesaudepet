@@ -66,25 +66,27 @@ export default function Contact() {
   };
 
   return (
-    <main className="pt-24 pb-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Entre em <span className="text-primary">contato</span>
-          </h1>
-          <p className="text-xl text-white/90">
-            Tire suas dúvidas ou solicite uma cotação personalizada
-          </p>
-        </div>
+    <main>
+      {/* Hero Section */}
+      <section className="min-h-screen flex items-center bg-[#FBF9F7]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#277677]">
+              Entre em <span className="text-[#E1AC33]">contato</span>
+            </h1>
+            <p className="text-xl mb-8 leading-relaxed text-[#302e2b] font-normal max-w-2xl mx-auto">
+              Tire suas dúvidas ou solicite uma cotação personalizada para seu melhor amigo
+            </p>
+          </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="unipet-card shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
-            <CardHeader>
-              <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
+          <Card className="rounded-2xl p-8 shadow-xl bg-[#FBF9F7] border-0">
+            <CardHeader className="p-0 mb-6">
+              <CardTitle className="text-[32px] font-bold text-[#277677]">Solicitar Cotação</CardTitle>
+              <p className="text-[18px] text-[#302e2b] mt-2">Preencha os dados para receber uma proposta personalizada</p>
             </CardHeader>
-            <CardContent className="p-6 pt-0">
+            <CardContent className="p-0">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
@@ -251,8 +253,9 @@ export default function Contact() {
 
                   <Button 
                     type="submit" 
-                    className="w-full unipet-button-primary text-lg py-3 text-[#ffffff]"
+                    className="w-full h-12 text-[18px] font-semibold rounded-lg bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]"
                     disabled={isSubmitting}
+                    data-testid="button-submit-quote"
                   >
                     {isSubmitting ? "Enviando..." : "Solicitar Cotação Gratuita"}
                   </Button>
@@ -264,62 +267,62 @@ export default function Contact() {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6">Outras Formas de Contato</h2>
+              <h2 className="text-[32px] font-bold text-[#277677] mb-6">Outras Formas de Contato</h2>
               
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    <Phone className="h-5 w-5 text-primary" />
+                  <div className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center">
+                    <Phone className="h-5 w-5 text-[#FBF9F7]" />
                   </div>
                   <div>
-                    <div className="font-semibold text-white">Telefone</div>
-                    <div className="text-white/80">0800 123 4567</div>
+                    <div className="font-semibold text-[#277677] text-[18px]">Telefone</div>
+                    <div className="text-[#302e2b] text-[16px]">0800 123 4567</div>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-primary" />
+                  <div className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center">
+                    <Mail className="h-5 w-5 text-[#FBF9F7]" />
                   </div>
                   <div>
-                    <div className="font-semibold text-white">E-mail</div>
-                    <div className="text-white/80">contato@unipetplan.com.br</div>
+                    <div className="font-semibold text-[#277677] text-[18px]">E-mail</div>
+                    <div className="text-[#302e2b] text-[16px]">contato@unipetplan.com.br</div>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    <MessageSquare className="h-5 w-5 text-primary" />
+                  <div className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center">
+                    <MessageSquare className="h-5 w-5 text-[#FBF9F7]" />
                   </div>
                   <div>
-                    <div className="font-semibold text-white">WhatsApp</div>
-                    <div className="text-white/80">(11) 99999-9999</div>
+                    <div className="font-semibold text-[#277677] text-[18px]">WhatsApp</div>
+                    <div className="text-[#302e2b] text-[16px]">(11) 99999-9999</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
-              <CardHeader>
-                <CardTitle className="text-xl text-primary flex items-center">
-                  <Clock className="h-5 w-5 mr-2" />
+            <Card className="rounded-2xl p-8 shadow-xl bg-[#FBF9F7] border-0">
+              <CardHeader className="p-0 mb-6">
+                <CardTitle className="text-[24px] text-[#277677] font-bold flex items-center">
+                  <Clock className="h-6 w-6 mr-3" />
                   Horário de Atendimento
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-white">
-                  <div className="flex justify-between">
-                    <span>Segunda a Sexta:</span>
+              <CardContent className="p-0">
+                <div className="space-y-4 text-[#302e2b]">
+                  <div className="flex justify-between text-[16px]">
+                    <span className="font-medium">Segunda a Sexta:</span>
                     <span>8h às 18h</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Sábado:</span>
+                  <div className="flex justify-between text-[16px]">
+                    <span className="font-medium">Sábado:</span>
                     <span>8h às 14h</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Emergências:</span>
-                    <span className="text-primary font-semibold">24h todos os dias</span>
+                  <div className="flex justify-between text-[16px]">
+                    <span className="font-medium">Emergências:</span>
+                    <span className="text-[#E1AC33] font-semibold">24h todos os dias</span>
                   </div>
                 </div>
               </CardContent>
@@ -327,25 +330,26 @@ export default function Contact() {
 
             {/* Social Media */}
             <div>
-              <h3 className="text-xl font-bold text-white mb-4">Siga-nos</h3>
+              <h3 className="text-[24px] font-bold text-[#277677] mb-4">Siga-nos</h3>
               <div className="flex space-x-4">
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
-                  <Facebook className="h-4 w-4" />
+                <a href="#" className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center hover:bg-[#E1AC33] transition-colors duration-200" data-testid="link-facebook">
+                  <Facebook className="h-5 w-5 text-[#FBF9F7]" />
                 </a>
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
-                  <Instagram className="h-4 w-4" />
+                <a href="#" className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center hover:bg-[#E1AC33] transition-colors duration-200" data-testid="link-instagram">
+                  <Instagram className="h-5 w-5 text-[#FBF9F7]" />
                 </a>
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
-                  <Linkedin className="h-4 w-4" />
+                <a href="#" className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center hover:bg-[#E1AC33] transition-colors duration-200" data-testid="link-linkedin">
+                  <Linkedin className="h-5 w-5 text-[#FBF9F7]" />
                 </a>
-                <a href="#" className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
-                  <Youtube className="h-4 w-4" />
+                <a href="#" className="bg-[#277677] w-12 h-12 rounded-full flex items-center justify-center hover:bg-[#E1AC33] transition-colors duration-200" data-testid="link-youtube">
+                  <Youtube className="h-5 w-5 text-[#FBF9F7]" />
                 </a>
               </div>
             </div>
           </div>
         </div>
       </div>
+      </section>
     </main>
   );
 }
