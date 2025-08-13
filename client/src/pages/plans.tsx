@@ -61,14 +61,7 @@ export default function Plans() {
               Escolha a proteção ideal para seu melhor amigo
             </p>
             
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#fbf9f7]">
-                Escolha o <span className="text-[#E1AC33]">plano ideal</span> para seu pet
-              </h1>
-              <p className="text-xl mb-8 leading-relaxed text-[#fbf9f7] font-normal max-w-2xl mx-auto">
-                Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
-              </p>
-            </div>
+            
 
             {/* Plan Toggle */}
             <div className="flex justify-center mb-12">
