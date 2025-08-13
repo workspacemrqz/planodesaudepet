@@ -259,7 +259,11 @@ export default function NetworkUnitsTab() {
             </div>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
+              <div className="space-y-4 admin-no-focus" onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                }
+              }}>
                 
                 {/* Step 1: Basic Information */}
                 {currentStep === 1 && (
@@ -350,7 +354,7 @@ export default function NetworkUnitsTab() {
                     <h4 className="font-medium text-[#277677]">Imagem da Unidade</h4>
                     
                     <div className="space-y-3">
-                      <SimpleImageUploader onImageUpload={handleImageUpload} isUploading={isUploading} />
+                      <SimpleImageUploader onFileSelect={handleImageUpload} isUploading={isUploading} hasImage={!!uploadedImageUrl} />
                       
                       {uploadedImageUrl && !isUploading && (
                         <div className="space-y-3">
@@ -432,7 +436,11 @@ export default function NetworkUnitsTab() {
                       </Button>
                     ) : (
                       <Button 
-                        type="submit"
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          form.handleSubmit(onSubmit)(e);
+                        }}
                         disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
                         data-testid="button-save-unit"
                         className="text-[#ffffff]"
@@ -442,7 +450,7 @@ export default function NetworkUnitsTab() {
                     )}
                   </div>
                 </div>
-              </form>
+              </div>
             </Form>
           </DialogContent>
         </Dialog>
