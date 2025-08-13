@@ -286,7 +286,7 @@ export default function NetworkUnitsTab() {
             {/* Progress Bar */}
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#277677] h-2 rounded-full transition-all duration-300"
+                className="bg-[#E1AC33] h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(currentStep / 3) * 100}%` }}
               />
             </div>
