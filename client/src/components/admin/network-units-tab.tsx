@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, MapPin, Phone, Star } from "lucide-react";
+import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
@@ -33,6 +33,7 @@ export default function NetworkUnitsTab() {
   const [servicesInput, setServicesInput] = useState("");
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
   const { toast } = useToast();
 
   const { data: units, isLoading } = useQuery<NetworkUnit[]>({
@@ -60,8 +61,7 @@ export default function NetworkUnitsTab() {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
       toast({ title: "Unidade criada com sucesso!" });
       setIsDialogOpen(false);
-      form.reset();
-      setServicesInput("");
+      resetForm();
     },
     onError: () => {
       toast({ title: "Erro ao criar unidade", variant: "destructive" });
@@ -77,9 +77,7 @@ export default function NetworkUnitsTab() {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
       toast({ title: "Unidade atualizada com sucesso!" });
       setIsDialogOpen(false);
-      setEditingUnit(null);
-      form.reset();
-      setServicesInput("");
+      resetForm();
     },
     onError: () => {
       toast({ title: "Erro ao atualizar unidade", variant: "destructive" });
@@ -126,26 +124,25 @@ export default function NetworkUnitsTab() {
     },
   });
 
-  // Handle file selection and upload
-  const handleFileSelect = async (file: File) => {
+  const handleImageUpload = async (file: File) => {
     setIsUploading(true);
-    
     try {
-      // Get upload URL
-      const response = await apiRequest("POST", "/api/objects/upload");
-      const data = await response.json();
-      const uploadURL = data.uploadURL;
+      // Get presigned URL
+      const uploadResponse = await fetch('/api/objects/upload', {
+        method: 'POST',
+      });
+      const { uploadURL } = await uploadResponse.json();
       
-      // Upload file directly to storage
-      const uploadResponse = await fetch(uploadURL, {
-        method: "PUT",
+      // Upload to object storage
+      const putResponse = await fetch(uploadURL, {
+        method: 'PUT',
         body: file,
         headers: {
           'Content-Type': file.type,
         },
       });
       
-      if (!uploadResponse.ok) {
+      if (!putResponse.ok) {
         throw new Error('Upload failed');
       }
       
@@ -161,21 +158,32 @@ export default function NetworkUnitsTab() {
         });
       }
       
-      toast({
-        title: "Sucesso",
-        description: "Imagem carregada com sucesso",
-      });
-      
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error('Upload error:', error);
       toast({
         title: "Erro",
-        description: "Erro ao carregar imagem",
+        description: "Falha no upload da imagem",
         variant: "destructive",
       });
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const resetForm = () => {
+    form.reset({
+      name: "",
+      address: "",
+      phone: "",
+      rating: 40,
+      services: [],
+      imageUrl: "",
+    });
+    setServicesInput("");
+    setUploadedImageUrl(null);
+    setCurrentStep(1);
+    setEditingUnit(null);
+    setIsUploading(false);
   };
 
   const handleEdit = (unit: NetworkUnit) => {
@@ -199,7 +207,21 @@ export default function NetworkUnitsTab() {
       }
     }
     setUploadedImageUrl(previewUrl);
+    setCurrentStep(1);
     setIsDialogOpen(true);
+  };
+
+  const handleNewUnit = () => {
+    resetForm();
+    setIsDialogOpen(true);
+  };
+
+  const nextStep = () => {
+    if (currentStep < 3) setCurrentStep(currentStep + 1);
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
   const handleDelete = (unit: NetworkUnit) => {
@@ -224,14 +246,6 @@ export default function NetworkUnitsTab() {
     }
   };
 
-  const resetForm = () => {
-    form.reset();
-    setServicesInput("");
-    setEditingUnit(null);
-    setUploadedImageUrl(null);
-    setIsUploading(false);
-  };
-
   if (isLoading) {
     return (
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -245,165 +259,221 @@ export default function NetworkUnitsTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-semibold text-[#FBF9F7]">Gerenciar Rede Credenciada</h3>
-          <p className="text-sm text-[#FBF9F7]/70">
-            Adicione, edite ou remova unidades da rede credenciada
-          </p>
-        </div>
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
+          Gerenciar Unidades da Rede
+        </h3>
         
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 hover:bg-[#277677]/90 text-[#fbf9f7] bg-[#145759]" data-testid="button-add-unit">
+            <Button 
+              onClick={handleNewUnit}
+              className="bg-[#145759] hover:bg-[#145759]/90 text-[#fbf9f7]"
+              data-testid="button-add-unit"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Nova Unidade
             </Button>
           </DialogTrigger>
-          
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-[#277677]">
-                {editingUnit ? "Editar Unidade" : "Nova Unidade"}
+                {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
               </DialogTitle>
             </DialogHeader>
             
+            {/* Progress Bar */}
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-[#277677] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${(currentStep / 3) * 100}%` }}
+              />
+            </div>
+
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome da Unidade</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: Hospital Animal's São Paulo" {...field} data-testid="input-unit-name" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Endereço</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Endereço completo" {...field} data-testid="textarea-unit-address" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/* Step 1: Basic Information */}
+                {currentStep === 1 && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-[#277677]">Informações Básicas</h4>
+                    
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome da Unidade</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Hospital Veterinário São Paulo"
+                              {...field}
+                              data-testid="input-unit-name"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Telefone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="(11) 99999-9999" {...field} data-testid="input-unit-phone" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="rating"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Avaliação (1.0 a 5.0)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            min="10"
-                            max="50"
-                            placeholder="45 (para 4.5)"
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                            data-testid="input-unit-rating"
-                            className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                        <p className="text-xs text-[#e6e6e6]">Digite como número inteiro (45 para 4.5 estrelas)</p>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Rua das Flores, 123 - Centro"
+                              {...field}
+                              data-testid="input-unit-address"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div className="space-y-3">
-                  <FormLabel>Imagem da Unidade</FormLabel>
-                  
-                  {/* Image preview container */}
-                  {uploadedImageUrl && (
-                    <div className="w-32 h-32 border-2 border-[#277677] rounded-lg overflow-hidden bg-gray-100">
-                      <img 
-                        src={uploadedImageUrl} 
-                        alt="Preview da imagem"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // If image fails to load, show a placeholder
-                          e.currentTarget.style.display = 'none';
-                        }}
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Telefone</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="(11) 99999-9999"
+                              {...field}
+                              data-testid="input-unit-phone"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="rating"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Avaliação (1.0 a 5.0)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="10"
+                              max="50"
+                              step="1"
+                              {...field}
+                              onChange={(e) => field.onChange(Number(e.target.value))}
+                              data-testid="input-unit-rating"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+
+                {/* Step 2: Image Upload */}
+                {currentStep === 2 && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-[#277677]">Imagem da Unidade</h4>
+                    
+                    <div className="space-y-3">
+                      <SimpleImageUploader onImageUpload={handleImageUpload} isUploading={isUploading} />
+                      
+                      {uploadedImageUrl && !isUploading && (
+                        <div className="space-y-3">
+                          <div className="text-sm p-2 rounded border bg-[#277677] text-[#ffffff]">
+                            ✓ Imagem carregada com sucesso
+                          </div>
+                          <div className="w-32 h-32 border-2 border-[#277677] rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                            <img 
+                              src={uploadedImageUrl} 
+                              alt="Preview" 
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                              }}
+                            />
+                            <div className="hidden text-gray-500 text-xs">Erro ao carregar</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Services */}
+                {currentStep === 3 && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-[#277677]">Serviços Disponíveis</h4>
+                    
+                    <div>
+                      <FormLabel>Serviços (um por linha)</FormLabel>
+                      <Textarea
+                        value={servicesInput}
+                        onChange={(e) => setServicesInput(e.target.value)}
+                        placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
+                        rows={8}
+                        className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
+                        data-testid="textarea-unit-services"
                       />
                     </div>
-                  )}
-                  
-                  <SimpleImageUploader
-                    onFileSelect={handleFileSelect}
-                    isUploading={isUploading}
-                    hasImage={!!uploadedImageUrl}
-                    buttonClassName="w-full bg-[#277677] hover:bg-[#1f5a5c] text-white disabled:opacity-50"
-                  />
-                  
-                  {uploadedImageUrl && !isUploading && (
-                    <div className="text-sm p-2 rounded border bg-[#277677] text-[#ffffff]">
-                      ✓ Imagem carregada com sucesso
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
-                <div>
-                  <FormLabel>Serviços Disponíveis (um por linha)</FormLabel>
-                  <Textarea
-                    value={servicesInput}
-                    onChange={(e) => setServicesInput(e.target.value)}
-                    placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
-                    rows={6}
-                    className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
-                    data-testid="textarea-unit-services"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setIsDialogOpen(false)}
-                    data-testid="button-cancel-unit"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button 
-                    type="submit"
-                    disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
-                    data-testid="button-save-unit"
-                    className="text-[#ffffff]"
-                  >
-                    {editingUnit ? "Atualizar" : "Criar"} Unidade
-                  </Button>
+                {/* Navigation Buttons */}
+                <div className="flex justify-between">
+                  <div>
+                    {currentStep > 1 && (
+                      <Button 
+                        type="button" 
+                        variant="outline"
+                        onClick={prevStep}
+                        data-testid="button-prev-step"
+                      >
+                        <ChevronLeft className="h-4 w-4 mr-2" />
+                        Anterior
+                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setIsDialogOpen(false)}
+                      data-testid="button-cancel-unit"
+                    >
+                      Cancelar
+                    </Button>
+                    
+                    {currentStep < 3 ? (
+                      <Button 
+                        type="button"
+                        onClick={nextStep}
+                        data-testid="button-next-step"
+                        className="text-[#ffffff]"
+                      >
+                        Próximo
+                        <ChevronRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    ) : (
+                      <Button 
+                        type="submit"
+                        disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
+                        data-testid="button-save-unit"
+                        className="text-[#ffffff]"
+                      >
+                        {editingUnit ? "Atualizar" : "Criar"} Unidade
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </form>
             </Form>
