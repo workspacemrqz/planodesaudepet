@@ -12,8 +12,14 @@ import {
   Search,
   Filter
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { NetworkUnit } from "@shared/schema";
 
 export default function Network() {
+  const { data: networkUnits, isLoading } = useQuery<NetworkUnit[]>({
+    queryKey: ["/api/network-units"],
+  });
+
   const hospitalFeatures = [
     {
       icon: Clock,
@@ -37,63 +43,6 @@ export default function Network() {
     }
   ];
 
-  const networkUnits = [
-    {
-      id: 1,
-      name: "Hospital Animal's São Paulo - Vila Olímpia",
-      address: "Rua Funchal, 418 - Vila Olímpia, São Paulo - SP",
-      phone: "(11) 3045-0000",
-      rating: 4.8,
-      services: ["Emergência 24h", "Cirurgia", "Internação", "Exames"],
-      image: "https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-    },
-    {
-      id: 2,
-      name: "Hospital Animal's Rio de Janeiro - Barra",
-      address: "Av. das Américas, 500 - Barra da Tijuca, Rio de Janeiro - RJ",
-      phone: "(21) 3500-0000",
-      rating: 4.9,
-      services: ["Emergência 24h", "Cardiologia", "Oncologia", "Dermatologia"],
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-    },
-    {
-      id: 3,
-      name: "Hospital Animal's Brasília - Asa Sul",
-      address: "SHLS 716 - Asa Sul, Brasília - DF",
-      phone: "(61) 3200-0000",
-      rating: 4.7,
-      services: ["Emergência 24h", "Ortopedia", "Neurologia", "Fisioterapia"],
-      image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-    },
-    {
-      id: 4,
-      name: "Hospital Animal's Belo Horizonte - Savassi",
-      address: "Rua Pernambuco, 1500 - Savassi, Belo Horizonte - MG",
-      phone: "(31) 3250-0000",
-      rating: 4.6,
-      services: ["Emergência 24h", "Radiologia", "Ultrassom", "Laboratório"],
-      image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-    },
-    {
-      id: 5,
-      name: "Hospital Animal's Porto Alegre - Moinhos",
-      address: "Rua Padre Chagas, 185 - Moinhos de Vento, Porto Alegre - RS",
-      phone: "(51) 3400-0000",
-      rating: 4.8,
-      services: ["Emergência 24h", "Endoscopia", "Anestesiologia", "Cirurgia"],
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-    },
-    {
-      id: 6,
-      name: "Hospital Animal's Salvador - Pituba",
-      address: "Av. Magalhães Neto, 1456 - Pituba, Salvador - BA",
-      phone: "(71) 3600-0000",
-      rating: 4.5,
-      services: ["Emergência 24h", "Oftalmologia", "Dentista Pet", "Grooming"],
-      image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-    }
-  ];
-
   return (
     <main className="min-h-screen bg-[#FBF9F7]">
       
@@ -110,18 +59,23 @@ export default function Network() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {networkUnits.map((unit) => (
+          {isLoading ? (
+            <div className="text-center py-8">
+              <p className="text-[#302e2b]">Carregando unidades da rede...</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {networkUnits?.map((unit) => (
               <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden">
                 <div className="relative">
                   <img 
-                    src={unit.image} 
+                    src={unit.imageUrl} 
                     alt={unit.name}
                     className="w-full h-48 object-cover"
                   />
                   <Badge className="absolute top-4 right-4 bg-[#E1AC33] text-[#277677] font-semibold">
                     <Star className="h-3 w-3 mr-1" />
-                    {unit.rating}
+                    {(unit.rating / 10).toFixed(1)}
                   </Badge>
                 </div>
                 
@@ -173,8 +127,9 @@ export default function Network() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
       {/* CTA Section */}
