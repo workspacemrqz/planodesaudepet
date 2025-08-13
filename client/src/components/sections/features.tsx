@@ -61,7 +61,7 @@ export default function Features() {
           {mainFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="text-center border border-primary/30 rounded-lg p-6 shadow-md">
+              <div key={index} className="text-center border border-primary/30 rounded-lg p-6 shadow-md text-[#fbf9f7] bg-[#277677]">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-[#302e2b] bg-[#165e662e]">
                   <Icon className="h-8 w-8 text-primary" />
                 </div>
