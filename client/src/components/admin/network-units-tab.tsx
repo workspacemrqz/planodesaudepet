@@ -144,7 +144,7 @@ export default function NetworkUnitsTab() {
         throw new Error('Upload failed');
       }
       
-      // Set the uploaded image URL for preview
+      // Set the uploaded image URL for preview (use the presigned URL for immediate preview)
       setUploadedImageUrl(uploadURL);
       
       // If editing a unit, update the image immediately
@@ -183,11 +183,8 @@ export default function NetworkUnitsTab() {
       imageUrl: unit.imageUrl,
     });
     setServicesInput(unit.services.join("\n"));
-    // Convert object path to full URL for display
-    const imageUrl = unit.imageUrl?.startsWith('/objects/') 
-      ? `${window.location.origin}${unit.imageUrl}`
-      : unit.imageUrl;
-    setUploadedImageUrl(imageUrl || null);
+    // Use the image URL directly since we now store full URLs
+    setUploadedImageUrl(unit.imageUrl || null);
     setIsDialogOpen(true);
   };
 
