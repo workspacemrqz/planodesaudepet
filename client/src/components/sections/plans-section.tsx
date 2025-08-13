@@ -64,16 +64,14 @@ export default function PlansSection() {
         <div className="flex justify-center mb-12">
           <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7]">
             <Button
-              variant={!showCopay ? "default" : "ghost"}
               onClick={() => setShowCopay(false)}
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 px-6 py-2 bg-[#32989a] text-[#fbf9f7]"
+              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md transition-none hover:bg-current ${!showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
             >
               Sem Coparticipação
             </Button>
             <Button
-              variant={showCopay ? "default" : "ghost"}
               onClick={() => setShowCopay(true)}
-              className="px-6 py-2"
+              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md transition-none hover:bg-current ${showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
             >
               Com Coparticipação
             </Button>
