@@ -98,8 +98,8 @@ export default function PlansSection() {
                   R${plan.price}
                   <span className={`text-lg font-normal ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#32989a]'}`}>/mês</span>
                 </div>
-                <div className={`px-4 py-2 rounded-xl ${plan.name === 'Padrão' ? 'bg-[#FBF9F7]' : 'bg-[#F3EEE8]'}`}>
-                  <p className={`font-medium ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`}>{plan.description}</p>
+                <div className={`px-4 py-2 rounded-xl ${plan.name === 'Padrão' ? 'bg-[#ffc440]' : 'bg-[#F3EEE8]'}`}>
+                  <p className={`font-medium ${plan.name === 'Padrão' ? 'text-[#FBF9F7]' : 'text-[#277677]'}`}>{plan.description}</p>
                 </div>
               </CardHeader>
               
@@ -114,7 +114,7 @@ export default function PlansSection() {
                 </ul>
                 
                 <Button 
-                  className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 px-4 py-2 w-full mt-auto text-[16px] ${plan.name === 'Padrão' ? 'bg-[#FBF9F7] text-[#E1AC33]' : 'bg-[#32989a] text-white'}`}
+                  className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 px-4 py-2 w-full mt-auto text-[16px] ${plan.name === 'Padrão' ? 'bg-[#32989A] text-[#FBF9F7]' : 'bg-[#32989a] text-white'}`}
                 >
                   Contratar Plano {plan.name}
                 </Button>
