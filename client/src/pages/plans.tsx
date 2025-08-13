@@ -137,9 +137,8 @@ export default function Plans() {
           </div>
         </div>
       </section>
-
       {/* Additional Information Section */}
-      <section className="py-20 bg-[#FBF9F7]">
+      <section className="py-20 bg-[#DED8CE]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-[36px] font-bold mb-4 text-[#277677]">
