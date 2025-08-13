@@ -251,6 +251,7 @@ export default function FaqTab() {
                     type="submit"
                     disabled={createItemMutation.isPending || updateItemMutation.isPending}
                     data-testid="button-save-faq"
+                    className="text-[#ffffff]"
                   >
                     {editingItem ? "Atualizar" : "Criar"} Pergunta
                   </Button>
