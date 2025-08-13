@@ -144,7 +144,7 @@ export default function NetworkUnitsTab() {
         throw new Error('Upload failed');
       }
       
-      // Set the uploaded image URL
+      // Set the uploaded image URL for preview
       setUploadedImageUrl(uploadURL);
       
       // If editing a unit, update the image immediately
