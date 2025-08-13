@@ -22,7 +22,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Heart className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-primary">UNIPET PLAN</span>
+            <span className="text-xl font-bold text-[#277677]">UNIPET PLAN</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,7 +57,7 @@ export default function Header() {
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center space-x-2">
                     <Heart className="h-6 w-6 text-primary" />
-                    <span className="text-lg font-bold text-primary">UNIPET PLAN</span>
+                    <span className="text-lg font-bold text-[#277677]">UNIPET PLAN</span>
                   </div>
                 </div>
                 <nav className="flex flex-col space-y-6">
