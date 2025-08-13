@@ -338,7 +338,7 @@ export default function FaqTab() {
       ) : (
         <Card>
           <CardContent className="p-6 text-center">
-            <HelpCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <HelpCircle className="h-12 w-12 text-[#145759] mx-auto mb-4" />
             <p className="text-[#FBF9F7]">Nenhuma pergunta cadastrada ainda.</p>
           </CardContent>
         </Card>

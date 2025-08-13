@@ -381,7 +381,7 @@ export default function NetworkUnitsTab() {
       {(!units || units.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
-            <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <MapPin className="h-12 w-12 text-[#145759] mx-auto mb-4" />
             <p className="text-[#FBF9F7]">Nenhuma unidade cadastrada ainda.</p>
           </CardContent>
         </Card>

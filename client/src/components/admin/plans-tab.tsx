@@ -366,7 +366,7 @@ export default function PlansTab() {
       {(!plans || plans.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
-            <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <CreditCard className="h-12 w-12 text-[#145759] mx-auto mb-4" />
             <p className="text-[#FBF9F7]">Nenhum plano cadastrado ainda.</p>
           </CardContent>
         </Card>
