@@ -55,7 +55,7 @@ export default function PlansSection() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#fbf9f7]">
             Escolha o <span className="text-primary">plano ideal</span> para seu pet
           </h2>
-          <p className="text-xl max-w-2xl mx-auto text-[#fbf9f7]">
+          <p className="max-w-2xl mx-auto text-[#fbf9f7] font-semibold text-[22px]">
             Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
           </p>
         </div>
