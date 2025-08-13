@@ -269,7 +269,7 @@ export default function FaqTab() {
           <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
             Gerenciar FAQ
           </h3>
-          <p className="text-sm text-[#302e2b]">
+          <p className="text-sm text-[#fbf9f7]">
             Arraste e solte para reordenar as perguntas
           </p>
         </div>
