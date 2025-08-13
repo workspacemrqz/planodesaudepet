@@ -150,7 +150,7 @@ export default function Plans() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-[#277677] rounded-2xl p-8 shadow-xl">
+            <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7]">
               <h3 className="text-[24px] font-bold text-[#FBF9F7] mb-6">Informações Gerais</h3>
               <div className="space-y-6">
                 <div>
@@ -168,7 +168,7 @@ export default function Plans() {
               </div>
             </div>
 
-            <div className="bg-[#277677] rounded-2xl p-8 shadow-xl">
+            <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7]">
               <h3 className="text-[24px] font-bold text-[#FBF9F7] mb-6">Planos Locais</h3>
               <p className="text-[#FBF9F7] mb-6 text-[16px]">
                 Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.
