@@ -179,10 +179,7 @@ export default function Plans() {
                   <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Rede Credenciada Local</h4>
                   <p className="text-[#302e2b] text-[16px]">Acesso facilitado a veterinários e clínicas parceiras próximas à sua localidade.</p>
                 </div>
-                <div>
-                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Atendimento Personalizado</h4>
-                  <p className="text-[#302e2b] text-[16px]">Suporte especializado que conhece as particularidades da sua região e necessidades locais.</p>
-                </div>
+                
               </div>
               <Button 
                 className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7] font-semibold px-8 py-3 text-[18px] rounded-lg h-12"
