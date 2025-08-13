@@ -62,7 +62,7 @@ export default function PlansSection() {
 
         {/* Plan Comparison Toggle */}
         <div className="flex justify-center mb-12">
-          <div className="bg-muted p-1 rounded-lg">
+          <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7]">
             <Button
               variant={!showCopay ? "default" : "ghost"}
               onClick={() => setShowCopay(false)}
