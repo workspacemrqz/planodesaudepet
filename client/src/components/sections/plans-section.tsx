@@ -87,11 +87,11 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? (plan.name === 'Padrão' ? 'border-[#ffc440] border-3 shadow-2xl transform scale-105 ring-2 ring-[#ffc440]/30 hover:scale-110 hover:shadow-3xl hover:ring-4 hover:ring-[#ffc440]/50 plano-padrao-destaque plano-destaque-glow' : 'border-primary border-2') : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#FBF9F7]' : 'bg-[#fbf9f7]'} transition-all duration-300 cursor-pointer`}>
+            <Card key={index} className={`relative ${plan.popular ? (plan.name === 'Padrão' ? 'border-[#ffc440] border-2' : 'border-primary border-2') : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#FBF9F7]' : 'bg-[#fbf9f7]'}`}>
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                  <Badge className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent animate-pulse ${plan.name === 'Padrão' ? 'bg-gradient-to-r from-[#ffc440] to-[#ffb800] text-[#fbf9f7] shadow-lg' : 'bg-[#ffc440] text-[#fbf9f7]'}`}>
-                    {plan.name === 'Padrão' ? '⭐ MAIS POPULAR ⭐' : 'Mais Popular'}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-[#ffc440] text-[#fbf9f7]">
+                    Mais Popular
                   </Badge>
                 </div>
               )}
