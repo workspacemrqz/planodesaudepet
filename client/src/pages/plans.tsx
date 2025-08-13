@@ -64,11 +64,11 @@ export default function Plans() {
             
 
             {/* Plan Toggle */}
-            <div className="flex justify-center mb-8 sm:mb-12 px-4">
-              <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7] w-full max-w-md sm:w-auto">
+            <div className="mb-8 sm:mb-12">
+              <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7] mx-auto max-w-2xl">
                 <Button
                   onClick={() => setShowCopay(false)}
-                  className={`px-3 sm:px-6 py-2 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${!showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
+                  className={`w-1/2 py-3 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${!showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
                   style={{ transition: 'none' }}
                   onMouseEnter={(e) => { e.preventDefault(); }}
                   data-testid="button-no-copay"
@@ -77,7 +77,7 @@ export default function Plans() {
                 </Button>
                 <Button
                   onClick={() => setShowCopay(true)}
-                  className={`px-3 sm:px-6 py-2 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
+                  className={`w-1/2 py-3 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
                   style={{ transition: 'none' }}
                   onMouseEnter={(e) => { e.preventDefault(); }}
                   data-testid="button-with-copay"
