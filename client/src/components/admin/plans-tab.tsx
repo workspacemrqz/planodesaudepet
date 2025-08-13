@@ -163,7 +163,6 @@ export default function PlansTab() {
           Gerenciar Planos
         </h3>
       </div>
-
       <Dialog open={isDialogOpen} onOpenChange={(open) => {
         setIsDialogOpen(open);
         if (!open) resetForm();
@@ -303,7 +302,6 @@ export default function PlansTab() {
           </Form>
         </DialogContent>
       </Dialog>
-
       <div className="space-y-4">
         {plans?.map((plan) => (
           <div key={plan.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
@@ -330,11 +328,7 @@ export default function PlansTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleTogglePopular(plan)}
-                  className={`h-8 w-8 p-0 transition-none ${
-                    plan.isPopular 
-                      ? 'bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] hover:text-[#FBF9F7]' 
-                      : 'bg-[#4B5563] text-[#FBF9F7] hover:bg-[#4B5563] hover:text-[#FBF9F7]'
-                  }`}
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 rounded-md h-8 w-8 p-0 transition-none text-[#FBF9F7] hover:bg-[#4B5563] hover:text-[#FBF9F7] bg-[#575757]"
                   data-testid={`button-popular-plan-${plan.id}`}
                   title={plan.isPopular ? "Remover como mais popular" : "Marcar como mais popular"}
                 >
@@ -354,7 +348,6 @@ export default function PlansTab() {
           </div>
         ))}
       </div>
-
       {(!plans || plans.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
