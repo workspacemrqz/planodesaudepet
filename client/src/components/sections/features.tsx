@@ -63,7 +63,7 @@ export default function Features() {
             return (
               <div key={index} className="text-center border border-primary/30 rounded-lg p-6 shadow-md text-[#fbf9f7] bg-[#277677]">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-[#302e2b] bg-[#165e662e]">
-                  <Icon className="h-8 w-8 text-primary" />
+                  <Icon className="h-8 w-8 text-[#277677]" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-[#fbf9f7]">{feature.title}</h3>
                 <p className="text-[#fbf9f7]">{feature.description}</p>
@@ -96,7 +96,7 @@ export default function Features() {
                 const Icon = item.icon;
                 return (
                   <div key={index} className="flex items-center space-x-3">
-                    <Icon className="h-5 w-5 text-primary" />
+                    <Icon className="h-5 w-5 text-[#277677]" />
                     <span className="text-[#302e2b]">{item.text}</span>
                   </div>
                 );
