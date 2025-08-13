@@ -73,7 +73,7 @@ export default function Features() {
         </div>
 
         {/* Network Information */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center px-4 sm:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center px-4 sm:px-0 pl-[0px] pr-[0px]">
           <div className="order-2 lg:order-1">
             {/* Modern veterinary clinic image */}
             <img 
