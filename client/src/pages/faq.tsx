@@ -47,17 +47,17 @@ export default function FAQ() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#0E0E0E]">
+    <main className="min-h-screen bg-[#FBF9F7]">
       {/* Hero Section */}
       <section className="relative py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
-            <HelpCircle className="h-12 w-12 text-[#E1AC33] mr-3" />
-            <h1 className="text-4xl md:text-6xl font-bold text-white">
+            <HelpCircle className="h-12 w-12 text-[#277677] mr-3" />
+            <h1 className="text-4xl md:text-6xl font-bold text-[#277677]">
               Perguntas Frequentes
             </h1>
           </div>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
+          <p className="text-xl text-[#302e2b] max-w-2xl mx-auto">
             Encontre respostas para as principais dúvidas sobre nossos planos de seguro para pets
           </p>
         </div>
@@ -104,13 +104,13 @@ export default function FAQ() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 px-4 bg-[#1a1a1a]">
+      <section className="py-16 px-4 bg-[#277677]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-[#FBF9F7] mb-4">
               Ainda tem dúvidas?
             </h2>
-            <p className="text-white/80 text-lg">
+            <p className="text-[#FBF9F7]/80 text-lg">
               Nossa equipe está pronta para ajudar você
             </p>
           </div>
@@ -119,32 +119,32 @@ export default function FAQ() {
             {/* Contact Info */}
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                  <Phone className="h-5 w-5 text-primary" />
+                <div className="bg-[#E1AC33]/20 w-12 h-12 rounded-full flex items-center justify-center">
+                  <Phone className="h-5 w-5 text-[#E1AC33]" />
                 </div>
                 <div>
-                  <div className="font-semibold text-white">Telefone</div>
-                  <div className="text-white/80">0800 123 4567</div>
+                  <div className="font-semibold text-[#FBF9F7]">Telefone</div>
+                  <div className="text-[#FBF9F7]/80">0800 123 4567</div>
                 </div>
               </div>
 
               <div className="flex items-center space-x-4">
-                <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                  <Mail className="h-5 w-5 text-primary" />
+                <div className="bg-[#E1AC33]/20 w-12 h-12 rounded-full flex items-center justify-center">
+                  <Mail className="h-5 w-5 text-[#E1AC33]" />
                 </div>
                 <div>
-                  <div className="font-semibold text-white">E-mail</div>
-                  <div className="text-white/80">contato@unipetplan.com.br</div>
+                  <div className="font-semibold text-[#FBF9F7]">E-mail</div>
+                  <div className="text-[#FBF9F7]/80">contato@unipetplan.com.br</div>
                 </div>
               </div>
 
               <div className="flex items-center space-x-4">
-                <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                  <MessageSquare className="h-5 w-5 text-primary" />
+                <div className="bg-[#E1AC33]/20 w-12 h-12 rounded-full flex items-center justify-center">
+                  <MessageSquare className="h-5 w-5 text-[#E1AC33]" />
                 </div>
                 <div>
-                  <div className="font-semibold text-white">WhatsApp</div>
-                  <div className="text-white/80">(11) 99999-9999</div>
+                  <div className="font-semibold text-[#FBF9F7]">WhatsApp</div>
+                  <div className="text-[#FBF9F7]/80">(11) 99999-9999</div>
                 </div>
               </div>
             </div>
@@ -194,15 +194,15 @@ export default function FAQ() {
 
             {/* CTA */}
             <div className="text-center">
-              <h4 className="text-xl font-bold text-white mb-4">
+              <h4 className="text-xl font-bold text-[#FBF9F7] mb-4">
                 Pronto para proteger seu pet?
               </h4>
-              <p className="text-white/80 mb-6">
+              <p className="text-[#FBF9F7]/80 mb-6">
                 Faça uma cotação gratuita e descubra o melhor plano para seu companheiro
               </p>
               <a 
                 href="/contato" 
-                className="inline-block bg-[#E1AC33] text-[#0E0E0E] px-6 py-3 rounded-lg font-semibold hover:bg-[#E1AC33]/90 transition-colors"
+                className="inline-block bg-[#E1AC33] text-[#277677] px-6 py-3 rounded-lg font-semibold hover:bg-[#E1AC33]/90 transition-colors"
                 data-testid="button-contact-faq"
               >
                 Solicitar Cotação
