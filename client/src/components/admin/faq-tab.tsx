@@ -116,7 +116,7 @@ function SortableFaqItem({
         </div>
       </div>
       <AccordionContent className="text-[#302e2b] pb-4">
-        <div className="pl-9 text-[#fbf9f7]">
+        <div className="pl-9 text-[#ebebeb]">
           {item.answer}
         </div>
       </AccordionContent>
