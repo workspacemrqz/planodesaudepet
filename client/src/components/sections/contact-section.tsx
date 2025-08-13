@@ -78,7 +78,7 @@ export default function ContactSection() {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <Card className="unipet-card shadow-lg">
-            <CardHeader style={{backgroundColor: '#DED8CE'}}>
+            <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff]">
               <CardTitle className="text-2xl" style={{color: '#302e2b'}}>Solicitar Cotação</CardTitle>
             </CardHeader>
             <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7]">
