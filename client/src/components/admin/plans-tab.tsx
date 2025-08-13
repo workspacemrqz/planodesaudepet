@@ -156,7 +156,7 @@ export default function PlansTab() {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-lg font-semibold text-[#fbf9f7]">Gerenciar Planos</h3>
-          <p className="text-sm text-[#302e2b]/70">
+          <p className="text-sm text-[#fbf9f7]">
             Adicione, edite ou remova planos de seguro
           </p>
         </div>
