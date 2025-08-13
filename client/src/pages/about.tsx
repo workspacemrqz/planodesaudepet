@@ -77,7 +77,7 @@ export default function About() {
         {/* Mission, Vision, Values */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
           {values.map((item, index) => (
-            <Card key={index} className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
+            <Card key={index} className="backdrop-blur-sm shadow-xl border border-primary/10" style={{backgroundColor: '#FBF9F7'}}>
               <CardHeader>
                 <CardTitle className="text-2xl text-primary">{item.title}</CardTitle>
               </CardHeader>

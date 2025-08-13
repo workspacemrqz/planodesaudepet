@@ -44,7 +44,7 @@
   /* UNIPET PLAN Custom Colors */
   --unipet-dark: hsl(181, 51%, 31%);
   --unipet-primary: hsl(42, 74%, 54%);
-  --unipet-white: hsl(0, 0%, 100%);
+  --unipet-white: #FBF9F7;
   --unipet-light: hsl(0, 0%, 95%);
 }
 

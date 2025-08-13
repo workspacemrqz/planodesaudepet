@@ -80,7 +80,7 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="unipet-card shadow-lg">
+          <Card className="unipet-card shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
             <CardHeader>
               <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
             </CardHeader>
@@ -300,7 +300,7 @@ export default function Contact() {
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card shadow-lg">
+            <Card className="unipet-card shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
               <CardHeader>
                 <CardTitle className="text-xl text-primary flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
