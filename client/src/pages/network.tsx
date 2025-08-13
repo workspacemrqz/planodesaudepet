@@ -97,7 +97,7 @@ export default function Network() {
   return (
     <main className="min-h-screen bg-[#FBF9F7]">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4">
+      <section className="relative pt-32 pb-20 px-4 pl-[20px] pr-[20px]">
         <div className="max-w-6xl mx-auto text-center">
           <div className="mb-6">
             <h1 className="text-[48px] font-bold text-[#277677]">
@@ -120,7 +120,6 @@ export default function Network() {
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="py-16 px-4 bg-[#277677]">
         <div className="max-w-6xl mx-auto">
@@ -149,7 +148,6 @@ export default function Network() {
           </div>
         </div>
       </section>
-
       {/* Network Units Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
@@ -229,7 +227,6 @@ export default function Network() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-16 px-4 bg-[#277677]">
         <div className="max-w-4xl mx-auto text-center">
