@@ -127,7 +127,7 @@ export default function NetworkUnitsTab() {
     
     try {
       // Get upload URL
-      const response = await apiRequest("POST", "/api/objects/upload");
+      const response = await apiRequest("POST", "/api/objects/upload") as { uploadURL: string };
       const uploadURL = response.uploadURL;
       
       // Upload file directly to storage
@@ -182,7 +182,11 @@ export default function NetworkUnitsTab() {
       imageUrl: unit.imageUrl,
     });
     setServicesInput(unit.services.join("\n"));
-    setUploadedImageUrl(unit.imageUrl);
+    // Convert object path to full URL for display
+    const imageUrl = unit.imageUrl?.startsWith('/objects/') 
+      ? `${window.location.origin}${unit.imageUrl}`
+      : unit.imageUrl;
+    setUploadedImageUrl(imageUrl || null);
     setIsDialogOpen(true);
   };
 
@@ -329,12 +333,29 @@ export default function NetworkUnitsTab() {
 
                 <div className="space-y-3">
                   <FormLabel>Imagem da Unidade</FormLabel>
+                  
+                  {/* Image preview container */}
+                  {uploadedImageUrl && (
+                    <div className="w-32 h-32 border-2 border-[#277677] rounded-lg overflow-hidden bg-gray-100">
+                      <img 
+                        src={uploadedImageUrl} 
+                        alt="Preview da imagem"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // If image fails to load, show a placeholder
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                  
                   <SimpleImageUploader
                     onFileSelect={handleFileSelect}
                     isUploading={isUploading}
                     hasImage={!!uploadedImageUrl}
                     buttonClassName="w-full bg-[#277677] hover:bg-[#1f5a5c] text-white disabled:opacity-50"
                   />
+                  
                   {uploadedImageUrl && !isUploading && (
                     <div className="text-sm text-green-600 bg-green-50 p-2 rounded border">
                       ✓ Imagem carregada com sucesso
