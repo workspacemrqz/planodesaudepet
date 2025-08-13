@@ -266,7 +266,7 @@ export default function FaqTab() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-[#277677] mb-1">
+          <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
             Gerenciar FAQ
           </h3>
           <p className="text-sm text-[#302e2b]">
@@ -354,7 +354,6 @@ export default function FaqTab() {
           </DialogContent>
         </Dialog>
       </div>
-      
       {isLoading ? (
         <Card>
           <CardContent className="p-6 text-center">
