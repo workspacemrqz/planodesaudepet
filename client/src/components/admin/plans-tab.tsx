@@ -81,6 +81,26 @@ export default function PlansTab() {
     },
   });
 
+  const togglePopularMutation = useMutation({
+    mutationFn: async (planId: string) => {
+      // First, set all plans to not popular
+      if (plans) {
+        const updates = plans.map(async (plan) => {
+          const isPopular = plan.id === planId ? !plan.isPopular : false;
+          return apiRequest("PUT", `/api/admin/plans/${plan.id}`, { isPopular });
+        });
+        await Promise.all(updates);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
+      toast({ title: "Status de popularidade atualizado!" });
+    },
+    onError: () => {
+      toast({ title: "Erro ao atualizar popularidade", variant: "destructive" });
+    },
+  });
+
   const handleEdit = (plan: Plan) => {
     setEditingPlan(plan);
     form.reset({
@@ -99,6 +119,10 @@ export default function PlansTab() {
     if (confirm(`Tem certeza que deseja remover o plano "${plan.name}"?`)) {
       deletePlanMutation.mutate(plan.id);
     }
+  };
+
+  const handleTogglePopular = (plan: Plan) => {
+    togglePopularMutation.mutate(plan.id);
   };
 
   const onSubmit = (data: PlanFormData) => {
@@ -301,6 +325,20 @@ export default function PlansTab() {
                   data-testid={`button-edit-plan-${plan.id}`}
                 >
                   <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleTogglePopular(plan)}
+                  className={`h-8 w-8 p-0 transition-none ${
+                    plan.isPopular 
+                      ? 'bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] hover:text-[#FBF9F7]' 
+                      : 'bg-[#4B5563] text-[#FBF9F7] hover:bg-[#4B5563] hover:text-[#FBF9F7]'
+                  }`}
+                  data-testid={`button-popular-plan-${plan.id}`}
+                  title={plan.isPopular ? "Remover como mais popular" : "Marcar como mais popular"}
+                >
+                  <Star className={`h-4 w-4 ${plan.isPopular ? 'fill-current' : ''}`} />
                 </Button>
                 <Button
                   size="sm"
