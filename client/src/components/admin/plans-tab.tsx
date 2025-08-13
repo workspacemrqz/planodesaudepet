@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, CreditCard, Star } from "lucide-react";
+import { Edit, CreditCard, Star } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,23 +49,6 @@ export default function PlansTab() {
     },
   });
 
-  const createPlanMutation = useMutation({
-    mutationFn: async (data: InsertPlan) => {
-      const response = await apiRequest("POST", "/api/admin/plans", data);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      toast({ title: "Plano criado com sucesso!" });
-      setIsDialogOpen(false);
-      form.reset();
-      setFeaturesInput("");
-    },
-    onError: () => {
-      toast({ title: "Erro ao criar plano", variant: "destructive" });
-    },
-  });
-
   const updatePlanMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertPlan> }) => {
       const response = await apiRequest("PUT", `/api/admin/plans/${id}`, data);
@@ -84,20 +67,6 @@ export default function PlansTab() {
     },
   });
 
-  const deletePlanMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await apiRequest("DELETE", `/api/admin/plans/${id}`);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      toast({ title: "Plano removido com sucesso!" });
-    },
-    onError: () => {
-      toast({ title: "Erro ao remover plano", variant: "destructive" });
-    },
-  });
-
   const handleEdit = (plan: Plan) => {
     setEditingPlan(plan);
     form.reset({
@@ -108,19 +77,13 @@ export default function PlansTab() {
       features: plan.features,
       isPopular: plan.isPopular,
     });
-    setFeaturesInput(plan.features.join("\n"));
+    setFeaturesInput(plan.features.join('\n'));
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (plan: Plan) => {
-    if (confirm(`Tem certeza que deseja remover o plano "${plan.name}"?`)) {
-      deletePlanMutation.mutate(plan.id);
-    }
-  };
-
   const onSubmit = (data: PlanFormData) => {
-    const features = featuresInput.split("\n").filter(f => f.trim().length > 0);
-    const planData: InsertPlan = {
+    const features = featuresInput.split('\n').filter(f => f.trim()).map(f => f.trim());
+    const planData = {
       ...data,
       features,
       isActive: true,
@@ -128,8 +91,6 @@ export default function PlansTab() {
 
     if (editingPlan) {
       updatePlanMutation.mutate({ id: editingPlan.id, data: planData });
-    } else {
-      createPlanMutation.mutate(planData);
     }
   };
 
@@ -157,155 +118,149 @@ export default function PlansTab() {
         <div>
           <h3 className="text-lg font-semibold text-[#FBF9F7]">Gerenciar Planos</h3>
           <p className="text-sm text-[#FBF9F7]">
-            Adicione, edite ou remova planos de seguro
+            Edite os 3 planos de seguro disponíveis no site
           </p>
         </div>
-        
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
-          <DialogTrigger asChild>
-            <Button className="hover:bg-[#277677]/90 text-[#fbf9f7] bg-[#145759]" data-testid="button-add-plan">
-              <Plus className="h-4 w-4 mr-2" />
-              Novo Plano
-            </Button>
-          </DialogTrigger>
+      </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open) resetForm();
+      }}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-[#277677]">
+              Editar Plano {editingPlan?.name}
+            </DialogTitle>
+          </DialogHeader>
           
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-[#277677]">
-                {editingPlan ? "Editar Plano" : "Novo Plano"}
-              </DialogTitle>
-            </DialogHeader>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome do Plano</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Descrição</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Ex: Proteção essencial" {...field} data-testid="input-plan-description" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="priceNormal"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Preço Normal (R$)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            placeholder="0" 
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                            data-testid="input-plan-price-normal"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="priceWithCopay"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Preço com Coparticipação (R$)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            placeholder="0" 
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                            data-testid="input-plan-price-copay"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div>
-                  <FormLabel>Funcionalidades (uma por linha)</FormLabel>
-                  <Textarea
-                    value={featuresInput}
-                    onChange={(e) => setFeaturesInput(e.target.value)}
-                    placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
-                    rows={6}
-                    className="mt-2"
-                    data-testid="textarea-plan-features"
-                  />
-                </div>
-
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="isPopular"
+                  name="name"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormItem>
+                      <FormLabel>Nome do Plano</FormLabel>
                       <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          data-testid="checkbox-plan-popular"
-                        />
+                        <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" />
                       </FormControl>
-                      <FormLabel className="text-sm font-normal">
-                        Marcar como plano mais popular
-                      </FormLabel>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
+                
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Descrição</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex: Proteção essencial" {...field} data-testid="input-plan-description" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                <div className="flex justify-end gap-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setIsDialogOpen(false)}
-                    data-testid="button-cancel-plan"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button 
-                    type="submit"
-                    disabled={createPlanMutation.isPending || updatePlanMutation.isPending}
-                    data-testid="button-save-plan"
-                  >
-                    {editingPlan ? "Atualizar" : "Criar"} Plano
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="priceNormal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Preço Normal (R$)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="0" 
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          data-testid="input-plan-price-normal"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="priceWithCopay"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Preço com Coparticipação (R$)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="0" 
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          data-testid="input-plan-price-copay"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div>
+                <FormLabel>Funcionalidades (uma por linha)</FormLabel>
+                <Textarea
+                  value={featuresInput}
+                  onChange={(e) => setFeaturesInput(e.target.value)}
+                  placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
+                  rows={6}
+                  className="mt-2"
+                  data-testid="textarea-plan-features"
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="isPopular"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        data-testid="checkbox-plan-popular"
+                      />
+                    </FormControl>
+                    <FormLabel className="text-sm font-normal">
+                      Marcar como plano mais popular
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end gap-2">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setIsDialogOpen(false)}
+                  data-testid="button-cancel-plan"
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  type="submit"
+                  disabled={updatePlanMutation.isPending}
+                  data-testid="button-save-plan"
+                >
+                  Atualizar Plano
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plans?.map((plan) => (
           <Card key={plan.id} className={`relative ${plan.isPopular ? 'ring-2 ring-[#E1AC33]' : ''}`}>
@@ -339,30 +294,23 @@ export default function PlansTab() {
                 ))}
               </ul>
               
-              <div className="flex gap-2">
+              <div className="flex justify-center">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => handleEdit(plan)}
-                  className="flex-1"
+                  className="w-full"
                   data-testid={`button-edit-plan-${plan.id}`}
                 >
                   <Edit className="h-4 w-4 mr-1" />
-                  Editar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => handleDelete(plan)}
-                  data-testid={`button-delete-plan-${plan.id}`}
-                >
-                  <Trash2 className="h-4 w-4" />
+                  Editar Plano
                 </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
       {(!plans || plans.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
