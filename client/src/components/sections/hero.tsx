@@ -30,7 +30,7 @@ export default function Hero() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#277677]">
               Cuidado completo para o seu <span className="text-primary">melhor amigo</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+            <p className="text-xl mb-8 leading-relaxed text-[#302e2b] font-normal">
               Planos de saúde pet com cobertura nacional, sem carência, preços acessíveis a partir de R$20 e rede conveniada Hospital Animal's 24h.
             </p>
             
