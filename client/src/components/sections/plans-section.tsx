@@ -131,7 +131,7 @@ export default function PlansSection() {
         <div className="mt-16 text-center">
           <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30 shadow-lg">
             <CardContent className="pt-8">
-              <h3 className="text-2xl font-bold text-primary mb-4">Planos Locais com Menos Burocracia</h3>
+              <h3 className="font-bold mb-4 text-[#fbf9f7] text-[30px]">Planos Locais com Menos Burocracia</h3>
               <p className="text-white text-lg mb-6">
                 Oferecemos também planos regionais com processo simplificado e atendimento personalizado para sua região.
               </p>
