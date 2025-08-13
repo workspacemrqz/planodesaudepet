@@ -62,7 +62,7 @@ export default function PlansSection() {
 
         {/* Plan Comparison Toggle */}
         <div className="flex justify-center mb-8 sm:mb-12 px-4">
-          <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7] w-full max-w-md sm:w-auto">
+          <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7] w-full max-w-md sm:w-auto text-center">
             <Button
               onClick={() => setShowCopay(false)}
               className={`px-3 sm:px-6 py-2 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${!showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
