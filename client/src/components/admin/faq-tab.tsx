@@ -231,7 +231,7 @@ export default function FaqTab() {
                         />
                       </FormControl>
                       <FormMessage />
-                      <p className="text-xs text-gray-500">Números menores aparecem primeiro</p>
+                      <p className="text-xs text-[#e0e0e0]">Números menores aparecem primeiro</p>
                     </FormItem>
                   )}
                 />
@@ -258,7 +258,6 @@ export default function FaqTab() {
           </DialogContent>
         </Dialog>
       </div>
-
       {faqItems && faqItems.length > 0 ? (
         <div className="space-y-4">
           <Accordion type="single" collapsible className="w-full">
