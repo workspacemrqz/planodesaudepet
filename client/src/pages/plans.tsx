@@ -151,26 +151,26 @@ export default function Plans() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7]">
-              <h3 className="text-[24px] font-bold text-[#FBF9F7] mb-6">Informações Gerais</h3>
+              <h3 className="text-[24px] font-bold text-[#302e2b] mb-6">Informações Gerais</h3>
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-semibold mb-2 text-[#FBF9F7] text-[18px]">Carência</h4>
-                  <p className="text-[#FBF9F7] text-[16px]">Todos os planos têm início imediato, sem período de carência.</p>
+                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Carência</h4>
+                  <p className="text-[#302e2b] text-[16px]">Todos os planos têm início imediato, sem período de carência.</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2 text-[#FBF9F7] text-[18px]">Limites de Uso</h4>
-                  <p className="text-[#FBF9F7] text-[16px]">Consulte os limites específicos de cada serviço no contrato do plano escolhido.</p>
+                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Limites de Uso</h4>
+                  <p className="text-[#302e2b] text-[16px]">Consulte os limites específicos de cada serviço no contrato do plano escolhido.</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2 text-[#FBF9F7] text-[18px]">Coparticipação</h4>
-                  <p className="text-[#FBF9F7] text-[16px]">Nos planos com coparticipação, você paga uma taxa reduzida por alguns procedimentos.</p>
+                  <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Coparticipação</h4>
+                  <p className="text-[#302e2b] text-[16px]">Nos planos com coparticipação, você paga uma taxa reduzida por alguns procedimentos.</p>
                 </div>
               </div>
             </div>
 
             <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7]">
-              <h3 className="text-[24px] font-bold text-[#FBF9F7] mb-6">Planos Locais</h3>
-              <p className="text-[#FBF9F7] mb-6 text-[16px]">
+              <h3 className="text-[24px] font-bold text-[#302e2b] mb-6">Planos Locais</h3>
+              <p className="text-[#302e2b] mb-6 text-[16px]">
                 Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.
               </p>
               <Button 
