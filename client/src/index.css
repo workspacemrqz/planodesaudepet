@@ -127,17 +127,139 @@
   }
 
   /* Select dropdown content styling */
+  .contact-form-field [data-radix-select-content],
   [data-radix-select-content] {
     background-color: #DED8CE !important;
     color: #302e2b !important;
     border-color: #c7c1b7 !important;
   }
 
+  /* Select item styling */
+  .contact-form-field [data-radix-select-item],
+  [data-radix-select-item] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+
   /* Select item hover styling */
+  .contact-form-field [data-radix-select-item]:hover,
+  .contact-form-field [data-radix-select-item][data-highlighted],
   [data-radix-select-item]:hover,
   [data-radix-select-item][data-highlighted] {
     background-color: #c7c1b7 !important;
     color: #302e2b !important;
+  }
+
+  /* Additional selectors for Radix Select components */
+  [data-radix-popper-content-wrapper] [role="listbox"] {
+    background-color: #DED8CE !important;
+    border-color: #c7c1b7 !important;
+  }
+
+  [data-radix-popper-content-wrapper] [role="option"] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+
+  [data-radix-popper-content-wrapper] [role="option"]:hover,
+  [data-radix-popper-content-wrapper] [role="option"][data-highlighted] {
+    background-color: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Force all select dropdown styling */
+  div[data-radix-select-content] {
+    background: #DED8CE !important;
+    border: 1px solid #c7c1b7 !important;
+  }
+  
+  div[data-radix-select-item] {
+    background: #DED8CE !important;
+    color: #302e2b !important;
+  }
+  
+  div[data-radix-select-item]:hover,
+  div[data-radix-select-item][data-highlighted] {
+    background: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Specific targeting for contact form selects */
+  .contact-form-field div[role="listbox"],
+  .contact-form-field div[data-radix-select-content] {
+    background: #DED8CE !important;
+    border: 1px solid #c7c1b7 !important;
+  }
+
+  .contact-form-field div[role="option"],
+  .contact-form-field div[data-radix-select-item] {
+    background: #DED8CE !important;
+    color: #302e2b !important;
+  }
+
+  .contact-form-field div[role="option"]:hover,
+  .contact-form-field div[role="option"][data-highlighted],
+  .contact-form-field div[data-radix-select-item]:hover,
+  .contact-form-field div[data-radix-select-item][data-highlighted] {
+    background: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Global override for ALL select dropdowns */
+  * {
+    --radix-select-content-bg: #DED8CE !important;
+    --radix-select-item-bg: #DED8CE !important;
+    --radix-select-item-hover-bg: #c7c1b7 !important;
+  }
+  
+  /* Universal selectors for any select content */
+  [data-radix-popper-content-wrapper] > div,
+  [data-radix-select-viewport],
+  [data-radix-select-content] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+  
+  [data-radix-select-viewport] > div,
+  [data-radix-select-item] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+  
+  [data-radix-select-viewport] > div:hover,
+  [data-radix-select-item]:hover,
+  [data-radix-select-viewport] > div[data-highlighted],
+  [data-radix-select-item][data-highlighted] {
+    background-color: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Final override - target by attribute selectors */
+  div[data-radix-collection-item] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+
+  div[data-radix-collection-item]:hover,
+  div[data-radix-collection-item][data-state="checked"],
+  div[data-radix-collection-item][aria-selected="true"] {
+    background-color: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Target the specific Radix Select structure */
+  [data-radix-popper-content-wrapper] {
+    --bg-popover: #DED8CE !important;
+    --text-popover-foreground: #302e2b !important;
+  }
+
+  [data-radix-popper-content-wrapper] * {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+
+  [data-radix-popper-content-wrapper] [data-highlighted] {
+    background-color: #c7c1b7 !important;
   }
 
   /* Form labels in contact form */
