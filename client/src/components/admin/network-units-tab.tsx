@@ -400,6 +400,7 @@ export default function NetworkUnitsTab() {
                     type="submit"
                     disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
                     data-testid="button-save-unit"
+                    className="text-[#ffffff]"
                   >
                     {editingUnit ? "Atualizar" : "Criar"} Unidade
                   </Button>
