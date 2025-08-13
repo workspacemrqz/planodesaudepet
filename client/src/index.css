@@ -218,7 +218,7 @@
   .contact-form-field div[role="option"][data-highlighted],
   .contact-form-field div[data-radix-select-item]:hover,
   .contact-form-field div[data-radix-select-item][data-highlighted] {
-    background: #c7c1b7 !important;
+    background: #DED8CE !important;
     color: #302e2b !important;
   }
 
@@ -277,6 +277,49 @@
 
   [data-radix-popper-content-wrapper] [data-highlighted] {
     background-color: #c7c1b7 !important;
+  }
+
+  /* Remove check icons from select items */
+  .contact-form-field [data-radix-select-item-indicator] {
+    display: none !important;
+  }
+
+  .contact-form-field svg[data-radix-select-item-indicator] {
+    display: none !important;
+  }
+
+  .contact-form-field [role="option"]::before {
+    display: none !important;
+  }
+
+  .contact-form-field [data-radix-select-item]::before {
+    display: none !important;
+  }
+
+  /* Hide any check mark or selection indicator */
+  .contact-form-field [data-state="checked"] svg,
+  .contact-form-field [aria-selected="true"] svg {
+    display: none !important;
+  }
+
+  /* More specific selectors to hide check icons */
+  .contact-form-field [data-radix-select-content] svg,
+  .contact-form-field [data-radix-select-item] svg {
+    display: none !important;
+  }
+
+  /* Override Radix UI default styling completely */
+  [data-radix-select-content] [data-radix-select-item] span:last-child {
+    display: none !important;
+  }
+
+  /* Remove all hover background effects globally for select dropdowns */
+  [data-radix-select-viewport] > div:hover,
+  [data-radix-select-item]:hover,
+  [data-radix-select-viewport] > div[data-highlighted],
+  [data-radix-select-item][data-highlighted] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
   }
 
   /* Form labels in contact form */
