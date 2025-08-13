@@ -263,12 +263,12 @@ export default function Contact() {
             </Card>
 
             {/* Contact Information */}
-            <div className="space-y-8">
-              <div>
+            <div className="space-y-8 w-fit">
+              <div className="w-fit">
                 <h2 className="text-2xl font-bold text-white mb-6">Outras Formas de Contato</h2>
                 
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4">
+                <div className="space-y-6 w-fit">
+                  <div className="flex items-center space-x-4 w-fit">
                     <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
                       <Phone className="h-5 w-5 text-primary" />
                     </div>
@@ -278,7 +278,7 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-4 w-fit">
                     <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
                       <Mail className="h-5 w-5 text-primary" />
                     </div>
@@ -288,7 +288,7 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-4 w-fit">
                     <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
                       <MessageSquare className="h-5 w-5 text-primary" />
                     </div>
@@ -325,7 +325,7 @@ export default function Contact() {
               </Card>
 
               {/* Social Media */}
-              <div>
+              <div className="w-fit">
                 <h4 className="text-xl font-bold mb-4 text-[#FBF9F7]">Siga-nos</h4>
                 <div className="flex space-x-4">
                   <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677]">
