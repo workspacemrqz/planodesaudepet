@@ -49,12 +49,12 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                className="text-lg px-8 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full"
+                className="text-base font-medium px-6 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full h-12 min-w-[140px]"
               >
                 Ver Planos
               </Button>
               <Button 
-                className="text-lg px-8 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full"
+                className="text-base font-medium px-6 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full h-12 min-w-[160px]"
               >
                 Solicitar Cotação
               </Button>
