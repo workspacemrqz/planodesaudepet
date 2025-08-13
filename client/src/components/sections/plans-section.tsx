@@ -83,7 +83,7 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'} shadow-lg flex flex-col h-full`}>
+            <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2' : 'unipet-card'} shadow-lg flex flex-col h-full bg-[#fbf9f7]`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-primary text-white">
@@ -92,21 +92,21 @@ export default function PlansSection() {
                 </div>
               )}
               
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-2xl text-primary mb-2">{plan.name}</CardTitle>
-                <div className="text-4xl font-bold mb-2">
+              <CardHeader className="text-center pb-4 bg-[#fbf9f7] text-[#e1ac33]">
+                <CardTitle className="text-2xl text-[#e1ac33] mb-2">{plan.name}</CardTitle>
+                <div className="text-4xl font-bold mb-2 text-[#e1ac33]">
                   R${plan.price}
-                  <span className="text-lg font-normal text-muted-foreground">/mês</span>
+                  <span className="text-lg font-normal text-[#e1ac33]">/mês</span>
                 </div>
-                <p className="text-muted-foreground">{plan.description}</p>
+                <p className="text-[#e1ac33]">{plan.description}</p>
               </CardHeader>
               
-              <CardContent className="flex flex-col flex-grow">
+              <CardContent className="flex flex-col flex-grow text-[#277677]">
                 <ul className="space-y-4 mb-8 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-3">
-                      <Check className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="text-muted-foreground">{feature}</span>
+                      <Check className="h-4 w-4 text-[#277677] flex-shrink-0" />
+                      <span className="text-[#277677]">{feature}</span>
                     </li>
                   ))}
                 </ul>
