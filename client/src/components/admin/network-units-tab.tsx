@@ -243,7 +243,7 @@ export default function NetworkUnitsTab() {
                           />
                         </FormControl>
                         <FormMessage />
-                        <p className="text-xs text-gray-500">Digite como número inteiro (45 para 4.5 estrelas)</p>
+                        <p className="text-xs text-[#e6e6e6]">Digite como número inteiro (45 para 4.5 estrelas)</p>
                       </FormItem>
                     )}
                   />
@@ -297,7 +297,6 @@ export default function NetworkUnitsTab() {
           </DialogContent>
         </Dialog>
       </div>
-
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {units?.map((unit) => (
           <Card key={unit.id} className="overflow-hidden">
@@ -378,7 +377,6 @@ export default function NetworkUnitsTab() {
           </Card>
         ))}
       </div>
-
       {(!units || units.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
