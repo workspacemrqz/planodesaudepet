@@ -54,7 +54,7 @@ export default function Hero() {
                 Ver Planos
               </Button>
               <Button 
-                className="text-lg font-semibold px-8 py-4 text-white bg-[#277677]/20 backdrop-blur-sm hover:bg-[#277677]/30 rounded-lg h-14 min-w-[180px] border border-[#277677]/30"
+                className="text-lg font-semibold px-8 py-4 bg-[#277677]/20 backdrop-blur-sm hover:bg-[#277677]/30 rounded-lg h-14 min-w-[180px] border border-[#277677]/30 text-[#277677]"
               >
                 Solicitar Cotação
               </Button>
