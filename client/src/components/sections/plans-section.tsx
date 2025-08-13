@@ -108,7 +108,7 @@ export default function PlansSection() {
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-3">
                       <Check className="h-4 w-4 text-[#277677] flex-shrink-0" />
-                      <span className="text-[#277677]">{feature}</span>
+                      <span className="text-[#277677] text-[17px] font-normal">{feature}</span>
                     </li>
                   ))}
                 </ul>
