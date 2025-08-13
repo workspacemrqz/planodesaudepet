@@ -135,7 +135,7 @@ export default function Plans() {
                 <Button 
                   className={`w-full ${plan.popular ? 'unipet-button-primary' : 'bg-secondary hover:bg-primary hover:text-primary-foreground'} transition-colors duration-200`}
                 >
-                  Contratar Plano
+                  Contratar Plano {plan.name}
                 </Button>
               </CardContent>
             </Card>
