@@ -98,7 +98,7 @@ export default function PlansSection() {
                   R${plan.price}
                   <span className={`text-lg font-normal ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>/mês</span>
                 </div>
-                <div className={`px-4 py-2 rounded-xl ${plan.name === 'Padrão' ? 'bg-[#F3EEE8]' : 'bg-[#F3EEE8]'}`}>
+                <div className="px-4 py-2 rounded-xl bg-[#e8e8e8]">
                   <p className={`font-medium ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`}>{plan.description}</p>
                 </div>
               </CardHeader>
