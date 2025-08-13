@@ -314,7 +314,7 @@ export default function FaqTab() {
                         e.stopPropagation();
                         handleDelete(item);
                       }}
-                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="h-8 w-8 p-0 bg-[#f5f3f1] text-[#2c8486] hover:text-red-700 hover:bg-red-50"
                       data-testid={`button-delete-faq-${item.id}`}
                     >
                       <Trash2 className="h-4 w-4" />
