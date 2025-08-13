@@ -72,7 +72,7 @@ export default function ContactSection() {
           <h2 className="font-bold mb-4 text-[#FBF9F7] text-2xl sm:text-3xl md:text-4xl lg:text-[36px] leading-tight">
             Entre em <span className="text-[#E1AC33]">contato</span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#FBF9F7] font-semibold px-4">Tire suas dúvidas ou solicite uma cotação personalizada</p>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#FBF9F7] font-semibold px-4 pl-[0px] pr-[0px]">Tire suas dúvidas ou solicite uma cotação personalizada</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 px-4 sm:px-0 pl-[0px] pr-[0px]">
