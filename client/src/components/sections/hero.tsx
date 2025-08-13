@@ -49,12 +49,12 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                className="text-base font-medium px-6 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full h-12 min-w-[140px]"
+                className="text-lg font-semibold px-8 py-4 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-lg h-14 min-w-[150px]"
               >
                 Ver Planos
               </Button>
               <Button 
-                className="text-base font-medium px-6 py-3 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-full h-12 min-w-[160px]"
+                className="text-lg font-semibold px-8 py-4 text-white bg-[#277677]/20 backdrop-blur-sm hover:bg-[#277677]/30 rounded-lg h-14 min-w-[180px] border border-[#277677]/30"
               >
                 Solicitar Cotação
               </Button>
@@ -75,7 +75,7 @@ export default function Hero() {
             {/* Floating Stats Card */}
             <Card className="absolute -bottom-6 -left-6 bg-card/95 backdrop-blur-sm shadow-xl">
               <CardContent className="p-6 pt-6 bg-[#2776776e]">
-                <div className="text-2xl font-bold text-[#277677] mb-1">50.000+</div>
+                <div className="text-2xl font-bold mb-1 text-[#fbf9f7]">50.000+</div>
                 <div className="text-muted-foreground text-sm">Pets protegidos</div>
               </CardContent>
             </Card>
