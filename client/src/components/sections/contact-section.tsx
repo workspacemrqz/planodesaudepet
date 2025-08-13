@@ -89,7 +89,7 @@ export default function ContactSection() {
                       control={form.control}
                       name="name"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Nome Completo</FormLabel>
                           <FormControl>
                             <Input placeholder="Seu nome completo" {...field} />
@@ -102,7 +102,7 @@ export default function ContactSection() {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>E-mail</FormLabel>
                           <FormControl>
                             <Input placeholder="seu@email.com" {...field} />
@@ -118,7 +118,7 @@ export default function ContactSection() {
                       control={form.control}
                       name="phone"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Telefone</FormLabel>
                           <FormControl>
                             <Input placeholder="(11) 99999-9999" {...field} />
@@ -131,7 +131,7 @@ export default function ContactSection() {
                       control={form.control}
                       name="city"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Cidade</FormLabel>
                           <FormControl>
                             <Input placeholder="Sua cidade" {...field} />
@@ -146,7 +146,7 @@ export default function ContactSection() {
                     control={form.control}
                     name="petName"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="contact-form-field">
                         <FormLabel>Nome do Pet</FormLabel>
                         <FormControl>
                           <Input placeholder="Nome do seu pet" {...field} />
@@ -161,7 +161,7 @@ export default function ContactSection() {
                       control={form.control}
                       name="animalType"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Tipo de Animal</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -183,7 +183,7 @@ export default function ContactSection() {
                       control={form.control}
                       name="petAge"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Idade do Pet</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -208,7 +208,7 @@ export default function ContactSection() {
                     control={form.control}
                     name="planInterest"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="contact-form-field">
                         <FormLabel>Plano de Interesse</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
@@ -232,7 +232,7 @@ export default function ContactSection() {
                     control={form.control}
                     name="message"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="contact-form-field">
                         <FormLabel>Mensagem (Opcional)</FormLabel>
                         <FormControl>
                           <Textarea 

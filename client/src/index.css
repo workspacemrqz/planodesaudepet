@@ -109,4 +109,39 @@
   .unipet-button-secondary {
     @apply border-2 border-primary;
   }
+
+  /* Contact Form Custom Styling */
+  .contact-form-field input,
+  .contact-form-field textarea,
+  .contact-form-field button[role="combobox"] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+    border-color: #c7c1b7 !important;
+  }
+
+  .contact-form-field input::placeholder,
+  .contact-form-field textarea::placeholder,
+  .contact-form-field button[role="combobox"][data-placeholder] {
+    color: #302e2b !important;
+    opacity: 0.7;
+  }
+
+  /* Select dropdown content styling */
+  [data-radix-select-content] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+    border-color: #c7c1b7 !important;
+  }
+
+  /* Select item hover styling */
+  [data-radix-select-item]:hover,
+  [data-radix-select-item][data-highlighted] {
+    background-color: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Form labels in contact form */
+  .contact-form-field label {
+    color: #302e2b !important;
+  }
 }
