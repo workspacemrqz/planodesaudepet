@@ -127,8 +127,9 @@ export default function NetworkUnitsTab() {
     
     try {
       // Get upload URL
-      const response = await apiRequest("POST", "/api/objects/upload") as { uploadURL: string };
-      const uploadURL = response.uploadURL;
+      const response = await apiRequest("POST", "/api/objects/upload");
+      const data = await response.json();
+      const uploadURL = data.uploadURL;
       
       // Upload file directly to storage
       const uploadResponse = await fetch(uploadURL, {
