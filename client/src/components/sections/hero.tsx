@@ -41,7 +41,7 @@ export default function Hero() {
                 return (
                   <div key={index} className="flex items-center space-x-3">
                     <Icon className="h-5 w-5 text-primary" />
-                    <span className="text-muted-foreground">{benefit.text}</span>
+                    <span className="text-[#302e2b]">{benefit.text}</span>
                   </div>
                 );
               })}
