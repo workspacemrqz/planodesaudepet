@@ -102,7 +102,7 @@ export default function Network() {
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
             <Hospital className="h-12 w-12 text-[#277677] mr-3" />
-            <h1 className="text-4xl md:text-6xl font-bold text-[#277677]">
+            <h1 className="text-[48px] font-bold text-[#277677]">
               Rede Credenciada
             </h1>
           </div>

@@ -70,7 +70,7 @@ export default function Contact() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+          <h1 className="text-[48px] font-bold mb-4 text-white">
             Entre em <span className="text-primary">contato</span>
           </h1>
           <p className="text-xl text-white/90">

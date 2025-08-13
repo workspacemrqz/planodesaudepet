@@ -28,7 +28,7 @@ export default function About() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+          <h1 className="text-[48px] font-bold mb-4 text-white">
             Sobre a <span className="text-[#e1ac33]">UNIPET PLAN</span>
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
