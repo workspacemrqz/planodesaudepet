@@ -187,7 +187,7 @@ export default function NetworkUnitsTab() {
                     <FormItem>
                       <FormLabel>Nome da Unidade</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Hospital Animal's São Paulo" {...field} data-testid="input-unit-name" />
+                        <Input placeholder="Ex: Hospital Animal's São Paulo" {...field} data-testid="input-unit-name" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -201,7 +201,7 @@ export default function NetworkUnitsTab() {
                     <FormItem>
                       <FormLabel>Endereço</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Endereço completo" {...field} data-testid="textarea-unit-address" />
+                        <Textarea placeholder="Endereço completo" {...field} data-testid="textarea-unit-address" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -216,7 +216,7 @@ export default function NetworkUnitsTab() {
                       <FormItem>
                         <FormLabel>Telefone</FormLabel>
                         <FormControl>
-                          <Input placeholder="(11) 99999-9999" {...field} data-testid="input-unit-phone" />
+                          <Input placeholder="(11) 99999-9999" {...field} data-testid="input-unit-phone" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -239,6 +239,7 @@ export default function NetworkUnitsTab() {
                             {...field}
                             onChange={(e) => field.onChange(Number(e.target.value))}
                             data-testid="input-unit-rating"
+                            className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
                           />
                         </FormControl>
                         <FormMessage />
@@ -255,7 +256,7 @@ export default function NetworkUnitsTab() {
                     <FormItem>
                       <FormLabel>URL da Imagem</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://..." {...field} data-testid="input-unit-image" />
+                        <Input placeholder="https://..." {...field} data-testid="input-unit-image" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -269,7 +270,7 @@ export default function NetworkUnitsTab() {
                     onChange={(e) => setServicesInput(e.target.value)}
                     placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
                     rows={6}
-                    className="mt-2"
+                    className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
                     data-testid="textarea-unit-services"
                   />
                 </div>

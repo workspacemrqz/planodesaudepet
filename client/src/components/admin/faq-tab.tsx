@@ -188,7 +188,7 @@ export default function FaqTab() {
                     <FormItem>
                       <FormLabel>Pergunta</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: O que é um seguro para pets?" {...field} data-testid="input-faq-question" />
+                        <Input placeholder="Ex: O que é um seguro para pets?" {...field} data-testid="input-faq-question" className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -207,6 +207,7 @@ export default function FaqTab() {
                           rows={6}
                           {...field} 
                           data-testid="textarea-faq-answer"
+                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
@@ -228,6 +229,7 @@ export default function FaqTab() {
                           {...field}
                           onChange={(e) => field.onChange(Number(e.target.value))}
                           data-testid="input-faq-order"
+                          className="focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
                         />
                       </FormControl>
                       <FormMessage />

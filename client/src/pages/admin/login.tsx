@@ -79,7 +79,7 @@ export default function AdminLogin() {
                           placeholder="admin" 
                           {...field}
                           data-testid="input-username"
-                          className="border-[#277677]/20 focus:border-[#277677] focus:ring-[#277677]/20"
+                          className="border-[#277677]/20 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
@@ -101,7 +101,7 @@ export default function AdminLogin() {
                           placeholder="admin" 
                           {...field}
                           data-testid="input-password"
-                          className="border-[#277677]/20 focus:border-[#277677] focus:ring-[#277677]/20"
+                          className="border-[#277677]/20 focus:ring-0 focus:ring-offset-0 focus:border-gray-300 hover:border-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
