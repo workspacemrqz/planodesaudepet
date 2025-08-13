@@ -80,11 +80,11 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="unipet-card shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
-            <CardHeader>
-              <CardTitle className="text-2xl text-primary">Solicitar Cotação</CardTitle>
+          <Card className="unipet-card shadow-lg rounded-xl border-none">
+            <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
+              <CardTitle className="tracking-tight text-[#277677] text-[26px] font-semibold">Solicitar Cotação</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 pt-0">
+            <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
@@ -92,7 +92,7 @@ export default function Contact() {
                       control={form.control}
                       name="name"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Nome Completo</FormLabel>
                           <FormControl>
                             <Input placeholder="Seu nome completo" {...field} />
@@ -105,7 +105,7 @@ export default function Contact() {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>E-mail</FormLabel>
                           <FormControl>
                             <Input placeholder="seu@email.com" {...field} />
@@ -121,7 +121,7 @@ export default function Contact() {
                       control={form.control}
                       name="phone"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Telefone</FormLabel>
                           <FormControl>
                             <Input placeholder="(11) 99999-9999" {...field} />
@@ -134,7 +134,7 @@ export default function Contact() {
                       control={form.control}
                       name="city"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Cidade</FormLabel>
                           <FormControl>
                             <Input placeholder="Sua cidade" {...field} />
@@ -149,7 +149,7 @@ export default function Contact() {
                     control={form.control}
                     name="petName"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="contact-form-field">
                         <FormLabel>Nome do Pet</FormLabel>
                         <FormControl>
                           <Input placeholder="Nome do seu pet" {...field} />
@@ -164,7 +164,7 @@ export default function Contact() {
                       control={form.control}
                       name="animalType"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Tipo de Animal</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -186,7 +186,7 @@ export default function Contact() {
                       control={form.control}
                       name="petAge"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="contact-form-field">
                           <FormLabel>Idade do Pet</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
@@ -211,7 +211,7 @@ export default function Contact() {
                     control={form.control}
                     name="planInterest"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="contact-form-field">
                         <FormLabel>Plano de Interesse</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
@@ -235,7 +235,7 @@ export default function Contact() {
                     control={form.control}
                     name="message"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="contact-form-field">
                         <FormLabel>Mensagem (Opcional)</FormLabel>
                         <FormControl>
                           <Textarea 
