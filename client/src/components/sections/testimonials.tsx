@@ -41,7 +41,7 @@ export default function Testimonials() {
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] font-semibold px-4">Depoimentos reais de quem confia na UNIPET PLAN</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 pl-[0px] pr-[0px]">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="rounded-2xl shadow-lg border-0" style={{backgroundColor: '#FBF9F7'}}>
               <CardContent className="pt-6 sm:pt-8 p-4 sm:p-6">
