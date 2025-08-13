@@ -89,7 +89,7 @@ export default function Plans() {
           </div>
 
           {/* Plans Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-5xl mx-auto px-4 sm:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-5xl mx-auto px-4 sm:px-0 pl-[0px] pr-[0px]">
             {plans.map((plan, index) => (
               <Card key={index} className={`relative transition-all duration-300 hover:shadow-2xl ${plan.popular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2 md:transform md:scale-105' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
                 {plan.popular && (
