@@ -302,7 +302,7 @@ export default function FaqTab() {
                         e.stopPropagation();
                         handleEdit(item);
                       }}
-                      className="h-8 w-8 p-0"
+                      className="h-8 w-8 p-0 bg-[#2d8486] text-[#fbf9f7]"
                       data-testid={`button-edit-faq-${item.id}`}
                     >
                       <Edit className="h-4 w-4" />
