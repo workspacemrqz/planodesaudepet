@@ -45,6 +45,16 @@ Preferred communication style: Simple, everyday language.
 - **Frontend Integration**: Live synchronization between admin changes and public FAQ page display
 - **Data Structure**: FAQ items include question, answer, display order, and active status fields
 
+### Network Units Management System
+- **Database Integration**: Complete migration from static data to PostgreSQL database storage
+- **Data Migration**: All 6 network units from /rede-credenciada page imported to database with proper data structure
+- **Dynamic Content**: Network page now fetches real-time data from the database via API endpoints
+- **Admin Interface**: Streamlined admin panel with simple container design matching FAQ styling
+- **CRUD Operations**: Full Create, Read, Update, Delete functionality for network units management
+- **Data Structure**: Network units include name, address, phone, rating (stored as integer*10), services array, image URL, and active status
+- **UI Consistency**: Admin containers display only unit names with edit/delete buttons matching FAQ component styling
+- **Form Validation**: Complete form with all fields (name, address, phone, rating, services, image URL) available during edit operations
+
 ### Authentication and Authorization
 - **Current State**: Basic foundation with user schema defined but not fully implemented
 - **Session Management**: Express session configuration prepared for future authentication features

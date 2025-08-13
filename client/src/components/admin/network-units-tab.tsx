@@ -297,91 +297,42 @@ export default function NetworkUnitsTab() {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="space-y-4">
         {units?.map((unit) => (
-          <Card key={unit.id} className="overflow-hidden">
-            <div className="relative">
-              <img 
-                src={unit.imageUrl} 
-                alt={unit.name}
-                className="w-full h-48 object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=400&h=300&fit=crop";
-                }}
-              />
-              <Badge className="absolute top-2 right-2 bg-[#E1AC33] text-[#277677]">
-                <Star className="h-3 w-3 mr-1" />
-                {(unit.rating / 10).toFixed(1)}
-              </Badge>
-            </div>
-            
-            <CardHeader className="pb-3">
-              <CardTitle className="text-[#277677] text-lg leading-tight">
-                {unit.name}
-              </CardTitle>
-            </CardHeader>
-            
-            <CardContent className="space-y-3">
-              <div className="space-y-2">
-                <div className="flex items-start gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-[#277677] mt-0.5 flex-shrink-0" />
-                  <span className="text-[#302e2b]">{unit.address}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-[#277677] flex-shrink-0" />
-                  <span className="text-[#302e2b]">{unit.phone}</span>
-                </div>
+          <div key={unit.id} className="border border-[#2F8585] rounded-lg bg-[#145759] p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h3 className="text-[#FBF9F7] font-medium">{unit.name}</h3>
               </div>
-
-              <div>
-                <p className="text-sm font-medium text-[#277677] mb-2">Serviços:</p>
-                <div className="flex flex-wrap gap-1">
-                  {unit.services.slice(0, 3).map((service, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="outline" 
-                      className="text-xs bg-[#277677]/5 text-[#277677] border-[#277677]/20"
-                    >
-                      {service}
-                    </Badge>
-                  ))}
-                  {unit.services.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{unit.services.length - 3} mais
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex gap-2 pt-2">
+              <div className="flex items-center gap-1">
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => handleEdit(unit)}
-                  className="flex-1"
+                  className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585] hover:text-[#FBF9F7] transition-none"
                   data-testid={`button-edit-unit-${unit.id}`}
                 >
-                  <Edit className="h-4 w-4 mr-1" />
-                  Editar
+                  <Edit className="h-4 w-4" />
                 </Button>
                 <Button
                   size="sm"
-                  variant="destructive"
+                  variant="ghost"
                   onClick={() => handleDelete(unit)}
+                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] hover:text-[#2F8585] transition-none"
                   data-testid={`button-delete-unit-${unit.id}`}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
       {(!units || units.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
-            <MapPin className="h-12 w-12 text-[#145759] mx-auto mb-4" />
-            <p className="text-[#FBF9F7]">Nenhuma unidade cadastrada ainda.</p>
+            <MapPin className="h-12 w-12 text-[#277677] mx-auto mb-4" />
+            <p className="text-[#302e2b]">Nenhuma unidade cadastrada ainda.</p>
           </CardContent>
         </Card>
       )}
