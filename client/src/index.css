@@ -64,6 +64,26 @@
   border-color: #d1d5db !important;
 }
 
+/* Remove all hover effects from FAQ buttons */
+[data-testid^="button-edit-faq"]:hover,
+[data-testid^="button-delete-faq"]:hover {
+  background-color: inherit !important;
+  color: inherit !important;
+  transform: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+[data-testid^="button-edit-faq"] {
+  background-color: #2d8486 !important;
+  color: #fbf9f7 !important;
+}
+
+[data-testid^="button-delete-faq"] {
+  background-color: #f5f3f1 !important;
+  color: #2c8486 !important;
+}
+
 .dark {
   --background: hsl(181, 51%, 31%);
   --foreground: hsl(0, 0%, 100%);
