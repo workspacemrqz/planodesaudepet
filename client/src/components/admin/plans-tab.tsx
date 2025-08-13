@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Edit, CreditCard, Star } from "lucide-react";
+import { Edit, CreditCard, Star, Check } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -261,51 +261,54 @@ export default function PlansTab() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 pl-[0px] pr-[0px]">
         {plans?.map((plan) => (
-          <Card key={plan.id} className={`relative ${plan.isPopular ? 'ring-2 ring-[#E1AC33]' : ''}`}>
+          <Card key={plan.id} className={`relative transition-all duration-300 hover:shadow-2xl ${plan.isPopular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2 md:transform md:scale-105' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
             {plan.isPopular && (
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-[#E1AC33] text-[#277677] px-3 py-1">
-                  <Star className="h-3 w-3 mr-1" />
+              <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-[#E1AC33] text-[#FBF9F7] px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold">
                   Mais Popular
                 </Badge>
               </div>
             )}
             
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-[#277677] text-xl">{plan.name}</CardTitle>
-              <div className="text-2xl font-bold text-[#277677]">
-                <div>R${plan.priceNormal}/mês</div>
-                <div className="text-sm text-[#FBF9F7]">
-                  R${plan.priceWithCopay}/mês (com coparticipação)
-                </div>
+            <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6">
+              <CardTitle className="tracking-tight sm:text-2xl lg:text-3xl font-bold text-[#277677] sm:mb-4 text-[26px] mt-[0px] mb-[0px] pt-[4px] pb-[4px]">{plan.name}</CardTitle>
+              <div className="mb-3 sm:mb-4">
+                <span className="sm:text-3xl lg:text-4xl font-bold text-[#277677] text-[28px]">R${plan.priceNormal}</span>
+                <span className="text-sm sm:text-base lg:text-lg font-medium text-[#302e2b]">/mês</span>
               </div>
-              <p className="text-sm text-[#302e2b]/70">{plan.description}</p>
+              <div className="mb-2">
+                <span className="text-lg font-medium text-[#302e2b]">R${plan.priceWithCopay}/mês</span>
+                <span className="text-sm text-[#302e2b]/70"> (com coparticipação)</span>
+              </div>
+              <div className="bg-[#277677]/10 px-3 sm:px-4 py-2 sm:py-3 rounded-xl">
+                <p className="text-[#277677] font-medium text-sm sm:text-base lg:text-lg">{plan.description}</p>
+              </div>
             </CardHeader>
             
-            <CardContent>
-              <ul className="space-y-2 mb-4">
+            <CardContent className="px-4 sm:px-6 pb-6 sm:pb-8">
+              <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow">
                 {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#277677] mt-2 flex-shrink-0"></div>
-                    <span>{feature}</span>
+                  <li key={index} className="flex items-start space-x-3">
+                    <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
+                    <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed">{feature}</span>
                   </li>
                 ))}
               </ul>
               
-              <div className="flex justify-center">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleEdit(plan)}
-                  className="w-full"
-                  data-testid={`button-edit-plan-${plan.id}`}
-                >
-                  <Edit className="h-4 w-4 mr-1" />
-                  Editar Plano
-                </Button>
-              </div>
+              <Button
+                onClick={() => handleEdit(plan)}
+                className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
+                  plan.isPopular 
+                    ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
+                    : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
+                }`}
+                data-testid={`button-edit-plan-${plan.id}`}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Editar Plano {plan.name}
+              </Button>
             </CardContent>
           </Card>
         ))}
