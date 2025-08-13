@@ -98,7 +98,7 @@ export default function PlansSection() {
                   R${plan.price}
                   <span className="text-lg font-normal text-[#32989a]">/mês</span>
                 </div>
-                <div className="bg-[#F3EEE8] px-4 py-2 rounded-lg">
+                <div className="bg-[#F3EEE8] px-4 py-2 rounded-xl">
                   <p className="text-[#277677] font-medium">{plan.description}</p>
                 </div>
               </CardHeader>
