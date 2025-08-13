@@ -27,7 +27,7 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#277677]">
               Cuidado completo para o seu <span className="text-primary">melhor amigo</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
