@@ -50,44 +50,6 @@ export default function Plans() {
 
   return (
     <main>
-      {/* Hero Section */}
-      <section className="min-h-screen flex items-center bg-[#FBF9F7]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#277677]">
-              Escolha o <span className="text-[#E1AC33]">plano ideal</span> para seu pet
-            </h1>
-            <p className="text-xl mb-8 leading-relaxed text-[#302e2b] font-normal max-w-2xl mx-auto">
-              Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
-            </p>
-          </div>
-
-          {/* Plan Toggle */}
-          <div className="flex justify-center mb-12">
-            <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7]">
-              <Button
-                onClick={() => setShowCopay(false)}
-                className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${!showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
-                style={{ transition: 'none' }}
-                onMouseEnter={(e) => { e.preventDefault(); }}
-                data-testid="button-no-copay"
-              >
-                Sem Coparticipação
-              </Button>
-              <Button
-                onClick={() => setShowCopay(true)}
-                className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
-                style={{ transition: 'none' }}
-                onMouseEnter={(e) => { e.preventDefault(); }}
-                data-testid="button-with-copay"
-              >
-                Com Coparticipação
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Plans Section */}
       <section className="py-20 text-[#fbf9f7] bg-[#277677]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,9 +57,42 @@ export default function Plans() {
             <h2 className="md:text-4xl mb-4 text-[#fbf9f7] text-[40px] font-bold">
               Nossos <span className="text-[#E1AC33]">Planos</span>
             </h2>
-            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[24px] font-medium">
+            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[24px] font-medium mb-8">
               Escolha a proteção ideal para seu melhor amigo
             </p>
+            
+            <div className="text-center mb-8">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#fbf9f7]">
+                Escolha o <span className="text-[#E1AC33]">plano ideal</span> para seu pet
+              </h1>
+              <p className="text-xl mb-8 leading-relaxed text-[#fbf9f7] font-normal max-w-2xl mx-auto">
+                Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
+              </p>
+            </div>
+
+            {/* Plan Toggle */}
+            <div className="flex justify-center mb-12">
+              <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7]">
+                <Button
+                  onClick={() => setShowCopay(false)}
+                  className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${!showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
+                  style={{ transition: 'none' }}
+                  onMouseEnter={(e) => { e.preventDefault(); }}
+                  data-testid="button-no-copay"
+                >
+                  Sem Coparticipação
+                </Button>
+                <Button
+                  onClick={() => setShowCopay(true)}
+                  className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${showCopay ? 'bg-[#277677]' : 'bg-[#E1AC33]'}`}
+                  style={{ transition: 'none' }}
+                  onMouseEnter={(e) => { e.preventDefault(); }}
+                  data-testid="button-with-copay"
+                >
+                  Com Coparticipação
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Plans Grid */}
