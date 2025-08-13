@@ -43,7 +43,7 @@ export default function Testimonials() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border border-primary/20 rounded-2xl shadow-lg" style={{backgroundColor: '#FBF9F7'}}>
+            <Card key={index} className="rounded-2xl shadow-lg border-0" style={{backgroundColor: '#FBF9F7'}}>
               <CardContent className="pt-8">
                 <div className="flex items-center mb-6">
                   <img 
