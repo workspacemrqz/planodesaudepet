@@ -121,7 +121,7 @@ export default function Network() {
         </div>
       </section>
       {/* Features Section */}
-      <section className="py-16 px-4 bg-[#277677]">
+      <section className="py-16 px-4 bg-[#277677] pl-[20px] pr-[20px]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#FBF9F7] mb-4">
