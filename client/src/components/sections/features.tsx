@@ -47,7 +47,7 @@ export default function Features() {
 
   return (
     <section className="py-20" style={{backgroundColor: '#FBF9F7'}}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="font-bold mb-4 text-[#302e2b] text-2xl sm:text-3xl md:text-4xl lg:text-[36px] leading-tight">
             Por que escolher a <span className="text-[#277677]">UNIPET PLAN?</span>
