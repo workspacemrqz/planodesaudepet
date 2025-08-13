@@ -22,7 +22,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Heart className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-[#277677]">UNIPET PLAN</span>
+            <span className="text-xl font-bold text-[#fbf9f7]">UNIPET PLAN</span>
           </Link>
 
           {/* Desktop Navigation */}
