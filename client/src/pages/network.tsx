@@ -96,30 +96,7 @@ export default function Network() {
 
   return (
     <main className="min-h-screen bg-[#FBF9F7]">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 pl-[20px] pr-[20px]">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="mb-6">
-            <h1 className="font-bold text-[#277677] text-[30px]">
-              Rede Credenciada
-            </h1>
-          </div>
-          <p className="font-normal text-[#302e2b] max-w-3xl mx-auto mb-8 text-[18px]">
-            Mais de 200 unidades Hospital Animal's em todo o Brasil, com atendimento 24 horas 
-            e os melhores profissionais para cuidar do seu pet
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90 px-8 py-3 rounded-lg font-semibold">
-              <Search className="h-5 w-5 mr-2" />
-              Encontrar Unidade
-            </Button>
-            <Button className="border-2 border-[#277677] text-[#277677] bg-transparent hover:bg-[#277677]/10 px-8 py-3 rounded-lg font-semibold">
-              <Filter className="h-5 w-5 mr-2" />
-              Filtrar por Especialidade
-            </Button>
-          </div>
-        </div>
-      </section>
+      
       
       {/* Network Units Section */}
       <section className="py-20 px-4">
