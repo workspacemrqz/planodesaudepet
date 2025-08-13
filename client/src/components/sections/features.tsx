@@ -84,7 +84,7 @@ export default function Features() {
           </div>
           <div>
             <h3 className="text-2xl md:text-3xl font-bold mb-6 text-[#302e2b]">
-              Rede Credenciada <span className="text-primary">Hospital Animal's 24h</span>
+              Rede Credenciada <span className="text-[#277677]">Hospital Animal's 24h</span>
             </h3>
             <p className="text-[#302e2b] text-lg mb-6">
               Tenha acesso a uma das maiores redes de hospitais veterinários do Brasil, 
