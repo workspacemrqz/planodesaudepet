@@ -82,7 +82,7 @@ export default function About() {
                 <CardTitle className="text-2xl text-primary">{item.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-[#101010] leading-relaxed">{item.content}</p>
+                <p className="text-[#302e2b] leading-relaxed">{item.content}</p>
               </CardContent>
             </Card>
           ))}
@@ -103,7 +103,7 @@ export default function About() {
               <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold text-primary mb-4">Atendimento Humanizado</h3>
-                  <p className="text-[#101010]">
+                  <p className="text-[#302e2b]">
                     Tratamos cada pet como se fosse nosso, oferecendo cuidado personalizado 
                     e suporte emocional para as famílias em momentos difíceis.
                   </p>
@@ -112,7 +112,7 @@ export default function About() {
               <Card className="bg-white/95 backdrop-blur-sm shadow-xl border border-primary/10">
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold text-primary mb-4">Inovação Constante</h3>
-                  <p className="text-[#101010]">
+                  <p className="text-[#302e2b]">
                     Investimos continuamente em tecnologia e processos para tornar 
                     o acesso aos cuidados veterinários mais fácil e eficiente.
                   </p>

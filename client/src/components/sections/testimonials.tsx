@@ -53,7 +53,7 @@ export default function Testimonials() {
                   />
                   <div className="ml-4">
                     <h4 className="font-semibold text-[#302e2b]">{testimonial.name}</h4>
-                    <p className="text-[#101010] text-sm">{testimonial.location}</p>
+                    <p className="text-[#302e2b] text-sm">{testimonial.location}</p>
                   </div>
                 </div>
                 {renderStars()}

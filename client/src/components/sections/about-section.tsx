@@ -15,12 +15,12 @@ export default function AboutSection() {
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#302e2b]">
                 Sobre a <span className="text-[#277677]">UNIPET PLAN</span>
               </h2>
-              <p className="text-[#101010] text-lg mb-6 leading-relaxed">
+              <p className="text-[#302e2b] text-lg mb-6 leading-relaxed">
                 Somos uma empresa brasileira especializada em planos de saúde para pets, 
                 comprometida em oferecer o melhor cuidado veterinário com preços acessíveis 
                 e atendimento humanizado.
               </p>
-              <p className="text-[#101010] text-lg mb-8 leading-relaxed">
+              <p className="text-[#302e2b] text-lg mb-8 leading-relaxed">
                 Nossa missão é garantir que todos os pets tenham acesso a cuidados de saúde 
                 de qualidade, proporcionando tranquilidade às famílias brasileiras que amam 
                 seus animais de estimação.
@@ -31,7 +31,7 @@ export default function AboutSection() {
                 {stats.map((stat, index) => (
                   <div key={index}>
                     <div className="text-3xl font-bold text-[#277677] mb-2">{stat.value}</div>
-                    <div className="text-[#101010]">{stat.label}</div>
+                    <div className="text-[#302e2b]">{stat.label}</div>
                   </div>
                 ))}
               </div>
