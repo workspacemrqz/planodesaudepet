@@ -183,8 +183,16 @@ export default function NetworkUnitsTab() {
       imageUrl: unit.imageUrl,
     });
     setServicesInput(unit.services.join("\n"));
-    // Use the image URL directly since we now store full URLs
-    setUploadedImageUrl(unit.imageUrl || null);
+    // Handle different URL types for preview
+    let previewUrl = null;
+    if (unit.imageUrl) {
+      if (unit.imageUrl.startsWith('/objects/') || unit.imageUrl.startsWith('https://')) {
+        previewUrl = unit.imageUrl;
+      } else {
+        previewUrl = unit.imageUrl;
+      }
+    }
+    setUploadedImageUrl(previewUrl);
     setIsDialogOpen(true);
   };
 

@@ -69,7 +69,13 @@ export default function Network() {
               <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden">
                 <div className="relative">
                   <img 
-                    src={unit.imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlmYTZiMiIvPgo8L3N2Zz4K'} 
+                    src={
+                      unit.imageUrl?.startsWith('/objects/') 
+                        ? unit.imageUrl 
+                        : unit.imageUrl?.startsWith('https://storage.googleapis.com/')
+                          ? unit.imageUrl
+                          : unit.imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlmYTZiMiIvPgo8L3N2Zz4K'
+                    } 
                     alt={unit.name}
                     className="w-full h-48 object-cover"
                     onError={(e) => {

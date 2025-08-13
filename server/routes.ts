@@ -250,14 +250,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "imageURL é obrigatório" });
       }
 
-      // Save the full URL directly to the database for easier access
-      const unit = await storage.updateNetworkUnit(id, { imageUrl: imageURL });
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = objectStorageService.normalizeObjectEntityPath(imageURL);
+      
+      // Update the network unit with the normalized object path
+      const unit = await storage.updateNetworkUnit(id, { imageUrl: objectPath });
       
       if (!unit) {
         return res.status(404).json({ error: "Unidade da rede não encontrada" });
       }
       
-      res.json({ imageUrl: imageURL });
+      res.json({ objectPath });
     } catch (error) {
       console.error("Error updating network unit image:", error);
       res.status(500).json({ error: "Erro interno do servidor" });
