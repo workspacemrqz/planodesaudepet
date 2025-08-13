@@ -278,7 +278,7 @@ export default function NetworkUnitsTab() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-[#277677]">
+              <DialogTitle className="text-[#e5e7eb]">
                 {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
               </DialogTitle>
             </DialogHeader>
