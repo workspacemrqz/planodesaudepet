@@ -38,7 +38,7 @@ export default function Testimonials() {
           <h2 className="md:text-4xl font-bold mb-4 text-[#fbf9f7] text-[40px]">
             O que nossos <span className="text-[#277677]">clientes dizem</span>
           </h2>
-          <p className="text-[#fbf9f7] text-[24px]">Depoimentos reais de quem confia na UNIPET PLAN</p>
+          <p className="text-[24px] text-[#302e2b]">Depoimentos reais de quem confia na UNIPET PLAN</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
