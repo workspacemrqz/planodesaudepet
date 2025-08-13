@@ -49,10 +49,10 @@ export default function Features() {
     <section className="py-20" style={{backgroundColor: '#FBF9F7'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#302e2b]">
             Por que escolher a <span className="text-primary">UNIPET PLAN?</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-[#302e2b] max-w-2xl mx-auto">
             Oferecemos o melhor cuidado para seu pet com praticidade e confiança
           </p>
         </div>
@@ -62,11 +62,11 @@ export default function Features() {
             const Icon = feature.icon;
             return (
               <div key={index} className="text-center border border-primary/30 rounded-lg p-6 shadow-md">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-[#ffffff00] bg-[#165e662e]">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-[#302e2b] bg-[#165e662e]">
                   <Icon className="h-8 w-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <p className="text-[#302e2b]">{feature.description}</p>
               </div>
             );
           })}
@@ -83,10 +83,10 @@ export default function Features() {
             />
           </div>
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold mb-6">
+            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-[#302e2b]">
               Rede Credenciada <span className="text-primary">Hospital Animal's 24h</span>
             </h3>
-            <p className="text-muted-foreground text-lg mb-6">
+            <p className="text-[#302e2b] text-lg mb-6">
               Tenha acesso a uma das maiores redes de hospitais veterinários do Brasil, 
               com atendimento 24 horas e profissionais especializados.
             </p>
@@ -97,7 +97,7 @@ export default function Features() {
                 return (
                   <div key={index} className="flex items-center space-x-3">
                     <Icon className="h-5 w-5 text-primary" />
-                    <span className="text-muted-foreground">{item.text}</span>
+                    <span className="text-[#302e2b]">{item.text}</span>
                   </div>
                 );
               })}
