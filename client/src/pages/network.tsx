@@ -120,34 +120,7 @@ export default function Network() {
           </div>
         </div>
       </section>
-      {/* Features Section */}
-      <section className="py-16 px-4 bg-[#277677] pl-[20px] pr-[20px]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#FBF9F7] mb-4">
-              Por que escolher a <span className="text-[#E1AC33]">Hospital Animal's</span>?
-            </h2>
-            <p className="text-[#FBF9F7]/80 text-lg max-w-2xl mx-auto">
-              A maior rede de hospitais veterinários do Brasil, com padrão internacional de qualidade
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {hospitalFeatures.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div key={index} className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-[#E1AC33]/20">
-                    <Icon className="h-8 w-8 text-[#E1AC33]" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-[#FBF9F7]">{feature.title}</h3>
-                  <p className="text-[#FBF9F7]/80">{feature.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      
       {/* Network Units Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
