@@ -65,13 +65,19 @@ export default function PlansSection() {
           <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7]">
             <Button
               onClick={() => setShowCopay(false)}
-              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md transition-none hover:bg-current ${!showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
+              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${!showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
+              style={{ transition: 'none' }}
+              onMouseEnter={(e) => { e.preventDefault(); }}
+              onMouseLeave={(e) => { e.preventDefault(); }}
             >
               Sem Coparticipação
             </Button>
             <Button
               onClick={() => setShowCopay(true)}
-              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md transition-none hover:bg-current ${showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
+              className={`px-6 py-2 text-[#FBF9F7] font-medium rounded-md ${showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
+              style={{ transition: 'none' }}
+              onMouseEnter={(e) => { e.preventDefault(); }}
+              onMouseLeave={(e) => { e.preventDefault(); }}
             >
               Com Coparticipação
             </Button>
