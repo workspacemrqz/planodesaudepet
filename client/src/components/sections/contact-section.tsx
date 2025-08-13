@@ -75,7 +75,7 @@ export default function ContactSection() {
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#FBF9F7] font-semibold px-4">Tire suas dúvidas ou solicite uma cotação personalizada</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 px-4 sm:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 px-4 sm:px-0 pl-[0px] pr-[0px]">
           {/* Contact Form */}
           <Card className="unipet-card shadow-lg rounded-xl border-none">
             <CardHeader className="flex flex-col space-y-1.5 p-4 sm:p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
