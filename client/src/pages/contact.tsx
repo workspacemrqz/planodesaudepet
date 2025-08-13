@@ -168,14 +168,14 @@ export default function Contact() {
                           <FormLabel>Tipo de Animal</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger data-testid="select-animal-type">
+                              <SelectTrigger>
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent data-testid="select-animal-type-content">
-                              <SelectItem value="cao" data-testid="select-item-cao">Cão</SelectItem>
-                              <SelectItem value="gato" data-testid="select-item-gato">Gato</SelectItem>
-                              <SelectItem value="outros" data-testid="select-item-outros">Outros</SelectItem>
+                            <SelectContent>
+                              <SelectItem value="cao">Cão</SelectItem>
+                              <SelectItem value="gato">Gato</SelectItem>
+                              <SelectItem value="outros">Outros</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -190,15 +190,15 @@ export default function Contact() {
                           <FormLabel>Idade do Pet</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger data-testid="select-pet-age">
+                              <SelectTrigger>
                                 <SelectValue placeholder="Selecione..." />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent data-testid="select-pet-age-content">
-                              <SelectItem value="0-1" data-testid="select-item-0-1">0-1 ano</SelectItem>
-                              <SelectItem value="1-3" data-testid="select-item-1-3">1-3 anos</SelectItem>
-                              <SelectItem value="3-7" data-testid="select-item-3-7">3-7 anos</SelectItem>
-                              <SelectItem value="7+" data-testid="select-item-7+">7+ anos</SelectItem>
+                            <SelectContent>
+                              <SelectItem value="0-1">0-1 ano</SelectItem>
+                              <SelectItem value="1-3">1-3 anos</SelectItem>
+                              <SelectItem value="3-7">3-7 anos</SelectItem>
+                              <SelectItem value="7+">7+ anos</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -215,15 +215,15 @@ export default function Contact() {
                         <FormLabel>Plano de Interesse</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger data-testid="select-plan-interest">
+                            <SelectTrigger>
                               <SelectValue placeholder="Selecione um plano..." />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent data-testid="select-plan-interest-content">
-                            <SelectItem value="basico" data-testid="select-item-basico">Básico - R$20/mês</SelectItem>
-                            <SelectItem value="padrao" data-testid="select-item-padrao">Padrão - R$45/mês</SelectItem>
-                            <SelectItem value="premium" data-testid="select-item-premium">Premium - R$80/mês</SelectItem>
-                            <SelectItem value="local" data-testid="select-item-local">Plano Local</SelectItem>
+                          <SelectContent>
+                            <SelectItem value="basico">Básico - R$20/mês</SelectItem>
+                            <SelectItem value="padrao">Padrão - R$45/mês</SelectItem>
+                            <SelectItem value="premium">Premium - R$80/mês</SelectItem>
+                            <SelectItem value="local">Plano Local</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
