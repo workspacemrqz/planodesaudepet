@@ -316,7 +316,7 @@ export default function ContactSection() {
                   </div>
                   <div className="flex justify-between">
                     <span>Emergências:</span>
-                    <span className="text-primary font-semibold">24h todos os dias</span>
+                    <span className="font-semibold text-[#277677]">24h todos os dias</span>
                   </div>
                 </div>
               </CardContent>
