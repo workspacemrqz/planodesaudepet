@@ -8,16 +8,16 @@
   --foreground: hsl(0, 0%, 100%);
   --card: hsl(181, 51%, 35%);
   --card-foreground: hsl(0, 0%, 100%);
-  --popover: hsl(181, 51%, 35%);
-  --popover-foreground: hsl(0, 0%, 100%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(181, 51%, 31%);
   --primary: hsl(42, 74%, 54%);
   --primary-foreground: hsl(181, 51%, 31%);
   --secondary: hsl(181, 51%, 40%);
   --secondary-foreground: hsl(0, 0%, 100%);
   --muted: hsl(181, 51%, 40%);
   --muted-foreground: hsl(0, 0%, 95%);
-  --accent: hsl(181, 51%, 40%);
-  --accent-foreground: hsl(42, 74%, 54%);
+  --accent: hsl(42, 74%, 54%);
+  --accent-foreground: hsl(181, 51%, 31%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(0, 0%, 100%);
   --border: hsl(181, 51%, 50%);
@@ -53,16 +53,16 @@
   --foreground: hsl(0, 0%, 100%);
   --card: hsl(181, 51%, 35%);
   --card-foreground: hsl(0, 0%, 100%);
-  --popover: hsl(181, 51%, 35%);
-  --popover-foreground: hsl(0, 0%, 100%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(181, 51%, 31%);
   --primary: hsl(42, 74%, 54%);
   --primary-foreground: hsl(181, 51%, 31%);
   --secondary: hsl(181, 51%, 40%);
   --secondary-foreground: hsl(0, 0%, 100%);
   --muted: hsl(181, 51%, 40%);
   --muted-foreground: hsl(0, 0%, 95%);
-  --accent: hsl(181, 51%, 40%);
-  --accent-foreground: hsl(42, 74%, 54%);
+  --accent: hsl(42, 74%, 54%);
+  --accent-foreground: hsl(181, 51%, 31%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(0, 0%, 100%);
   --border: hsl(181, 51%, 50%);
@@ -108,5 +108,36 @@
   
   .unipet-button-secondary {
     @apply border-2 border-primary;
+  }
+
+  /* Enhanced Select Component Styles */
+  [data-radix-select-content] {
+    background: white !important;
+    color: hsl(181, 51%, 31%) !important;
+    border: 1px solid hsl(181, 51%, 50%) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    z-index: 50 !important;
+  }
+
+  [data-radix-select-item] {
+    cursor: pointer !important;
+  }
+
+  [data-radix-select-item]:hover,
+  [data-radix-select-item][data-highlighted] {
+    background: hsl(42, 74%, 54%) !important;
+    color: hsl(181, 51%, 31%) !important;
+  }
+
+  [data-radix-select-trigger] {
+    border: 1px solid hsl(181, 51%, 50%) !important;
+    background: white !important;
+    color: hsl(181, 51%, 31%) !important;
+  }
+
+  [data-radix-select-trigger]:focus {
+    border-color: hsl(42, 74%, 54%) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px hsl(42, 74%, 54%, 0.2) !important;
   }
 }
