@@ -63,7 +63,7 @@ export default function Features() {
             return (
               <div key={index} className="text-center border border-primary/30 rounded-lg p-6 shadow-md text-[#fbf9f7] bg-[#277677]">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-[#fbf9f7] bg-[#036566]">
-                  <Icon className="h-8 w-8 text-[#277677]" />
+                  <Icon className="h-8 w-8 text-[#FBF9F7]" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-[#fbf9f7]">{feature.title}</h3>
                 <p className="text-[#fbf9f7]">{feature.description}</p>
