@@ -267,12 +267,7 @@ export default function FaqTab() {
               <AccordionItem key={item.id} value={item.id} className="border rounded-lg px-4 bg-white">
                 <div className="flex items-center justify-between pr-2">
                   <AccordionTrigger className="text-left text-[#277677] font-medium hover:no-underline flex-1">
-                    <span className="flex items-center gap-3">
-                      <span className="bg-[#E1AC33] text-[#277677] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-                        {item.displayOrder}
-                      </span>
-                      {item.question}
-                    </span>
+                    {item.question}
                   </AccordionTrigger>
                   
                   <div className="flex items-center gap-1 ml-4">
