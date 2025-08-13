@@ -306,16 +306,14 @@ export default function ContactSection() {
               </CardHeader>
               <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
                 <div className="space-y-2 text-[#302e2b]">
-                  <div className="flex justify-between">
-                    <span>Segunda a Sexta:</span>
-                    <span>8h às 18h</span>
+                  <div>
+                    <span>Segunda a Sexta: 8h às 18h</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Sábado:</span>
-                    <span>8h às 14h</span>
+                  <div>
+                    <span>Sábado: 8h às 14h</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Emergências:</span>
+                  <div>
+                    <span>Emergências: </span>
                     <span className="font-semibold text-[#277677]">24h todos os dias</span>
                   </div>
                 </div>
