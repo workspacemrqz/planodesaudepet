@@ -101,7 +101,7 @@ export default function Plans() {
                 )}
                 
                 <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6">
-                  <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#277677] mb-3 sm:mb-4">{plan.name}</CardTitle>
+                  <CardTitle className="tracking-tight sm:text-2xl lg:text-3xl font-bold text-[#277677] mb-3 sm:mb-4 text-[26px] pt-[8px] pb-[8px]">{plan.name}</CardTitle>
                   <div className="mb-3 sm:mb-4">
                     <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#277677]">R${plan.price}</span>
                     <span className="text-sm sm:text-base lg:text-lg font-medium text-[#302e2b]">/mês</span>
