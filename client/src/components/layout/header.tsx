@@ -18,12 +18,12 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
+    <header className="fixed top-0 left-0 right-0 bg-[#368080] border-b border-border z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="/LOGO.png" alt="Unipet Plan" className="h-12 w-auto filter brightness-0 invert" />
+            <img src="/LOGO.png" alt="Unipet Plan" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,7 +57,7 @@ export default function Header() {
               <SheetContent side="right" className="w-[300px] bg-background">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center">
-                    <img src="/LOGO.png" alt="Unipet Plan" className="h-8 w-auto filter brightness-0 invert" />
+                    <img src="/LOGO.png" alt="Unipet Plan" className="h-8 w-auto" />
                   </div>
                 </div>
                 <nav className="flex flex-col space-y-6">
