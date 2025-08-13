@@ -281,7 +281,7 @@ export default function FaqTab() {
                 setEditingItem(null);
                 form.reset();
               }}
-              className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#fbf9f7]"
+              className="bg-[#145759] hover:bg-[#145759]/90 text-[#fbf9f7]"
               data-testid="button-add-faq"
             >
               <Plus className="h-4 w-4 mr-2" />
