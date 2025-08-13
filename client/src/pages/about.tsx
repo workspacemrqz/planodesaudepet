@@ -31,7 +31,7 @@ export default function About() {
           <h1 className="text-[48px] font-bold mb-4 text-white">
             Sobre a <span className="text-[#e1ac33]">UNIPET PLAN</span>
           </h1>
-          <p className="text-[24px] font-medium text-white/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-[20px] font-normal text-white/90 max-w-3xl mx-auto leading-relaxed">
             Somos uma empresa brasileira especializada em planos de saúde para pets, 
             comprometida em oferecer o melhor cuidado veterinário com preços acessíveis 
             e atendimento humanizado.

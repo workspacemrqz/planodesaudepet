@@ -57,7 +57,7 @@ export default function Plans() {
             <h2 className="text-[48px] mb-4 text-[#fbf9f7] font-bold">
               Nossos <span className="text-[#E1AC33]">Planos</span>
             </h2>
-            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[24px] font-medium mb-8">
+            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[20px] font-normal mb-8">
               Escolha a proteção ideal para seu melhor amigo
             </p>
             

@@ -106,7 +106,7 @@ export default function Network() {
               Rede Credenciada
             </h1>
           </div>
-          <p className="text-[24px] font-medium text-[#302e2b] max-w-3xl mx-auto mb-8">
+          <p className="text-[20px] font-normal text-[#302e2b] max-w-3xl mx-auto mb-8">
             Mais de 200 unidades Hospital Animal's em todo o Brasil, com atendimento 24 horas 
             e os melhores profissionais para cuidar do seu pet
           </p>

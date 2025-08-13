@@ -57,7 +57,7 @@ export default function FAQ() {
               Perguntas Frequentes
             </h1>
           </div>
-          <p className="text-[24px] font-medium max-w-2xl mx-auto text-[#fbf9f7]">
+          <p className="text-[20px] font-normal max-w-2xl mx-auto text-[#fbf9f7]">
             Encontre respostas para as principais dúvidas sobre nossos planos de seguro para pets
           </p>
         </div>

@@ -73,7 +73,7 @@ export default function Contact() {
           <h1 className="text-[48px] font-bold mb-4 text-white">
             Entre em <span className="text-primary">contato</span>
           </h1>
-          <p className="text-[24px] font-medium text-white/90">
+          <p className="text-[20px] font-normal text-white/90">
             Tire suas dúvidas ou solicite uma cotação personalizada
           </p>
         </div>
