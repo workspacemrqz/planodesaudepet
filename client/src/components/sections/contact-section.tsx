@@ -69,7 +69,7 @@ export default function ContactSection() {
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#060606]">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#302e2b]">
             Entre em <span className="text-primary">contato</span>
           </h2>
           <p className="text-xl text-[#101010]">Tire suas dúvidas ou solicite uma cotação personalizada</p>
@@ -269,8 +269,8 @@ export default function ContactSection() {
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-[#060606]">Telefone</div>
-                    <div className="text-[#060606]">0800 123 4567</div>
+                    <div className="font-semibold text-[#302e2b]">Telefone</div>
+                    <div className="text-[#302e2b]">0800 123 4567</div>
                   </div>
                 </div>
 
@@ -279,8 +279,8 @@ export default function ContactSection() {
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-[#060606]">E-mail</div>
-                    <div className="text-[#060606]">contato@unipetplan.com.br</div>
+                    <div className="font-semibold text-[#302e2b]">E-mail</div>
+                    <div className="text-[#302e2b]">contato@unipetplan.com.br</div>
                   </div>
                 </div>
 
@@ -289,8 +289,8 @@ export default function ContactSection() {
                     <MessageSquare className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-[#060606]">WhatsApp</div>
-                    <div className="text-[#060606]">(11) 99999-9999</div>
+                    <div className="font-semibold text-[#302e2b]">WhatsApp</div>
+                    <div className="text-[#302e2b]">(11) 99999-9999</div>
                   </div>
                 </div>
               </div>
