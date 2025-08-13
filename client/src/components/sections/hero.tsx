@@ -23,7 +23,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="min-h-screen flex items-center">
+    <section className="min-h-screen flex items-center bg-[#FBF9F7]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
