@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Heart, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, MessageSquare } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, MessageSquare } from "lucide-react";
 
 export default function Footer() {
   const quickLinks = [
@@ -24,9 +24,8 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-6">
-              <Heart className="h-8 w-8 text-[#277677]" />
-              <span className="text-xl font-bold text-[#277677]">UNIPET PLAN</span>
+            <div className="flex items-center mb-6">
+              <img src="/LOGO.png" alt="Unipet Plan" className="h-12 w-auto" />
             </div>
             <p className="text-[#302e2b] mb-6">
               Cuidando da saúde do seu pet com carinho, qualidade e preços acessíveis.

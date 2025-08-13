@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Heart, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Header() {
@@ -22,9 +22,8 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-[#fbf9f7]">UNIPET PLAN</span>
+          <Link href="/" className="flex items-center">
+            <img src="/LOGO.png" alt="Unipet Plan" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,9 +56,8 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] bg-background">
                 <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-2">
-                    <Heart className="h-6 w-6 text-primary" />
-                    <span className="text-lg font-bold text-[#277677]">UNIPET PLAN</span>
+                  <div className="flex items-center">
+                    <img src="/LOGO.png" alt="Unipet Plan" className="h-8 w-auto" />
                   </div>
                 </div>
                 <nav className="flex flex-col space-y-6">
