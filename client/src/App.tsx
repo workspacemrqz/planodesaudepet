@@ -9,6 +9,7 @@ import Plans from "@/pages/plans";
 import About from "@/pages/about";
 import Contact from "@/pages/contact";
 import FAQ from "@/pages/faq";
+import Network from "@/pages/network";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/sobre" component={About} />
         <Route path="/contato" component={Contact} />
         <Route path="/faq" component={FAQ} />
+        <Route path="/rede-credenciada" component={Network} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
