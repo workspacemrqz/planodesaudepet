@@ -103,9 +103,14 @@ export default function NetworkUnitsTab() {
   // Upload image mutation
   const uploadImageMutation = useMutation({
     mutationFn: async ({ unitId, imageURL }: { unitId: string, imageURL: string }) => {
-      await apiRequest("PUT", `/api/admin/network-units/${unitId}/image`, { imageURL });
+      const response = await apiRequest("PUT", `/api/admin/network-units/${unitId}/image`, { imageURL });
+      return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Update the preview with the normalized object path
+      if (data.objectPath) {
+        setUploadedImageUrl(data.objectPath);
+      }
       queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
       toast({
         title: "Sucesso",
@@ -144,10 +149,11 @@ export default function NetworkUnitsTab() {
         throw new Error('Upload failed');
       }
       
-      // Set the uploaded image URL for preview (use the presigned URL for immediate preview)
+      // Set the uploaded image URL for preview
       setUploadedImageUrl(uploadURL);
       
-      // If editing a unit, update the image immediately
+      // If editing a unit, update the image immediately with the presigned URL
+      // The server will convert it to the proper object path
       if (editingUnit) {
         uploadImageMutation.mutate({ 
           unitId: editingUnit.id, 
