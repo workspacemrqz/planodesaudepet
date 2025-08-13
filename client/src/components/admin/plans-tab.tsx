@@ -155,7 +155,7 @@ export default function PlansTab() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-[#277677]">Gerenciar Planos</h3>
+          <h3 className="text-lg font-semibold text-[#fbf9f7]">Gerenciar Planos</h3>
           <p className="text-sm text-[#302e2b]/70">
             Adicione, edite ou remova planos de seguro
           </p>
@@ -306,7 +306,6 @@ export default function PlansTab() {
           </DialogContent>
         </Dialog>
       </div>
-
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plans?.map((plan) => (
           <Card key={plan.id} className={`relative ${plan.isPopular ? 'ring-2 ring-[#E1AC33]' : ''}`}>
@@ -364,7 +363,6 @@ export default function PlansTab() {
           </Card>
         ))}
       </div>
-
       {(!plans || plans.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
