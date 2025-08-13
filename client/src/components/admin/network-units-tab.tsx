@@ -331,24 +331,20 @@ export default function NetworkUnitsTab() {
                       name="rating"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel>Avaliação</FormLabel>
+                          <div className="flex items-center gap-2">
+                            <FormLabel>Avaliação</FormLabel>
+                            <span className="font-medium text-[#277677]">{field.value.toFixed(1)}</span>
+                          </div>
                           <FormControl>
-                            <div className="space-y-2">
-                              <Slider
-                                min={1}
-                                max={5}
-                                step={0.1}
-                                value={[field.value]}
-                                onValueChange={(values) => field.onChange(values[0])}
-                                className="w-full"
-                                data-testid="slider-unit-rating"
-                              />
-                              <div className="flex justify-between text-sm text-gray-500">
-                                <span>1</span>
-                                <span className="font-medium text-[#277677]">{field.value.toFixed(1)}</span>
-                                <span>5</span>
-                              </div>
-                            </div>
+                            <Slider
+                              min={1}
+                              max={5}
+                              step={0.1}
+                              value={[field.value]}
+                              onValueChange={(values) => field.onChange(values[0])}
+                              className="w-full"
+                              data-testid="slider-unit-rating"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
