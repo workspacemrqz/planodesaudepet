@@ -55,7 +55,7 @@ export default function Network() {
               Principais Unidades
             </h2>
             <p className="text-[#302e2b] text-lg max-w-2xl mx-auto">
-              Conheça algumas das nossas principais unidades espalhadas pelo Brasil
+              Conheça algumas das nossas principais unidades<br />espalhadas pelo Brasil
             </p>
           </div>
 

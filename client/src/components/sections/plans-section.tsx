@@ -53,10 +53,10 @@ export default function PlansSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px] text-center">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl mb-4 text-[#fbf9f7] font-bold leading-tight">
-            Escolha o <span className="text-primary">plano ideal</span> para seu pet
+            Escolha o <span className="text-primary">plano ideal</span><br />para seu pet
           </h2>
           <p className="max-w-2xl mx-auto text-[#fbf9f7] text-base sm:text-lg md:text-xl lg:text-2xl font-medium px-4">
-            Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
+            Planos Locais com<br />Menos Burocracia
           </p>
         </div>
 

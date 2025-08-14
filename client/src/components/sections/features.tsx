@@ -50,7 +50,7 @@ export default function Features() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="font-bold mb-4 text-[#302e2b] text-2xl sm:text-3xl md:text-4xl lg:text-[36px] leading-tight">
-            Por que escolher a <span className="text-[#277677]">UNIPET PLAN?</span>
+            Por que escolher a<br /><span className="text-[#277677]">UNIPET PLAN?</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] max-w-2xl mx-auto font-semibold px-4">
             Oferecemos o melhor cuidado para seu pet com praticidade e confiança
@@ -84,7 +84,7 @@ export default function Features() {
           </div>
           <div className="order-1 lg:order-2">
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-[#302e2b] leading-tight">
-              Rede Credenciada <span className="text-[#277677]">Hospital Animal's 24h</span>
+              Rede Credenciada<br /><span className="text-[#277677]">Hospital Animal's 24h</span>
             </h3>
             <p className="text-[#302e2b] text-sm sm:text-base lg:text-lg mb-4 sm:mb-6 leading-relaxed">
               Tenha acesso a uma das maiores redes de hospitais veterinários do Brasil, 
