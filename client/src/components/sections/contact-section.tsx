@@ -306,7 +306,7 @@ export default function ContactSection() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
-                <div className="space-y-2 text-[#302e2b]">
+                <div className="space-y-2 text-[#302e2b] mt-[0px] mb-[0px] pt-[10px] pb-[10px]">
                   <div>
                     <span>Segunda a Sexta: 8h às 18h</span>
                   </div>
