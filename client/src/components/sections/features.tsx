@@ -66,7 +66,7 @@ export default function Features() {
                   <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-[#FBF9F7]" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 text-[#fbf9f7]">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-[#fbf9f7] leading-relaxed">{feature.description}</p>
+                <p className="text-sm sm:text-base text-[#fbf9f7] leading-relaxed pl-[60px] pr-[60px]">{feature.description}</p>
               </div>
             );
           })}
