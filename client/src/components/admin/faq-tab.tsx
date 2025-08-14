@@ -279,7 +279,7 @@ export default function FaqTab() {
                 setEditingItem(null);
                 form.reset();
               }}
-              className="bg-[#145759] text-[#fbf9f7]"
+              className="text-[#fbf9f7] bg-[#E1AC33]"
               data-testid="button-add-faq"
             >
               <Plus className="h-4 w-4 mr-2" />

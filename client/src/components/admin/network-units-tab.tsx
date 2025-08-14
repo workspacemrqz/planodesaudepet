@@ -276,7 +276,7 @@ export default function NetworkUnitsTab() {
           <DialogTrigger asChild>
             <Button 
               onClick={handleNewUnit}
-              className="bg-[#145759] text-[#fbf9f7]"
+              className="text-[#fbf9f7] bg-[#E1AC33]"
               data-testid="button-add-unit"
             >
               <Plus className="h-4 w-4 mr-2" />
