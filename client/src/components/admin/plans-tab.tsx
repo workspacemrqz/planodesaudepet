@@ -312,8 +312,8 @@ export default function PlansTab() {
                   onClick={() => handleTogglePopular(plan)}
                   className={`h-8 w-8 p-0 ${
                     plan.isPopular 
-                      ? 'bg-[#E1AC33] text-[#FBF9F7]' 
-                      : 'bg-[#4B5563] text-[#FBF9F7]'
+                      ? 'bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] focus:bg-[#E1AC33] active:bg-[#E1AC33] hover:text-[#FBF9F7] focus:text-[#FBF9F7] active:text-[#FBF9F7]' 
+                      : 'bg-[#4B5563] text-[#FBF9F7] hover:bg-[#4B5563] focus:bg-[#4B5563] active:bg-[#4B5563] hover:text-[#FBF9F7] focus:text-[#FBF9F7] active:text-[#FBF9F7]'
                   }`}
                   data-testid={`button-popular-plan-${plan.id}`}
                   title={plan.isPopular ? "Remover como mais popular" : "Marcar como mais popular"}
