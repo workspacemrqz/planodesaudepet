@@ -441,62 +441,69 @@ export default function NetworkUnitsTab() {
                 )}
 
                 {/* Navigation Buttons */}
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
-                  {/* Left side - Cancel button (only step 1) */}
-                  <div className="flex justify-center sm:justify-start">
-                    {currentStep === 1 && (
+                <div className="flex justify-center gap-2">
+                  {currentStep === 1 ? (
+                    // Step 1: Cancel + Next buttons side by side
+                    <>
                       <Button 
                         type="button" 
                         variant="outline" 
                         onClick={() => setIsDialogOpen(false)}
                         data-testid="button-cancel-unit"
-                        className="mobile-touch-target"
+                        className="mobile-touch-target flex-1 max-w-[140px]"
                       >
                         Cancelar
                       </Button>
-                    )}
-                  </div>
-                  
-                  {/* Right side - Navigation buttons */}
-                  <div className="flex gap-2 justify-center sm:justify-end">
-                    {currentStep > 1 && (
+                      <Button 
+                        type="button"
+                        onClick={nextStep}
+                        data-testid="button-next-step"
+                        className="text-[#ffffff] mobile-touch-target flex-1 max-w-[140px]"
+                      >
+                        Próximo
+                        <ChevronRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    </>
+                  ) : (
+                    // Steps 2-3: Previous + Next/Save buttons
+                    <>
                       <Button 
                         type="button" 
                         variant="outline"
                         onClick={prevStep}
                         data-testid="button-prev-step"
-                        className="mobile-touch-target"
+                        className="mobile-touch-target flex-1 max-w-[140px]"
                       >
                         <ChevronLeft className="h-4 w-4 mr-2" />
                         Anterior
                       </Button>
-                    )}
-                    
-                    {currentStep < 3 ? (
-                      <Button 
-                        type="button"
-                        onClick={nextStep}
-                        data-testid="button-next-step"
-                        className="text-[#ffffff] mobile-touch-target"
-                      >
-                        Próximo
-                        <ChevronRight className="h-4 w-4 ml-2" />
-                      </Button>
-                    ) : (
-                      <Button 
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          form.handleSubmit(onSubmit)(e);
-                        }}
-                        disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
-                        data-testid="button-save-unit"
-                        className="text-[#ffffff] mobile-touch-target"
-                      >
-                        {editingUnit ? "Atualizar" : "Criar"} Unidade
-                      </Button>
-                    )}
-                  </div>
+                      
+                      {currentStep < 3 ? (
+                        <Button 
+                          type="button"
+                          onClick={nextStep}
+                          data-testid="button-next-step"
+                          className="text-[#ffffff] mobile-touch-target flex-1 max-w-[140px]"
+                        >
+                          Próximo
+                          <ChevronRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      ) : (
+                        <Button 
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            form.handleSubmit(onSubmit)(e);
+                          }}
+                          disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
+                          data-testid="button-save-unit"
+                          className="text-[#ffffff] mobile-touch-target flex-1 max-w-[200px]"
+                        >
+                          {editingUnit ? "Atualizar" : "Criar"} Unidade
+                        </Button>
+                      )}
+                    </>
+                  )}
                 </div>
                 </div>
               </Form>
