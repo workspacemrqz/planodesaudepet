@@ -308,7 +308,7 @@ export default function FaqTab() {
                           placeholder="Digite a pergunta..." 
                           {...field}
                           data-testid="input-faq-question"
-                          className="bg-[#195d5e] text-white placeholder:text-gray-300"
+                          className="bg-[#195d5e] text-white placeholder:text-gray-300 border-gray-300 focus:border-gray-300 focus:ring-0 focus:ring-offset-0 focus:outline-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -327,7 +327,7 @@ export default function FaqTab() {
                           rows={4}
                           {...field}
                           data-testid="textarea-faq-answer"
-                          className="bg-[#195d5e] text-white placeholder:text-gray-300"
+                          className="bg-[#195d5e] text-white placeholder:text-gray-300 border-gray-300 focus:border-gray-300 focus:ring-0 focus:ring-offset-0 focus:outline-none"
                         />
                       </FormControl>
                       <FormMessage />

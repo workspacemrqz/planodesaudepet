@@ -81,6 +81,7 @@
   box-shadow: none !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
+  border: 1px solid #d1d5db !important;
 }
 
 .admin-dialog-content input:focus,
@@ -90,13 +91,71 @@
 .admin-dialog-content input:focus-visible,
 .admin-dialog-content textarea:focus-visible,
 .admin-dialog-content select:focus-visible,
-.admin-dialog-content [role="combobox"]:focus-visible {
+.admin-dialog-content [role="combobox"]:focus-visible,
+.admin-dialog-content input:active,
+.admin-dialog-content textarea:active,
+.admin-dialog-content select:active,
+.admin-dialog-content [role="combobox"]:active {
   outline: none !important;
   ring: none !important;
   box-shadow: none !important;
   border-color: #d1d5db !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-opacity: 0 !important;
+}
+
+/* Additional overrides for Shadcn UI components */
+.admin-dialog-content .relative input,
+.admin-dialog-content .relative textarea,
+.admin-no-focus input,
+.admin-no-focus textarea {
+  outline: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-opacity: 0 !important;
+}
+
+.admin-dialog-content .relative input:focus,
+.admin-dialog-content .relative textarea:focus,
+.admin-no-focus input:focus,
+.admin-no-focus textarea:focus,
+.admin-dialog-content .relative input:focus-visible,
+.admin-dialog-content .relative textarea:focus-visible,
+.admin-no-focus input:focus-visible,
+.admin-no-focus textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #d1d5db !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-opacity: 0 !important;
+}
+
+/* Extra forceful override for all possible input/textarea focus states */
+*[data-testid^="input-"],
+*[data-testid^="textarea-"] {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+*[data-testid^="input-"]:focus,
+*[data-testid^="textarea-"]:focus,
+*[data-testid^="input-"]:focus-visible,
+*[data-testid^="textarea-"]:focus-visible,
+*[data-testid^="input-"]:active,
+*[data-testid^="textarea-"]:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #9ca3af !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-opacity: 0 !important;
 }
 
 
