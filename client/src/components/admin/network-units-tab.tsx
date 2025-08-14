@@ -517,7 +517,7 @@ export default function NetworkUnitsTab() {
                 placeholder="Digite o nome ou endereço..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="pl-10 bg-[#fbf9f7] text-[#302e2b] border-[#277677]"
+                className="pl-10 text-[#302e2b] border-[#277677] bg-[#145759]"
                 data-testid="input-search-units"
               />
             </div>
@@ -529,7 +529,7 @@ export default function NetworkUnitsTab() {
               Filtrar por avaliação
             </label>
             <Select value={filterByRating} onValueChange={setFilterByRating}>
-              <SelectTrigger className="bg-[#fbf9f7] text-[#302e2b] border-[#277677]" data-testid="select-rating-filter">
+              <SelectTrigger className="border-[#277677] bg-[#145759] text-[#fbf9f7]" data-testid="select-rating-filter">
                 <SelectValue placeholder="Todas as avaliações" />
               </SelectTrigger>
               <SelectContent>
@@ -547,7 +547,7 @@ export default function NetworkUnitsTab() {
               Filtrar por serviço
             </label>
             <Select value={filterByService} onValueChange={setFilterByService}>
-              <SelectTrigger className="bg-[#fbf9f7] text-[#302e2b] border-[#277677]" data-testid="select-service-filter">
+              <SelectTrigger className="border-[#277677] bg-[#145759] text-[#fbf9f7]" data-testid="select-service-filter">
                 <SelectValue placeholder="Todos os serviços" />
               </SelectTrigger>
               <SelectContent>
@@ -631,18 +631,7 @@ export default function NetworkUnitsTab() {
           <CardContent className="p-6 text-center">
             <Search className="h-12 w-12 text-[#277677] mx-auto mb-4" />
             <p className="text-[#fbf9f7]">Nenhuma unidade encontrada com os filtros aplicados.</p>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                setSearchText("");
-                setFilterByRating("all");
-                setFilterByService("all");
-              }}
-              className="mt-4 text-[#277677] border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7]"
-              data-testid="button-clear-filters-empty"
-            >
-              Limpar filtros
-            </Button>
+            
           </CardContent>
         </Card>
       )}
