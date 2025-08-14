@@ -74,7 +74,7 @@ export default function ContactSubmissionsTab() {
           data-testid="collapsible-forms-trigger"
         >
           <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-[#E1AC33]" />
+            <Mail className="h-5 w-5 text-[#2C8587]" />
             <div className="text-left">
               <h3 className="text-lg font-semibold text-[#FBF9F7]">
                 Formulários de Contato
@@ -98,7 +98,7 @@ export default function ContactSubmissionsTab() {
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg text-[#FBF9F7] flex items-center gap-2">
-                  <Heart className="h-5 w-5 text-[#E1AC33]" />
+                  <Heart className="h-5 w-5 text-[#2C8587]" />
                   {submission.name}
                 </CardTitle>
                 <div className="text-xs text-[#FBF9F7]/70 flex items-center gap-1">
@@ -113,15 +113,15 @@ export default function ContactSubmissionsTab() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-[#E1AC33]" />
+                    <Mail className="h-4 w-4 text-[#2C8587]" />
                     <span className="text-[#FBF9F7]">{submission.email}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-[#E1AC33]" />
+                    <Phone className="h-4 w-4 text-[#2C8587]" />
                     <span className="text-[#FBF9F7]">{submission.phone}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-[#E1AC33]" />
+                    <MapPin className="h-4 w-4 text-[#2C8587]" />
                     <span className="text-[#FBF9F7]">{submission.city}</span>
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export default function ContactSubmissionsTab() {
                   </div>
                   <div className="text-sm">
                     <span className="font-medium text-[#FBF9F7]">Idade:</span>
-                    <Badge variant="outline" className="ml-2 border-[#E1AC33] text-[#FBF9F7]">
+                    <Badge variant="outline" className="ml-2 border-[#2C8587] text-[#FBF9F7]">
                       {submission.petAge}
                     </Badge>
                   </div>
@@ -158,7 +158,7 @@ export default function ContactSubmissionsTab() {
 
               {/* Message */}
               {submission.message && (
-                <div className="border-l-4 border-[#E1AC33] pl-4">
+                <div className="border-l-4 border-[#2C8587] pl-4">
                   <p className="text-sm font-medium text-[#FBF9F7] mb-1">Mensagem:</p>
                   <p className="text-sm text-[#FBF9F7] leading-relaxed">
                     {submission.message}
@@ -170,7 +170,7 @@ export default function ContactSubmissionsTab() {
               <div className="flex gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="bg-[#E1AC33] text-[#fbf9f7] hover:bg-[#E1AC33]/90"
+                  className="bg-[#2C8587] text-[#fbf9f7] hover:bg-[#2C8587]/90"
                   onClick={() => window.open(`mailto:${submission.email}?subject=Proposta UNIPET PLAN para ${submission.petName}`)}
                   data-testid={`button-email-${submission.id}`}
                 >
@@ -180,7 +180,7 @@ export default function ContactSubmissionsTab() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-[#E1AC33] hover:bg-[#E1AC33]/10 bg-[#2c8587] text-[#fbf9f7]"
+                  className="border-[#2C8587] hover:bg-[#2C8587]/10 bg-[#2c8587] text-[#fbf9f7]"
                   onClick={() => window.open(`tel:${submission.phone}`)}
                   data-testid={`button-call-${submission.id}`}
                 >
