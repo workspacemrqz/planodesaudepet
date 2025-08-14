@@ -14,12 +14,10 @@ export default function FAQ() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 text-[#fbf9f7] bg-[#277677] pl-[20px] pr-[20px]">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-6">
-            <HelpCircle className="h-12 w-12 text-[#277677] mr-3" />
-            <h1 className="font-bold text-[#e1ac33] text-[36px]">
-              Perguntas Frequentes
-            </h1>
-          </div>
+          <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
+          <h1 className="font-bold text-[#e1ac33] text-[36px] mb-6">
+            Perguntas Frequentes
+          </h1>
           <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
             Tudo que você precisa saber<br />sobre nossos planos
           </p>
