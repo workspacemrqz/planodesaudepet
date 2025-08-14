@@ -91,12 +91,11 @@ function SortableFaqItem({
         <div className="flex items-center gap-1 ml-4">
           <Button
             size="sm"
-            variant="ghost"
             onClick={(e) => {
               e.stopPropagation();
               onEdit(item);
             }}
-            className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585]"
+            className="h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585]"
             data-testid={`button-edit-faq-${item.id}`}
           >
             <Edit className="h-4 w-4" />
