@@ -301,44 +301,18 @@
 
   /* Mobile admin optimizations */
   @media (max-width: 768px) {
-    /* Dialog overlay mobile */
-    [data-radix-dialog-overlay] {
-      position: fixed !important;
-      inset: 0 !important;
-      background-color: rgba(0, 0, 0, 0.8) !important;
-      z-index: 40 !important;
-    }
-
-    /* Dialog portal container */
-    [data-radix-portal] {
-      position: fixed !important;
-      inset: 0 !important;
-      z-index: 50 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 1rem !important;
-    }
-    
-    /* Make dialogs responsive on mobile */
-    [role="dialog"] {
-      position: relative !important;
-      margin: 0 auto !important;
-      width: 100% !important;
+    /* Admin dialog specific styles */
+    .admin-dialog-content {
+      width: calc(100vw - 2rem) !important;
       max-width: calc(100vw - 2rem) !important;
-      height: auto !important;
+      margin: 1rem !important;
       max-height: calc(100vh - 2rem) !important;
-      overflow: hidden !important;
-      border-radius: 0.75rem !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-      background: white !important;
     }
     
-    /* Improve modal content scrolling */
-    [role="dialog"] > div {
-      overflow-y: auto !important;
+    /* Admin dialog content scrolling */
+    .admin-dialog-content > div {
       max-height: calc(100vh - 4rem) !important;
-      padding: 1.25rem !important;
+      overflow-y: auto !important;
     }
     
     /* Dialog header mobile */

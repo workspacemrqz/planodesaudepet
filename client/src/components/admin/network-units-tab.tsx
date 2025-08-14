@@ -287,7 +287,7 @@ export default function NetworkUnitsTab() {
               Nova Unidade
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl admin-dialog-content">
             <DialogHeader>
               <DialogTitle className="text-[#e5e7eb]">
                 {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3

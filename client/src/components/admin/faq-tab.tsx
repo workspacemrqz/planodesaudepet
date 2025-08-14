@@ -288,7 +288,7 @@ export default function FaqTab() {
               Adicionar Pergunta
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl w-full sm:max-w-2xl">
+          <DialogContent className="max-w-2xl w-full sm:max-w-2xl admin-dialog-content">
             <DialogHeader>
               <DialogTitle className="text-[#ffffff]">
                 {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
