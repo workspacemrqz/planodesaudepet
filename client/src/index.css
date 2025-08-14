@@ -166,6 +166,19 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold;
   }
+
+  /* Square image containers */
+  .square-image-container {
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden;
+  }
+
+  .square-image-container img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    aspect-ratio: 1 / 1 !important;
+  }
 }
 
 @layer components {

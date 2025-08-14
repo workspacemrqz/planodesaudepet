@@ -403,17 +403,16 @@ export default function NetworkUnitsTab() {
                           <div className="text-sm p-2 rounded border bg-[#277677] text-[#ffffff]">
                             ✓ Imagem carregada com sucesso
                           </div>
-                          <div className="w-32 h-32 border-2 border-[#277677] rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                          <div className="w-32 h-32 border-2 border-[#277677] rounded-lg square-image-container bg-gray-100">
                             <img 
                               src={uploadedImageUrl} 
                               alt="Preview" 
-                              className="w-full h-full object-cover aspect-square"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
                               }}
                             />
-                            <div className="hidden text-gray-500 text-xs">Erro ao carregar</div>
+                            <div className="hidden text-gray-500 text-xs flex items-center justify-center h-full">Erro ao carregar</div>
                           </div>
                         </div>
                       )}
