@@ -96,8 +96,7 @@ export default function ContactSubmissionsTab() {
           <Card key={submission.id} className="rounded-lg border text-card-foreground border-[#277677]/30 shadow-sm transition-all duration-300 hover:shadow-2xl bg-[#114b4c]">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
-                <CardTitle className="text-lg text-[#FBF9F7] flex items-center gap-2">
-                  <Heart className="h-5 w-5 text-[#2C8587]" />
+                <CardTitle className="text-lg text-[#FBF9F7]">
                   {submission.name}
                 </CardTitle>
                 <div className="text-xs text-[#FBF9F7]/70 flex items-center gap-1">
