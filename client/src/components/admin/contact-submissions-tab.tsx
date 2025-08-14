@@ -93,14 +93,14 @@ export default function ContactSubmissionsTab() {
       <CollapsibleContent className="space-y-4" data-testid="collapsible-forms-content">
         <div className="grid gap-4">
           {submissions.map((submission) => (
-          <Card key={submission.id} className="shadow-sm border border-gray-200">
+          <Card key={submission.id} className="bg-[#145759] border-[#277677]/30 shadow-sm transition-all duration-300 hover:shadow-2xl">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
-                <CardTitle className="text-lg text-[#277677] flex items-center gap-2">
+                <CardTitle className="text-lg text-[#FBF9F7] flex items-center gap-2">
                   <Heart className="h-5 w-5 text-[#E1AC33]" />
                   {submission.name}
                 </CardTitle>
-                <div className="text-xs text-[#302e2b]/70 flex items-center gap-1">
+                <div className="text-xs text-[#FBF9F7]/70 flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
                   {format(new Date(submission.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
                 </div>
@@ -112,33 +112,33 @@ export default function ContactSubmissionsTab() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-[#277677]" />
-                    <span className="text-[#302e2b]">{submission.email}</span>
+                    <Mail className="h-4 w-4 text-[#E1AC33]" />
+                    <span className="text-[#FBF9F7]">{submission.email}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-[#277677]" />
-                    <span className="text-[#302e2b]">{submission.phone}</span>
+                    <Phone className="h-4 w-4 text-[#E1AC33]" />
+                    <span className="text-[#FBF9F7]">{submission.phone}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-[#277677]" />
-                    <span className="text-[#302e2b]">{submission.city}</span>
+                    <MapPin className="h-4 w-4 text-[#E1AC33]" />
+                    <span className="text-[#FBF9F7]">{submission.city}</span>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <div className="text-sm">
-                    <span className="font-medium text-[#277677]">Pet:</span>
-                    <span className="ml-2 text-[#302e2b]">{submission.petName}</span>
+                    <span className="font-medium text-[#FBF9F7]">Pet:</span>
+                    <span className="ml-2 text-[#FBF9F7]">{submission.petName}</span>
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium text-[#277677]">Tipo:</span>
-                    <Badge variant="secondary" className="ml-2">
+                    <span className="font-medium text-[#FBF9F7]">Tipo:</span>
+                    <Badge variant="secondary" className="ml-2 bg-[#E1AC33] text-[#145759]">
                       {getAnimalTypeLabel(submission.animalType)}
                     </Badge>
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium text-[#277677]">Idade:</span>
-                    <Badge variant="outline" className="ml-2">
+                    <span className="font-medium text-[#FBF9F7]">Idade:</span>
+                    <Badge variant="outline" className="ml-2 border-[#E1AC33] text-[#FBF9F7]">
                       {submission.petAge}
                     </Badge>
                   </div>
@@ -146,10 +146,10 @@ export default function ContactSubmissionsTab() {
               </div>
 
               {/* Plan Interest */}
-              <div className="bg-[#277677]/5 p-3 rounded-lg">
+              <div className="bg-[#E1AC33]/10 p-3 rounded-lg">
                 <div className="text-sm">
-                  <span className="font-medium text-[#277677]">Plano de interesse:</span>
-                  <Badge className="ml-2 bg-[#E1AC33] text-[#277677]">
+                  <span className="font-medium text-[#FBF9F7]">Plano de interesse:</span>
+                  <Badge className="ml-2 bg-[#E1AC33] text-[#145759]">
                     {getPlanLabel(submission.planInterest)}
                   </Badge>
                 </div>
@@ -158,8 +158,8 @@ export default function ContactSubmissionsTab() {
               {/* Message */}
               {submission.message && (
                 <div className="border-l-4 border-[#E1AC33] pl-4">
-                  <p className="text-sm font-medium text-[#277677] mb-1">Mensagem:</p>
-                  <p className="text-sm text-[#302e2b] leading-relaxed">
+                  <p className="text-sm font-medium text-[#FBF9F7] mb-1">Mensagem:</p>
+                  <p className="text-sm text-[#FBF9F7] leading-relaxed">
                     {submission.message}
                   </p>
                 </div>
@@ -169,7 +169,7 @@ export default function ContactSubmissionsTab() {
               <div className="flex gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="bg-[#277677] text-white"
+                  className="bg-[#E1AC33] text-[#145759] hover:bg-[#E1AC33]/90"
                   onClick={() => window.open(`mailto:${submission.email}?subject=Proposta UNIPET PLAN para ${submission.petName}`)}
                   data-testid={`button-email-${submission.id}`}
                 >
@@ -179,7 +179,7 @@ export default function ContactSubmissionsTab() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-[#277677] text-[#277677]"
+                  className="border-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33]/10"
                   onClick={() => window.open(`tel:${submission.phone}`)}
                   data-testid={`button-call-${submission.id}`}
                 >
