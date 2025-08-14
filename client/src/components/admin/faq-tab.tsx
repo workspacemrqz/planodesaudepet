@@ -288,13 +288,14 @@ export default function FaqTab() {
               Adicionar Pergunta
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl w-full sm:max-w-2xl admin-dialog-content">
-            <DialogHeader>
-              <DialogTitle className="text-[#ffffff]">
-                {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
-              </DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
+          <DialogContent className="max-w-2xl w-full sm:max-w-2xl admin-dialog-content p-0">
+            <div className="p-6">
+              <DialogHeader>
+                <DialogTitle className="text-[#ffffff]">
+                  {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
+                </DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
                 <FormField
                   control={form.control}
@@ -353,6 +354,7 @@ export default function FaqTab() {
                 </div>
               </form>
             </Form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

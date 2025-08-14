@@ -287,21 +287,22 @@ export default function NetworkUnitsTab() {
               Nova Unidade
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl admin-dialog-content">
-            <DialogHeader className="pb-2">
-              <DialogTitle className="text-[#e5e7eb] mb-0">
-                {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
-              </DialogTitle>
-            </DialogHeader>
-            
-            
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl admin-dialog-content p-0">
+            <div className="p-6">
+              <DialogHeader className="pb-2">
+                <DialogTitle className="text-[#e5e7eb] mb-0">
+                  {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
+                </DialogTitle>
+              </DialogHeader>
+              
+              
 
-            <Form {...form}>
-              <div className="space-y-4 admin-no-focus" onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                }
-              }}>
+              <Form {...form}>
+                <div className="space-y-4 admin-no-focus" onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}>
                 
                 {/* Step 1: Basic Information */}
                 {currentStep === 1 && (
@@ -493,8 +494,9 @@ export default function NetworkUnitsTab() {
                     )}
                   </div>
                 </div>
-              </div>
-            </Form>
+                </div>
+              </Form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

@@ -169,14 +169,15 @@ export default function PlansTab() {
         setIsDialogOpen(open);
         if (!open) resetForm();
       }}>
-        <DialogContent className="max-w-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto admin-dialog-content">
-          <DialogHeader>
-            <DialogTitle className="text-[#ffffff]">
-              Editar Plano {editingPlan?.name}
-            </DialogTitle>
-          </DialogHeader>
-          
-          <Form {...form}>
+        <DialogContent className="max-w-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto admin-dialog-content p-0">
+          <div className="p-6">
+            <DialogHeader>
+              <DialogTitle className="text-[#ffffff]">
+                Editar Plano {editingPlan?.name}
+              </DialogTitle>
+            </DialogHeader>
+            
+            <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
               <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
                 <FormField
@@ -285,6 +286,7 @@ export default function PlansTab() {
               </div>
             </form>
           </Form>
+          </div>
         </DialogContent>
       </Dialog>
       <div className="space-y-4">
