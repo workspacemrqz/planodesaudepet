@@ -147,7 +147,7 @@ export default function ContactSubmissionsTab() {
               </div>
 
               {/* Plan Interest */}
-              <div className="bg-[#E1AC33]/10 p-3 rounded-lg">
+              <div className="p-3 rounded-lg bg-[#e1ac3300]">
                 <div className="text-sm">
                   <span className="font-medium text-[#FBF9F7]">Plano de interesse:</span>
                   <Badge className="ml-2 bg-[#E1AC33] text-[#145759]">
