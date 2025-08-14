@@ -512,12 +512,12 @@ export default function NetworkUnitsTab() {
               Buscar por nome ou endereço
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-[#FBF9F7]" />
               <Input
                 placeholder="Digite o nome ou endereço..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="pl-10 text-[#302e2b] border-[#277677] bg-[#145759]"
+                className="pl-10 text-[#FBF9F7] border-[#277677] bg-[#145759] placeholder:text-[#FBF9F7]/60"
                 data-testid="input-search-units"
               />
             </div>
