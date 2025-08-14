@@ -299,6 +299,12 @@
     }
   }
 
+  /* Admin dialog border-radius for all screen sizes */
+  .admin-dialog-content {
+    border-radius: 1rem !important;
+    overflow: hidden !important;
+  }
+
   /* Mobile admin optimizations */
   @media (max-width: 768px) {
     /* Admin dialog specific styles */
@@ -312,6 +318,8 @@
       max-height: calc(100vh - 2rem) !important;
       margin: 0 !important;
       box-sizing: border-box !important;
+      border-radius: 1rem !important;
+      overflow: hidden !important;
     }
     
     /* Admin dialog content scrolling */
