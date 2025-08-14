@@ -168,7 +168,7 @@ export default function ContactSubmissionsTab() {
               <div className="flex gap-2 pt-2">
                 <Button
                   size="sm"
-                  className="bg-[#2C8587] text-[#fbf9f7] hover:bg-[#2C8587]/90"
+                  className="bg-[#308584] text-[#FBF9F7] hover:bg-[#308584] focus:bg-[#308584] active:bg-[#308584] hover:text-[#FBF9F7] focus:text-[#FBF9F7] active:text-[#FBF9F7]"
                   onClick={() => window.open(`mailto:${submission.email}?subject=Proposta UNIPET PLAN para ${submission.petName}`)}
                   data-testid={`button-email-${submission.id}`}
                 >
@@ -177,8 +177,7 @@ export default function ContactSubmissionsTab() {
                 </Button>
                 <Button
                   size="sm"
-                  variant="outline"
-                  className="border-[#2C8587] hover:bg-[#2C8587]/10 bg-[#2c8587] text-[#fbf9f7]"
+                  className="bg-[#308584] text-[#FBF9F7] hover:bg-[#308584] focus:bg-[#308584] active:bg-[#308584] hover:text-[#FBF9F7] focus:text-[#FBF9F7] active:text-[#FBF9F7]"
                   onClick={() => window.open(`tel:${submission.phone}`)}
                   data-testid={`button-call-${submission.id}`}
                 >
