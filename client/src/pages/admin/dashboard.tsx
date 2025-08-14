@@ -39,7 +39,7 @@ export default function AdminDashboard() {
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="bg-[#fbf9f700] border-[#FBF9F7] text-[#FBF9F7]"
+                className="bg-[#FBF9F7] border-[#FBF9F7] text-[#277677]"
                 disabled={logoutMutation.isPending}
                 data-testid="button-logout"
               >
