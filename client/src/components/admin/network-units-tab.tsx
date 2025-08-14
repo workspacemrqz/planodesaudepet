@@ -306,7 +306,7 @@ export default function NetworkUnitsTab() {
                 {/* Step 1: Basic Information */}
                 {currentStep === 1 && (
                   <div className="space-y-4">
-                    <h4 className="font-medium text-[#277677]">Informações Básicas</h4>
+                    <h4 className="font-medium text-[#FBF9F7]">Informações Básicas</h4>
                     
                     <FormField
                       control={form.control}
