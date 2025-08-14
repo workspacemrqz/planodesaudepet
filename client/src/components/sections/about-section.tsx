@@ -12,7 +12,7 @@ export default function AboutSection() {
         <div className="backdrop-blur-sm p-8 rounded-2xl shadow-xl" style={{backgroundColor: '#FBF9F7'}}>
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#302e2b]">
+              <h2 className="md:text-4xl font-bold mb-6 text-[#302e2b] text-[28px]">
                 Sobre a <span className="text-[#277677]">UNIPET PLAN</span>
               </h2>
               <p className="text-[#302e2b] text-lg mb-6 leading-relaxed">
