@@ -458,15 +458,17 @@ export default function NetworkUnitsTab() {
                   </div>
                   
                   <div className="flex gap-2 justify-center sm:justify-end">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setIsDialogOpen(false)}
-                      data-testid="button-cancel-unit"
-                      className="mobile-touch-target"
-                    >
-                      Cancelar
-                    </Button>
+                    {currentStep === 1 && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => setIsDialogOpen(false)}
+                        data-testid="button-cancel-unit"
+                        className="mobile-touch-target"
+                      >
+                        Cancelar
+                      </Button>
+                    )}
                     
                     {currentStep < 3 ? (
                       <Button 
