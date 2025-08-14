@@ -442,7 +442,23 @@ export default function NetworkUnitsTab() {
 
                 {/* Navigation Buttons */}
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
+                  {/* Left side - Cancel button (only step 1) */}
                   <div className="flex justify-center sm:justify-start">
+                    {currentStep === 1 && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => setIsDialogOpen(false)}
+                        data-testid="button-cancel-unit"
+                        className="mobile-touch-target"
+                      >
+                        Cancelar
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {/* Right side - Navigation buttons */}
+                  <div className="flex gap-2 justify-center sm:justify-end">
                     {currentStep > 1 && (
                       <Button 
                         type="button" 
@@ -453,20 +469,6 @@ export default function NetworkUnitsTab() {
                       >
                         <ChevronLeft className="h-4 w-4 mr-2" />
                         Anterior
-                      </Button>
-                    )}
-                  </div>
-                  
-                  <div className="flex gap-2 justify-center sm:justify-end">
-                    {currentStep === 1 && (
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={() => setIsDialogOpen(false)}
-                        data-testid="button-cancel-unit"
-                        className="mobile-touch-target"
-                      >
-                        Cancelar
                       </Button>
                     )}
                     
