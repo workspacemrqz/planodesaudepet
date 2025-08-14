@@ -146,27 +146,7 @@ export default function ContactSubmissionsTab() {
                   </div>
                 )}
 
-                {/* Actions */}
-                <div className="flex gap-2 pt-2">
-                  <Button
-                    size="sm"
-                    className="bg-[#308584] text-[#FBF9F7] hover:bg-[#308584] focus:bg-[#308584] active:bg-[#308584] hover:text-[#FBF9F7] focus:text-[#FBF9F7] active:text-[#FBF9F7]"
-                    onClick={() => window.open(`mailto:${submission.email}?subject=Proposta UNIPET PLAN para ${submission.petName}`)}
-                    data-testid={`button-email-${submission.id}`}
-                  >
-                    <Mail className="h-4 w-4 mr-1" />
-                    E-mail
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="bg-[#308584] text-[#FBF9F7] hover:bg-[#308584] focus:bg-[#308584] active:bg-[#308584] hover:text-[#FBF9F7] focus:text-[#FBF9F7] active:text-[#FBF9F7]"
-                    onClick={() => window.open(`tel:${submission.phone}`)}
-                    data-testid={`button-call-${submission.id}`}
-                  >
-                    <Phone className="h-4 w-4 mr-1" />
-                    Ligar
-                  </Button>
-                </div>
+                
               </div>
             </CollapsibleContent>
           </Collapsible>
