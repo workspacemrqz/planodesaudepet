@@ -96,7 +96,7 @@ function SortableFaqItem({
               e.stopPropagation();
               onEdit(item);
             }}
-            className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7]"
+            className="h-8 w-8 p-0 bg-[#2F8585] text-[#FBF9F7] hover:bg-[#2F8585]"
             data-testid={`button-edit-faq-${item.id}`}
           >
             <Edit className="h-4 w-4" />
