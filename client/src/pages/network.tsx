@@ -79,7 +79,7 @@ export default function Network() {
                       e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlmYTZiMiIvPgo8L3N2Zz4K';
                     }}
                   />
-                  <Badge className="absolute top-4 right-4 bg-[#E1AC33] text-[#277677] font-semibold">
+                  <Badge className="absolute top-4 right-4 font-semibold text-[#121212] bg-[#e6a622]">
                     <Star className="h-3 w-3 mr-1" />
                     {(unit.rating / 10).toFixed(1)}
                   </Badge>
