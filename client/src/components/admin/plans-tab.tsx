@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, CreditCard, Star, Check, Trash2 } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const planFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -32,6 +33,7 @@ export default function PlansTab() {
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [featuresInput, setFeaturesInput] = useState("");
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const { data: plans, isLoading } = useQuery<Plan[]>({
     queryKey: ["/api/admin/plans"],
@@ -167,7 +169,7 @@ export default function PlansTab() {
         setIsDialogOpen(open);
         if (!open) resetForm();
       }}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#ffffff]">
               Editar Plano {editingPlan?.name}
@@ -176,7 +178,7 @@ export default function PlansTab() {
           
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
                 <FormField
                   control={form.control}
                   name="name"
@@ -206,7 +208,7 @@ export default function PlansTab() {
                 />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
                 <FormField
                   control={form.control}
                   name="priceNormal"

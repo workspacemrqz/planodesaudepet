@@ -8,10 +8,12 @@ import ContactSubmissionsTab from "@/components/admin/contact-submissions-tab";
 import PlansTab from "@/components/admin/plans-tab";
 import NetworkUnitsTab from "@/components/admin/network-units-tab";
 import FaqTab from "@/components/admin/faq-tab";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function AdminDashboard() {
   const { user, logoutMutation } = useAdminAuth();
   const [activeTab, setActiveTab] = useState("contact");
+  const isMobile = useIsMobile();
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -22,7 +24,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <header className="bg-[#277677] shadow-lg border-b border-[#277677]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className={`${isMobile ? 'flex flex-col space-y-3' : 'flex justify-between items-center'} py-4`}>
             <div className="flex items-center space-x-3">
               <div>
                 <h1 className="text-xl font-bold text-[#FBF9F7]">
@@ -31,7 +33,7 @@ export default function AdminDashboard() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className={`${isMobile ? 'flex justify-between items-center' : 'flex items-center space-x-4'}`}>
               <div className="text-[#FBF9F7] text-sm">
                 Bem-vindo, <span className="font-semibold">{user?.username}</span>
               </div>
@@ -66,7 +68,7 @@ export default function AdminDashboard() {
           <CardContent className="p-0">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <CardHeader className="pb-0 bg-gradient-to-r from-[#277677]/5 to-[#E1AC33]/5">
-                <TabsList className="grid grid-cols-2 lg:grid-cols-4 gap-1 bg-transparent h-auto p-1">
+                <TabsList className={`${isMobile ? 'grid grid-cols-2 gap-1' : 'grid grid-cols-2 lg:grid-cols-4 gap-1'} bg-transparent h-auto p-1`}>
                   <TabsTrigger 
                     value="contact" 
                     className="flex items-center gap-2 data-[state=active]:bg-[#277677] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium"
@@ -105,7 +107,7 @@ export default function AdminDashboard() {
                 </TabsList>
               </CardHeader>
 
-              <div className="p-6">
+              <div className={`${isMobile ? 'p-4' : 'p-6'}`}>
                 <TabsContent value="contact" className="mt-0">
                   <ContactSubmissionsTab />
                 </TabsContent>

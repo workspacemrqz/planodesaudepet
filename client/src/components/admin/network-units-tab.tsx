@@ -17,6 +17,7 @@ import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight, Sea
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const networkUnitFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -43,6 +44,7 @@ export default function NetworkUnitsTab() {
   const [filterByService, setFilterByService] = useState<string>("all");
   
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const { data: units, isLoading } = useQuery<NetworkUnit[]>({
     queryKey: ["/api/admin/network-units"],
@@ -267,23 +269,25 @@ export default function NetworkUnitsTab() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
-          Gerenciar Unidades da Rede
-        </h3>
+      <div className={`${isMobile ? 'block space-y-4' : 'flex items-center justify-between'} mb-6`}>
+        <div>
+          <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
+            Gerenciar Unidades da Rede
+          </h3>
+        </div>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button 
               onClick={handleNewUnit}
-              className="text-[#fbf9f7] bg-[#E1AC33]"
+              className="text-[#fbf9f7] bg-[#E1AC33] w-full sm:w-auto"
               data-testid="button-add-unit"
             >
               <Plus className="h-4 w-4 mr-2" />
               Nova Unidade
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
             <DialogHeader>
               <DialogTitle className="text-[#e5e7eb]">
                 {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3

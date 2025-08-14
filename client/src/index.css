@@ -299,6 +299,40 @@
     }
   }
 
+  /* Mobile admin optimizations */
+  @media (max-width: 768px) {
+    /* Make dialogs responsive on mobile */
+    [role="dialog"] {
+      margin: 0.5rem !important;
+      max-height: 90vh !important;
+      width: calc(100vw - 1rem) !important;
+      max-width: calc(100vw - 1rem) !important;
+    }
+    
+    /* Improve modal content scrolling */
+    [role="dialog"] > div {
+      overflow-y: auto !important;
+      max-height: 85vh !important;
+    }
+    
+    /* Make admin buttons full width on mobile */
+    .admin-mobile-btn {
+      width: 100% !important;
+    }
+    
+    /* Admin tab improvements */
+    .admin-tabs {
+      font-size: 0.875rem !important;
+      padding: 0.5rem !important;
+    }
+    
+    /* Mobile admin form improvements */
+    .admin-form-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+  }
+
   /* Image responsiveness fixes */
   img {
     height: auto;

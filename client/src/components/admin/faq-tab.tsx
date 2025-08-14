@@ -14,6 +14,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Plus, Edit, Trash2, HelpCircle, GripVertical } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   DndContext,
   closestCenter,
@@ -127,6 +128,7 @@ export default function FaqTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<FaqItem | null>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const { data: faqItems = [], isLoading } = useQuery<FaqItem[]>({
     queryKey: ["/api/admin/faq"],
@@ -262,7 +264,7 @@ export default function FaqTab() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className={`${isMobile ? 'block space-y-4' : 'flex items-center justify-between'} mb-6`}>
         <div>
           <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
             Gerenciar FAQ
@@ -279,14 +281,14 @@ export default function FaqTab() {
                 setEditingItem(null);
                 form.reset();
               }}
-              className="text-[#fbf9f7] bg-[#E1AC33]"
+              className="text-[#fbf9f7] bg-[#E1AC33] w-full sm:w-auto"
               data-testid="button-add-faq"
             >
               <Plus className="h-4 w-4 mr-2" />
               Adicionar Pergunta
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl w-[95vw] sm:w-full">
             <DialogHeader>
               <DialogTitle className="text-[#ffffff]">
                 {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
