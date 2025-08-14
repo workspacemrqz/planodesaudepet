@@ -49,7 +49,7 @@ export default function Network() {
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="md:text-4xl font-bold text-[#302e2b] mb-4 text-[36px]">
+            <h2 className="md:text-4xl font-bold mb-4 text-[36px] text-[#277677]">
               Principais Unidades
             </h2>
             
