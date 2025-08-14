@@ -24,8 +24,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           {/* Company Info */}
           <div className="col-span-1 sm:col-span-2 md:col-span-1">
-            <div className="flex items-center mb-4 sm:mb-6">
-              <img src="/unipet-logo.png" alt="Unipet Plan" className="h-10 sm:h-12 w-auto" />
+            <div className="flex items-start justify-start mb-4 sm:mb-6">
+              <img src="/unipet-logo.png" alt="Unipet Plan" className="h-8 sm:h-10 w-auto" />
             </div>
             <p className="text-[#302e2b] mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
               Cuidando da saúde do seu pet com carinho, qualidade e preços acessíveis.
