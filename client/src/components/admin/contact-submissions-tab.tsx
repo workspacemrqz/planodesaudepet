@@ -3,11 +3,14 @@ import { ContactSubmission } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Calendar, Heart, ExternalLink } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Mail, Phone, MapPin, Calendar, Heart, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useState } from "react";
 
 export default function ContactSubmissionsTab() {
+  const [isOpen, setIsOpen] = useState(false);
   const { data: submissions, isLoading, error } = useQuery<ContactSubmission[]>({
     queryKey: ["/api/admin/contact/submissions"],
   });
@@ -64,20 +67,32 @@ export default function ContactSubmissionsTab() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-semibold text-[#FBF9F7]">
-            Formulários de Contato
-          </h3>
-          <p className="text-sm text-[#FBF9F7]/70">
-            Total de {submissions.length} formulário{submissions.length !== 1 ? 's' : ''} recebido{submissions.length !== 1 ? 's' : ''}
-          </p>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-4">
+      <CollapsibleTrigger 
+        className="flex w-full items-center justify-between p-4 bg-[#277677]/10 hover:bg-[#277677]/20 rounded-lg transition-colors"
+        data-testid="collapsible-forms-trigger"
+      >
+        <div className="flex items-center gap-3">
+          <Mail className="h-5 w-5 text-[#E1AC33]" />
+          <div className="text-left">
+            <h3 className="text-lg font-semibold text-[#FBF9F7]">
+              Formulários de Contato
+            </h3>
+            <p className="text-sm text-[#FBF9F7]/70">
+              Total de {submissions.length} formulário{submissions.length !== 1 ? 's' : ''} recebido{submissions.length !== 1 ? 's' : ''}
+            </p>
+          </div>
         </div>
-      </div>
+        {isOpen ? (
+          <ChevronDown className="h-5 w-5 text-[#FBF9F7] transition-transform" />
+        ) : (
+          <ChevronRight className="h-5 w-5 text-[#FBF9F7] transition-transform" />
+        )}
+      </CollapsibleTrigger>
 
-      <div className="grid gap-4">
-        {submissions.map((submission) => (
+      <CollapsibleContent className="space-y-4" data-testid="collapsible-forms-content">
+        <div className="grid gap-4">
+          {submissions.map((submission) => (
           <Card key={submission.id} className="shadow-sm border border-gray-200">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
@@ -175,7 +190,8 @@ export default function ContactSubmissionsTab() {
             </CardContent>
           </Card>
         ))}
-      </div>
-    </div>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
