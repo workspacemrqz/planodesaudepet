@@ -75,9 +75,7 @@ export default function Header() {
                       {item.name}
                     </Link>
                   ))}
-                  <Button className="unipet-button-primary text-[#ffffff] mt-6">
-                    Contratar Agora
-                  </Button>
+                  
                 </nav>
               </SheetContent>
             </Sheet>
