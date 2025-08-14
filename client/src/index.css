@@ -328,6 +328,13 @@
       overflow-y: auto !important;
       padding: 1.5rem !important;
       box-sizing: border-box !important;
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE and Edge */
+    }
+
+    /* Hide scrollbar for WebKit browsers */
+    .admin-dialog-content > div::-webkit-scrollbar {
+      display: none !important;
     }
 
     /* Ensure dialog doesn't overflow horizontally */
