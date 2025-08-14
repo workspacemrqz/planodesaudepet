@@ -69,7 +69,7 @@ export default function ContactSection() {
     <section className="py-20" style={{backgroundColor: '#277677'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="font-bold mb-4 text-[#FBF9F7] text-2xl sm:text-3xl md:text-4xl lg:text-[36px] leading-tight">
+          <h2 className="font-bold mb-4 text-[#FBF9F7] sm:text-3xl md:text-4xl lg:text-[36px] text-[30px]">
             Entre em <span className="text-[#E1AC33]">contato</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#FBF9F7] font-semibold px-4 pl-[0px] pr-[0px]">Tire suas dúvidas ou solicite uma cotação personalizada</p>
