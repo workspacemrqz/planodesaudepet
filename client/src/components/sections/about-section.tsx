@@ -7,7 +7,7 @@ export default function AboutSection() {
   ];
 
   return (
-    <section className="py-20 from-primary/5 to-primary/10 bg-[#ded8ce]">
+    <section className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="backdrop-blur-sm p-8 rounded-2xl shadow-xl" style={{backgroundColor: '#FBF9F7'}}>
           <div className="grid lg:grid-cols-2 gap-16 items-center">
