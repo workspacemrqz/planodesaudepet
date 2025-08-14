@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   MapPin, 
   Clock, 
@@ -11,16 +13,74 @@ import {
   Ambulance,
   Search,
   Filter,
-  MessageSquare
+  MessageSquare,
+  X
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { NetworkUnit } from "@shared/schema";
+import { useState, useMemo } from "react";
 
 export default function Network() {
   const { data: networkUnits, isLoading } = useQuery<NetworkUnit[]>({
     queryKey: ["/api/network-units"],
   });
+
+  // Filter states
+  const [searchText, setSearchText] = useState("");
+  const [selectedCity, setSelectedCity] = useState("all");
+  const [selectedService, setSelectedService] = useState("all");
+  const [minRating, setMinRating] = useState("all");
+
+  // Get unique cities and services for filter options
+  const uniqueCities = useMemo(() => {
+    if (!networkUnits) return [];
+    const cities = networkUnits.map(unit => {
+      // Extract city from address (assuming format like "Street, City, State")
+      const addressParts = unit.address.split(',');
+      return addressParts.length > 1 ? addressParts[1].trim() : addressParts[0].trim();
+    });
+    return Array.from(new Set(cities)).sort();
+  }, [networkUnits]);
+
+  const uniqueServices = useMemo(() => {
+    if (!networkUnits) return [];
+    const allServices = networkUnits.flatMap(unit => unit.services);
+    return Array.from(new Set(allServices)).sort();
+  }, [networkUnits]);
+
+  // Filter units based on selected criteria
+  const filteredUnits = useMemo(() => {
+    if (!networkUnits) return [];
+    
+    return networkUnits.filter(unit => {
+      // Text search (name or address)
+      const matchesSearch = searchText === "" || 
+        unit.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        unit.address.toLowerCase().includes(searchText.toLowerCase());
+
+      // City filter
+      const matchesCity = selectedCity === "" || selectedCity === "all" || 
+        unit.address.toLowerCase().includes(selectedCity.toLowerCase());
+
+      // Service filter
+      const matchesService = selectedService === "" || selectedService === "all" ||
+        unit.services.some(service => service.toLowerCase().includes(selectedService.toLowerCase()));
+
+      // Rating filter
+      const matchesRating = minRating === "" || minRating === "all" || 
+        (unit.rating / 10) >= parseFloat(minRating);
+
+      return matchesSearch && matchesCity && matchesService && matchesRating;
+    });
+  }, [networkUnits, searchText, selectedCity, selectedService, minRating]);
+
+  const clearFilters = () => {
+    setSearchText("");
+    setSelectedCity("all");
+    setSelectedService("all");
+    setMinRating("all");
+  };
 
   const hospitalFeatures = [
     {
@@ -55,15 +115,110 @@ export default function Network() {
               Principais Unidades
             </h2>
             
+            {/* Filter Section */}
+            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <Filter className="h-5 w-5 text-[#277677]" />
+                <h3 className="text-lg font-semibold text-[#277677]">Filtrar Unidades</h3>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Buscar por nome ou endereço..."
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className="pl-10 border-[#277677]/20 focus:border-[#277677]"
+                    data-testid="input-search-units"
+                  />
+                </div>
+
+                {/* City Filter */}
+                <Select value={selectedCity} onValueChange={setSelectedCity}>
+                  <SelectTrigger className="border-[#277677]/20 focus:border-[#277677]" data-testid="select-city">
+                    <SelectValue placeholder="Selecionar cidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as cidades</SelectItem>
+                    {uniqueCities.map((city) => (
+                      <SelectItem key={city} value={city}>
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Service Filter */}
+                <Select value={selectedService} onValueChange={setSelectedService}>
+                  <SelectTrigger className="border-[#277677]/20 focus:border-[#277677]" data-testid="select-service">
+                    <SelectValue placeholder="Selecionar serviço" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os serviços</SelectItem>
+                    {uniqueServices.map((service) => (
+                      <SelectItem key={service} value={service}>
+                        {service}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Rating Filter */}
+                <Select value={minRating} onValueChange={setMinRating}>
+                  <SelectTrigger className="border-[#277677]/20 focus:border-[#277677]" data-testid="select-rating">
+                    <SelectValue placeholder="Avaliação mínima" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Qualquer avaliação</SelectItem>
+                    <SelectItem value="4.5">4.5+ estrelas</SelectItem>
+                    <SelectItem value="4.0">4.0+ estrelas</SelectItem>
+                    <SelectItem value="3.5">3.5+ estrelas</SelectItem>
+                    <SelectItem value="3.0">3.0+ estrelas</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Clear Filters and Results Count */}
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-600">
+                  {isLoading ? "Carregando..." : `${filteredUnits.length} unidade${filteredUnits.length !== 1 ? 's' : ''} encontrada${filteredUnits.length !== 1 ? 's' : ''}`}
+                </p>
+                {(searchText || (selectedCity && selectedCity !== "all") || (selectedService && selectedService !== "all") || (minRating && minRating !== "all")) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-[#277677] border-[#277677] hover:bg-[#277677]/10"
+                    data-testid="button-clear-filters"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Limpar Filtros
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
 
           {isLoading ? (
             <div className="text-center py-8">
               <p className="text-[#302e2b]">Carregando unidades da rede...</p>
             </div>
+          ) : filteredUnits.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-[#302e2b] text-lg mb-4">Nenhuma unidade encontrada com os filtros selecionados.</p>
+              <Button
+                onClick={clearFilters}
+                className="bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90"
+                data-testid="button-clear-filters-empty"
+              >
+                Limpar Filtros
+              </Button>
+            </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {networkUnits?.map((unit) => (
+              {filteredUnits.map((unit) => (
               <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden">
                 <div className="relative">
                   <img 
