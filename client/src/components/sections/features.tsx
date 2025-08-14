@@ -53,7 +53,7 @@ export default function Features() {
             Por que escolher a<br /><span className="text-[#277677]">UNIPET PLAN?</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] max-w-2xl mx-auto font-semibold px-4">
-            Oferecemos o melhor cuidado para seu pet com praticidade e confiança
+            Oferecemos o melhor cuidado para seu pet<br />com praticidade e confiança
           </p>
         </div>
 

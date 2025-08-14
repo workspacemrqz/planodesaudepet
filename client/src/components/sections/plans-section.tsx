@@ -56,7 +56,7 @@ export default function PlansSection() {
             Escolha o <span className="text-primary">plano ideal</span><br />para seu pet
           </h2>
           <p className="max-w-2xl mx-auto text-[#fbf9f7] text-base sm:text-lg md:text-xl lg:text-2xl font-medium px-4">
-            Planos Locais com<br />Menos Burocracia
+            Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
           </p>
         </div>
 

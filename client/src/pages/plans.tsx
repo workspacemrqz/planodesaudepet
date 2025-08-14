@@ -58,7 +58,7 @@ export default function Plans() {
               Nossos <span className="text-[#E1AC33]">Planos</span>
             </h2>
             <p className="max-w-2xl mx-auto text-[#fbf9f7] sm:text-lg md:text-xl mb-6 sm:mb-8 px-4 pl-[0px] pr-[0px] font-normal text-[18px]">
-              Escolha a proteção ideal para seu melhor amigo
+              Escolha a proteção ideal<br />para seu melhor amigo
             </p>
             
             
@@ -173,7 +173,7 @@ export default function Plans() {
               <div className="space-y-6 mb-6">
                 <div>
                   <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Cobertura Regional</h4>
-                  <p className="text-[#302e2b] text-[16px]">Oferecemos planos regionais com menos burocracia e processo simplificado para sua região.</p>
+                  <p className="text-[#302e2b] text-[16px]">Oferecemos também planos regionais com processo<br />simplificado e atendimento personalizado para sua região.</p>
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Rede Credenciada Local</h4>
