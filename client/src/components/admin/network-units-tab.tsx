@@ -392,7 +392,7 @@ export default function NetworkUnitsTab() {
                 {/* Step 2: Image Upload */}
                 {currentStep === 2 && (
                   <div className="space-y-4">
-                    <h4 className="font-medium text-[#277677]">Imagem da Unidade</h4>
+                    <h4 className="font-medium text-[#FBF9F7]">Imagem da Unidade</h4>
                     
                     <div className="space-y-3">
                       <SimpleImageUploader onFileSelect={handleImageUpload} isUploading={isUploading} hasImage={!!uploadedImageUrl} />
