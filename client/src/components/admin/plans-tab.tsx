@@ -324,7 +324,7 @@ export default function PlansTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleDelete(plan)}
-                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585]"
+                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] focus:bg-[#FBF9F7] active:bg-[#FBF9F7] hover:text-[#2F8585] focus:text-[#2F8585] active:text-[#2F8585]"
                   data-testid={`button-delete-plan-${plan.id}`}
                 >
                   <Trash2 className="h-4 w-4" />

@@ -480,7 +480,7 @@ export default function NetworkUnitsTab() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleDelete(unit)}
-                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585]"
+                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] focus:bg-[#FBF9F7] active:bg-[#FBF9F7] hover:text-[#2F8585] focus:text-[#2F8585] active:text-[#2F8585]"
                   data-testid={`button-delete-unit-${unit.id}`}
                 >
                   <Trash2 className="h-4 w-4" />
