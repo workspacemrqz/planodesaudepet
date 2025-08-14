@@ -301,35 +301,77 @@
 
   /* Mobile admin optimizations */
   @media (max-width: 768px) {
+    /* Dialog overlay mobile */
+    [data-radix-dialog-overlay] {
+      position: fixed !important;
+      inset: 0 !important;
+      background-color: rgba(0, 0, 0, 0.8) !important;
+      z-index: 40 !important;
+    }
+
+    /* Dialog portal container */
+    [data-radix-portal] {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 50 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 1rem !important;
+    }
+    
     /* Make dialogs responsive on mobile */
     [role="dialog"] {
-      margin: 0.5rem !important;
-      max-height: 90vh !important;
-      width: calc(100vw - 1rem) !important;
-      max-width: calc(100vw - 1rem) !important;
+      position: relative !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+      max-width: calc(100vw - 2rem) !important;
+      height: auto !important;
+      max-height: calc(100vh - 2rem) !important;
+      overflow: hidden !important;
+      border-radius: 0.75rem !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      background: white !important;
     }
     
     /* Improve modal content scrolling */
     [role="dialog"] > div {
       overflow-y: auto !important;
-      max-height: 85vh !important;
+      max-height: calc(100vh - 4rem) !important;
+      padding: 1.25rem !important;
     }
     
-    /* Make admin buttons full width on mobile */
-    .admin-mobile-btn {
-      width: 100% !important;
+    /* Dialog header mobile */
+    [role="dialog"] h2 {
+      font-size: 1.125rem !important;
+      line-height: 1.5 !important;
+      margin-bottom: 1rem !important;
     }
     
-    /* Admin tab improvements */
-    .admin-tabs {
-      font-size: 0.875rem !important;
-      padding: 0.5rem !important;
+    /* Form inputs mobile */
+    [role="dialog"] input,
+    [role="dialog"] textarea,
+    [role="dialog"] select {
+      font-size: 16px !important;
+      padding: 0.75rem !important;
+      min-height: 44px !important;
     }
     
-    /* Mobile admin form improvements */
-    .admin-form-grid {
-      grid-template-columns: 1fr !important;
-      gap: 1rem !important;
+    /* Button improvements */
+    [role="dialog"] button {
+      min-height: 44px !important;
+      padding: 0.75rem 1rem !important;
+      font-size: 1rem !important;
+    }
+    
+    /* Form spacing mobile */
+    [role="dialog"] .space-y-4 > * + * {
+      margin-top: 1rem !important;
+    }
+    
+    /* Progress bar mobile */
+    [role="dialog"] .w-full.bg-gray-200 {
+      margin: 0.5rem 0 1rem 0 !important;
     }
   }
 
