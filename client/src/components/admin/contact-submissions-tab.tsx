@@ -94,7 +94,7 @@ export default function ContactSubmissionsTab() {
         <CollapsibleContent className="pb-4" data-testid="collapsible-forms-content">
           <div className="grid gap-4">
             {submissions.map((submission) => (
-          <Card key={submission.id} className="bg-[#145759] border-[#277677]/30 shadow-sm transition-all duration-300 hover:shadow-2xl">
+          <Card key={submission.id} className="rounded-lg border text-card-foreground border-[#277677]/30 shadow-sm transition-all duration-300 hover:shadow-2xl bg-[#114b4c]">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg text-[#FBF9F7] flex items-center gap-2">
