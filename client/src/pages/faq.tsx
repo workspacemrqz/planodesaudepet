@@ -15,7 +15,7 @@ export default function FAQ() {
         {/* Header */}
         <div className="text-center">
           <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
-          <h1 className="font-bold text-[#e1ac33] text-[36px] mb-4">
+          <h1 className="font-bold text-[#e1ac33] text-[36px]">
             Perguntas Frequentes
           </h1>
           <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
