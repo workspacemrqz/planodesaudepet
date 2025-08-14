@@ -407,7 +407,7 @@ export default function NetworkUnitsTab() {
                             <img 
                               src={uploadedImageUrl} 
                               alt="Preview" 
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover aspect-square"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
