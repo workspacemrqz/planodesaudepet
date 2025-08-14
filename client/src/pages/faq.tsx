@@ -10,23 +10,20 @@ export default function FAQ() {
   });
 
   return (
-    <main className="min-h-screen bg-[#FBF9F7]">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 text-[#fbf9f7] bg-[#277677] pl-[20px] pr-[20px]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
-          <div className="mb-16 text-center">
-            <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
-            <h1 className="font-bold text-[#e1ac33] text-[36px] mb-4">
-              Perguntas Frequentes
-            </h1>
-            <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
-              Tudo que você precisa saber<br />sobre nossos planos
-            </p>
-          </div>
+    <main className="pt-32 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
+        {/* Header */}
+        <div className="mb-16 text-center">
+          <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
+          <h1 className="font-bold text-[#e1ac33] text-[36px] mb-4">
+            Perguntas Frequentes
+          </h1>
+          <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
+            Tudo que você precisa saber<br />sobre nossos planos
+          </p>
         </div>
-      </section>
-      {/* FAQ Section */}
-      <section className="py-16 px-4 bg-[#ded8ce] pl-[20px] pr-[20px]">
+
+        {/* FAQ Section */}
         <div className="max-w-4xl mx-auto">
           <Card className="bg-[#FBF9F7] border-none shadow-lg rounded-xl">
             <CardHeader className="text-center pb-8">
@@ -69,7 +66,7 @@ export default function FAQ() {
             </CardContent>
           </Card>
         </div>
-      </section>
+      </div>
     </main>
   );
 }
