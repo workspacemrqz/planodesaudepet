@@ -127,10 +127,10 @@ export default function ContactSubmissionsTab() {
                 </div>
 
                 {/* Plan Interest */}
-                <div className="p-3 rounded-lg bg-[#e1ac3300]">
+                <div className="p-3 rounded-lg bg-[#e1ac3300] pl-[0px] pr-[0px]">
                   <div className="text-sm">
                     <span className="font-medium text-[#FBF9F7]">Plano de interesse:</span>
-                    <Badge className="ml-2 bg-[#2f8585] text-[#fbf9f7]">
+                    <Badge className="bg-[#2f8585] text-[#fbf9f7] ml-[0px] mr-[0px]">
                       {getPlanLabel(submission.planInterest)}
                     </Badge>
                   </div>
