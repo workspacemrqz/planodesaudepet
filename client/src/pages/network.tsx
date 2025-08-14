@@ -52,9 +52,7 @@ export default function Network() {
             <h2 className="md:text-4xl font-bold text-[#302e2b] mb-4 text-[36px]">
               Principais Unidades
             </h2>
-            <p className="text-[#302e2b] text-lg max-w-2xl mx-auto">
-              Conheça algumas das nossas principais unidades<br />espalhadas pelo Brasil
-            </p>
+            
           </div>
 
           {isLoading ? (
