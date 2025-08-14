@@ -295,9 +295,9 @@ export default function NetworkUnitsTab() {
             </DialogHeader>
             
             {/* Progress Bar */}
-            <div className="w-full bg-gray-200 rounded-full h-1 overflow-hidden">
+            <div className="w-full bg-gray-200 rounded-full h-0.5 overflow-hidden">
               <div 
-                className="bg-[#E1AC33] h-1 rounded-full transition-all duration-300 ease-in-out"
+                className="bg-[#E1AC33] h-0.5 rounded-full transition-all duration-300 ease-in-out"
                 style={{ width: `${(currentStep / 3) * 100}%` }}
               />
             </div>
