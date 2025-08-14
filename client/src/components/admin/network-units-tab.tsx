@@ -471,7 +471,7 @@ export default function NetworkUnitsTab() {
                 <Button
                   size="sm"
                   onClick={() => handleEdit(unit)}
-                  className="h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585]"
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 rounded-md h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585] bg-[#2f8585]"
                   data-testid={`button-edit-unit-${unit.id}`}
                 >
                   <Edit className="h-4 w-4" />
