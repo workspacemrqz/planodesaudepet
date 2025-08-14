@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +12,8 @@ import { Slider } from "@/components/ui/slider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
@@ -35,11 +36,48 @@ export default function NetworkUnitsTab() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  
+  // Filter states
+  const [searchText, setSearchText] = useState("");
+  const [filterByRating, setFilterByRating] = useState<string>("all");
+  const [filterByService, setFilterByService] = useState<string>("all");
+  
   const { toast } = useToast();
 
   const { data: units, isLoading } = useQuery<NetworkUnit[]>({
     queryKey: ["/api/admin/network-units"],
   });
+
+  // Get unique services for filter dropdown
+  const availableServices = useMemo(() => {
+    if (!units) return [];
+    const allServices = units.flatMap(unit => unit.services);
+    return Array.from(new Set(allServices)).sort();
+  }, [units]);
+
+  // Filter units based on search and filter criteria
+  const filteredUnits = useMemo(() => {
+    if (!units) return [];
+    
+    return units.filter(unit => {
+      // Search by name or address
+      const matchesSearch = searchText === "" || 
+        unit.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        unit.address.toLowerCase().includes(searchText.toLowerCase());
+      
+      // Filter by rating range
+      const matchesRating = filterByRating === "all" || 
+        (filterByRating === "high" && unit.rating >= 40) ||
+        (filterByRating === "medium" && unit.rating >= 30 && unit.rating < 40) ||
+        (filterByRating === "low" && unit.rating < 30);
+      
+      // Filter by service
+      const matchesService = filterByService === "all" || 
+        unit.services.includes(filterByService);
+      
+      return matchesSearch && matchesRating && matchesService;
+    });
+  }, [units, searchText, filterByRating, filterByService]);
 
   const form = useForm<NetworkUnitFormData>({
     resolver: zodResolver(networkUnitFormSchema),
@@ -460,8 +498,100 @@ export default function NetworkUnitsTab() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Filter Section */}
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center gap-2 text-[#fbf9f7] mb-4">
+          <Filter className="h-4 w-4" />
+          <span className="font-medium">Filtros</span>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search by name/address */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#fbf9f7]">
+              Buscar por nome ou endereço
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Digite o nome ou endereço..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="pl-10 bg-[#fbf9f7] text-[#302e2b] border-[#277677]"
+                data-testid="input-search-units"
+              />
+            </div>
+          </div>
+
+          {/* Filter by rating */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#fbf9f7]">
+              Filtrar por avaliação
+            </label>
+            <Select value={filterByRating} onValueChange={setFilterByRating}>
+              <SelectTrigger className="bg-[#fbf9f7] text-[#302e2b] border-[#277677]" data-testid="select-rating-filter">
+                <SelectValue placeholder="Todas as avaliações" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as avaliações</SelectItem>
+                <SelectItem value="high">Alta (4.0+ estrelas)</SelectItem>
+                <SelectItem value="medium">Média (3.0-3.9 estrelas)</SelectItem>
+                <SelectItem value="low">Baixa (menos de 3.0)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filter by service */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#fbf9f7]">
+              Filtrar por serviço
+            </label>
+            <Select value={filterByService} onValueChange={setFilterByService}>
+              <SelectTrigger className="bg-[#fbf9f7] text-[#302e2b] border-[#277677]" data-testid="select-service-filter">
+                <SelectValue placeholder="Todos os serviços" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os serviços</SelectItem>
+                {availableServices.map((service) => (
+                  <SelectItem key={service} value={service}>
+                    {service}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Clear filters button */}
+        {(searchText || filterByRating !== "all" || filterByService !== "all") && (
+          <div className="flex justify-end">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchText("");
+                setFilterByRating("all");
+                setFilterByService("all");
+              }}
+              className="text-[#277677] border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7]"
+              data-testid="button-clear-filters"
+            >
+              Limpar filtros
+            </Button>
+          </div>
+        )}
+
+        {/* Results count */}
+        <div className="text-sm text-[#fbf9f7]">
+          {filteredUnits.length === units?.length 
+            ? `${filteredUnits.length} unidade${filteredUnits.length !== 1 ? 's' : ''} encontrada${filteredUnits.length !== 1 ? 's' : ''}`
+            : `${filteredUnits.length} de ${units?.length} unidade${(units?.length || 0) !== 1 ? 's' : ''} encontrada${filteredUnits.length !== 1 ? 's' : ''}`
+          }
+        </div>
+      </div>
+
       <div className="space-y-4">
-        {units?.map((unit) => (
+        {filteredUnits?.map((unit) => (
           <div key={unit.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
             <div className="flex items-center justify-between py-4">
               <div className="flex-1">
@@ -495,6 +625,27 @@ export default function NetworkUnitsTab() {
           <CardContent className="p-6 text-center">
             <MapPin className="h-12 w-12 text-[#277677] mx-auto mb-4" />
             <p className="text-[#302e2b]">Nenhuma unidade cadastrada ainda.</p>
+          </CardContent>
+        </Card>
+      )}
+      
+      {units && units.length > 0 && filteredUnits.length === 0 && (
+        <Card>
+          <CardContent className="p-6 text-center">
+            <Search className="h-12 w-12 text-[#277677] mx-auto mb-4" />
+            <p className="text-[#302e2b]">Nenhuma unidade encontrada com os filtros aplicados.</p>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setSearchText("");
+                setFilterByRating("all");
+                setFilterByService("all");
+              }}
+              className="mt-4 text-[#277677] border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7]"
+              data-testid="button-clear-filters-empty"
+            >
+              Limpar filtros
+            </Button>
           </CardContent>
         </Card>
       )}
