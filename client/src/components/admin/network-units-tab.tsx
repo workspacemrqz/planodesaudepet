@@ -449,7 +449,7 @@ export default function NetworkUnitsTab() {
                         variant="outline" 
                         onClick={() => setIsDialogOpen(false)}
                         data-testid="button-cancel-unit"
-                        className="mobile-touch-target flex-1 max-w-[140px]"
+                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] border-[#2C8587] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
                       >
                         Cancelar
                       </Button>
@@ -471,7 +471,7 @@ export default function NetworkUnitsTab() {
                         variant="outline"
                         onClick={prevStep}
                         data-testid="button-prev-step"
-                        className="mobile-touch-target flex-1 max-w-[140px]"
+                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] border-[#2C8587] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
                       >
                         <ChevronLeft className="h-4 w-4 mr-2" />
                         Anterior

@@ -273,6 +273,7 @@ export default function PlansTab() {
                   variant="outline" 
                   onClick={() => setIsDialogOpen(false)}
                   data-testid="button-cancel-plan"
+                  className="bg-[#2C8587] text-[#F7F5F3] border-[#2C8587] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
                 >
                   Cancelar
                 </Button>
