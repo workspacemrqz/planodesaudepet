@@ -10,7 +10,7 @@ export default function FAQ() {
   });
 
   return (
-    <main className="pt-32 pb-20">
+    <main className="pt-[0px] pb-[0px]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         {/* Header */}
         <div className="text-center mt-[50px] mb-[50px]">
