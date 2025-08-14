@@ -35,7 +35,7 @@ export default function Testimonials() {
     <section className="py-20 text-[#277677] bg-[#ded8ce]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-[#302e2b] leading-tight">
+          <h2 className="text-[30px] font-bold mb-4 text-[#302e2b] leading-tight">
             O que nossos<br /><span className="text-[#277677]">clientes dizem</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] font-semibold px-4">Depoimentos reais de quem<br />confia na UNIPET PLAN</p>
