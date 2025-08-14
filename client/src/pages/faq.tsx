@@ -11,7 +11,7 @@ export default function FAQ() {
 
   return (
     <main className="pt-[0px] pb-[0px]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px] pt-[10px] pb-[10px]">
         {/* Header */}
         <div className="text-center mt-[50px] mb-[50px]">
           <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
