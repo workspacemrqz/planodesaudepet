@@ -67,32 +67,33 @@ export default function ContactSubmissionsTab() {
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-4">
-      <CollapsibleTrigger 
-        className="flex w-full items-center justify-between border rounded-lg px-4 py-4 mt-[10px] mb-[10px] bg-[#145759] hover:bg-[#145759]/90 transition-colors"
-        data-testid="collapsible-forms-trigger"
-      >
-        <div className="flex items-center gap-3">
-          <Mail className="h-5 w-5 text-[#E1AC33]" />
-          <div className="text-left">
-            <h3 className="text-lg font-semibold text-[#FBF9F7]">
-              Formulários de Contato
-            </h3>
-            <p className="text-sm text-[#FBF9F7]/70">
-              Total de {submissions.length} formulário{submissions.length !== 1 ? 's' : ''} recebido{submissions.length !== 1 ? 's' : ''}
-            </p>
+    <div className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger 
+          className="flex w-full items-center justify-between py-4 hover:bg-[#145759]/90 transition-colors"
+          data-testid="collapsible-forms-trigger"
+        >
+          <div className="flex items-center gap-3">
+            <Mail className="h-5 w-5 text-[#E1AC33]" />
+            <div className="text-left">
+              <h3 className="text-lg font-semibold text-[#FBF9F7]">
+                Formulários de Contato
+              </h3>
+              <p className="text-sm text-[#FBF9F7]/70">
+                Total de {submissions.length} formulário{submissions.length !== 1 ? 's' : ''} recebido{submissions.length !== 1 ? 's' : ''}
+              </p>
+            </div>
           </div>
-        </div>
-        {isOpen ? (
-          <ChevronDown className="h-5 w-5 text-[#FBF9F7] transition-transform" />
-        ) : (
-          <ChevronRight className="h-5 w-5 text-[#FBF9F7] transition-transform" />
-        )}
-      </CollapsibleTrigger>
+          {isOpen ? (
+            <ChevronDown className="h-5 w-5 text-[#FBF9F7] transition-transform" />
+          ) : (
+            <ChevronRight className="h-5 w-5 text-[#FBF9F7] transition-transform" />
+          )}
+        </CollapsibleTrigger>
 
-      <CollapsibleContent className="space-y-4" data-testid="collapsible-forms-content">
-        <div className="grid gap-4">
-          {submissions.map((submission) => (
+        <CollapsibleContent className="pb-4" data-testid="collapsible-forms-content">
+          <div className="grid gap-4">
+            {submissions.map((submission) => (
           <Card key={submission.id} className="bg-[#145759] border-[#277677]/30 shadow-sm transition-all duration-300 hover:shadow-2xl">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
@@ -190,8 +191,9 @@ export default function ContactSubmissionsTab() {
             </CardContent>
           </Card>
         ))}
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
   );
 }
