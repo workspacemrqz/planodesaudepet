@@ -133,7 +133,7 @@ export default function ContactSubmissionsTab() {
                   </div>
                   <div className="text-sm">
                     <span className="font-medium text-[#FBF9F7]">Tipo:</span>
-                    <Badge variant="secondary" className="ml-2 bg-[#E1AC33] text-[#145759]">
+                    <Badge variant="secondary" className="ml-2 bg-[#2c8587] text-[#fbf9f7]">
                       {getAnimalTypeLabel(submission.animalType)}
                     </Badge>
                   </div>
@@ -150,7 +150,7 @@ export default function ContactSubmissionsTab() {
               <div className="p-3 rounded-lg bg-[#e1ac3300]">
                 <div className="text-sm">
                   <span className="font-medium text-[#FBF9F7]">Plano de interesse:</span>
-                  <Badge className="ml-2 bg-[#E1AC33] text-[#145759]">
+                  <Badge className="ml-2 bg-[#2f8585] text-[#fbf9f7]">
                     {getPlanLabel(submission.planInterest)}
                   </Badge>
                 </div>
