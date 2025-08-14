@@ -23,7 +23,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="/unipet logo.png" alt="Unipet Plan" className="h-12 w-auto" />
+            <img src="/unipet-logo.png" alt="Unipet Plan" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,7 +57,7 @@ export default function Header() {
               <SheetContent side="right" className="w-[300px] bg-background">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center">
-                    <img src="/unipet logo.png" alt="Unipet Plan" className="h-8 w-auto" />
+                    <img src="/unipet-logo.png" alt="Unipet Plan" className="h-8 w-auto" />
                   </div>
                 </div>
                 <nav className="flex flex-col space-y-6">
