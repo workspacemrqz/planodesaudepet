@@ -13,7 +13,7 @@ export default function FAQ() {
     <main className="pt-32 pb-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         {/* Header */}
-        <div className="text-center">
+        <div className="text-center mt-[50px] mb-[50px]">
           <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
           <h1 className="font-bold text-[#e1ac33] text-[36px]">
             Perguntas Frequentes
