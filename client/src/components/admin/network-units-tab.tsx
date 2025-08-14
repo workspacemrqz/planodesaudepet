@@ -288,13 +288,19 @@ export default function NetworkUnitsTab() {
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl admin-dialog-content">
-            <DialogHeader>
-              <DialogTitle className="text-[#e5e7eb]">
+            <DialogHeader className="pb-2">
+              <DialogTitle className="text-[#e5e7eb] mb-0">
                 {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
               </DialogTitle>
             </DialogHeader>
             
-            
+            {/* Progress Bar */}
+            <div className="w-full bg-gray-200 rounded-full overflow-hidden" style={{ height: '3px' }}>
+              <div 
+                className="bg-[#E1AC33] rounded-full transition-all duration-300 ease-in-out"
+                style={{ width: `${(currentStep / 3) * 100}%`, height: '3px' }}
+              />
+            </div>
 
             <Form {...form}>
               <div className="space-y-4 admin-no-focus" onKeyDown={(e) => {
@@ -423,7 +429,7 @@ export default function NetworkUnitsTab() {
                 {/* Step 3: Services */}
                 {currentStep === 3 && (
                   <div className="space-y-4">
-                    <h4 className="font-medium text-[#277677]">Serviços Disponíveis</h4>
+                    <h4 className="font-medium text-[#FBF9F7]">Serviços Disponíveis</h4>
                     
                     <div>
                       <FormLabel>Serviços (um por linha)</FormLabel>
