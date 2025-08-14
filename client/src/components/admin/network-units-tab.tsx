@@ -432,7 +432,7 @@ export default function NetworkUnitsTab() {
                         onChange={(e) => setServicesInput(e.target.value)}
                         placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
                         rows={8}
-                        className="mt-2 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
+                        className="mt-2"
                         data-testid="textarea-unit-services"
                       />
                     </div>

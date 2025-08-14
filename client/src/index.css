@@ -51,17 +51,52 @@
 /* Remove all focus outlines and rings from admin forms */
 .admin-no-focus input:focus,
 .admin-no-focus textarea:focus,
+.admin-no-focus select:focus,
 .admin-no-focus input:focus-visible,
-.admin-no-focus textarea:focus-visible {
+.admin-no-focus textarea:focus-visible,
+.admin-no-focus select:focus-visible,
+.admin-no-focus [role="combobox"]:focus,
+.admin-no-focus [role="combobox"]:focus-visible {
   outline: none !important;
   ring: none !important;
   box-shadow: none !important;
   border-color: #d1d5db !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
 }
 
 .admin-no-focus input:hover,
-.admin-no-focus textarea:hover {
+.admin-no-focus textarea:hover,
+.admin-no-focus select:hover {
   border-color: #d1d5db !important;
+}
+
+/* Global admin dialog outline removal */
+.admin-dialog-content input,
+.admin-dialog-content textarea,
+.admin-dialog-content select,
+.admin-dialog-content [role="combobox"] {
+  outline: none !important;
+  ring: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+}
+
+.admin-dialog-content input:focus,
+.admin-dialog-content textarea:focus,
+.admin-dialog-content select:focus,
+.admin-dialog-content [role="combobox"]:focus,
+.admin-dialog-content input:focus-visible,
+.admin-dialog-content textarea:focus-visible,
+.admin-dialog-content select:focus-visible,
+.admin-dialog-content [role="combobox"]:focus-visible {
+  outline: none !important;
+  ring: none !important;
+  box-shadow: none !important;
+  border-color: #d1d5db !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
 }
 
 
