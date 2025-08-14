@@ -572,7 +572,7 @@ export default function NetworkUnitsTab() {
                 setFilterByRating("all");
                 setFilterByService("all");
               }}
-              className="text-[#277677] border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7]"
+              className="border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7] text-[#fbf9f7] bg-[#145759]"
               data-testid="button-clear-filters"
             >
               Limpar filtros
