@@ -58,28 +58,26 @@ export function SimpleImageUploader({
         className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 py-2 w-full hover:bg-[#1f5a5c] text-white disabled:opacity-50 bg-[#145759]"
         data-testid="button-upload-image"
       >
-        <div className="flex items-center justify-center gap-2 py-2">
-          {isUploading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-              <span>Enviando...</span>
-            </>
-          ) : (
-            <>
-              {hasImage ? (
-                <>
-                  <Image className="h-4 w-4" />
-                  <span>Trocar Imagem</span>
-                </>
-              ) : (
-                <>
-                  <Upload className="h-4 w-4" />
-                  <span>Selecionar Imagem</span>
-                </>
-              )}
-            </>
-          )}
-        </div>
+        {isUploading ? (
+          <>
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+            <span>Enviando...</span>
+          </>
+        ) : (
+          <>
+            {hasImage ? (
+              <>
+                <Image className="h-4 w-4" />
+                <span>Trocar Imagem</span>
+              </>
+            ) : (
+              <>
+                <Upload className="h-4 w-4" />
+                <span>Selecionar Imagem</span>
+              </>
+            )}
+          </>
+        )}
       </Button>
     </>
   );
