@@ -83,7 +83,7 @@ export default function Features() {
             />
           </div>
           <div className="order-1 lg:order-2">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-[#302e2b] leading-tight">
+            <h3 className="sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-[#302e2b] text-[25px]">
               Rede Credenciada<br /><span className="text-[#277677]">Hospital Animal's 24h</span>
             </h3>
             <p className="text-[#302e2b] text-sm sm:text-base lg:text-lg mb-4 sm:mb-6 leading-relaxed">
