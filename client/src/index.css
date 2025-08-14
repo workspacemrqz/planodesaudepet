@@ -303,16 +303,50 @@
   @media (max-width: 768px) {
     /* Admin dialog specific styles */
     .admin-dialog-content {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
       width: calc(100vw - 2rem) !important;
       max-width: calc(100vw - 2rem) !important;
-      margin: 1rem !important;
       max-height: calc(100vh - 2rem) !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
     }
     
     /* Admin dialog content scrolling */
     .admin-dialog-content > div {
       max-height: calc(100vh - 4rem) !important;
       overflow-y: auto !important;
+      padding: 1.5rem !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Ensure dialog doesn't overflow horizontally */
+    .admin-dialog-content * {
+      box-sizing: border-box !important;
+      max-width: 100% !important;
+    }
+
+    /* Form inputs in dialogs */
+    .admin-dialog-content input,
+    .admin-dialog-content textarea,
+    .admin-dialog-content select {
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Button container in dialogs */
+    .admin-dialog-content .flex.gap-2,
+    .admin-dialog-content .flex.justify-end {
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+    }
+
+    .admin-dialog-content .flex.gap-2 > *,
+    .admin-dialog-content .flex.justify-end > * {
+      flex: 1 !important;
+      min-width: 0 !important;
     }
     
     /* Dialog header mobile */
