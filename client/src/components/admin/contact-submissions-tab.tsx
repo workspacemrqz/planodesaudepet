@@ -69,7 +69,7 @@ export default function ContactSubmissionsTab() {
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-4">
       <CollapsibleTrigger 
-        className="flex w-full items-center justify-between p-4 bg-[#277677]/10 hover:bg-[#277677]/20 rounded-lg transition-colors"
+        className="flex w-full items-center justify-between border rounded-lg px-4 py-4 mt-[10px] mb-[10px] bg-[#145759] hover:bg-[#145759]/90 transition-colors"
         data-testid="collapsible-forms-trigger"
       >
         <div className="flex items-center gap-3">
