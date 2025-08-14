@@ -45,13 +45,11 @@ export default function Network() {
 
   return (
     <main className="min-h-screen bg-[#FBF9F7]">
-      
-      
       {/* Network Units Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#302e2b] mb-4">
+            <h2 className="md:text-4xl font-bold text-[#302e2b] mb-4 text-[36px]">
               Principais Unidades
             </h2>
             <p className="text-[#302e2b] text-lg max-w-2xl mx-auto">
