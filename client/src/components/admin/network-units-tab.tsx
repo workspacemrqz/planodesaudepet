@@ -498,7 +498,6 @@ export default function NetworkUnitsTab() {
           </DialogContent>
         </Dialog>
       </div>
-
       {/* Filter Section */}
       <div className="mb-6 space-y-4">
         <div className="flex items-center gap-2 text-[#fbf9f7] mb-4">
@@ -589,7 +588,6 @@ export default function NetworkUnitsTab() {
           }
         </div>
       </div>
-
       <div className="space-y-4">
         {filteredUnits?.map((unit) => (
           <div key={unit.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
@@ -628,12 +626,11 @@ export default function NetworkUnitsTab() {
           </CardContent>
         </Card>
       )}
-      
       {units && units.length > 0 && filteredUnits.length === 0 && (
         <Card>
           <CardContent className="p-6 text-center">
             <Search className="h-12 w-12 text-[#277677] mx-auto mb-4" />
-            <p className="text-[#302e2b]">Nenhuma unidade encontrada com os filtros aplicados.</p>
+            <p className="text-[#fbf9f7]">Nenhuma unidade encontrada com os filtros aplicados.</p>
             <Button 
               variant="outline" 
               onClick={() => {
