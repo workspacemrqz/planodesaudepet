@@ -10,7 +10,8 @@ import {
   Stethoscope, 
   Ambulance,
   Search,
-  Filter
+  Filter,
+  MessageSquare
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { NetworkUnit } from "@shared/schema";
@@ -122,6 +123,7 @@ export default function Network() {
                       className="flex-1 bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90"
                       data-testid={`button-contact-unit-${unit.id}`}
                     >
+                      <MessageSquare className="h-4 w-4 mr-2 text-[#FBF9F7]" />
                       Entrar em Contato
                     </Button>
                     <Button 
