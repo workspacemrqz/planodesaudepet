@@ -74,7 +74,6 @@ export default function ContactSubmissionsTab() {
           data-testid="collapsible-forms-trigger"
         >
           <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-[#2C8587]" />
             <div className="text-left">
               <h3 className="text-lg font-semibold text-[#FBF9F7]">
                 Formulários de Contato
