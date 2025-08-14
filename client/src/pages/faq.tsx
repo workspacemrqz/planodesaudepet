@@ -13,14 +13,16 @@ export default function FAQ() {
     <main className="min-h-screen bg-[#FBF9F7]">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 text-[#fbf9f7] bg-[#277677] pl-[20px] pr-[20px]">
-        <div className="max-w-4xl mx-auto text-center">
-          <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
-          <h1 className="font-bold text-[#e1ac33] text-[36px] mb-6">
-            Perguntas Frequentes
-          </h1>
-          <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
-            Tudo que você precisa saber<br />sobre nossos planos
-          </p>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
+          <div className="mb-16 text-center">
+            <HelpCircle className="h-12 w-12 text-[#277677] mr-3 mx-auto mb-3" />
+            <h1 className="font-bold text-[#e1ac33] text-[36px] mb-4">
+              Perguntas Frequentes
+            </h1>
+            <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
+              Tudo que você precisa saber<br />sobre nossos planos
+            </p>
+          </div>
         </div>
       </section>
       {/* FAQ Section */}
