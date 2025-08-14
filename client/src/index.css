@@ -272,6 +272,17 @@
     }
   }
 
+  /* Mobile dialog button centering */
+  @media (max-width: 640px) {
+    .admin-dialog-content .flex.flex-col {
+      gap: 1rem;
+    }
+    
+    .admin-dialog-content .flex.justify-center {
+      width: 100%;
+    }
+  }
+
   /* Mobile spacing adjustments */
   @media (max-width: 640px) {
     .mobile-spacing-tight {

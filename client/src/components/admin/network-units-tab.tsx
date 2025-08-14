@@ -440,14 +440,15 @@ export default function NetworkUnitsTab() {
                 )}
 
                 {/* Navigation Buttons */}
-                <div className="flex justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
+                  <div className="flex justify-center sm:justify-start">
                     {currentStep > 1 && (
                       <Button 
                         type="button" 
                         variant="outline"
                         onClick={prevStep}
                         data-testid="button-prev-step"
+                        className="mobile-touch-target"
                       >
                         <ChevronLeft className="h-4 w-4 mr-2" />
                         Anterior
@@ -455,12 +456,13 @@ export default function NetworkUnitsTab() {
                     )}
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 justify-center sm:justify-end">
                     <Button 
                       type="button" 
                       variant="outline" 
                       onClick={() => setIsDialogOpen(false)}
                       data-testid="button-cancel-unit"
+                      className="mobile-touch-target"
                     >
                       Cancelar
                     </Button>
@@ -470,7 +472,7 @@ export default function NetworkUnitsTab() {
                         type="button"
                         onClick={nextStep}
                         data-testid="button-next-step"
-                        className="text-[#ffffff]"
+                        className="text-[#ffffff] mobile-touch-target"
                       >
                         Próximo
                         <ChevronRight className="h-4 w-4 ml-2" />
@@ -484,7 +486,7 @@ export default function NetworkUnitsTab() {
                         }}
                         disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
                         data-testid="button-save-unit"
-                        className="text-[#ffffff]"
+                        className="text-[#ffffff] mobile-touch-target"
                       >
                         {editingUnit ? "Atualizar" : "Criar"} Unidade
                       </Button>
