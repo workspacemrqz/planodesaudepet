@@ -280,6 +280,7 @@ export default function PlansTab() {
                   type="submit"
                   disabled={updatePlanMutation.isPending}
                   data-testid="button-save-plan"
+                  className="text-[#FBF9F7]"
                 >
                   Atualizar Plano
                 </Button>
