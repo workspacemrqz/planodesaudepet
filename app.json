@@ -3,7 +3,7 @@
   "description": "Sistema de plano de saúde para pets",
   "buildpacks": [
     {
-      "url": "heroku/builder:24"
+      "url": "heroku/nodejs"
     }
   ],
   "env": {

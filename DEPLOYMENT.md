@@ -1,6 +1,13 @@
 # Deployment no EasyPanel
 
-Este projeto está configurado para deployment no EasyPanel utilizando Buildpacks com o construtor `heroku/builder:24`.
+Este projeto está configurado para deployment no EasyPanel utilizando Buildpacks com o construtor `heroku/nodejs`.
+
+## Correções Aplicadas
+
+### Problemas Identificados e Corrigidos:
+1. **Caminho incorreto para arquivos estáticos** - Corrigido para `dist/public`
+2. **Buildpack incorreto** - Alterado de `heroku/builder:24` para `heroku/nodejs`
+3. **Versão do Node.js não especificada** - Adicionada especificação no package.json
 
 ## Arquivos de Configuração
 
@@ -12,14 +19,14 @@ web: npm start
 
 ### app.json
 Contém a configuração do buildpack e variáveis de ambiente necessárias:
-- Buildpack: `heroku/builder:24`
+- Buildpack: `heroku/nodejs`
 - Variáveis de ambiente: `NODE_ENV`, `DATABASE_URL`, `LOGIN`, `SENHA`
 - Script pós-deploy: `npm run db:push`
 
 ### .buildpacks
 Arquivo alternativo para especificar o buildpack:
 ```
-heroku/builder:24
+heroku/nodejs
 ```
 
 ## Configurações Realizadas
@@ -40,7 +47,7 @@ Configure as seguintes variáveis no EasyPanel:
 
 ## Processo de Build
 
-1. O buildpack `heroku/builder:24` detecta automaticamente o projeto Node.js
+1. O buildpack `heroku/nodejs` detecta automaticamente o projeto Node.js
 2. Executa `npm install` para instalar dependências
 3. Executa `npm run heroku-postbuild` que roda o build da aplicação
 4. Após o deploy, executa `npm run db:push` para sincronizar o banco
