@@ -125,16 +125,11 @@ export default function SettingsTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-[#277677]/10 rounded-lg">
-          <Settings className="h-5 w-5 text-[#FBF9F7]" />
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold text-[#FBF9F7]">Configurações do Site</h3>
-          <p className="text-sm text-[#FBF9F7]">
-            Gerencie as informações de contato e conteúdo que aparecem no site
-          </p>
-        </div>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-[#FBF9F7]">Configurações do Site</h3>
+        <p className="text-sm text-[#FBF9F7]">
+          Gerencie as informações de contato e conteúdo que aparecem no site
+        </p>
       </div>
 
       <Form {...form}>

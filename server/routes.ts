@@ -315,6 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const units = await storage.getNetworkUnits();
       res.json(units);
     } catch (error) {
+      console.error("Erro ao buscar unidades da rede:", error);
       res.status(500).json({ error: "Erro ao buscar unidades da rede" });
     }
   });

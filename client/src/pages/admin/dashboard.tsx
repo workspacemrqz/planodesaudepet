@@ -34,10 +34,7 @@ export default function AdminDashboard() {
               </div>
             </div>
             
-            <div className={`${isMobile ? 'flex justify-between items-center' : 'flex items-center space-x-4'}`}>
-              <div className="text-[#FBF9F7] text-sm">
-                Bem-vindo, <span className="font-semibold">{user?.username}</span>
-              </div>
+            <div className={`${isMobile ? 'flex justify-end' : 'flex items-center justify-end'}`}>
               <Button
                 onClick={handleLogout}
                 variant="outline"
