@@ -41,9 +41,6 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
-            <Button className="unipet-button-primary text-[#ffffff]">
-              Contratar Agora
-            </Button>
           </nav>
 
           {/* Mobile Menu */}

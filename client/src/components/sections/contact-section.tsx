@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Phone, Mail, MessageSquare, Clock, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -29,6 +30,7 @@ type ContactFormData = z.infer<typeof contactFormSchema>;
 export default function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { settings, shouldShow } = useSiteSettingsWithDefaults();
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -265,61 +267,60 @@ export default function ContactSection() {
               <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[#fbf9f7]">Outras Formas de Contato</h3>
               
               <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    <Phone className="h-5 w-5 text-primary" />
+                {shouldShow.phone && (
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-[#FBF9F7]">Telefone</div>
+                      <div className="text-[#FBF9F7]">{settings.phone}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-semibold text-[#FBF9F7]">Telefone</div>
-                    <div className="text-[#FBF9F7]">0800 123 4567</div>
-                  </div>
-                </div>
+                )}
 
-                <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-primary" />
+                {shouldShow.email && (
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-[#FBF9F7]">E-mail</div>
+                      <div className="text-[#FBF9F7]">{settings.email}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-semibold text-[#FBF9F7]">E-mail</div>
-                    <div className="text-[#FBF9F7]">contato@unipetplan.com.br</div>
-                  </div>
-                </div>
+                )}
 
-                <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    <MessageSquare className="h-5 w-5 text-primary" />
+                {shouldShow.whatsapp && (
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-primary/20 w-12 h-12 rounded-full flex items-center justify-center">
+                      <MessageSquare className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-[#FBF9F7]">WhatsApp</div>
+                      <div className="text-[#FBF9F7]">{settings.whatsapp}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-semibold text-[#FBF9F7]">WhatsApp</div>
-                    <div className="text-[#FBF9F7]">(11) 99999-9999</div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 
             {/* Service Hours */}
-            <Card className="unipet-card shadow-lg rounded-xl border-none">
-              <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
-                <CardTitle className="text-xl flex items-center tracking-tight text-[#277677] text-[20px] font-semibold pt-[10px] pb-[10px]">
-                  <Clock className="h-5 w-5 mr-2" />
-                  Horário de Atendimento
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
-                <div className="space-y-2 text-[#302e2b] mt-[0px] mb-[0px] pt-[10px] pb-[10px]">
-                  <div>
-                    <span>Segunda a Sexta: 8h às 18h</span>
+            {shouldShow.businessHours && (
+              <Card className="unipet-card shadow-lg rounded-xl border-none">
+                <CardHeader className="flex flex-col space-y-1.5 p-6 bg-[#FBF9F7] text-[#ffffff] rounded-t-xl">
+                  <CardTitle className="text-xl flex items-center tracking-tight text-[#277677] text-[20px] font-semibold pt-[10px] pb-[10px]">
+                    <Clock className="h-5 w-5 mr-2" />
+                    Horário de Atendimento
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 pt-0 text-[#302e2b] bg-[#FBF9F7] rounded-b-xl">
+                  <div className="text-[#302e2b] mt-[0px] mb-[0px] pt-[10px] pb-[10px] whitespace-pre-line">
+                    {settings.businessHours}
                   </div>
-                  <div>
-                    <span>Sábado: 8h às 14h</span>
-                  </div>
-                  <div>
-                    <span>Emergências: </span>
-                    <span className="font-semibold text-[#277677]">24h todos os dias</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
 
             
           </div>

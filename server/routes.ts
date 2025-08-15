@@ -5,7 +5,8 @@ import {
   insertContactSubmissionSchema, 
   insertPlanSchema, 
   insertNetworkUnitSchema, 
-  insertFaqItemSchema 
+  insertFaqItemSchema,
+  insertSiteSettingsSchema 
 } from "@shared/schema";
 import { setupAuth, initializeAdminUser } from "./auth";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
@@ -170,6 +171,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Site Settings Management (Admin only)
+  app.get("/api/admin/site-settings", requireAdmin, async (req, res) => {
+    try {
+      const settings = await storage.getSiteSettings();
+      res.json(settings || {});
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar configurações" });
+    }
+  });
+
+  app.put("/api/admin/site-settings", requireAdmin, async (req, res) => {
+    try {
+      const validatedData = insertSiteSettingsSchema.partial().parse(req.body);
+      const settings = await storage.updateSiteSettings(validatedData);
+      res.json(settings);
+    } catch (error) {
+      console.error("Error updating site settings:", error);
+      res.status(400).json({ error: "Dados inválidos para atualizar configurações" });
+    }
+  });
+
   app.post("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
       const validatedData = insertFaqItemSchema.parse(req.body);
@@ -278,6 +300,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Site Settings (public read access)
+  app.get("/api/site-settings", async (req, res) => {
+    try {
+      const settings = await storage.getSiteSettings();
+      res.json(settings || {});
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar configurações" });
+    }
+  });
+
   app.get("/api/network-units", async (req, res) => {
     try {
       const units = await storage.getNetworkUnits();
@@ -292,7 +324,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const items = await storage.getFaqItems();
       res.json(items);
     } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar itens do FAQ" });
+      console.error("Erro detalhado ao buscar FAQ:", error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      res.status(500).json({ error: "Erro ao buscar itens do FAQ", details: errorMessage, stack: errorStack });
     }
   });
 

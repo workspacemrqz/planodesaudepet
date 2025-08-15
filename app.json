@@ -1,0 +1,30 @@
+{
+  "name": "plano-de-saude-pet",
+  "description": "Sistema de plano de saúde para pets",
+  "buildpacks": [
+    {
+      "url": "heroku/builder:24"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "DATABASE_URL": {
+      "description": "PostgreSQL database URL",
+      "required": true
+    },
+    "LOGIN": {
+      "description": "Admin login",
+      "required": true
+    },
+    "SENHA": {
+      "description": "Admin password",
+      "required": true
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run db:push"
+  }
+}

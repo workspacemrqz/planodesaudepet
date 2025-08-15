@@ -12,17 +12,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Edit, CreditCard, Star, Check, Trash2 } from "lucide-react";
+import { Edit, CreditCard, Star, Check } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const planFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  priceNormal: z.number().min(0, "Preço deve ser maior que 0"),
-  priceWithCopay: z.number().min(0, "Preço com coparticipação deve ser maior que 0"),
   description: z.string().min(1, "Descrição é obrigatória"),
   features: z.array(z.string()).min(1, "Pelo menos uma funcionalidade é obrigatória"),
+  buttonText: z.string().min(1, "Texto do botão é obrigatório"),
+  redirectUrl: z.string().min(1, "URL de redirecionamento é obrigatória"),
   isPopular: z.boolean().default(false),
 });
 
@@ -32,6 +32,8 @@ export default function PlansTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [featuresInput, setFeaturesInput] = useState("");
+  const [priceNormalInput, setPriceNormalInput] = useState("0,00");
+  const [priceWithCopayInput, setPriceWithCopayInput] = useState("0,00");
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -43,10 +45,10 @@ export default function PlansTab() {
     resolver: zodResolver(planFormSchema),
     defaultValues: {
       name: "",
-      priceNormal: 0,
-      priceWithCopay: 0,
       description: "",
       features: [],
+      buttonText: "Contratar Plano",
+      redirectUrl: "/contact",
       isPopular: false,
     },
   });
@@ -69,19 +71,7 @@ export default function PlansTab() {
     },
   });
 
-  const deletePlanMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await apiRequest("DELETE", `/api/admin/plans/${id}`);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      toast({ title: "Plano removido com sucesso!" });
-    },
-    onError: () => {
-      toast({ title: "Erro ao remover plano", variant: "destructive" });
-    },
-  });
+
 
   const togglePopularMutation = useMutation({
     mutationFn: async (planId: string) => {
@@ -107,30 +97,37 @@ export default function PlansTab() {
     setEditingPlan(plan);
     form.reset({
       name: plan.name,
-      priceNormal: plan.priceNormal,
-      priceWithCopay: plan.priceWithCopay,
       description: plan.description,
       features: plan.features,
+      buttonText: plan.buttonText || "Contratar Plano",
+      redirectUrl: plan.redirectUrl || "/contact",
       isPopular: plan.isPopular,
     });
     setFeaturesInput(plan.features.join('\n'));
+    setPriceNormalInput((plan.priceNormal / 100).toFixed(2).replace('.', ','));
+    setPriceWithCopayInput((plan.priceWithCopay / 100).toFixed(2).replace('.', ','));
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (plan: Plan) => {
-    if (confirm(`Tem certeza que deseja remover o plano "${plan.name}"?`)) {
-      deletePlanMutation.mutate(plan.id);
-    }
-  };
+
 
   const handleTogglePopular = (plan: Plan) => {
     togglePopularMutation.mutate(plan.id);
+  };
+
+  const parsePrice = (priceString: string): number => {
+    // Remove espaços e substitui vírgula por ponto
+    const cleanPrice = priceString.replace(/\s/g, '').replace(',', '.');
+    const price = parseFloat(cleanPrice);
+    return isNaN(price) ? 0 : Math.round(price * 100); // Converte para centavos
   };
 
   const onSubmit = (data: PlanFormData) => {
     const features = featuresInput.split('\n').filter(f => f.trim()).map(f => f.trim());
     const planData = {
       ...data,
+      priceNormal: parsePrice(priceNormalInput),
+      priceWithCopay: parsePrice(priceWithCopayInput),
       features,
       isActive: true,
     };
@@ -143,6 +140,8 @@ export default function PlansTab() {
   const resetForm = () => {
     form.reset();
     setFeaturesInput("");
+    setPriceNormalInput("0,00");
+    setPriceWithCopayInput("0,00");
     setEditingPlan(null);
   };
 
@@ -210,21 +209,44 @@ export default function PlansTab() {
               </div>
 
               <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
+                <FormItem>
+                  <FormLabel>Preço Normal (R$)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="text" 
+                      placeholder="0,00" 
+                      value={priceNormalInput}
+                      onChange={(e) => setPriceNormalInput(e.target.value)}
+                      data-testid="input-plan-price-normal"
+                      className=""
+                    />
+                  </FormControl>
+                </FormItem>
+                
+                <FormItem>
+                  <FormLabel>Preço com Coparticipação (R$)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="text" 
+                      placeholder="0,00" 
+                      value={priceWithCopayInput}
+                      onChange={(e) => setPriceWithCopayInput(e.target.value)}
+                      data-testid="input-plan-price-copay"
+                      className=""
+                    />
+                  </FormControl>
+                </FormItem>
+              </div>
+
+              <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
                 <FormField
                   control={form.control}
-                  name="priceNormal"
+                  name="buttonText"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Preço Normal (R$)</FormLabel>
+                      <FormLabel>Texto do Botão</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="0" 
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                          data-testid="input-plan-price-normal"
-                          className=""
-                        />
+                        <Input placeholder="Ex: Contratar Plano" {...field} data-testid="input-plan-button-text" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -233,19 +255,12 @@ export default function PlansTab() {
                 
                 <FormField
                   control={form.control}
-                  name="priceWithCopay"
+                  name="redirectUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Preço com Coparticipação (R$)</FormLabel>
+                      <FormLabel>URL de Redirecionamento</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="0" 
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                          data-testid="input-plan-price-copay"
-                          className=""
-                        />
+                        <Input placeholder="Ex: /contact" {...field} data-testid="input-plan-redirect-url" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -326,15 +341,7 @@ export default function PlansTab() {
                 >
                   <Star className={`h-4 w-4 ${plan.isPopular ? 'fill-current' : ''}`} />
                 </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleDelete(plan)}
-                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] focus:bg-[#FBF9F7] active:bg-[#FBF9F7] hover:text-[#2F8585] focus:text-[#2F8585] active:text-[#2F8585]"
-                  data-testid={`button-delete-plan-${plan.id}`}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+
               </div>
             </div>
           </div>

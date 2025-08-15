@@ -40,7 +40,7 @@ export default function AboutSection() {
             <div>
               {/* Pet insurance concept image */}
               <img 
-                src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                src="/inicio-sobre.jpg" 
                 alt="Conceito de seguro pet com veterinário cuidando de animal" 
                 className="rounded-2xl shadow-xl w-full h-auto" 
               />

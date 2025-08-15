@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 
 export default function Testimonials() {
+  
   const testimonials = [
     {
       name: "Maria Silva",
@@ -36,33 +37,41 @@ export default function Testimonials() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-[30px] font-bold mb-4 text-[#302e2b] leading-tight">
-            O que nossos<br /><span className="text-[#277677]">clientes dizem</span>
+            O que nossos <span className="text-[#277677]">clientes dizem</span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] font-semibold px-4">Depoimentos reais de quem<br />confia na UNIPET PLAN</p>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] font-semibold px-4">Depoimentos reais de quem<br className="lg:hidden" /><span className="lg:hidden"> </span>confia na UNIPET PLAN</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 pl-[0px] pr-[0px]">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="rounded-2xl shadow-lg border-0" style={{backgroundColor: '#FBF9F7'}}>
-              <CardContent className="pt-6 sm:pt-8 p-4 sm:p-6">
-                <div className="flex items-center mb-4 sm:mb-6">
-                  <img 
-                    src={testimonial.image} 
-                    alt={`${testimonial.name} com seu pet`} 
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
-                  />
-                  <div className="ml-3 sm:ml-4">
-                    <h4 className="font-semibold text-[#302e2b] text-sm sm:text-base">{testimonial.name}</h4>
-                    <p className="text-[#302e2b] text-xs sm:text-sm">{testimonial.location}</p>
+          {testimonials.map((testimonial, index) => {
+            return (
+              <Card 
+                key={index} 
+                className="rounded-2xl shadow-lg border-0" 
+                style={{backgroundColor: '#FBF9F7'}}
+              >
+                <CardContent className="pt-6 sm:pt-8 p-4 sm:p-6">
+                  <div className="flex items-center mb-4 sm:mb-6">
+                    <img 
+                      src={testimonial.image} 
+                      alt={`${testimonial.name} com seu pet`} 
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
+                    />
+                    <div className="ml-3 sm:ml-4">
+                      <h4 className="font-semibold text-[#302e2b] text-sm sm:text-base">{testimonial.name}</h4>
+                      <p className="text-[#302e2b] text-xs sm:text-sm">{testimonial.location}</p>
+                    </div>
                   </div>
-                </div>
-                {renderStars()}
-                <p className="text-[#302e2b] italic text-sm sm:text-base leading-relaxed">
-                  "{testimonial.testimonial}"
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                  <div>
+                    {renderStars()}
+                  </div>
+                  <p className="text-[#302e2b] italic text-sm sm:text-base leading-relaxed">
+                    "{testimonial.testimonial}"
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

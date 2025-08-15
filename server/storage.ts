@@ -11,15 +11,18 @@ import {
   type InsertFaqItem,
   type AdminUser,
   type InsertAdminUser,
+  type SiteSettings,
+  type InsertSiteSettings,
   users,
   contactSubmissions,
   plans,
   networkUnits,
   faqItems,
-  adminUsers
+  adminUsers,
+  siteSettings
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
@@ -61,6 +64,10 @@ export interface IStorage {
   createFaqItem(item: InsertFaqItem): Promise<FaqItem>;
   updateFaqItem(id: string, item: Partial<InsertFaqItem>): Promise<FaqItem | undefined>;
   deleteFaqItem(id: string): Promise<boolean>;
+  
+  // Site Settings
+  getSiteSettings(): Promise<SiteSettings | undefined>;
+  updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined>;
   
   // Session store
   sessionStore: session.Store;
@@ -167,7 +174,7 @@ export class DatabaseStorage implements IStorage {
 
   // FAQ Items
   async getFaqItems(): Promise<FaqItem[]> {
-    return await db.select().from(faqItems).where(eq(faqItems.isActive, true)).orderBy(faqItems.displayOrder);
+    return await db.select().from(faqItems).where(eq(faqItems.isActive, true)).orderBy(asc(faqItems.displayOrder));
   }
 
   async getFaqItem(id: string): Promise<FaqItem | undefined> {
@@ -188,6 +195,29 @@ export class DatabaseStorage implements IStorage {
   async deleteFaqItem(id: string): Promise<boolean> {
     const result = await db.update(faqItems).set({ isActive: false }).where(eq(faqItems.id, id));
     return (result.rowCount || 0) > 0;
+  }
+
+  // Site Settings
+  async getSiteSettings(): Promise<SiteSettings | undefined> {
+    const [settings] = await db.select().from(siteSettings).limit(1);
+    return settings || undefined;
+  }
+
+  async updateSiteSettings(updateData: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined> {
+    const existingSettings = await this.getSiteSettings();
+    
+    if (existingSettings) {
+      const [settings] = await db.update(siteSettings)
+        .set({ ...updateData, updatedAt: new Date() })
+        .where(eq(siteSettings.id, existingSettings.id))
+        .returning();
+      return settings || undefined;
+    } else {
+      const [settings] = await db.insert(siteSettings)
+        .values({ ...updateData, createdAt: new Date(), updatedAt: new Date() })
+        .returning();
+      return settings;
+    }
   }
 }
 

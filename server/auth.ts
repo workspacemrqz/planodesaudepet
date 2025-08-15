@@ -80,17 +80,20 @@ export function setupAuth(app: Express) {
 
 export async function initializeAdminUser() {
   try {
+    const adminUsername = process.env.LOGIN || "admin";
+    const adminPassword = process.env.SENHA || "admin";
+    
     // Check if admin user already exists
-    const existingAdmin = await storage.getAdminUserByUsername("admin");
+    const existingAdmin = await storage.getAdminUserByUsername(adminUsername);
     
     if (!existingAdmin) {
-      // Create default admin user
-      const hashedPassword = await hashPassword("admin");
+      // Create default admin user from environment variables
+      const hashedPassword = await hashPassword(adminPassword);
       await storage.createAdminUser({
-        username: "admin",
+        username: adminUsername,
         password: hashedPassword,
       });
-      console.log("Default admin user created: username='admin', password='admin'");
+      console.log(`Admin user created: username='${adminUsername}'`);
     }
   } catch (error) {
     console.error("Error initializing admin user:", error);

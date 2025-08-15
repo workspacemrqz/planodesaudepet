@@ -30,6 +30,8 @@ export const plans = pgTable("plans", {
   priceWithCopay: integer("price_with_copay").notNull(),
   description: text("description").notNull(),
   features: text("features").array().notNull(),
+  buttonText: text("button_text").default("Contratar Plano").notNull(),
+  redirectUrl: text("redirect_url").default("/contact").notNull(),
   isPopular: boolean("is_popular").default(false).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -40,6 +42,8 @@ export const networkUnits = pgTable("network_units", {
   name: text("name").notNull(),
   address: text("address").notNull(),
   phone: text("phone").notNull(),
+  whatsapp: text("whatsapp"),
+  googleMapsUrl: text("google_maps_url"),
   rating: integer("rating").notNull(), // stored as 48 for 4.8 rating
   services: text("services").array().notNull(),
   imageUrl: text("image_url").notNull(),
@@ -63,6 +67,24 @@ export const adminUsers = pgTable("admin_users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const siteSettings = pgTable("site_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  whatsapp: text("whatsapp"),
+  email: text("email"),
+  phone: text("phone"),
+  instagramUrl: text("instagram_url"),
+  facebookUrl: text("facebook_url"),
+  linkedinUrl: text("linkedin_url"),
+  youtubeUrl: text("youtube_url"),
+  cnpj: text("cnpj"),
+  businessHours: text("business_hours"),
+  ourStory: text("our_story"),
+  privacyPolicy: text("privacy_policy"),
+  termsOfUse: text("terms_of_use"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -82,6 +104,9 @@ export const insertPlanSchema = createInsertSchema(plans).omit({
 export const insertNetworkUnitSchema = createInsertSchema(networkUnits).omit({
   id: true,
   createdAt: true,
+}).extend({
+  whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos").optional(),
+  googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
 });
 
 export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
@@ -92,6 +117,12 @@ export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
 export const insertAdminUserSchema = createInsertSchema(adminUsers).omit({
   id: true,
   createdAt: true,
+});
+
+export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 // Types
@@ -107,3 +138,5 @@ export type InsertFaqItem = z.infer<typeof insertFaqItemSchema>;
 export type FaqItem = typeof faqItems.$inferSelect;
 export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
 export type AdminUser = typeof adminUsers.$inferSelect;
+export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
+export type SiteSettings = typeof siteSettings.$inferSelect;

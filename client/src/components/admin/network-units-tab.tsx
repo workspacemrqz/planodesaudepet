@@ -13,11 +13,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
+import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight, Search, Filter, X } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
 const networkUnitFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -26,6 +27,8 @@ const networkUnitFormSchema = z.object({
   rating: z.number().min(1).max(5, "Rating deve ser entre 1 e 5"),
   services: z.array(z.string()).min(1, "Pelo menos um serviço é obrigatório"),
   imageUrl: z.string().optional(),
+  whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos"),
+  googleMapsUrl: z.string().url("URL do Google Maps deve ser válida"),
 });
 
 type NetworkUnitFormData = z.infer<typeof networkUnitFormSchema>;
@@ -37,6 +40,8 @@ export default function NetworkUnitsTab() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [unitToDelete, setUnitToDelete] = useState<NetworkUnit | null>(null);
   
   // Filter states
   const [searchText, setSearchText] = useState("");
@@ -90,6 +95,8 @@ export default function NetworkUnitsTab() {
       rating: 4,
       services: [],
       imageUrl: "",
+      whatsapp: "",
+      googleMapsUrl: "",
     },
   });
 
@@ -203,6 +210,8 @@ export default function NetworkUnitsTab() {
       rating: unit.rating / 10, // Convert from stored format (10-50) to display format (1-5)
       services: unit.services,
       imageUrl: unit.imageUrl,
+      whatsapp: unit.whatsapp || "",
+      googleMapsUrl: unit.googleMapsUrl || "",
     });
     setServicesInput(unit.services.join("\n"));
     // Handle different URL types for preview
@@ -233,9 +242,35 @@ export default function NetworkUnitsTab() {
   };
 
   const handleDelete = (unit: NetworkUnit) => {
-    if (confirm(`Tem certeza que deseja remover "${unit.name}"?`)) {
-      deleteUnitMutation.mutate(unit.id);
+    setUnitToDelete(unit);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (unitToDelete) {
+      deleteUnitMutation.mutate(unitToDelete.id, {
+        onSuccess: () => {
+          setDeleteModalOpen(false);
+          setUnitToDelete(null);
+          toast({
+            title: "Sucesso",
+            description: "Unidade removida com sucesso.",
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Erro",
+            description: "Erro ao remover unidade. Tente novamente.",
+            variant: "destructive",
+          });
+        }
+      });
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteModalOpen(false);
+    setUnitToDelete(null);
   };
 
   const onSubmit = (data: NetworkUnitFormData) => {
@@ -356,6 +391,53 @@ export default function NetworkUnitsTab() {
                               placeholder="(11) 99999-9999"
                               {...field}
                               data-testid="input-unit-phone"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="whatsapp"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>WhatsApp</FormLabel>
+                          <FormControl>
+                            <div className="flex">
+                              <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                                https://wa.me/
+                              </span>
+                              <Input
+                                placeholder="11999999999"
+                                {...field}
+                                className="rounded-l-none"
+                                maxLength={11}
+                                onChange={(e) => {
+                                  const value = e.target.value.replace(/\D/g, '');
+                                  field.onChange(value);
+                                }}
+                                data-testid="input-unit-whatsapp"
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="googleMapsUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Link do Google Maps</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://maps.google.com/..."
+                              {...field}
+                              data-testid="input-unit-google-maps"
                             />
                           </FormControl>
                           <FormMessage />
@@ -512,10 +594,7 @@ export default function NetworkUnitsTab() {
       </div>
       {/* Filter Section */}
       <div className="mb-6 space-y-4">
-        <div className="flex items-center gap-2 text-[#fbf9f7] mb-4">
-          <Filter className="h-4 w-4" />
-          <span className="font-medium">Filtros</span>
-        </div>
+
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search by name/address */}
@@ -584,9 +663,10 @@ export default function NetworkUnitsTab() {
                 setFilterByRating("all");
                 setFilterByService("all");
               }}
-              className="border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7] text-[#fbf9f7] bg-[#145759]"
+              className="border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7] text-[#fbf9f7] bg-[#145759] flex items-center justify-center"
               data-testid="button-clear-filters"
             >
+              <X className="h-4 w-4 mr-1" />
               Limpar filtros
             </Button>
           </div>
@@ -633,20 +713,33 @@ export default function NetworkUnitsTab() {
       {(!units || units.length === 0) && (
         <Card>
           <CardContent className="p-6 text-center">
-            <MapPin className="h-12 w-12 text-[#277677] mx-auto mb-4" />
-            <p className="text-[#302e2b]">Nenhuma unidade cadastrada ainda.</p>
+            <MapPin className="h-12 w-12 text-[#145759] mx-auto mb-4" />
+            <p className="text-[#FBF9F7]">Nenhuma unidade cadastrada ainda.</p>
           </CardContent>
         </Card>
       )}
       {units && units.length > 0 && filteredUnits.length === 0 && (
         <Card>
           <CardContent className="p-6 text-center">
-            <Search className="h-12 w-12 text-[#277677] mx-auto mb-4" />
-            <p className="text-[#fbf9f7]">Nenhuma unidade encontrada com os filtros aplicados.</p>
+            <Search className="h-12 w-12 text-[#145759] mx-auto mb-4" />
+            <p className="text-[#FBF9F7]">Nenhuma unidade encontrada com os filtros aplicados.</p>
             
           </CardContent>
         </Card>
       )}
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Confirmar Exclusão"
+        message={`Tem certeza que deseja remover a unidade "${unitToDelete?.name}"?`}
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        isLoading={deleteUnitMutation.isPending}
+        icon={<Trash2 className="h-6 w-6" />}
+      />
     </div>
   );
 }

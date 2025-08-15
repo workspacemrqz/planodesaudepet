@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Rocket, DollarSign, CalendarCheck, Hospital, MapPin, UserCheck, Microscope, Ambulance } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Features() {
+  const [, setLocation] = useLocation();
+  
   const mainFeatures = [
     {
       icon: Rocket,
@@ -50,23 +53,28 @@ export default function Features() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="font-bold mb-4 text-[#302e2b] text-[30px] leading-tight">
-            Por que escolher a<br /><span className="text-[#277677]">UNIPET PLAN?</span>
+            Por que escolher a <span className="text-[#277677]">UNIPET PLAN?</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#302e2b] max-w-2xl mx-auto font-semibold px-4">
-            Oferecemos o melhor cuidado para seu pet<br />com praticidade e confiança
+            Oferecemos o melhor cuidado para seu pet<br className="lg:hidden" /><span className="lg:hidden"> </span>com praticidade e confiança
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-16 sm:mb-20 px-4 sm:px-0 pl-[0px] pr-[0px]">
+        <div 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-16 sm:mb-20 px-4 sm:px-0 pl-[0px] pr-[0px]"
+        >
           {mainFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="text-center border border-primary/30 rounded-lg p-4 sm:p-6 shadow-md text-[#fbf9f7] bg-[#277677] mt-[0px] mb-[0px] pt-[20px] pb-[20px] pl-[16px] pr-[16px] ml-[0px] mr-[0px]">
+              <div 
+                key={index} 
+                className="text-center border border-primary/30 rounded-lg p-4 sm:p-6 shadow-md text-[#fbf9f7] bg-[#277677] mt-[0px] mb-[0px] pt-[20px] pb-[20px] pl-[16px] pr-[16px] ml-[0px] mr-[0px]"
+              >
                 <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 text-[#fbf9f7] bg-[#036566]">
                   <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-[#FBF9F7]" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 text-[#fbf9f7]">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-[#fbf9f7] leading-relaxed pl-[60px] pr-[60px]">{feature.description}</p>
+                <p className="text-sm sm:text-base text-[#fbf9f7] leading-relaxed px-0 sm:pl-[60px] sm:pr-[60px]">{feature.description}</p>
               </div>
             );
           })}
@@ -103,7 +111,13 @@ export default function Features() {
               })}
             </div>
             
-            <Button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 sm:h-12 px-4 py-2 unipet-button-primary text-white bg-[#277677] mobile-touch-target w-full sm:w-auto">
+            <Button 
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 sm:h-12 px-4 py-2 unipet-button-primary text-white bg-[#277677] mobile-touch-target w-full sm:w-auto"
+              onClick={() => {
+                setLocation('/rede-credenciada');
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+              }}
+            >
               Encontrar Unidade Próxima
             </Button>
           </div>

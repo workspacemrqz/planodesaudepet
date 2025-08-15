@@ -6,8 +6,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock"
 
-const Sheet = SheetPrimitive.Root
+// Wrapper para Sheet que aplica o scroll lock
+const Sheet = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Root>
+>(({ open, onOpenChange, ...props }, ref) => {
+  // Aplicar o scroll lock quando o sheet estiver aberto
+  useBodyScrollLock(open || false);
+
+  return (
+    <SheetPrimitive.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      {...props}
+    />
+  );
+});
+Sheet.displayName = "Sheet";
 
 const SheetTrigger = SheetPrimitive.Trigger
 

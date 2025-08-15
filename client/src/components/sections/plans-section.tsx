@@ -3,57 +3,78 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
+import { type Plan } from "@shared/schema";
+import { Link } from "wouter";
+import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
+import { useHomePageData } from "@/hooks/use-parallel-data";
+import { PlansGridSkeleton } from "@/components/loading/plan-skeleton";
+
+const formatPrice = (priceInCents: number): string => {
+  return (priceInCents / 100).toFixed(2).replace('.', ',');
+};
 
 export default function PlansSection() {
+  const { redirectToWhatsApp } = useWhatsAppRedirect();
   const [showCopay, setShowCopay] = useState(false);
 
-  const plans = [
-    {
-      name: "Básico",
-      price: showCopay ? 15 : 20,
-      description: "Proteção essencial para seu pet",
-      features: [
-        "Consultas veterinárias",
-        "Vacinas anuais",
-        "Emergências básicas",
-        "Telemedicina veterinária"
-      ],
-      popular: false
-    },
-    {
-      name: "Padrão",
-      price: showCopay ? 35 : 45,
-      description: "Cobertura completa e tranquilidade",
-      features: [
-        "Tudo do plano Básico",
-        "Exames laboratoriais",
-        "Cirurgias de pequeno porte",
-        "Internações",
-        "Hospital Animal's 24h"
-      ],
-      popular: true
-    },
-    {
-      name: "Premium",
-      price: showCopay ? 60 : 80,
-      description: "Máxima proteção e benefícios",
-      features: [
-        "Tudo do plano Padrão",
-        "Cirurgias de grande porte",
-        "Fisioterapia veterinária",
-        "Medicina preventiva completa",
-        "Cobertura nacional"
-      ],
-      popular: false
+  // Usar hook otimizado para carregamento paralelo de dados da home
+  const { data, isLoading, hasError } = useHomePageData();
+  const plansData = data.plans || [];
+  const error = hasError;
+
+  // Sort plans to put the popular one in the center
+  const plans = [...plansData].sort((a, b) => {
+    if (a.isPopular && !b.isPopular) return 0; // Popular plan goes to middle
+    if (!a.isPopular && b.isPopular) return 0;
+    return 0;
+  });
+
+  // Reorder to put popular plan in center position for 3-column layout
+  const orderedPlans = plans.length === 3 ? (() => {
+    const popularIndex = plans.findIndex(plan => plan.isPopular);
+    if (popularIndex !== -1 && popularIndex !== 1) {
+      const reordered = [...plans];
+      const popularPlan = reordered.splice(popularIndex, 1)[0];
+      reordered.splice(1, 0, popularPlan); // Insert at middle position (index 1)
+      return reordered;
     }
-  ];
+    return plans;
+  })() : plans;
+
+  if (isLoading) {
+    return (
+      <section className="py-20 bg-gradient-to-br from-[#2C8587] to-[#1a5a5c]">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-[30px] mb-4 text-[#fbf9f7] font-bold leading-tight">
+              Escolha o <span className="text-primary">plano ideal</span> para seu pet
+            </h2>
+            <p className="max-w-2xl mx-auto text-[#fbf9f7] text-base sm:text-lg md:text-xl lg:text-2xl font-medium px-4 mb-8">
+              Encontre o plano ideal para seu pet
+            </p>
+          </div>
+          <PlansGridSkeleton />
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20 bg-gradient-to-br from-[#2C8587] to-[#1a5a5c]">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-white">Erro ao carregar planos. Tente novamente.</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 text-[#fbf9f7] bg-[#2c8587]" style={{backgroundColor: '#277677'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px] text-center">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-[30px] mb-4 text-[#fbf9f7] font-bold leading-tight">
-            Escolha o <span className="text-primary">plano ideal</span><br />para seu pet
+            Escolha o <span className="text-primary">plano ideal</span> para seu pet
           </h2>
           <p className="max-w-2xl mx-auto text-[#fbf9f7] text-base sm:text-lg md:text-xl lg:text-2xl font-medium px-4">
             Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
@@ -85,43 +106,51 @@ export default function PlansSection() {
         </div>
 
         {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 pl-[0px] pr-[0px]">
-          {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? (plan.name === 'Padrão' ? 'border-[#ffc440] border-2' : 'border-primary border-2') : 'unipet-card'} shadow-lg flex flex-col h-full ${plan.name === 'Padrão' ? 'bg-[#FBF9F7]' : 'bg-[#fbf9f7]'}`}>
-              {plan.popular && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-5xl mx-auto px-4 sm:px-0 pl-[0px] pr-[0px]">
+          {orderedPlans.map((plan, index) => (
+            <Card key={plan.id || index} className={`relative transition-all duration-300 hover:shadow-2xl flex flex-col ${plan.isPopular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2 md:transform md:scale-105' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
+              {plan.isPopular && (
                 <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="inline-flex items-center rounded-full border px-2 sm:px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-[#ffc440] text-[#fbf9f7]">
+                  <Badge className="bg-[#E1AC33] text-[#FBF9F7] px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold">
                     Mais Popular
                   </Badge>
                 </div>
               )}
               
-              <CardHeader className={`text-center pb-3 sm:pb-4 rounded-t-lg ${plan.name === 'Padrão' ? 'bg-[#FBF9F7] text-[#E1AC33]' : 'bg-[#fbf9f7] text-[#e1ac33]'}`}>
-                <CardTitle className={`font-semibold tracking-tight mb-2 text-xl sm:text-2xl lg:text-3xl ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>{plan.name}</CardTitle>
-                <div className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>
-                  R${plan.price}
-                  <span className={`text-sm sm:text-base lg:text-lg font-normal ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#32989a]'}`}>/mês</span>
+              <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6">
+                <CardTitle className="tracking-tight sm:text-2xl lg:text-3xl font-bold text-[#277677] sm:mb-4 text-[26px] mt-[0px] mb-[0px] pt-[4px] pb-[4px]">{plan.name}</CardTitle>
+                <div className="mb-3 sm:mb-4">
+                  <span className="sm:text-3xl lg:text-4xl font-bold text-[#277677] text-[28px]">R${formatPrice(showCopay ? plan.priceWithCopay : plan.priceNormal)}</span>
+                  <span className="text-sm sm:text-base lg:text-lg font-medium text-[#302e2b]">/mês</span>
                 </div>
-                <div className="px-3 sm:px-4 py-2 rounded-xl bg-[#e8e8e8]">
-                  <p className={`font-medium text-sm sm:text-base ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`}>{plan.description}</p>
+                <div className="bg-[#277677]/10 px-3 sm:px-4 py-2 sm:py-3 rounded-xl">
+                  <p className="text-[#277677] font-medium text-sm sm:text-base lg:text-lg">{plan.description}</p>
                 </div>
               </CardHeader>
               
-              <CardContent className={`flex flex-col flex-grow p-4 sm:p-6 ${plan.name === 'Padrão' ? 'text-[#E1AC33] bg-[#FBF9F7]' : 'text-[#277677]'}`}>
-                <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow">
+              <CardContent className="px-4 sm:px-6 pb-6 sm:pb-8 flex flex-col flex-grow">
+                <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow text-left">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start space-x-3">
+                    <li key={featureIndex} className="flex items-start space-x-3 text-left">
                       <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
-                      <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed">{feature}</span>
+                      <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed text-left">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
-                <Button 
-                  className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 sm:h-12 px-4 py-2 w-full mt-auto text-sm sm:text-base mobile-touch-target ${plan.name === 'Padrão' ? 'bg-[#E1AC33] text-[#FBF9F7]' : 'bg-[#32989a] text-white'}`}
-                >
-                  Contratar Plano {plan.name}
-                </Button>
+                <div className="mt-auto">
+                  <Link href={plan.redirectUrl || '/contact'}>
+                    <Button 
+                      className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
+                        plan.isPopular 
+                          ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
+                          : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
+                      }`}
+                    >
+                      {plan.buttonText || `Contratar Plano ${plan.name}`}
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -133,9 +162,12 @@ export default function PlansSection() {
             <CardContent className="pt-8">
               <h3 className="font-bold mb-4 text-[#fbf9f7] text-[30px]">Planos Locais com Menos Burocracia</h3>
               <p className="mb-6 text-[#fbf9f7] text-[18px] font-normal">
-                Oferecemos também planos regionais com processo simplificado e atendimento personalizado para sua região.
+                Oferecemos também planos regionais com processo<br className="lg:hidden" /><span className="hidden lg:inline"><br /></span>simplificado e atendimento personalizado para sua região.
               </p>
-              <Button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 unipet-button-primary text-lg px-8 py-3 bg-[#e1ac33] text-[#fbf9f7]">
+              <Button 
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 unipet-button-primary text-lg px-8 py-3 bg-[#e1ac33] text-[#fbf9f7]"
+                onClick={() => redirectToWhatsApp('Olá! Gostaria de consultar os planos locais disponíveis na minha região.')}
+              >
                 Consultar Planos Locais
               </Button>
             </CardContent>

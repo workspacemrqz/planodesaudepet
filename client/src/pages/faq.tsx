@@ -1,13 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle, Phone, Mail, MessageSquare, Clock, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { type FaqItem } from "@shared/schema";
+import { useFaqPageData } from "@/hooks/use-parallel-data";
+import { FaqSkeleton } from "@/components/loading/faq-skeleton";
 
 export default function FAQ() {
-  const { data: faqItems = [], isLoading } = useQuery<FaqItem[]>({
-    queryKey: ["/api/faq"],
-  });
+  // Usar hook otimizado para carregamento paralelo de FAQ e configurações
+  const { data, isLoading } = useFaqPageData();
+  const faqItems = data.faq || [];
 
   return (
     <main className="pt-[0px] pb-[0px]">
@@ -19,27 +20,25 @@ export default function FAQ() {
             Perguntas Frequentes
           </h1>
           <p className="font-normal max-w-2xl mx-auto text-[#fbf9f7] text-[18px]">
-            Tudo que você precisa saber<br />sobre nossos planos
+            Tudo que você precisa saber sobre nossos planos
           </p>
         </div>
 
         {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto">
-          <Card className="bg-[#FBF9F7] border-none shadow-lg rounded-xl">
-            <CardHeader className="text-center pb-8">
-              <CardTitle className="text-3xl font-bold text-[#277677]">
-                Tire suas dúvidas
-              </CardTitle>
-              <p className="text-[#302e2b] mt-2">
-                Selecionamos as perguntas mais comuns de nossos clientes
-              </p>
-            </CardHeader>
-            <CardContent className="px-6 pb-8">
-              {isLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="text-[#277677] text-lg">Carregando perguntas...</div>
-                </div>
-              ) : (
+        <div className="max-w-4xl mx-auto mb-16">
+          {isLoading ? (
+            <FaqSkeleton />
+          ) : (
+            <Card className="bg-[#FBF9F7] border-none shadow-lg rounded-xl">
+              <CardHeader className="text-center pb-8">
+                <CardTitle className="text-3xl font-bold text-[#277677]">
+                  Tire suas dúvidas
+                </CardTitle>
+                <p className="text-[#302e2b] mt-2">
+                  Selecionamos as perguntas mais comuns de nossos clientes
+                </p>
+              </CardHeader>
+              <CardContent className="px-6 pb-8">
                 <Accordion type="single" collapsible className="space-y-4">
                   {faqItems.map((faq, index) => (
                     <AccordionItem 
@@ -62,9 +61,9 @@ export default function FAQ() {
                     </AccordionItem>
                   ))}
                 </Accordion>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </main>

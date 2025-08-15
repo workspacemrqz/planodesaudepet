@@ -48,6 +48,8 @@
   --unipet-light: hsl(0, 0%, 95%);
 }
 
+
+
 /* Remove all focus outlines and rings from admin forms */
 .admin-no-focus input:focus,
 .admin-no-focus textarea:focus,
@@ -60,7 +62,7 @@
   outline: none !important;
   ring: none !important;
   box-shadow: none !important;
-  border-color: #d1d5db !important;
+  border-color: #FBF9F7 !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
 }
@@ -68,7 +70,7 @@
 .admin-no-focus input:hover,
 .admin-no-focus textarea:hover,
 .admin-no-focus select:hover {
-  border-color: #d1d5db !important;
+  border-color: #FBF9F7 !important;
 }
 
 /* Global admin dialog outline removal */
@@ -81,7 +83,7 @@
   box-shadow: none !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
-  border: 1px solid #d1d5db !important;
+  border: 1px solid #FBF9F7 !important;
 }
 
 .admin-dialog-content input:focus,
@@ -99,7 +101,7 @@
   outline: none !important;
   ring: none !important;
   box-shadow: none !important;
-  border-color: #d1d5db !important;
+  border-color: #FBF9F7 !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
   --tw-ring-color: transparent !important;
@@ -129,7 +131,7 @@
 .admin-no-focus textarea:focus-visible {
   outline: none !important;
   box-shadow: none !important;
-  border-color: #d1d5db !important;
+  border-color: #FBF9F7 !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
   --tw-ring-color: transparent !important;
@@ -151,7 +153,7 @@
 *[data-testid^="textarea-"]:active {
   outline: none !important;
   box-shadow: none !important;
-  border-color: #9ca3af !important;
+  border-color: #FBF9F7 !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
   --tw-ring-color: transparent !important;
@@ -417,6 +419,23 @@
     }
   }
 
+  /* Desktop text wrapping control - disable text breaking on desktop only */
+  @media (min-width: 768px) {
+    .desktop-no-text-wrap {
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+      hyphens: none !important;
+      white-space: nowrap !important;
+    }
+    
+    /* Global desktop text behavior - prevent aggressive text breaking */
+    p, span, div, h1, h2, h3, h4, h5, h6 {
+      word-break: normal;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+  }
+
   /* Admin dialog border-radius for all screen sizes */
   .admin-dialog-content {
     border-radius: 1rem !important;
@@ -579,8 +598,8 @@
     color: #302e2b !important;
   }
 
-  /* Global override for ALL select dropdowns */
-  * {
+  /* Global override for ALL select dropdowns - removed universal selector */
+  :root {
     --radix-select-content-bg: #DED8CE !important;
     --radix-select-item-bg: #DED8CE !important;
     --radix-select-item-hover-bg: #c7c1b7 !important;
@@ -594,16 +613,22 @@
     color: #302e2b !important;
   }
   
-  [data-radix-select-viewport] > div,
+  /* Apply background only to select item containers */
   [data-radix-select-item] {
     background-color: #DED8CE !important;
     color: #302e2b !important;
   }
   
-  [data-radix-select-viewport] > div:hover,
+  [data-radix-select-viewport] > [data-radix-select-item] {
+    background-color: #DED8CE !important;
+    color: #302e2b !important;
+  }
+  
+  /* Hover and highlighted states for select items only */
   [data-radix-select-item]:hover,
-  [data-radix-select-viewport] > div[data-highlighted],
-  [data-radix-select-item][data-highlighted] {
+  [data-radix-select-item][data-highlighted],
+  [data-radix-select-viewport] > [data-radix-select-item]:hover,
+  [data-radix-select-viewport] > [data-radix-select-item][data-highlighted] {
     background-color: #c7c1b7 !important;
     color: #302e2b !important;
   }
@@ -627,7 +652,8 @@
     --text-popover-foreground: #302e2b !important;
   }
 
-  [data-radix-popper-content-wrapper] * {
+  /* Only apply background to container elements, not text elements */
+  [data-radix-popper-content-wrapper] > div {
     background-color: #DED8CE !important;
     color: #302e2b !important;
   }
@@ -670,17 +696,94 @@
     display: none !important;
   }
 
-  /* Remove all hover background effects globally for select dropdowns */
-  [data-radix-select-viewport] > div:hover,
-  [data-radix-select-item]:hover,
-  [data-radix-select-viewport] > div[data-highlighted],
-  [data-radix-select-item][data-highlighted] {
-    background-color: #DED8CE !important;
+  /* Ensure consistent styling for all select dropdown states */
+  [data-radix-select-item]:focus,
+  [data-radix-select-item]:active,
+  [data-radix-select-viewport] > [data-radix-select-item]:focus,
+  [data-radix-select-viewport] > [data-radix-select-item]:active {
+    background-color: #c7c1b7 !important;
     color: #302e2b !important;
+    outline: none !important;
   }
 
   /* Form labels in contact form */
   .contact-form-field label {
     color: #302e2b !important;
+  }
+
+  /* Global placeholder styling - applies to all inputs except contact form */
+  input::placeholder,
+  textarea::placeholder {
+    color: #9fb8b8 !important;
+  }
+
+  /* Override for contact form placeholders to maintain existing styling */
+  .contact-form-field input::placeholder,
+  .contact-form-field textarea::placeholder {
+    color: #302e2b !important;
+    opacity: 0.7;
+  }
+
+  /* Prevent background fragmentation on text elements in dropdowns */
+  [data-radix-select-item] span,
+  [data-radix-select-item] [data-radix-select-item-text],
+  [data-radix-select-content] span,
+  [data-radix-popper-content-wrapper] span {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-clip: initial !important;
+    text-decoration: none !important;
+    text-shadow: none !important;
+    box-decoration-break: initial !important;
+  }
+
+  /* Global input and select styling - applies to all except contact form */
+  input:not(.contact-form-field input),
+  textarea:not(.contact-form-field textarea),
+  select:not(.contact-form-field select),
+  button[role="combobox"]:not(.contact-form-field button[role="combobox"]) {
+    background-color: #145759 !important;
+    border: 1px solid #3EBEC1 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Global input and select styling - fixed states without changes */
+  input:not(.contact-form-field input):hover,
+  input:not(.contact-form-field input):focus,
+  input:not(.contact-form-field input):focus-visible,
+  input:not(.contact-form-field input):active,
+  textarea:not(.contact-form-field textarea):hover,
+  textarea:not(.contact-form-field textarea):focus,
+  textarea:not(.contact-form-field textarea):focus-visible,
+  textarea:not(.contact-form-field textarea):active,
+  select:not(.contact-form-field select):hover,
+  select:not(.contact-form-field select):focus,
+  select:not(.contact-form-field select):focus-visible,
+  select:not(.contact-form-field select):active,
+  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):hover,
+  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):focus,
+  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):focus-visible,
+  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):active {
+    background-color: #145759 !important;
+    border: 1px solid #3EBEC1 !important;
+    color: #FFFFFF !important;
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
+
+  /* Global placeholder styling - white color for all except contact form */
+  input:not(.contact-form-field input)::placeholder,
+  textarea:not(.contact-form-field textarea)::placeholder {
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+  }
+
+  /* Override existing global placeholder styling to be more specific */
+  input:not(.contact-form-field input)::placeholder,
+  textarea:not(.contact-form-field textarea)::placeholder {
+    color: #FFFFFF !important;
   }
 }

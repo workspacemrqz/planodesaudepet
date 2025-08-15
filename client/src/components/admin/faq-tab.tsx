@@ -15,6 +15,7 @@ import { Plus, Edit, Trash2, HelpCircle, GripVertical } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 import {
   DndContext,
   closestCenter,
@@ -116,7 +117,7 @@ function SortableFaqItem({
         </div>
       </div>
       <AccordionContent className="text-[#302e2b] pb-4">
-        <div className="pl-9 text-[#ebebeb]">
+        <div className="pl-9 text-[#9fb8b8]">
           {item.answer}
         </div>
       </AccordionContent>
@@ -127,6 +128,8 @@ function SortableFaqItem({
 export default function FaqTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<FaqItem | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<FaqItem | null>(null);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -246,9 +249,35 @@ export default function FaqTab() {
   };
 
   const handleDelete = (item: FaqItem) => {
-    if (confirm(`Tem certeza que deseja remover esta pergunta?`)) {
-      deleteItemMutation.mutate(item.id);
+    setItemToDelete(item);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      deleteItemMutation.mutate(itemToDelete.id, {
+        onSuccess: () => {
+          setDeleteModalOpen(false);
+          setItemToDelete(null);
+          toast({
+            title: "Sucesso",
+            description: "Pergunta removida com sucesso.",
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Erro",
+            description: "Erro ao remover pergunta. Tente novamente.",
+            variant: "destructive",
+          });
+        }
+      });
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
   };
 
   const onSubmit = (data: FaqItemFormData) => {
@@ -362,7 +391,7 @@ export default function FaqTab() {
       {isLoading ? (
         <Card>
           <CardContent className="p-6 text-center">
-            <div className="text-[#277677]">Carregando perguntas...</div>
+            <div className="text-[#FBF9F7]">Carregando perguntas...</div>
           </CardContent>
         </Card>
       ) : faqItems && faqItems.length > 0 ? (
@@ -392,11 +421,24 @@ export default function FaqTab() {
       ) : (
         <Card>
           <CardContent className="p-6 text-center">
-            <HelpCircle className="h-12 w-12 text-[#277677] mx-auto mb-4" />
-            <p className="text-[#302e2b]">Nenhuma pergunta cadastrada ainda.</p>
+            <HelpCircle className="h-12 w-12 text-[#145759] mx-auto mb-4" />
+            <p className="text-[#FBF9F7]">Nenhuma pergunta cadastrada ainda.</p>
           </CardContent>
         </Card>
       )}
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Confirmar Exclusão"
+        message={`Tem certeza que deseja remover a pergunta "${itemToDelete?.question}"?`}
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        isLoading={deleteItemMutation.isPending}
+        icon={<Trash2 className="h-6 w-6" />}
+      />
     </div>
   );
 }

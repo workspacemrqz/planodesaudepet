@@ -17,14 +17,17 @@ import {
   X
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
 import { NetworkUnit } from "@shared/schema";
 import { useState, useMemo } from "react";
+import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
+import { useNetworkPageData } from "@/hooks/use-parallel-data";
+import { NetworkGridSkeleton } from "@/components/loading/network-skeleton";
 
 export default function Network() {
-  const { data: networkUnits, isLoading } = useQuery<NetworkUnit[]>({
-    queryKey: ["/api/network-units"],
-  });
+  const { redirectToWhatsApp } = useWhatsAppRedirect();
+  // Usar hook otimizado para carregamento paralelo de unidades da rede e configurações
+  const { data, isLoading } = useNetworkPageData();
+  const networkUnits = data.networkUnits;
 
   // Filter states
   const [searchText, setSearchText] = useState("");
@@ -187,13 +190,12 @@ export default function Network() {
                 </p>
                 {(searchText || (selectedCity && selectedCity !== "all") || (selectedService && selectedService !== "all") || (minRating && minRating !== "all")) && (
                   <Button
-                    variant="outline"
                     size="sm"
                     onClick={clearFilters}
-                    className="text-[#277677] border-[#277677] hover:bg-[#277677]/10"
+                    className="bg-[#E1AC33] text-[#FBF9F7] border-none hover:bg-[#E1AC33] focus:bg-[#E1AC33] active:bg-[#E1AC33] flex items-center justify-center"
                     data-testid="button-clear-filters"
                   >
-                    <X className="h-4 w-4 mr-2" />
+                    <X className="h-4 w-4 mr-1" />
                     Limpar Filtros
                   </Button>
                 )}
@@ -202,24 +204,23 @@ export default function Network() {
           </div>
 
           {isLoading ? (
-            <div className="text-center py-8">
-              <p className="text-[#302e2b]">Carregando unidades da rede...</p>
-            </div>
+            <NetworkGridSkeleton />
           ) : filteredUnits.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-[#302e2b] text-lg mb-4">Nenhuma unidade encontrada com os filtros selecionados.</p>
               <Button
                 onClick={clearFilters}
-                className="bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90"
+                className="bg-[#E1AC33] text-[#FBF9F7] border-none hover:bg-[#E1AC33] focus:bg-[#E1AC33] active:bg-[#E1AC33] flex items-center justify-center"
                 data-testid="button-clear-filters-empty"
               >
+                <X className="h-4 w-4 mr-1" />
                 Limpar Filtros
               </Button>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredUnits.map((unit) => (
-              <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden">
+              <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden flex flex-col h-full">
                 <div className="relative">
                   <img 
                     src={
@@ -248,7 +249,7 @@ export default function Network() {
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 flex flex-col flex-1">
                   <div className="space-y-3 mb-6">
                     <div className="flex items-start space-x-3">
                       <MapPin className="h-4 w-4 text-[#277677] mt-1 flex-shrink-0" />
@@ -260,7 +261,7 @@ export default function Network() {
                     </div>
                   </div>
 
-                  <div className="mb-6">
+                  <div className="mb-6 flex-1">
                     <h4 className="font-semibold text-[#277677] mb-3">Serviços Disponíveis:</h4>
                     <div className="flex flex-wrap gap-2">
                       {unit.services.map((service, serviceIndex) => (
@@ -274,9 +275,15 @@ export default function Network() {
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 mt-auto">
                     <Button 
                       className="flex-1 bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90"
+                      onClick={() => {
+                        if (unit.whatsapp) {
+                          window.open(`https://wa.me/${unit.whatsapp}`, '_blank');
+                        }
+                      }}
+                      disabled={!unit.whatsapp}
                       data-testid={`button-contact-unit-${unit.id}`}
                     >
                       <FaWhatsapp className="h-4 w-4 mr-2 text-[#FBF9F7]" />
@@ -284,6 +291,12 @@ export default function Network() {
                     </Button>
                     <Button 
                       className="border-2 border-[#277677] text-[#277677] bg-transparent hover:bg-[#277677]/10"
+                      onClick={() => {
+                        if (unit.googleMapsUrl) {
+                          window.open(unit.googleMapsUrl, '_blank');
+                        }
+                      }}
+                      disabled={!unit.googleMapsUrl}
                       data-testid={`button-location-unit-${unit.id}`}
                     >
                       <MapPin className="h-4 w-4" />
@@ -307,10 +320,16 @@ export default function Network() {
             Estamos sempre expandindo nossa rede para melhor atendê-lo.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-[#E1AC33] text-[#277677] hover:bg-[#E1AC33]/90 px-8 py-3 rounded-lg font-semibold">
+            <Button 
+              className="bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] focus:bg-[#E1AC33] active:bg-[#E1AC33] px-8 py-3 rounded-lg font-semibold"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
               Ver Todas as Unidades
             </Button>
-            <Button className="border-2 border-[#FBF9F7] text-[#FBF9F7] bg-transparent hover:bg-[#FBF9F7]/10 px-8 py-3 rounded-lg font-semibold">
+            <Button 
+              className="border-2 border-[#FBF9F7] text-[#FBF9F7] bg-transparent hover:bg-[#FBF9F7]/10 px-8 py-3 rounded-lg font-semibold"
+              onClick={() => redirectToWhatsApp('Olá! Gostaria de falar com o atendimento sobre os planos de saúde pet.')}
+            >
               Falar com Atendimento
             </Button>
           </div>
