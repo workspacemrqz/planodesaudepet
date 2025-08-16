@@ -186,7 +186,7 @@ export default function PlansTab() {
                     <FormItem>
                       <FormLabel>Nome do Plano</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Básico" {...field} data-testid="input-plan-name" />
+                        <Input placeholder="Ex: Padrão" {...field} data-testid="input-plan-name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

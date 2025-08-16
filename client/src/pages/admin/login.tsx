@@ -90,7 +90,7 @@ export default function AdminLogin() {
                             placeholder="Digite seu usuário" 
                             {...field}
                             data-testid="input-username"
-                            className="h-12 pl-4 pr-4 border-2 border-[#277677]/20 focus:border-[#277677] hover:border-[#277677]/40 transition-all duration-300 rounded-xl bg-white/80 backdrop-blur-sm shadow-sm focus:shadow-md text-base text-[#101010] placeholder:text-[#121212]"
+                            className="h-12 pl-4 pr-4 border-0 rounded-xl bg-[#DED8CE] backdrop-blur-sm shadow-sm text-base text-[#302E2B] placeholder:text-[#bcb7af]"
                           />
                           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#277677]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         </div>
@@ -116,12 +116,12 @@ export default function AdminLogin() {
                             placeholder="Digite sua senha" 
                             {...field}
                             data-testid="input-password"
-                            className="h-12 pl-4 pr-12 border-2 border-[#277677]/20 focus:border-[#277677] hover:border-[#277677]/40 transition-all duration-300 rounded-xl bg-white/80 backdrop-blur-sm shadow-sm focus:shadow-md text-base text-[#101010] placeholder:text-[#121212]"
+                            className="h-12 pl-4 pr-12 border-0 rounded-xl bg-[#DED8CE] backdrop-blur-sm shadow-sm text-base text-[#302E2B] placeholder:text-[#bcb7af]"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#277677]/60 hover:text-[#277677] transition-colors duration-200"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#302E2B] hover:text-[#302E2B]/80 transition-colors duration-200"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -135,11 +135,10 @@ export default function AdminLogin() {
 
                 <Button 
                   type="submit" 
-                  className="w-full h-14 bg-gradient-to-r from-[#277677] to-[#1e5f60] hover:from-[#1e5f60] hover:to-[#277677] text-[#FBF9F7] font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group mb-8"
+                  className="w-full h-14 bg-[#277677] text-[#FBF9F7] font-bold text-lg rounded-xl mb-8"
                   disabled={loginMutation.isPending}
                   data-testid="button-login"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   {loginMutation.isPending ? (
                     <div className="flex items-center justify-center">
                       <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -147,7 +146,7 @@ export default function AdminLogin() {
                   ) : (
                     <>
                       <Lock className="mr-3 h-5 w-5" />
-                      <span className="relative z-10">Entrar no Sistema</span>
+                      Entrar no Sistema
                     </>
                   )}
                 </Button>

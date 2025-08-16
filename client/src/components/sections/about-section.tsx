@@ -1,10 +1,8 @@
+import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
+import { getImageUrlSync } from "@/lib/image-utils";
+
 export default function AboutSection() {
-  const stats = [
-    { value: "50.000+", label: "Pets Protegidos" },
-    { value: "200+", label: "Clínicas Credenciadas" },
-    { value: "15+", label: "Estados Atendidos" },
-    { value: "98%", label: "Satisfação" }
-  ];
+  const { settings } = useSiteSettingsWithDefaults();
 
   return (
     <section className="py-20">
@@ -26,21 +24,13 @@ export default function AboutSection() {
                 seus animais de estimação.
               </p>
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 gap-8">
-                {stats.map((stat, index) => (
-                  <div key={index}>
-                    <div className="text-3xl font-bold text-[#277677] mb-2">{stat.value}</div>
-                    <div className="text-[#302e2b]">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
+
             </div>
 
             <div>
               {/* Pet insurance concept image */}
               <img 
-                src="/inicio-sobre.jpg" 
+                src={getImageUrlSync(settings.aboutImage, '/inicio-sobre.jpg')} 
                 alt="Conceito de seguro pet com veterinário cuidando de animal" 
                 className="rounded-2xl shadow-xl w-full h-auto" 
               />

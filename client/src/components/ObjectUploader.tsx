@@ -64,7 +64,7 @@ export function ObjectUploader({
       restrictions: {
         maxNumberOfFiles,
         maxFileSize,
-        allowedFileTypes: ['image/*'], // Only allow images
+        allowedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'], // Only allow PNG, JPEG, JPG
       },
       autoProceed: false,
     })

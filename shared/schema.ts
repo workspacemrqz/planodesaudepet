@@ -72,6 +72,7 @@ export const siteSettings = pgTable("site_settings", {
   whatsapp: text("whatsapp"),
   email: text("email"),
   phone: text("phone"),
+  address: text("address"),
   instagramUrl: text("instagram_url"),
   facebookUrl: text("facebook_url"),
   linkedinUrl: text("linkedin_url"),
@@ -81,6 +82,9 @@ export const siteSettings = pgTable("site_settings", {
   ourStory: text("our_story"),
   privacyPolicy: text("privacy_policy"),
   termsOfUse: text("terms_of_use"),
+  mainImage: text("main_image"),
+  networkImage: text("network_image"),
+  aboutImage: text("about_image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -89,6 +93,18 @@ export const session = pgTable("session", {
   sid: varchar("sid").primaryKey(),
   sess: json("sess").notNull(),
   expire: timestamp("expire", { precision: 6 }).notNull(),
+});
+
+export const fileMetadata = pgTable("file_metadata", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  objectId: varchar("object_id").notNull().unique(),
+  originalName: text("original_name").notNull(),
+  mimeType: varchar("mime_type").notNull(),
+  extension: varchar("extension").notNull(),
+  filePath: text("file_path").notNull(),
+  fileSize: integer("file_size").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Insert schemas
@@ -131,6 +147,12 @@ export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
   updatedAt: true,
 });
 
+export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -146,3 +168,5 @@ export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type SiteSettings = typeof siteSettings.$inferSelect;
+export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
+export type FileMetadata = typeof fileMetadata.$inferSelect;

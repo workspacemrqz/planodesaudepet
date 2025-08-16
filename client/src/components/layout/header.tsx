@@ -47,8 +47,8 @@ export default function Header() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-[#f5f3f1]">
-                  <Menu className="h-6 w-6" />
+                <Button variant="ghost" size="icon" className="text-white hover:text-white focus:text-white active:text-white hover:bg-transparent focus:bg-transparent active:bg-transparent transition-none p-0">
+                  <Menu className="h-16 w-16" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] bg-background">

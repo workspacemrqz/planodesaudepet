@@ -6,13 +6,47 @@ import {
   insertPlanSchema, 
   insertNetworkUnitSchema, 
   insertFaqItemSchema,
-  insertSiteSettingsSchema 
+  insertSiteSettingsSchema,
+  insertFileMetadataSchema 
 } from "@shared/schema";
 import { setupAuth, initializeAdminUser } from "./auth";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileTypeFromBuffer } from "file-type";
+
+// Configure multer for file uploads
+const uploadDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: uploadDir,
+    filename: (req, file, cb) => {
+      const objectId = req.params.objectId;
+      const ext = path.extname(file.originalname);
+      cb(null, `${objectId}${ext}`);
+    }
+  }),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'));
+    }
+  }
+});
 
 // Middleware to check admin authentication
 const requireAdmin = (req: any, res: any, next: any) => {
+  console.log('requireAdmin middleware - isAuthenticated:', req.isAuthenticated());
+  console.log('requireAdmin middleware - user:', req.user);
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "Admin authentication required" });
   }
@@ -20,6 +54,113 @@ const requireAdmin = (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Simple upload routes (before auth setup to avoid session issues)
+  app.post("/api/objects/upload", async (req, res) => {
+    console.log('POST /api/objects/upload - Starting upload process');
+    try {
+      // For local development, we'll use a simple file upload approach
+      // Generate a unique filename
+      const crypto = await import('crypto');
+      const objectId = crypto.randomUUID();
+      const objectPath = `/objects/uploads/${objectId}`;
+      
+      // Return a mock upload URL that points to our local upload endpoint
+      const uploadURL = `http://localhost:3005/api/objects/upload-file/${objectId}`;
+      
+      console.log('Generated upload URL:', uploadURL);
+      console.log('Generated object path:', objectPath);
+      
+      res.json({ uploadURL, objectPath });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Erro ao obter URL de upload" });
+    }
+  });
+
+  // Handle file upload (direct file in body)
+  app.put("/api/objects/upload-file/:objectId", async (req, res) => {
+    try {
+      const objectId = req.params.objectId;
+      const contentType = req.headers['content-type'] || 'application/octet-stream';
+      
+      console.log('Starting file upload for objectId:', objectId);
+      console.log('Content-Type from header:', contentType);
+      
+      // Collect the entire request body into a buffer
+      const chunks: Buffer[] = [];
+      
+      req.on('data', (chunk: Buffer) => {
+        chunks.push(chunk);
+      });
+      
+      req.on('end', async () => {
+        try {
+          const fileBuffer = Buffer.concat(chunks);
+          console.log('File buffer size:', fileBuffer.length);
+          
+          // Detect file type using magic bytes
+          const detectedType = await fileTypeFromBuffer(fileBuffer);
+          console.log('Detected file type:', detectedType);
+          
+          if (!detectedType || !detectedType.mime.startsWith('image/')) {
+            return res.status(400).json({ error: 'Arquivo não é uma imagem válida' });
+          }
+          
+          const extension = `.${detectedType.ext}`;
+          const mimeType = detectedType.mime;
+          const filename = `${objectId}${extension}`;
+          const filepath = path.join(uploadDir, filename);
+          
+          console.log('Final file details:', {
+            filename,
+            extension,
+            mimeType,
+            size: fileBuffer.length
+          });
+          
+          // Write file to disk
+          await fs.promises.writeFile(filepath, fileBuffer);
+          
+          // Save metadata to database
+          const fileMetadata = {
+            objectId,
+            originalName: filename,
+            mimeType,
+            extension,
+            filePath: filepath,
+            fileSize: fileBuffer.length
+          };
+          
+          await storage.createFileMetadata(fileMetadata);
+          
+          console.log('File uploaded and metadata saved successfully:', filename);
+          
+          res.json({ 
+            success: true, 
+            objectPath: `/api/objects/${objectId}/image`,
+            filename: filename,
+            mimeType,
+            extension,
+            size: fileBuffer.length
+          });
+          
+        } catch (error) {
+          console.error('Error processing file upload:', error);
+          res.status(500).json({ error: 'Erro ao processar upload do arquivo' });
+        }
+      });
+      
+      req.on('error', (error) => {
+        console.error('Error receiving file data:', error);
+        res.status(500).json({ error: 'Erro ao receber dados do arquivo' });
+      });
+      
+    } catch (error) {
+      console.error('Error in file upload:', error);
+      res.status(500).json({ error: 'Erro no upload do arquivo' });
+    }
+  });
+
   // Setup authentication
   setupAuth(app);
 
@@ -183,8 +324,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/admin/site-settings", requireAdmin, async (req, res) => {
     try {
+      console.log('Received site settings data:', req.body);
+      console.log('Image fields:', {
+        mainImage: req.body.mainImage,
+        networkImage: req.body.networkImage,
+        aboutImage: req.body.aboutImage
+      });
       const validatedData = insertSiteSettingsSchema.partial().parse(req.body);
+      console.log('Validated data:', validatedData);
       const settings = await storage.updateSiteSettings(validatedData);
+      console.log('Updated settings result:', settings);
       res.json(settings);
     } catch (error) {
       console.error("Error updating site settings:", error);
@@ -235,19 +384,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // OBJECT STORAGE ROUTES
 
-  // Get upload URL for images
-  app.post("/api/objects/upload", requireAdmin, async (req, res) => {
+  // Serve uploaded images
+  app.get("/objects/uploads/:filename", async (req, res) => {
     try {
-      const objectStorageService = new ObjectStorageService();
-      const result = await objectStorageService.getObjectEntityUploadURLWithPath();
-      res.json(result);
+      const filename = req.params.filename;
+      const filePath = path.join(uploadDir, filename);
+      
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      
+      res.sendFile(filePath);
     } catch (error) {
-      console.error("Error getting upload URL:", error);
-      res.status(500).json({ error: "Erro ao obter URL de upload" });
+      console.error("Error serving file:", error);
+      res.status(500).json({ error: "Erro ao servir arquivo" });
     }
   });
 
-  // Serve uploaded images
+  // Legacy object serving route
   app.get("/objects/:objectPath(*)", async (req, res) => {
     try {
       const objectStorageService = new ObjectStorageService();

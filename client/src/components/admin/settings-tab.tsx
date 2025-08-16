@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,11 +13,14 @@ import { Settings, Save, Phone, Mail, MessageSquare, Building, Clock, FileText }
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SimpleImageUploader } from "@/components/SimpleImageUploader";
+import { getImageUrlSync } from "@/lib/image-utils";
 
 const settingsFormSchema = z.object({
   whatsapp: z.string().optional(),
   email: z.string().email("Email inválido").optional().or(z.literal("")),
   phone: z.string().optional(),
+  address: z.string().optional(),
   instagramUrl: z.string().url("URL inválida").optional().or(z.literal("")),
   facebookUrl: z.string().url("URL inválida").optional().or(z.literal("")),
   linkedinUrl: z.string().url("URL inválida").optional().or(z.literal("")),
@@ -27,6 +30,9 @@ const settingsFormSchema = z.object({
   ourStory: z.string().optional(),
   privacyPolicy: z.string().optional(),
   termsOfUse: z.string().optional(),
+  mainImage: z.string().optional(),
+  networkImage: z.string().optional(),
+  aboutImage: z.string().optional(),
 });
 
 type SettingsFormData = z.infer<typeof settingsFormSchema>;
@@ -35,6 +41,14 @@ export default function SettingsTab() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Image upload states
+  const [mainImageUrl, setMainImageUrl] = useState<string | null>(null);
+  const [networkImageUrl, setNetworkImageUrl] = useState<string | null>(null);
+  const [aboutImageUrl, setAboutImageUrl] = useState<string | null>(null);
+  const [isUploadingMain, setIsUploadingMain] = useState(false);
+  const [isUploadingNetwork, setIsUploadingNetwork] = useState(false);
+  const [isUploadingAbout, setIsUploadingAbout] = useState(false);
 
   const { data: settings, isLoading } = useQuery<SiteSettings>({
     queryKey: ["admin-site-settings"],
@@ -50,6 +64,7 @@ export default function SettingsTab() {
       whatsapp: "",
       email: "",
       phone: "",
+      address: "",
       instagramUrl: "",
       facebookUrl: "",
       linkedinUrl: "",
@@ -59,8 +74,74 @@ export default function SettingsTab() {
       ourStory: "",
       privacyPolicy: "",
       termsOfUse: "",
+      mainImage: "",
+      networkImage: "",
+      aboutImage: "",
     },
   });
+  
+  // Image upload functions
+  const handleImageUpload = async (file: File, imageType: 'main' | 'network' | 'about') => {
+    // Set uploading state
+    if (imageType === 'main') setIsUploadingMain(true);
+    else if (imageType === 'network') setIsUploadingNetwork(true);
+    else setIsUploadingAbout(true);
+    
+    try {
+      // Get presigned URL and object path
+      const uploadResponse = await fetch('/api/objects/upload', {
+        method: 'POST',
+      });
+      const { uploadURL, objectPath } = await uploadResponse.json();
+      
+      // Upload to object storage (same as network-units-tab.tsx)
+      const putResponse = await fetch(uploadURL, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+      
+      if (!putResponse.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      // Set the object path for preview and storage
+      if (imageType === 'main') {
+        setMainImageUrl(objectPath);
+        form.setValue('mainImage', objectPath);
+      } else if (imageType === 'network') {
+        setNetworkImageUrl(objectPath);
+        form.setValue('networkImage', objectPath);
+      } else {
+        setAboutImageUrl(objectPath);
+        form.setValue('aboutImage', objectPath);
+      }
+      
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Erro",
+        description: "Falha no upload da imagem",
+        variant: "destructive",
+      });
+    } finally {
+      // Reset uploading state
+      if (imageType === 'main') setIsUploadingMain(false);
+      else if (imageType === 'network') setIsUploadingNetwork(false);
+      else setIsUploadingAbout(false);
+    }
+  };
+  
+  // Update image states when settings load
+  useEffect(() => {
+    if (settings) {
+      setMainImageUrl(settings.mainImage || null);
+      setNetworkImageUrl(settings.networkImage || null);
+      setAboutImageUrl(settings.aboutImage || null);
+    }
+  }, [settings]);
 
   // Update form when settings data is loaded
   React.useEffect(() => {
@@ -69,6 +150,7 @@ export default function SettingsTab() {
         whatsapp: settings.whatsapp || "",
         email: settings.email || "",
         phone: settings.phone || "",
+        address: settings.address || "",
         instagramUrl: settings.instagramUrl || "",
         facebookUrl: settings.facebookUrl || "",
         linkedinUrl: settings.linkedinUrl || "",
@@ -78,6 +160,9 @@ export default function SettingsTab() {
         ourStory: settings.ourStory || "",
         privacyPolicy: settings.privacyPolicy || "",
         termsOfUse: settings.termsOfUse || "",
+        mainImage: settings.mainImage || "",
+        networkImage: settings.networkImage || "",
+        aboutImage: settings.aboutImage || "",
       });
     }
   }, [settings, form]);
@@ -108,6 +193,12 @@ export default function SettingsTab() {
   });
 
   const onSubmit = (data: SettingsFormData) => {
+    console.log('Form data being submitted:', data);
+    console.log('Image URLs:', {
+      mainImage: data.mainImage,
+      networkImage: data.networkImage,
+      aboutImage: data.aboutImage
+    });
     setIsSubmitting(true);
     updateSettingsMutation.mutate(data);
   };
@@ -208,6 +299,28 @@ export default function SettingsTab() {
                   )}
                 />
                 
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[#FBF9F7]">Endereço</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="AVENIDA DOM SEVERINO, 1372, FATIMA - Teresina/PI"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-[#9fb8b8]">
+                        Endereço que aparecerá na página de contato e seção de contato
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
                 <FormField
                   control={form.control}
                   name="cnpj"
@@ -323,6 +436,143 @@ export default function SettingsTab() {
                   )}
                 />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Image Management */}
+          <Card className="bg-[#115051]">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-[#FBF9F7]">
+                <Settings className="h-4 w-4 text-[#FBF9F7]" />
+                Gerenciamento de Imagens
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="mainImage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#FBF9F7]">Imagem Principal</FormLabel>
+                    <FormControl>
+                       <div className="space-y-2">
+                         <SimpleImageUploader
+                           onFileSelect={async (file) => {
+                             await handleImageUpload(file, 'main');
+                           }}
+                           isUploading={isUploadingMain}
+                           hasImage={!!mainImageUrl}
+                         />
+                         {mainImageUrl && (
+                           <div className="mt-2">
+                             <img src={getImageUrlSync(mainImageUrl)} alt="Preview" className="max-w-xs max-h-32 object-cover rounded" />
+                             <Button
+                               type="button"
+                               variant="outline"
+                               size="sm"
+                               className="mt-1 text-white hover:text-white border-white hover:bg-white hover:text-red-600"
+                               onClick={() => {
+                                 setMainImageUrl(null);
+                                 field.onChange("");
+                               }}
+                             >
+                               Remover Imagem
+                             </Button>
+                           </div>
+                         )}
+                       </div>
+                    </FormControl>
+                    <FormDescription className="text-[#9fb8b8]">
+                      Imagem principal exibida na página inicial
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="networkImage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#FBF9F7]">Imagem de Rede Credenciada</FormLabel>
+                    <FormControl>
+                       <div className="space-y-2">
+                         <SimpleImageUploader
+                           onFileSelect={async (file) => {
+                             await handleImageUpload(file, 'network');
+                           }}
+                           isUploading={isUploadingNetwork}
+                           hasImage={!!networkImageUrl}
+                         />
+                         {networkImageUrl && (
+                           <div className="mt-2">
+                             <img src={getImageUrlSync(networkImageUrl)} alt="Preview" className="max-w-xs max-h-32 object-cover rounded" />
+                             <Button
+                               type="button"
+                               variant="outline"
+                               size="sm"
+                               className="mt-1 text-white hover:text-white border-white hover:bg-white hover:text-red-600"
+                               onClick={() => {
+                                 setNetworkImageUrl(null);
+                                 field.onChange("");
+                               }}
+                             >
+                               Remover Imagem
+                             </Button>
+                           </div>
+                         )}
+                       </div>
+                    </FormControl>
+                    <FormDescription className="text-[#9fb8b8]">
+                      Imagem de rede credenciada exibida na página inicial
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="aboutImage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#FBF9F7]">Imagem Sobre a UNIPET</FormLabel>
+                    <FormControl>
+                       <div className="space-y-2">
+                         <SimpleImageUploader
+                           onFileSelect={async (file) => {
+                             await handleImageUpload(file, 'about');
+                           }}
+                           isUploading={isUploadingAbout}
+                           hasImage={!!aboutImageUrl}
+                         />
+                         {aboutImageUrl && (
+                           <div className="mt-2">
+                             <img src={getImageUrlSync(aboutImageUrl)} alt="Preview" className="max-w-xs max-h-32 object-cover rounded" />
+                             <Button
+                               type="button"
+                               variant="outline"
+                               size="sm"
+                               className="mt-1 text-white hover:text-white border-white hover:bg-white hover:text-red-600"
+                               onClick={() => {
+                                 setAboutImageUrl(null);
+                                 field.onChange("");
+                               }}
+                             >
+                               Remover Imagem
+                             </Button>
+                           </div>
+                         )}
+                       </div>
+                    </FormControl>
+                    <FormDescription className="text-[#9fb8b8]">
+                      Imagem sobre a UNIPET exibida na página inicial e na página sobre
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
           </Card>
 

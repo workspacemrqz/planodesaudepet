@@ -22,6 +22,9 @@ import { useState, useMemo } from "react";
 import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
 import { useNetworkPageData } from "@/hooks/use-parallel-data";
 import { NetworkGridSkeleton } from "@/components/loading/network-skeleton";
+import { AnimatedSection } from "@/components/ui/animated-section";
+import { AnimatedList } from "@/components/ui/animated-list";
+import { getImageUrlSync } from "@/lib/image-utils";
 
 export default function Network() {
   const { redirectToWhatsApp } = useWhatsAppRedirect();
@@ -114,16 +117,16 @@ export default function Network() {
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="md:text-4xl font-bold mb-4 text-[36px] text-[#277677]">
-              Principais Unidades
-            </h2>
+            <AnimatedSection animation="slideUp" delay={200}>
+              <h1 className="font-bold mb-4 text-[28px] md:text-[36px] text-[#277677]">
+                Principais Unidades
+              </h1>
+            </AnimatedSection>
             
             {/* Filter Section */}
-            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 mb-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Filter className="h-5 w-5 text-[#277677]" />
-                <h3 className="text-lg font-semibold text-[#277677]">Filtrar Unidades</h3>
-              </div>
+            <AnimatedSection animation="scale" delay={400}>
+              <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg pt-10 pb-6 px-6 mb-8">
+
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 {/* Search Input */}
@@ -200,7 +203,8 @@ export default function Network() {
                   </Button>
                 )}
               </div>
-            </div>
+              </div>
+            </AnimatedSection>
           </div>
 
           {isLoading ? (
@@ -218,18 +222,13 @@ export default function Network() {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredUnits.map((unit) => (
-              <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden flex flex-col h-full">
+            <AnimatedList animation="slideUp" delay={600} staggerDelay={150}>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredUnits.map((unit) => (
+                <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden flex flex-col h-full">
                 <div className="relative">
                   <img 
-                    src={
-                      unit.imageUrl?.startsWith('/objects/') 
-                        ? unit.imageUrl 
-                        : unit.imageUrl?.startsWith('https://storage.googleapis.com/')
-                          ? unit.imageUrl
-                          : unit.imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlmYTZiMiIvPgo8L3N2Zz4K'
-                    } 
+                    src={getImageUrlSync(unit.imageUrl, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K')} 
                     alt={unit.name}
                     className="w-full aspect-square object-cover"
                     onError={(e) => {
@@ -303,38 +302,14 @@ export default function Network() {
                     </Button>
                   </div>
                 </CardContent>
-              </Card>
-              ))}
-            </div>
+                </Card>
+                ))}
+              </div>
+            </AnimatedList>
           )}
         </div>
       </section>
-      {/* CTA Section */}
-      <section className="py-16 px-4 bg-[#277677] pl-[20px] pr-[20px]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#FBF9F7] mb-4">
-            Não encontrou uma unidade próxima?
-          </h2>
-          <p className="text-[#FBF9F7]/80 text-lg mb-8 max-w-2xl mx-auto">
-            Entre em contato conosco e descubra todas as opções disponíveis na sua região. 
-            Estamos sempre expandindo nossa rede para melhor atendê-lo.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              className="bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] focus:bg-[#E1AC33] active:bg-[#E1AC33] px-8 py-3 rounded-lg font-semibold"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            >
-              Ver Todas as Unidades
-            </Button>
-            <Button 
-              className="border-2 border-[#FBF9F7] text-[#FBF9F7] bg-transparent hover:bg-[#FBF9F7]/10 px-8 py-3 rounded-lg font-semibold"
-              onClick={() => redirectToWhatsApp('Olá! Gostaria de falar com o atendimento sobre os planos de saúde pet.')}
-            >
-              Falar com Atendimento
-            </Button>
-          </div>
-        </div>
-      </section>
+
     </main>
   );
 }

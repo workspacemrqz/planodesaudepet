@@ -13,13 +13,16 @@ import {
   type InsertAdminUser,
   type SiteSettings,
   type InsertSiteSettings,
+  type FileMetadata,
+  type InsertFileMetadata,
   users,
   contactSubmissions,
   plans,
   networkUnits,
   faqItems,
   adminUsers,
-  siteSettings
+  siteSettings,
+  fileMetadata
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc } from "drizzle-orm";
@@ -68,6 +71,12 @@ export interface IStorage {
   // Site Settings
   getSiteSettings(): Promise<SiteSettings | undefined>;
   updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined>;
+  
+  // File Metadata
+  getFileMetadata(objectId: string): Promise<FileMetadata | undefined>;
+  createFileMetadata(metadata: InsertFileMetadata): Promise<FileMetadata>;
+  updateFileMetadata(objectId: string, metadata: Partial<InsertFileMetadata>): Promise<FileMetadata | undefined>;
+  deleteFileMetadata(objectId: string): Promise<boolean>;
   
   // Session store
   sessionStore: session.Store;
@@ -218,6 +227,30 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return settings;
     }
+  }
+
+  // File Metadata
+  async getFileMetadata(objectId: string): Promise<FileMetadata | undefined> {
+    const [metadata] = await db.select().from(fileMetadata).where(eq(fileMetadata.objectId, objectId));
+    return metadata || undefined;
+  }
+
+  async createFileMetadata(insertMetadata: InsertFileMetadata): Promise<FileMetadata> {
+    const [metadata] = await db.insert(fileMetadata).values(insertMetadata).returning();
+    return metadata;
+  }
+
+  async updateFileMetadata(objectId: string, updateData: Partial<InsertFileMetadata>): Promise<FileMetadata | undefined> {
+    const [metadata] = await db.update(fileMetadata)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(fileMetadata.objectId, objectId))
+      .returning();
+    return metadata || undefined;
+  }
+
+  async deleteFileMetadata(objectId: string): Promise<boolean> {
+    const result = await db.delete(fileMetadata).where(eq(fileMetadata.objectId, objectId));
+    return (result.rowCount || 0) > 0;
   }
 }
 

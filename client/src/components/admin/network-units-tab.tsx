@@ -17,6 +17,7 @@ import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight, Sea
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
+import { getImageUrlSync } from "@/lib/image-utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
@@ -487,8 +488,9 @@ export default function NetworkUnitsTab() {
                           </div>
                           <div className="w-32 h-32 border-2 border-[#277677] rounded-lg square-image-container bg-gray-100">
                             <img 
-                              src={uploadedImageUrl} 
+                              src={getImageUrlSync(uploadedImageUrl)} 
                               alt="Preview" 
+                              className="w-full h-full object-cover rounded-lg"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');

@@ -1,0 +1,111 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@tailwind",
+      "description": "Use the @tailwind directive to insert Tailwind's base, components, utilities and variants styles into your CSS.",
+      "references": [
+        {
+          "name": "Tailwind CSS Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#tailwind"
+        }
+      ]
+    },
+    {
+      "name": "@apply",
+      "description": "Use @apply to inline any existing utility classes into your own custom CSS.",
+      "references": [
+        {
+          "name": "Tailwind CSS Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#apply"
+        }
+      ]
+    },
+    {
+      "name": "@layer",
+      "description": "Use the @layer directive to tell Tailwind which 'bucket' a set of custom styles belong to.",
+      "references": [
+        {
+          "name": "Tailwind CSS Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#layer"
+        }
+      ]
+    },
+    {
+      "name": "@variants",
+      "description": "You can generate responsive, hover, focus, and other variants of your own utilities by wrapping their definitions in the @variants directive.",
+      "references": [
+        {
+          "name": "Tailwind CSS Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#variants"
+        }
+      ]
+    },
+    {
+      "name": "@responsive",
+      "description": "You can generate responsive variants of your own classes by wrapping their definitions in the @responsive directive.",
+      "references": [
+        {
+          "name": "Tailwind CSS Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#responsive"
+        }
+      ]
+    },
+    {
+      "name": "@screen",
+      "description": "The @screen directive allows you to create media queries that reference your breakpoints by name instead of duplicating their values in your own CSS.",
+      "references": [
+        {
+          "name": "Tailwind CSS Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#screen"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "ring",
+      "description": "Tailwind CSS ring utility for creating focus rings and outlines.",
+      "syntax": "<length> | <color>",
+      "references": [
+        {
+          "name": "Tailwind CSS Ring Documentation",
+          "url": "https://tailwindcss.com/docs/ring-width"
+        }
+      ]
+    },
+    {
+      "name": "ring-color",
+      "description": "Sets the color of focus rings created with ring utilities.",
+      "syntax": "<color>",
+      "references": [
+        {
+          "name": "Tailwind CSS Ring Color Documentation",
+          "url": "https://tailwindcss.com/docs/ring-color"
+        }
+      ]
+    },
+    {
+      "name": "ring-opacity",
+      "description": "Sets the opacity of focus rings created with ring utilities.",
+      "syntax": "<number>",
+      "references": [
+        {
+          "name": "Tailwind CSS Ring Opacity Documentation",
+          "url": "https://tailwindcss.com/docs/ring-opacity"
+        }
+      ]
+    },
+    {
+      "name": "ring-offset",
+      "description": "Sets the offset of focus rings created with ring utilities.",
+      "syntax": "<length>",
+      "references": [
+        {
+          "name": "Tailwind CSS Ring Offset Documentation",
+          "url": "https://tailwindcss.com/docs/ring-offset-width"
+        }
+      ]
+    }
+  ]
+}

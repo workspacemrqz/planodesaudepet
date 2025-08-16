@@ -1,5 +1,6 @@
 import { Link } from "wouter";
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, MessageSquare, Clock, Building } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, Clock, Building } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 
 export default function Footer() {
@@ -33,25 +34,25 @@ export default function Footer() {
             <p className="text-[#302e2b] mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
               Cuidando da saúde do seu pet com carinho, qualidade e preços acessíveis.
             </p>
-            <div className="flex space-x-3">
+            <div className="flex">
               {shouldShow.facebookUrl && (
-                <a href={settings.facebookUrl || undefined} target="_blank" rel="noopener noreferrer" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors mobile-touch-target">
-                  <Facebook className="h-4 w-4" />
+                <a href={settings.facebookUrl || undefined} target="_blank" rel="noopener noreferrer" className="text-[#277677]">
+                  <Facebook className="h-6 w-6" />
                 </a>
               )}
               {shouldShow.instagramUrl && (
-                <a href={settings.instagramUrl || undefined} target="_blank" rel="noopener noreferrer" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors mobile-touch-target">
-                  <Instagram className="h-4 w-4" />
+                <a href={settings.instagramUrl || undefined} target="_blank" rel="noopener noreferrer" className="text-[#277677]">
+                  <Instagram className="h-6 w-6" />
                 </a>
               )}
               {shouldShow.linkedinUrl && (
-                <a href={settings.linkedinUrl || undefined} target="_blank" rel="noopener noreferrer" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors mobile-touch-target">
-                  <Linkedin className="h-4 w-4" />
+                <a href={settings.linkedinUrl || undefined} target="_blank" rel="noopener noreferrer" className="text-[#277677]">
+                  <Linkedin className="h-6 w-6" />
                 </a>
               )}
               {shouldShow.youtubeUrl && (
-                <a href={settings.youtubeUrl || undefined} target="_blank" rel="noopener noreferrer" className="bg-[#277677] p-2 rounded-full text-white hover:bg-[#277677]/80 transition-colors mobile-touch-target">
-                  <Youtube className="h-4 w-4" />
+                <a href={settings.youtubeUrl || undefined} target="_blank" rel="noopener noreferrer" className="text-[#277677]">
+                  <Youtube className="h-6 w-6" />
                 </a>
               )}
             </div>
@@ -80,7 +81,7 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {services.map((service) => (
                 <li key={service}>
-                  <span className="text-[#302e2b] hover:text-[#277677] transition-colors cursor-default text-sm sm:text-base">
+                  <span className="text-[#302E2B] cursor-default text-sm sm:text-base">
                     {service}
                   </span>
                 </li>
@@ -93,8 +94,8 @@ export default function Footer() {
             <h4 className="text-base sm:text-lg font-semibold text-[#277677] mb-4 sm:mb-6">Contato</h4>
             <div className="space-y-3 sm:space-y-4">
               {shouldShow.phone && (
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-4 w-4 text-[#277677] flex-shrink-0" />
+                <div className="flex items-start gap-3">
+                  <Phone className="h-4 w-4 text-[#277677] flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[#302e2b] font-semibold text-sm sm:text-base">Telefone</div>
                     <div className="text-[#302e2b] text-sm sm:text-base">{settings.phone}</div>
@@ -102,8 +103,8 @@ export default function Footer() {
                 </div>
               )}
               {shouldShow.email && (
-                <div className="flex items-center space-x-3">
-                  <Mail className="h-4 w-4 text-[#277677] flex-shrink-0" />
+                <div className="flex items-start gap-3">
+                  <Mail className="h-4 w-4 text-[#277677] flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[#302e2b] font-semibold text-sm sm:text-base">E-mail</div>
                     <div className="text-[#302e2b] text-sm sm:text-base break-all md:break-normal">{settings.email}</div>
@@ -111,8 +112,8 @@ export default function Footer() {
                 </div>
               )}
               {shouldShow.whatsapp && (
-                <div className="flex items-start space-x-3">
-                  <MessageSquare className="h-4 w-4 text-[#277677] mt-1 flex-shrink-0" />
+                <div className="flex items-start gap-3">
+                  <FaWhatsapp className="h-4 w-4 text-[#277677] flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[#302e2b] font-semibold text-sm sm:text-base">WhatsApp</div>
                     <div className="text-[#302e2b] text-sm sm:text-base">{settings.whatsapp}</div>
@@ -120,8 +121,8 @@ export default function Footer() {
                 </div>
               )}
               {shouldShow.businessHours && (
-                <div className="flex items-start space-x-3">
-                  <Clock className="h-4 w-4 text-[#277677] mt-1 flex-shrink-0" />
+                <div className="flex items-start gap-3">
+                  <Clock className="h-4 w-4 text-[#277677] flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[#302e2b] font-semibold text-sm sm:text-base">Horário</div>
                     <div className="text-[#302e2b] text-sm sm:text-base leading-relaxed whitespace-pre-line">{settings.businessHours}</div>
@@ -136,7 +137,7 @@ export default function Footer() {
         <div className="border-t border-border mt-8 sm:mt-12 pt-6 sm:pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-[#302e2b] text-xs sm:text-sm text-center md:text-left">
-              <div>© 2024 UNIPET PLAN - Todos os direitos reservados.</div>
+              <div>© {new Date().getFullYear()} UNIPET PLAN - Todos os direitos reservados.</div>
               {shouldShow.cnpj && (
                 <div className="mt-1">CNPJ: {settings.cnpj}</div>
               )}

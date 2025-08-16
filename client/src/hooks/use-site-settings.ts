@@ -50,9 +50,13 @@ export const defaultSettings: Partial<SiteSettings> = {
   whatsapp: "(11) 99999-9999",
   email: "contato@unipetplan.com.br",
   phone: "0800 123 4567",
+  address: "AVENIDA DOM SEVERINO, 1372, FATIMA - Teresina/PI",
   cnpj: "00.000.000/0001-00",
   businessHours: "Segunda a Sexta: 8h às 18h\nSábado: 8h às 14h\nEmergências: 24h todos os dias",
-  ourStory: "A UNIPET PLAN nasceu da paixão de veterinários experientes que acreditam que todo animal merece cuidados de qualidade, independentemente da condição financeira de seus tutores. Nossa missão é tornar os cuidados veterinários acessíveis a todos, oferecendo planos de saúde que garantem o bem-estar dos seus companheiros de quatro patas.",
+  ourStory: "A UNIPET PLAN nasceu da paixão de veterinários experientes que acreditam que todo animal merece cuidados de qualidade, independentemente da condição financeira de seus tutores. Nossa missão é tornar os cuidados veterinários acessíveis a todos, oferecendo planos de saúde que garantem o bem-estar dos pets.",
+  mainImage: "/Cachorros.jpg",
+  networkImage: null,
+  aboutImage: "/inicio-sobre.jpg",
 };
 
 /**
@@ -79,6 +83,7 @@ export function useSiteSettingsWithDefaults() {
       whatsapp: shouldShowField(typedSettings?.whatsapp),
       email: shouldShowField(typedSettings?.email),
       phone: shouldShowField(typedSettings?.phone),
+      address: shouldShowField(typedSettings?.address),
       instagramUrl: shouldShowField(typedSettings?.instagramUrl),
       facebookUrl: shouldShowField(typedSettings?.facebookUrl),
       linkedinUrl: shouldShowField(typedSettings?.linkedinUrl),

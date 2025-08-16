@@ -5,25 +5,8 @@ import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock"
 
-// Wrapper para Select que aplica o scroll lock
-const Select = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root>
->(({ open, onOpenChange, ...props }, ref) => {
-  // Aplicar o scroll lock quando o select estiver aberto
-  useBodyScrollLock(open || false);
-
-  return (
-    <SelectPrimitive.Root
-      open={open}
-      onOpenChange={onOpenChange}
-      {...props}
-    />
-  );
-});
-Select.displayName = "Select";
+const Select = SelectPrimitive.Root
 
 const SelectGroup = SelectPrimitive.Group
 

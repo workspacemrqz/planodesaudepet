@@ -57,7 +57,6 @@ export default function ContactSubmissionsTab() {
 
   const getPlanLabel = (plan: string) => {
     switch (plan) {
-      case "basico": return "Básico - R$20/mês";
       case "padrao": return "Padrão - R$45/mês";
       case "premium": return "Premium - R$80/mês";
       case "local": return "Plano Local";

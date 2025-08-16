@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Upload JPEG</title>
+</head>
+<body>
+    <h1>Teste de Upload JPEG/JPG</h1>
+    <input type="file" id="fileInput" accept="image/png,image/jpeg" />
+    <button onclick="testUpload()">Testar Upload</button>
+    <div id="result"></div>
+    
+    <script>
+        function testUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const result = document.getElementById('result');
+            
+            if (!file) {
+                result.innerHTML = 'Nenhum arquivo selecionado';
+                return;
+            }
+            
+            result.innerHTML = `
+                <h3>Informações do Arquivo:</h3>
+                <p><strong>Nome:</strong> ${file.name}</p>
+                <p><strong>Tipo MIME:</strong> ${file.type}</p>
+                <p><strong>Tamanho:</strong> ${file.size} bytes</p>
+                <p><strong>Última modificação:</strong> ${new Date(file.lastModified)}</p>
+            `;
+            
+            // Testar validação
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (allowedTypes.includes(file.type)) {
+                result.innerHTML += '<p style="color: green;">✓ Tipo de arquivo válido</p>';
+            } else {
+                result.innerHTML += '<p style="color: red;">✗ Tipo de arquivo inválido</p>';
+            }
+            
+            // Testar tamanho
+            if (file.size <= 5242880) {
+                result.innerHTML += '<p style="color: green;">✓ Tamanho válido (≤ 5MB)</p>';
+            } else {
+                result.innerHTML += '<p style="color: red;">✗ Arquivo muito grande (> 5MB)</p>';
+            }
+        }
+    </script>
+</body>
+</html>

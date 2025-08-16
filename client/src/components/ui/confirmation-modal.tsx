@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -25,6 +26,9 @@ export function ConfirmationModal({
   isLoading = false,
   icon
 }: ConfirmationModalProps) {
+  // Use the body scroll lock hook
+  useBodyScrollLock(isOpen);
+
   // Handle ESC key press
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
@@ -35,13 +39,10 @@ export function ConfirmationModal({
 
     if (isOpen) {
       document.addEventListener("keydown", handleEscKey);
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = "hidden";
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscKey);
-      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
 
