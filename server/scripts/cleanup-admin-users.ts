@@ -44,15 +44,4 @@ async function cleanupAdminUsers() {
   }
 }
 
-// Import hashPassword function inline since we can't import from auth.ts directly
-async function hashPassword(password: string) {
-  const { scrypt, randomBytes } = await import('crypto');
-  const { promisify } = await import('util');
-  
-  const scryptAsync = promisify(scrypt);
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
-}
-
 cleanupAdminUsers();

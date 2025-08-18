@@ -188,14 +188,7 @@ function applyScrollLock() {
     // Resetar cache e recalcular
     resetScrollbarCache();
     
-    const isOverlay = detectOverlayScrollbar();
-    const hasScroll = hasVerticalScrollbar();
-    const scrollbarWidth = getScrollbarWidth();
-    
     console.log('Applying scroll lock:', {
-      isOverlay,
-      hasScroll,
-      scrollbarWidth,
       activeLocks: globalState.activeLocks.size,
       scrollY
     });
@@ -210,18 +203,10 @@ function applyScrollLock() {
       body.style.width = '100%';
     }
     
-    // Aplicar compensação de scrollbar
-    if (hasScroll && !isOverlay && scrollbarWidth > 0) {
-      // Verificar se já há compensação
-      const computedStyle = getComputedStyle(body);
-      const currentPadding = parseInt(computedStyle.paddingRight, 10) || 0;
-      
-      if (currentPadding === 0) {
-        body.style.paddingRight = `${scrollbarWidth}px`;
-      } else if (currentPadding !== scrollbarWidth) {
-        // Corrigir compensação incorreta
-        body.style.paddingRight = `${scrollbarWidth}px`;
-      }
+    // Aplicar compensação de scrollbar - correção para evitar deslocamento horizontal
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
     }
     
     // Iniciar observador
