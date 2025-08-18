@@ -152,14 +152,21 @@ export default function NetworkUnitsTab() {
   const handleImageUpload = async (file: File) => {
     setIsUploading(true);
     try {
-      // Get presigned URL and object path
-      const uploadResponse = await fetch('/api/objects/upload', {
+      // Step 1: Get upload URL from backend
+      const uploadUrlResponse = await fetch('/api/objects/upload', {
         method: 'POST',
       });
-      const { uploadURL, objectPath } = await uploadResponse.json();
       
-      // Upload to object storage
-      const putResponse = await fetch(uploadURL, {
+      if (!uploadUrlResponse.ok) {
+        throw new Error('Failed to get upload URL');
+      }
+      
+      const { uploadURL, objectPath } = await uploadUrlResponse.json();
+      console.log('Got upload URL:', uploadURL);
+      console.log('Object path:', objectPath);
+      
+      // Step 2: Upload file to the provided URL
+      const uploadResponse = await fetch(uploadURL, {
         method: 'PUT',
         body: file,
         headers: {
@@ -167,11 +174,13 @@ export default function NetworkUnitsTab() {
         },
       });
       
-      if (!putResponse.ok) {
-        throw new Error('Upload failed');
+      if (!uploadResponse.ok) {
+        throw new Error('File upload failed');
       }
       
-      // Set the object path for preview and storage
+      console.log('File uploaded successfully');
+      
+      // Use the canonical URL returned by the backend
       setUploadedImageUrl(objectPath);
       
     } catch (error) {

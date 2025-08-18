@@ -161,6 +161,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Canonical image serving route (before auth setup)
+  app.get("/api/objects/:id/image", async (req, res) => {
+    try {
+      const objectId = req.params.id;
+      console.log('Serving image for objectId:', objectId);
+      
+      // Get file metadata from database
+      const metadata = await storage.getFileMetadata(objectId);
+      
+      if (!metadata) {
+        console.log('File metadata not found for objectId:', objectId);
+        return res.status(404).json({ error: 'Imagem não encontrada' });
+      }
+      
+      console.log('Found file metadata:', {
+        objectId: metadata.objectId,
+        mimeType: metadata.mimeType,
+        extension: metadata.extension,
+        filePath: metadata.filePath
+      });
+      
+      // Check if file exists on disk
+      if (!fs.existsSync(metadata.filePath)) {
+        console.log('File not found on disk:', metadata.filePath);
+        return res.status(404).json({ error: 'Arquivo não encontrado no disco' });
+      }
+      
+      // Set correct Content-Type and serve file
+      res.setHeader('Content-Type', metadata.mimeType);
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache
+      res.setHeader('ETag', `"${metadata.objectId}-${metadata.updatedAt.getTime()}"`);
+      
+      // Stream the file
+      const fileStream = fs.createReadStream(metadata.filePath);
+      fileStream.pipe(res);
+      
+      fileStream.on('error', (error) => {
+        console.error('Error streaming file:', error);
+        if (!res.headersSent) {
+          res.status(500).json({ error: 'Erro ao servir arquivo' });
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error serving image:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
   // Setup authentication
   setupAuth(app);
 

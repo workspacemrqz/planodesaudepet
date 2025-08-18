@@ -7,6 +7,7 @@ import "@uppy/dashboard/dist/style.min.css";
 import AwsS3 from "@uppy/aws-s3";
 import type { UploadResult } from "@uppy/core";
 import { Button } from "@/components/ui/button";
+import { useEnhancedScrollLock } from "@/hooks/use-enhanced-scroll-lock";
 
 interface ObjectUploaderProps {
   maxNumberOfFiles?: number;
@@ -59,6 +60,9 @@ export function ObjectUploader({
   children,
 }: ObjectUploaderProps) {
   const [showModal, setShowModal] = useState(false);
+  
+  // Aplicar scroll lock quando o modal do Uppy estiver aberto
+  useEnhancedScrollLock(showModal);
   const [uppy] = useState(() =>
     new Uppy({
       restrictions: {

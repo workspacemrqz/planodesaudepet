@@ -1,7 +1,8 @@
 import { ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { useEnhancedScrollLock } from '../../hooks/use-enhanced-scroll-lock';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -27,7 +28,7 @@ export function ConfirmationModal({
   icon
 }: ConfirmationModalProps) {
   // Use the body scroll lock hook
-  useBodyScrollLock(isOpen);
+  useEnhancedScrollLock(isOpen);
 
   // Handle ESC key press
   useEffect(() => {
@@ -66,7 +67,7 @@ export function ConfirmationModal({
     }
   };
 
-  return (
+  return createPortal(
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
@@ -127,6 +128,7 @@ export function ConfirmationModal({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

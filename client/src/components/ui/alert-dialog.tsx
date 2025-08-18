@@ -3,8 +3,25 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { useEnhancedScrollLock } from "@/hooks/use-enhanced-scroll-lock"
 
-const AlertDialog = AlertDialogPrimitive.Root
+// Wrapper para AlertDialog que aplica o scroll lock
+const AlertDialog = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Root>
+>(({ open, onOpenChange, ...props }, ref) => {
+  // Aplicar o scroll lock quando o alert dialog estiver aberto
+  useEnhancedScrollLock(open || false);
+
+  return (
+    <AlertDialogPrimitive.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      {...props}
+    />
+  );
+});
+AlertDialog.displayName = "AlertDialog";
 
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 

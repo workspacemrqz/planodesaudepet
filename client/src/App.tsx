@@ -20,6 +20,7 @@ import AdminDashboard from "@/pages/admin/dashboard";
 import { AdminAuthProvider } from "@/hooks/use-admin-auth";
 import { AdminProtectedRoute } from "@/components/admin/admin-protected-route";
 
+
 function Router() {
   return (
     <Switch>

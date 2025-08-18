@@ -204,20 +204,50 @@
 @layer base {
   * {
     @apply border-border;
+    margin: 0;
+    padding: 0;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Estilos base robustos para prevenir deslocamento lateral */
+  html {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
+    @apply font-sans antialiased bg-background text-foreground;
     font-family: 'Inter', sans-serif;
-  }
-
-  /* Mobile-specific viewport fixes */
-  html {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
     overflow-x: hidden;
+    /* Remover qualquer transição que possa causar flickering */
   }
   
   /* Prevent horizontal scrolling on all devices */
   * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Remover transições de padding-right que causam flickering */
+  .fixed-element-compensation {
+    /* Sem transições para evitar efeitos visuais indesejados */
+  }
+  
+  /* Garantir que elementos fixos não causem overflow horizontal */
+  [data-fixed="true"],
+  .fixed,
+  .sticky {
     max-width: 100%;
     box-sizing: border-box;
   }
@@ -450,8 +480,8 @@
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
-      width: calc(100vw - 2rem) !important;
-      max-width: calc(100vw - 2rem) !important;
+      width: calc(100% - 2rem) !important;
+      max-width: calc(100% - 2rem) !important;
       max-height: calc(100vh - 2rem) !important;
       margin: 0 !important;
       box-sizing: border-box !important;

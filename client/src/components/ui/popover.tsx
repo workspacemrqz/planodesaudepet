@@ -2,25 +2,9 @@ import * as React from "react"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 
 import { cn } from "@/lib/utils"
-import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock"
 
-// Wrapper para Popover que aplica o scroll lock
-const Popover = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root>
->(({ open, onOpenChange, ...props }, ref) => {
-  // Aplicar o scroll lock quando o popover estiver aberto
-  useBodyScrollLock(open || false);
-
-  return (
-    <PopoverPrimitive.Root
-      open={open}
-      onOpenChange={onOpenChange}
-      {...props}
-    />
-  );
-});
-Popover.displayName = "Popover";
+// Popover sem scroll lock - popovers simples não precisam bloquear o scroll
+const Popover = PopoverPrimitive.Root
 
 const PopoverTrigger = PopoverPrimitive.Trigger
 

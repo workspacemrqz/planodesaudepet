@@ -100,8 +100,13 @@ export function setupAuth(app: Express) {
 
 export async function initializeAdminUser() {
   try {
-    const adminUsername = process.env.LOGIN || "admin";
-    const adminPassword = process.env.SENHA || "admin";
+    const adminUsername = process.env.LOGIN;
+    const adminPassword = process.env.SENHA;
+    
+    // Validate that required environment variables are set
+    if (!adminUsername || !adminPassword) {
+      throw new Error("LOGIN and SENHA environment variables must be defined in .env file");
+    }
     
     // Check if admin user already exists
     const existingAdmin = await storage.getAdminUserByUsername(adminUsername);
@@ -117,5 +122,6 @@ export async function initializeAdminUser() {
     }
   } catch (error) {
     console.error("Error initializing admin user:", error);
+    throw error; // Re-throw to prevent server startup with invalid credentials
   }
 }

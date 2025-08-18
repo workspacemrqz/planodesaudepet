@@ -4,17 +4,28 @@ import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
+import { useEnhancedScrollLock } from "@/hooks/use-enhanced-scroll-lock"
 
-const Drawer = ({
-  shouldScaleBackground = true,
-  ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root
-    shouldScaleBackground={shouldScaleBackground}
-    {...props}
-  />
-)
-Drawer.displayName = "Drawer"
+// Wrapper para Drawer que aplica o scroll lock
+const Drawer = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Root> & {
+    shouldScaleBackground?: boolean;
+  }
+>(({ shouldScaleBackground = true, open, onOpenChange, ...props }, ref) => {
+  // Aplicar o scroll lock quando o drawer estiver aberto
+  useEnhancedScrollLock(open || false);
+
+  return (
+    <DrawerPrimitive.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      shouldScaleBackground={shouldScaleBackground}
+      {...props}
+    />
+  );
+});
+Drawer.displayName = "Drawer";
 
 const DrawerTrigger = DrawerPrimitive.Trigger
 
