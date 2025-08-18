@@ -20,6 +20,7 @@ interface ScrollLockState {
   mutationObserver: MutationObserver | null;
   isApplyingStyles: boolean;
   pendingOperations: Array<() => void>;
+  measuredScrollbarWidth: number | null;
 }
 
 const globalState: ScrollLockState = {
@@ -27,7 +28,8 @@ const globalState: ScrollLockState = {
   originalBodyStyles: null,
   mutationObserver: null,
   isApplyingStyles: false,
-  pendingOperations: []
+  pendingOperations: [],
+  measuredScrollbarWidth: null
 };
 
 /**
@@ -106,7 +108,14 @@ function removeExternalCompensation() {
   
   // Detectar padding suspeito aplicado externamente
   const currentPadding = parseInt(computedStyle.paddingRight, 10) || 0;
-  const expectedScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  // CORREÇÃO: Usar valor armazenado em vez de recalcular após overflow: hidden
+  const expectedScrollbarWidth = globalState.measuredScrollbarWidth || 0;
+  
+  console.log('removeExternalCompensation using stored value:', {
+    currentPadding,
+    expectedScrollbarWidth,
+    measuredScrollbarWidth: globalState.measuredScrollbarWidth
+  });
   
   // Detectar e corrigir margin-right aplicado pelo Radix UI
   const currentMarginRight = parseInt(computedStyle.marginRight, 10) || 0;
@@ -129,7 +138,7 @@ function removeExternalCompensation() {
     body.style.paddingRight = '0px';
   }
   
-  // Se há padding duplo
+  // Se há padding duplo - usar valor armazenado para comparação
   if (currentPadding > expectedScrollbarWidth && expectedScrollbarWidth > 0) {
     console.log('Removing double padding compensation:', currentPadding, 'expected:', expectedScrollbarWidth);
     body.style.paddingRight = `${expectedScrollbarWidth}px`;
@@ -189,6 +198,12 @@ function applyScrollLock() {
     const body = document.body;
     const scrollY = window.scrollY;
     
+    // CORREÇÃO FUNDAMENTAL: Medir scrollbar ANTES de aplicar overflow: hidden
+    if (globalState.measuredScrollbarWidth === null) {
+      globalState.measuredScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      console.log('Measured scrollbar width before lock:', globalState.measuredScrollbarWidth);
+    }
+    
     // Salvar estilos originais apenas na primeira vez
     if (!globalState.originalBodyStyles) {
       globalState.originalBodyStyles = {
@@ -206,7 +221,8 @@ function applyScrollLock() {
     
     console.log('Applying scroll lock:', {
       activeLocks: globalState.activeLocks.size,
-      scrollY
+      scrollY,
+      measuredScrollbarWidth: globalState.measuredScrollbarWidth
     });
     
     // Aplicar estilos de bloqueio
@@ -219,10 +235,9 @@ function applyScrollLock() {
       body.style.width = '100%';
     }
     
-    // Aplicar compensação de scrollbar - correção para evitar deslocamento horizontal
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`;
+    // Aplicar compensação usando valor medido ANTES do lock
+    if (globalState.measuredScrollbarWidth > 0) {
+      body.style.paddingRight = `${globalState.measuredScrollbarWidth}px`;
     }
     
     // Iniciar observador
@@ -268,9 +283,12 @@ function removeScrollLock() {
         window.scrollTo(0, scrollY);
       });
     }
-    
+
     globalState.originalBodyStyles = null;
-    
+    if (globalState.activeLocks.size === 0) {
+      globalState.measuredScrollbarWidth = null;
+    }
+
     // Parar observador
     stopMutationObserver();
   };
