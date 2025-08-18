@@ -20,6 +20,7 @@ interface ScrollLockState {
   mutationObserver: MutationObserver | null;
   isApplyingStyles: boolean;
   pendingOperations: Array<() => void>;
+  measuredScrollbarWidth: number | null;
 }
 
 const globalState: ScrollLockState = {
@@ -27,7 +28,8 @@ const globalState: ScrollLockState = {
   originalBodyStyles: null,
   mutationObserver: null,
   isApplyingStyles: false,
-  pendingOperations: []
+  pendingOperations: [],
+  measuredScrollbarWidth: null
 };
 
 /**
@@ -268,9 +270,12 @@ function removeScrollLock() {
         window.scrollTo(0, scrollY);
       });
     }
-    
+
     globalState.originalBodyStyles = null;
-    
+    if (globalState.activeLocks.size === 0) {
+      globalState.measuredScrollbarWidth = null;
+    }
+
     // Parar observador
     stopMutationObserver();
   };
