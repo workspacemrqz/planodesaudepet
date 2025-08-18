@@ -19,6 +19,10 @@ interface ScrollLockState {
   } | null;
   mutationObserver: MutationObserver | null;
   isApplyingStyles: boolean;
+  /**
+   * Largura medida da barra de rolagem antes de aplicar o lock
+   */
+  measuredScrollbarWidth: number;
   pendingOperations: Array<() => void>;
 }
 
@@ -27,6 +31,7 @@ const globalState: ScrollLockState = {
   originalBodyStyles: null,
   mutationObserver: null,
   isApplyingStyles: false,
+  measuredScrollbarWidth: 0,
   pendingOperations: []
 };
 
@@ -203,12 +208,16 @@ function applyScrollLock() {
     
     // Resetar cache e recalcular
     resetScrollbarCache();
-    
+
+    // Medir largura da scrollbar antes de ocultar
+    globalState.measuredScrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
     console.log('Applying scroll lock:', {
       activeLocks: globalState.activeLocks.size,
       scrollY
     });
-    
+
     // Aplicar estilos de bloqueio
     body.style.overflow = 'hidden';
     
@@ -219,8 +228,8 @@ function applyScrollLock() {
       body.style.width = '100%';
     }
     
-    // Aplicar compensação de scrollbar - correção para evitar deslocamento horizontal
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    // Aplicar compensação de scrollbar usando largura medida
+    const scrollbarWidth = globalState.measuredScrollbarWidth;
     if (scrollbarWidth > 0) {
       body.style.paddingRight = `${scrollbarWidth}px`;
     }
@@ -270,7 +279,8 @@ function removeScrollLock() {
     }
     
     globalState.originalBodyStyles = null;
-    
+    globalState.measuredScrollbarWidth = 0;
+
     // Parar observador
     stopMutationObserver();
   };
@@ -431,6 +441,7 @@ export function forceResetScrollLock() {
   // Clear state
   globalState.activeLocks.clear();
   globalState.originalBodyStyles = null;
+  globalState.measuredScrollbarWidth = 0;
   globalState.isApplyingStyles = false;
   
   console.log('Scroll lock forcefully reset');
