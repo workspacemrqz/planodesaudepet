@@ -20,6 +20,7 @@ interface ScrollLockState {
   mutationObserver: MutationObserver | null;
   isApplyingStyles: boolean;
   pendingOperations: Array<() => void>;
+  measuredScrollbarWidth: number;
 }
 
 const globalState: ScrollLockState = {
@@ -27,7 +28,8 @@ const globalState: ScrollLockState = {
   originalBodyStyles: null,
   mutationObserver: null,
   isApplyingStyles: false,
-  pendingOperations: []
+  pendingOperations: [],
+  measuredScrollbarWidth: 0
 };
 
 /**
@@ -103,36 +105,36 @@ function flushPendingOperations() {
 function removeExternalCompensation() {
   const body = document.body;
   const computedStyle = getComputedStyle(body);
-  
+
   // Detectar padding suspeito aplicado externamente
   const currentPadding = parseInt(computedStyle.paddingRight, 10) || 0;
-  const expectedScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-  
+  const measuredScrollbarWidth = globalState.measuredScrollbarWidth;
+
   // Detectar e corrigir margin-right aplicado pelo Radix UI
   const currentMarginRight = parseInt(computedStyle.marginRight, 10) || 0;
   if (currentMarginRight > 0) {
     console.log('Removing external margin-right compensation from Radix UI:', currentMarginRight);
     // Forçar margin-right para 0 (o CSS override também faz isso, mas garantimos aqui)
     body.style.marginRight = '0px';
-    
+
     // Se margin-right for maior que a largura real da scrollbar, ajustar (clamp)
-    if (currentMarginRight > expectedScrollbarWidth && expectedScrollbarWidth > 0) {
-      console.log('Clamping excessive margin-right:', currentMarginRight, 'to scrollbar width:', expectedScrollbarWidth);
+    if (currentMarginRight > measuredScrollbarWidth && measuredScrollbarWidth > 0) {
+      console.log('Clamping excessive margin-right:', currentMarginRight, 'to measured scrollbar width:', measuredScrollbarWidth);
       // Mesmo assim, mantemos em 0 para evitar conflito com scrollbar-gutter
       body.style.marginRight = '0px';
     }
   }
-  
+
   // Se há padding mas não deveria ter (overlay scrollbar ou sem scroll)
-  if (currentPadding > 0 && (detectOverlayScrollbar() || expectedScrollbarWidth === 0)) {
+  if (currentPadding > 0 && (detectOverlayScrollbar() || measuredScrollbarWidth === 0)) {
     console.log('Removing external padding compensation:', currentPadding);
     body.style.paddingRight = '0px';
   }
-  
+
   // Se há padding duplo
-  if (currentPadding > expectedScrollbarWidth && expectedScrollbarWidth > 0) {
-    console.log('Removing double padding compensation:', currentPadding, 'expected:', expectedScrollbarWidth);
-    body.style.paddingRight = `${expectedScrollbarWidth}px`;
+  if (currentPadding > measuredScrollbarWidth && measuredScrollbarWidth > 0) {
+    console.log('Removing double padding compensation:', currentPadding, 'expected:', measuredScrollbarWidth);
+    body.style.paddingRight = `${measuredScrollbarWidth}px`;
   }
 }
 
@@ -220,7 +222,8 @@ function applyScrollLock() {
     }
     
     // Aplicar compensação de scrollbar - correção para evitar deslocamento horizontal
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth = getScrollbarWidth();
+    globalState.measuredScrollbarWidth = scrollbarWidth;
     if (scrollbarWidth > 0) {
       body.style.paddingRight = `${scrollbarWidth}px`;
     }
@@ -432,6 +435,7 @@ export function forceResetScrollLock() {
   globalState.activeLocks.clear();
   globalState.originalBodyStyles = null;
   globalState.isApplyingStyles = false;
-  
+  globalState.measuredScrollbarWidth = 0;
+
   console.log('Scroll lock forcefully reset');
 }
