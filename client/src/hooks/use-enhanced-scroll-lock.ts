@@ -97,7 +97,8 @@ function flushPendingOperations() {
 }
 
 /**
- * Remove compensação externa aplicada por bibliotecas
+ * Remove compensação externa aplicada por bibliotecas (especialmente Radix UI)
+ * Detecta e corrige margin-right indevido que causa conflito com scrollbar-gutter
  */
 function removeExternalCompensation() {
   const body = document.body;
@@ -105,10 +106,25 @@ function removeExternalCompensation() {
   
   // Detectar padding suspeito aplicado externamente
   const currentPadding = parseInt(computedStyle.paddingRight, 10) || 0;
-  const expectedScrollbarWidth = getScrollbarWidth();
+  const expectedScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  
+  // Detectar e corrigir margin-right aplicado pelo Radix UI
+  const currentMarginRight = parseInt(computedStyle.marginRight, 10) || 0;
+  if (currentMarginRight > 0) {
+    console.log('Removing external margin-right compensation from Radix UI:', currentMarginRight);
+    // Forçar margin-right para 0 (o CSS override também faz isso, mas garantimos aqui)
+    body.style.marginRight = '0px';
+    
+    // Se margin-right for maior que a largura real da scrollbar, ajustar (clamp)
+    if (currentMarginRight > expectedScrollbarWidth && expectedScrollbarWidth > 0) {
+      console.log('Clamping excessive margin-right:', currentMarginRight, 'to scrollbar width:', expectedScrollbarWidth);
+      // Mesmo assim, mantemos em 0 para evitar conflito com scrollbar-gutter
+      body.style.marginRight = '0px';
+    }
+  }
   
   // Se há padding mas não deveria ter (overlay scrollbar ou sem scroll)
-  if (currentPadding > 0 && (detectOverlayScrollbar() || !hasVerticalScrollbar())) {
+  if (currentPadding > 0 && (detectOverlayScrollbar() || expectedScrollbarWidth === 0)) {
     console.log('Removing external padding compensation:', currentPadding);
     body.style.paddingRight = '0px';
   }

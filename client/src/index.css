@@ -233,6 +233,13 @@
     overflow-x: hidden;
     /* Remover qualquer transição que possa causar flickering */
   }
+
+  /* Override global para neutralizar margin-right aplicado pelo Radix UI
+   * Previne conflito com scrollbar-gutter e nossa compensação via padding
+   * Garante que margin-right seja sempre 0 durante overlays */
+  body[style] {
+    margin-right: 0 !important;
+  }
   
   /* Prevent horizontal scrolling on all devices */
   * {
