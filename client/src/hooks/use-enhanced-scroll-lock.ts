@@ -154,19 +154,46 @@ function startMutationObserver() {
   }
   
   globalState.mutationObserver = new MutationObserver((mutations) => {
-    let hasStyleChanges = false;
+    let hasRelevantStyleChanges = false;
     
     for (const mutation of mutations) {
       if (mutation.type === 'attributes' && 
           mutation.attributeName === 'style' &&
           mutation.target === document.body) {
-        hasStyleChanges = true;
+        
+        // Ignorar mudanças causadas pelo Radix UI Select/Dropdown
+        const body = document.body;
+        const currentMarginRight = parseInt(body.style.marginRight || '0', 10);
+        const currentPaddingRight = parseInt(body.style.paddingRight || '0', 10);
+        const currentOverflow = body.style.overflow;
+        
+        // Se a mudança é apenas margin-right, padding-right ou overflow (típico do Radix UI),
+        // e não temos scroll locks ativos, ignorar completamente
+        if (globalState.activeLocks.size === 0) {
+          // Verificar se é uma mudança típica do Radix UI:
+          // 1. Pequenos valores de margin-right/padding-right (≤ 17px)
+          // 2. Overflow hidden (usado pelo react-remove-scroll)
+          const isRadixMarginChange = (currentMarginRight > 0 && currentMarginRight <= 17) || 
+                                     (currentPaddingRight > 0 && currentPaddingRight <= 17);
+          const isRadixOverflowChange = currentOverflow === 'hidden';
+          
+          if (isRadixMarginChange || isRadixOverflowChange) {
+            console.log('Ignoring Radix UI Select style change:', { 
+              marginRight: currentMarginRight, 
+              paddingRight: currentPaddingRight,
+              overflow: currentOverflow 
+            });
+            continue; // Ignorar esta mudança
+          }
+        }
+        
+        hasRelevantStyleChanges = true;
         break;
       }
     }
     
-    if (hasStyleChanges && !globalState.isApplyingStyles) {
-      console.log('External body style modification detected');
+    if (hasRelevantStyleChanges && !globalState.isApplyingStyles) {
+      console.log('External body style modification detected (non-Radix)');
       debouncedOperation(() => {
         removeExternalCompensation();
       }, 100, 'mutation'); // Increased delay and specific type

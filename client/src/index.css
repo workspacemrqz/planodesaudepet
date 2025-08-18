@@ -240,11 +240,58 @@
   body[style] {
     margin-right: 0 !important;
   }
+
+  /* Desabilitar completamente a compensação de scrollbar do Radix UI */
+  /* Isso previne que o Radix UI aplique qualquer estilo ao body */
+  body[data-scroll-locked],
+  body[style*="margin-right"],
+  body[style*="padding-right"] {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* CORREÇÃO DEFINITIVA: Forçar overflow visível sempre no body */
+  /* Isso desabilita completamente o scroll lock do react-remove-scroll usado pelo Radix UI */
+  body,
+  body[data-scroll-locked],
+  body[style*="overflow"],
+  body[style*="overflow: hidden"] {
+    overflow: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  /* Forçar que todos os componentes Radix UI não apliquem scroll lock */
+  [data-radix-select-content],
+  [data-radix-dropdown-menu-content],
+  [data-radix-popover-content],
+  [data-radix-tooltip-content] {
+    /* Garantir que o conteúdo não cause scroll lock */
+    position: fixed !important;
+  }
+
+  /* Prevenir que o Radix UI modifique o body durante a abertura de dropdowns */
+  body {
+    /* REMOVIDO: scrollbar-gutter pode causar espaço em branco indevido */
+    /* scrollbar-gutter: stable; */
+  }
   
   /* Prevent horizontal scrolling on all devices */
   * {
     max-width: 100%;
     box-sizing: border-box;
+  }
+  
+  /* CORREÇÃO DEFINITIVA: Prevenir espaço em branco no canto direito */
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Garantir que nenhum elemento cause overflow horizontal */
+  body * {
+    max-width: 100%;
   }
   
   /* Remover transições de padding-right que causam flickering */
