@@ -9,7 +9,7 @@ import {
   insertSiteSettingsSchema,
   insertFileMetadataSchema 
 } from "@shared/schema";
-import { setupAuth, initializeAdminUser } from "./auth";
+import { setupAuth, validateAdminCredentials } from "./auth";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import multer from "multer";
 import path from "path";
@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
 
   // Initialize default admin user
-  await initializeAdminUser();
+  await validateAdminCredentials();
 
   // Contact form submission (public)
   app.post("/api/contact", async (req, res) => {

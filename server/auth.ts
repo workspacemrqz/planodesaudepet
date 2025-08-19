@@ -2,10 +2,6 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express } from "express";
 import session from "express-session";
-import { scrypt, randomBytes, timingSafeEqual } from "crypto";
-import { promisify } from "util";
-import bcrypt from "bcrypt";
-import { storage } from "./storage";
 import { AdminUser as SelectAdminUser } from "@shared/schema";
 
 declare global {
@@ -14,38 +10,14 @@ declare global {
   }
 }
 
-const scryptAsync = promisify(scrypt);
-
-export async function hashPassword(password: string) {
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
-}
-
-async function comparePasswords(supplied: string, stored: string) {
-  // Check if it's a bcrypt hash
-  if (stored.startsWith('$2b$') || stored.startsWith('$2a$') || stored.startsWith('$2y$')) {
-    return await bcrypt.compare(supplied, stored);
-  }
-  
-  // Handle scrypt format (hash.salt)
-  const parts = stored.split(".");
-  if (parts.length !== 2) {
-    throw new Error('Invalid password format');
-  }
-  
-  const [hashed, salt] = parts;
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
-}
+// Password hashing functions removed - no longer needed for .env authentication
 
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "unipet-admin-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: storage.sessionStore,
+    // Session store removed - using default memory store for simplicity
   };
 
   app.set("trust proxy", 1);
@@ -55,11 +27,28 @@ export function setupAuth(app: Express) {
 
   passport.use(
     new LocalStrategy(async (username, password, done) => {
-      const user = await storage.getAdminUserByUsername(username);
-      if (!user || !(await comparePasswords(password, user.password))) {
+      // Get credentials directly from environment variables
+      const adminUsername = process.env.LOGIN;
+      const adminPassword = process.env.SENHA;
+      
+      // Validate environment variables are set
+      if (!adminUsername || !adminPassword) {
+        console.error('LOGIN and SENHA environment variables must be defined in .env file');
         return done(null, false);
-      } else {
+      }
+      
+      // Check credentials against environment variables
+      if (username === adminUsername && password === adminPassword) {
+        // Create a user object for the session
+        const user = {
+          id: 'admin',
+          username: adminUsername,
+          password: '', // Don't store password in session
+          createdAt: new Date()
+        };
         return done(null, user);
+      } else {
+        return done(null, false);
       }
     }),
   );
@@ -67,11 +56,20 @@ export function setupAuth(app: Express) {
   passport.serializeUser((user, done) => done(null, user.id));
   passport.deserializeUser(async (id: string, done) => {
     try {
-      const user = await storage.getAdminUser(id);
-      if (!user) {
-        return done(null, false);
+      // For the new auth system, we only have one admin user
+      if (id === 'admin') {
+        const adminUsername = process.env.LOGIN;
+        if (adminUsername) {
+          const user = {
+            id: 'admin',
+            username: adminUsername,
+            password: '',
+            createdAt: new Date()
+          };
+          return done(null, user);
+        }
       }
-      done(null, user);
+      return done(null, false);
     } catch (error) {
       console.error('Error deserializing user:', error);
       done(error, null);
@@ -98,30 +96,21 @@ export function setupAuth(app: Express) {
   });
 }
 
-export async function initializeAdminUser() {
-  try {
-    const adminUsername = process.env.LOGIN;
-    const adminPassword = process.env.SENHA;
-    
-    // Validate that required environment variables are set
-    if (!adminUsername || !adminPassword) {
-      throw new Error("LOGIN and SENHA environment variables must be defined in .env file");
-    }
-    
-    // Check if admin user already exists
-    const existingAdmin = await storage.getAdminUserByUsername(adminUsername);
-    
-    if (!existingAdmin) {
-      // Create default admin user from environment variables
-      const hashedPassword = await hashPassword(adminPassword);
-      await storage.createAdminUser({
-        username: adminUsername,
-        password: hashedPassword,
-      });
-      console.log(`Admin user created: username='${adminUsername}'`);
-    }
-  } catch (error) {
-    console.error("Error initializing admin user:", error);
-    throw error; // Re-throw to prevent server startup with invalid credentials
+// This function is no longer needed as we authenticate directly from .env variables
+// export async function initializeAdminUser() {
+//   // Authentication now uses LOGIN and SENHA from .env directly
+//   // No database operations required
+// }
+
+export async function validateAdminCredentials() {
+  // Validate that required environment variables are set
+  const adminUsername = process.env.LOGIN;
+  const adminPassword = process.env.SENHA;
+  
+  if (!adminUsername || !adminPassword) {
+    throw new Error("LOGIN and SENHA environment variables must be defined in .env file");
   }
+  
+  console.log(`Admin credentials validated from .env: username='${adminUsername}'`);
+  return true;
 }
