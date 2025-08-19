@@ -168,16 +168,16 @@ export default function PlansTab() {
         setIsDialogOpen(open);
         if (!open) resetForm();
       }}>
-        <DialogContent className="max-w-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto admin-dialog-content p-0">
-          <div className="p-6">
-            <DialogHeader>
-              <DialogTitle className="text-[#ffffff]">
+        <DialogContent className="max-w-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto admin-dialog-content p-0 border-none outline-none ring-0">
+          <div className="p-6 border-none outline-none">
+            <DialogHeader className="border-none outline-none">
+              <DialogTitle className="text-[#ffffff] border-none outline-none">
                 Editar Plano {editingPlan?.name}
               </DialogTitle>
             </DialogHeader>
             
             <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus border-none outline-none">
               <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
                 <FormField
                   control={form.control}

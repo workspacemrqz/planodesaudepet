@@ -51,6 +51,22 @@ function Router() {
 }
 
 function App() {
+  // Suprimir erro ResizeObserver que não afeta a funcionalidade
+  useEffect(() => {
+    const handleResizeObserverError = (e: ErrorEvent) => {
+      if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
+        e.stopImmediatePropagation();
+        return false;
+      }
+    };
+
+    window.addEventListener('error', handleResizeObserverError);
+
+    return () => {
+      window.removeEventListener('error', handleResizeObserverError);
+    };
+  }, []);
+
   // Prefetch dados críticos assim que a aplicação carrega
   useEffect(() => {
     const prefetchCriticalData = async () => {

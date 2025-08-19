@@ -32,7 +32,7 @@ export default function AboutSection() {
               <img 
                 src={getImageUrlSync(settings.aboutImage, '/inicio-sobre.jpg')} 
                 alt="Conceito de seguro pet com veterinário cuidando de animal" 
-                className="rounded-2xl shadow-xl w-full h-auto" 
+                className="rounded-2xl shadow-xl w-full h-auto sm:mt-0 mt-[-2rem]" 
               />
             </div>
           </div>

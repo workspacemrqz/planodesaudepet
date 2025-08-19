@@ -505,7 +505,7 @@ export default function NetworkUnitsTab() {
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
                               }}
                             />
-                            <div className="hidden text-gray-500 text-xs flex items-center justify-center h-full">Erro ao carregar</div>
+                            <div className="hidden text-gray-500 text-xs items-center justify-center h-full">Erro ao carregar</div>
                           </div>
                         </div>
                       )}
@@ -611,7 +611,7 @@ export default function NetworkUnitsTab() {
           {/* Search by name/address */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#fbf9f7]">
-              Buscar por nome ou endereço
+              Buscar
             </label>
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-[#FBF9F7]" />
@@ -702,7 +702,7 @@ export default function NetworkUnitsTab() {
                 <Button
                   size="sm"
                   onClick={() => handleEdit(unit)}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 rounded-md h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585] bg-[#2f8585]"
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 rounded-md h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585]"
                   data-testid={`button-edit-unit-${unit.id}`}
                 >
                   <Edit className="h-4 w-4" />

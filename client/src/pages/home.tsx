@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import Hero from "@/components/sections/hero";
 import PlansSection from "@/components/sections/plans-section";
 import Features from "@/components/sections/features";
+import FaqSection from "@/components/sections/faq-section";
 
 // Lazy load componentes não críticos para melhor performance inicial
 const Testimonials = lazy(() => import("@/components/sections/testimonials"));
@@ -14,6 +15,15 @@ export default function Home() {
       <Hero />
       <PlansSection />
       <Features />
+      <FaqSection 
+        showTitle={true} 
+        maxItems={5} 
+        customColors={{
+          backgroundColor: '#277677',
+          titleColor: '#FBF9F7',
+          subtitleColor: '#FBF9F7'
+        }}
+      />
       <Suspense fallback={
         <div className="py-20 bg-[#FBF9F7] flex items-center justify-center">
           <div className="text-[#277677] text-lg">Carregando depoimentos...</div>

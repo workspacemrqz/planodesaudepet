@@ -43,7 +43,7 @@ export default function About() {
               <img 
                 src={getImageUrlSync(settings.aboutImage, '/inicio-sobre.jpg')} 
                 alt="Conceito de seguro pet com veterinário cuidando de animal"
-                className="rounded-2xl shadow-xl w-full h-auto"
+                className="rounded-2xl shadow-xl w-full h-auto sm:mt-0 mt-[-2rem]"
               />
             </div>
           </AnimatedSection>
@@ -69,7 +69,7 @@ export default function About() {
             <AnimatedSection key={index} animation="slideUp" delay={800 + (index * 200)}>
               <Card className="backdrop-blur-sm shadow-xl border-0 h-full" style={{backgroundColor: '#FBF9F7'}}>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-[#2C8587]">{item.title}</CardTitle>
+                  <CardTitle className="text-2xl text-[#302E2B]">{item.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-[#302e2b] leading-relaxed">{item.content}</p>
@@ -98,7 +98,7 @@ export default function About() {
               <AnimatedSection animation="slideUp" delay={1600}>
                 <Card className="backdrop-blur-sm shadow-xl border-0 h-full" style={{backgroundColor: '#FBF9F7'}}>
                   <CardContent className="pt-6">
-                    <h3 className="text-xl font-semibold text-[#2C8587] mb-4">Atendimento Humanizado</h3>
+                    <h3 className="text-xl font-semibold text-[#302E2B] mb-4">Atendimento Humanizado</h3>
                     <p className="text-[#302e2b]">
                       Tratamos cada pet como se fosse nosso, oferecendo cuidado personalizado 
                       e suporte emocional para as famílias em momentos difíceis.
@@ -109,7 +109,7 @@ export default function About() {
               <AnimatedSection animation="slideUp" delay={1800}>
                 <Card className="backdrop-blur-sm shadow-xl border-0 h-full" style={{backgroundColor: '#FBF9F7'}}>
                   <CardContent className="pt-6">
-                    <h3 className="text-xl font-semibold text-[#2C8587] mb-4">Inovação Constante</h3>
+                    <h3 className="text-xl font-semibold text-[#302E2B] mb-4">Inovação Constante</h3>
                     <p className="text-[#302e2b]">
                       Investimos continuamente em tecnologia e processos para tornar 
                       o acesso aos cuidados veterinários mais fácil e eficiente.
