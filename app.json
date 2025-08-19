@@ -3,7 +3,7 @@
   "description": "Sistema de plano de saúde para pets",
   "buildpacks": [
     {
-      "url": "heroku/nodejs"
+      "url": "heroku/builder:24"
     }
   ],
   "stack": "heroku-24",
@@ -26,7 +26,15 @@
     },
     "PORT": {
       "description": "Port number for the application",
-      "value": "80"
+      "value": "3000"
+    },
+    "HOST": {
+      "description": "Host for the application",
+      "value": "0.0.0.0"
+    },
+    "SESSION_SECRET": {
+      "description": "Secret key for session management",
+      "generator": "secret"
     }
   },
   "scripts": {
