@@ -60,7 +60,7 @@ export default function PlansTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      toast({ title: "Plano atualizado com sucesso!" });
+      // Notificação de sucesso removida
       setIsDialogOpen(false);
       setEditingPlan(null);
       form.reset();
@@ -86,7 +86,7 @@ export default function PlansTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      toast({ title: "Status de popularidade atualizado!" });
+      // Notificação de sucesso removida
     },
     onError: () => {
       toast({ title: "Erro ao atualizar popularidade", variant: "destructive" });

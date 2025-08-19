@@ -53,10 +53,7 @@ export default function Contact() {
     try {
       await apiRequest('POST', '/api/contact', data);
       
-      toast({
-        title: "Mensagem enviada!",
-        description: "Entraremos em contato em breve.",
-      });
+      // Notificação de sucesso removida
       
       form.reset();
     } catch (error) {

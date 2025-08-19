@@ -79,12 +79,12 @@ export default function PlansSection() {
     <section className="py-20 text-[#fbf9f7] bg-[#2c8587]" style={{backgroundColor: '#277677'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px] text-center">
         <div className="text-center mb-12 sm:mb-16">
-          <AnimatedSection animation="slideUp" delay={200}>
+          <AnimatedSection animation="slideUp" delay={100}>
             <h2 className="text-[30px] mb-4 text-[#fbf9f7] font-bold leading-tight">
               Escolha o <span className="text-primary">plano ideal</span> para seu pet
             </h2>
           </AnimatedSection>
-          <AnimatedSection animation="slideUp" delay={400}>
+          <AnimatedSection animation="slideUp" delay={200}>
             <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[18px] font-normal px-4">
               Oferecemos opções com e sem coparticipação, além de planos locais com menos burocracia
             </p>
@@ -92,7 +92,7 @@ export default function PlansSection() {
         </div>
 
         {/* Plan Comparison Toggle */}
-        <AnimatedSection animation="scale" delay={600}>
+        <AnimatedSection animation="scale" delay={300}>
           <div className="mb-8 sm:mb-12">
             <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7] mx-auto max-w-2xl">
               <Button
@@ -120,8 +120,8 @@ export default function PlansSection() {
         {/* Plans Grid */}
         <AnimatedList 
           animation="slideUp" 
-          delay={800} 
-          staggerDelay={200}
+          delay={400} 
+          staggerDelay={100}
           className={`grid grid-cols-1 ${gridColsMd} ${gridColsLg} gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-4xl mx-auto px-4 sm:px-0 pl-[0px] pr-[0px]`}
         >
           {orderedPlans.map((plan, index) => (
@@ -174,7 +174,7 @@ export default function PlansSection() {
         </AnimatedList>
 
         {/* Local Plans CTA */}
-        <AnimatedSection animation="slideUp" delay={1200}>
+        <AnimatedSection animation="slideUp" delay={600}>
           <div className="mt-16 text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30 shadow-lg">
               <CardContent className="pt-8">

@@ -61,7 +61,7 @@ export function useScrollAnimation({
 export function useStaggeredScrollAnimation({
   threshold = 0.1,
   rootMargin = '0px 0px -50px 0px',
-  staggerDelay = 100,
+  staggerDelay = 50,
   triggerOnce = true
 }: UseScrollAnimationOptions & { staggerDelay?: number } = {}) {
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());

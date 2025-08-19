@@ -36,21 +36,21 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full pl-[20px] pr-[20px]">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div className="order-2 lg:order-1">
-            <AnimatedSection animation="slideUp" delay={200}>
+            <AnimatedSection animation="slideUp" delay={100}>
               <h1 
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-[#302e2b] leading-tight"
               >
                 Cuidado completo para o seu <span className="text-primary">melhor amigo</span>
               </h1>
             </AnimatedSection>
-            <AnimatedSection animation="slideUp" delay={400}>
+            <AnimatedSection animation="slideUp" delay={200}>
               <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-[#302e2b] font-normal">
                 Planos de saúde pet sem carência, cobertura para animais domésticos e Silvestres com preços acessíveis a partir de R$20/mês.
               </p>
             </AnimatedSection>
             
             {/* Key Benefits */}
-            <AnimatedSection animation="slideUp" delay={600}>
+            <AnimatedSection animation="slideUp" delay={300}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
                 {benefits.map((benefit, index) => {
                   const Icon = benefit.icon;
@@ -64,7 +64,7 @@ export default function Hero() {
               </div>
             </AnimatedSection>
 
-            <AnimatedSection animation="slideUp" delay={800}>
+            <AnimatedSection animation="slideUp" delay={400}>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button 
                 className="text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-lg h-12 sm:h-14 min-w-0 sm:min-w-[150px] mobile-touch-target"
@@ -86,7 +86,7 @@ export default function Hero() {
           </div>
 
           <div className="relative order-1 lg:order-2 mb-8 lg:mb-0">
-            <AnimatedSection animation="slideLeft" delay={300}>
+            <AnimatedSection animation="slideLeft" delay={150}>
               {/* Happy pets with owners image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img 
@@ -98,7 +98,7 @@ export default function Hero() {
               </div>
             </AnimatedSection>
             
-            <AnimatedSection animation="scale" delay={1000}>
+            <AnimatedSection animation="scale" delay={500}>
               {/* Floating Stats Card */}
               <Card className="absolute -bottom-3 -left-3 sm:-bottom-6 sm:-left-6 bg-card/95 backdrop-blur-sm shadow-xl rounded-xl">
                 <CardContent className="p-3 sm:p-6 sm:pt-6 bg-[#2776776e] pt-[12px] pb-[12px] pl-[12px] pr-[12px] text-center rounded-xl">

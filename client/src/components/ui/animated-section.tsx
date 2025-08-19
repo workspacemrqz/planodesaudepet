@@ -50,7 +50,7 @@ const animationClasses: Record<AnimationType, { initial: string; animate: string
 export function AnimatedSection({
   children,
   animation = 'fadeIn',
-  duration = 600,
+  duration = 300,
   delay = 0,
   threshold = 0.1,
   rootMargin = '0px 0px -50px 0px',
@@ -104,8 +104,8 @@ interface AnimatedListProps {
 export function AnimatedList({
   children,
   animation = 'slideUp',
-  duration = 600,
-  staggerDelay = 100,
+  duration = 300,
+  staggerDelay = 50,
   threshold = 0.1,
   rootMargin = '0px 0px -50px 0px',
   triggerOnce = true,

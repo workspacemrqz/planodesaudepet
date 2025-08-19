@@ -76,12 +76,12 @@ export default function Plans() {
       <section className="pt-32 pb-20 text-[#fbf9f7] bg-[#277677]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
           <div className="text-center mb-12 sm:mb-16">
-            <AnimatedSection animation="slideUp" delay={200}>
+            <AnimatedSection animation="slideUp" delay={100}>
               <h1 className="font-bold mb-4 text-[#fbf9f7] text-[36px]">
                 Nossos <span className="text-[#E1AC33]">Planos</span>
               </h1>
             </AnimatedSection>
-            <AnimatedSection animation="slideUp" delay={400}>
+            <AnimatedSection animation="slideUp" delay={200}>
               <p className="max-w-2xl mx-auto text-[#fbf9f7] text-[18px] sm:text-[18px] md:text-[18px] mb-6 sm:mb-8 px-4 pl-[0px] pr-[0px] font-normal">
                 <span className="block sm:inline">Escolha a proteção ideal</span>
                 <span className="block sm:inline"> para seu melhor amigo</span>
@@ -91,7 +91,7 @@ export default function Plans() {
             
 
             {/* Plan Toggle */}
-            <AnimatedSection animation="scale" delay={600}>
+            <AnimatedSection animation="scale" delay={300}>
               <div className="mb-8 sm:mb-12">
                 <div className="p-1 rounded-lg bg-[#E1AC33] text-[#fbf9f7] mx-auto max-w-2xl">
                   <Button
@@ -118,7 +118,7 @@ export default function Plans() {
           </div>
 
           {/* Plans Grid */}
-          <AnimatedList animation="slideUp" delay={800} staggerDelay={200}>
+          <AnimatedList animation="slideUp" delay={400} staggerDelay={100}>
             <div className={`grid grid-cols-1 ${gridColsMd} ${gridColsLg} gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-4xl mx-auto px-4 sm:px-0 pl-[0px] pr-[0px]`}>
               {orderedPlans.map((plan, index) => (
                 <Card key={plan.id || index} className={`relative transition-all duration-300 hover:shadow-2xl flex flex-col h-[480px] sm:h-[560px] w-full ${plan.isPopular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
@@ -176,19 +176,19 @@ export default function Plans() {
       <section className="py-20 bg-[#DED8CE]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
           <div className="text-center mb-16">
-            <AnimatedSection animation="slideUp" delay={1200}>
+            <AnimatedSection animation="slideUp" delay={600}>
               <h2 className="font-bold mb-4 text-[#302e2b] text-[26px] md:text-[34px] whitespace-nowrap">
                 Informações <span className="text-[#277677]">importantes</span>
               </h2>
             </AnimatedSection>
-            <AnimatedSection animation="slideUp" delay={1400}>
+            <AnimatedSection animation="slideUp" delay={700}>
               <p className="text-[18px] text-[#302e2b] max-w-2xl mx-auto font-normal">
                 Tudo que você precisa saber sobre nossos planos
               </p>
             </AnimatedSection>
           </div>
 
-          <AnimatedList animation="slideUp" delay={1600} staggerDelay={200}>
+          <AnimatedList animation="slideUp" delay={800} staggerDelay={100}>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7] h-[480px] sm:h-[420px] flex flex-col">
                 <h3 className="text-[24px] font-bold text-[#302e2b] mb-6">Informações Gerais</h3>

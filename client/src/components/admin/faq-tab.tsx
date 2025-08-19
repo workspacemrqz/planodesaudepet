@@ -163,7 +163,7 @@ export default function FaqTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      toast({ title: "Pergunta adicionada com sucesso!" });
+      // Notificação de sucesso removida
       setIsDialogOpen(false);
       form.reset();
     },
@@ -179,7 +179,7 @@ export default function FaqTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      toast({ title: "Pergunta atualizada com sucesso!" });
+      // Notificação de sucesso removida
       setIsDialogOpen(false);
       setEditingItem(null);
       form.reset();
@@ -196,7 +196,7 @@ export default function FaqTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      toast({ title: "Pergunta removida com sucesso!" });
+      // Notificação de sucesso removida
     },
     onError: () => {
       toast({ title: "Erro ao remover pergunta", variant: "destructive" });
@@ -213,7 +213,7 @@ export default function FaqTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      toast({ title: "Ordem atualizada com sucesso!" });
+      // Notificação de sucesso removida
     },
     onError: () => {
       toast({ title: "Erro ao atualizar ordem", variant: "destructive" });

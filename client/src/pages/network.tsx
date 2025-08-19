@@ -137,14 +137,14 @@ export default function Network() {
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <AnimatedSection animation="slideUp" delay={200}>
+            <AnimatedSection animation="slideUp" delay={100}>
               <h1 className="font-bold mb-4 text-[28px] md:text-[36px] text-[#277677]">
                 Principais Unidades
               </h1>
             </AnimatedSection>
             
             {/* Filter Section */}
-            <AnimatedSection animation="scale" delay={400}>
+            <AnimatedSection animation="scale" delay={200}>
               <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg pt-10 pb-6 px-6 mb-8">
 
               
@@ -241,7 +241,7 @@ export default function Network() {
             </div>
           ) : (
             <>
-              <AnimatedList animation="slideUp" delay={600} staggerDelay={150}>
+              <AnimatedList animation="slideUp" delay={300} staggerDelay={75}>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {currentUnits.map((unit) => (
                   <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden flex flex-col h-full">

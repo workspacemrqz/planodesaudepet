@@ -52,10 +52,7 @@ export default function ContactSection() {
     setIsSubmitting(true);
     try {
       await apiRequest("POST", "/api/contact", data);
-      toast({
-        title: "Cotação enviada com sucesso!",
-        description: "Entraremos em contato em breve.",
-      });
+      // Notificação de sucesso removida
       form.reset();
     } catch (error) {
       toast({

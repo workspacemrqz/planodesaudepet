@@ -108,7 +108,7 @@ export default function NetworkUnitsTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
-      toast({ title: "Unidade criada com sucesso!" });
+      // Notificação de sucesso removida
       setIsDialogOpen(false);
       resetForm();
     },
@@ -124,7 +124,7 @@ export default function NetworkUnitsTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
-      toast({ title: "Unidade atualizada com sucesso!" });
+      // Notificação de sucesso removida
       setIsDialogOpen(false);
       resetForm();
     },
@@ -140,7 +140,7 @@ export default function NetworkUnitsTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/network-units"] });
-      toast({ title: "Unidade removida com sucesso!" });
+      // Notificação de sucesso removida
     },
     onError: () => {
       toast({ title: "Erro ao remover unidade", variant: "destructive" });

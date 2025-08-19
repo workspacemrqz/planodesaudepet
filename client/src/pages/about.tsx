@@ -29,7 +29,7 @@ export default function About() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
         {/* Header */}
         <div className="mb-16 text-center">
-          <AnimatedSection animation="slideUp" delay={200}>
+          <AnimatedSection animation="slideUp" delay={100}>
             <h1 className="font-bold mb-4 text-white text-[28px] md:text-[36px]">
               Sobre a <span className="text-[#e1ac33]">UNIPET PLAN</span>
             </h1>
@@ -38,7 +38,7 @@ export default function About() {
 
         {/* Company Story */}
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-          <AnimatedSection animation="slideRight" delay={400}>
+          <AnimatedSection animation="slideRight" delay={200}>
             <div>
               <img 
                 src={getImageUrlSync(settings.aboutImage, '/inicio-sobre.jpg')} 
@@ -48,10 +48,10 @@ export default function About() {
             </div>
           </AnimatedSection>
           <div>
-            <AnimatedSection animation="slideLeft" delay={400}>
+            <AnimatedSection animation="slideLeft" delay={200}>
               <h2 className="text-3xl font-bold mb-6 text-[#e1ac33]">Nossa História</h2>
             </AnimatedSection>
-            <AnimatedSection animation="slideLeft" delay={600}>
+            <AnimatedSection animation="slideLeft" delay={300}>
               {shouldShow.ourStory && (
                 <div className="text-lg leading-relaxed text-[#ffffff] whitespace-pre-line">
                   {settings.ourStory}
@@ -81,13 +81,13 @@ export default function About() {
 
         {/* Team Section */}
         <div className="text-center mb-16">
-          <AnimatedSection animation="slideUp" delay={1200}>
+          <AnimatedSection animation="slideUp" delay={600}>
             <h2 className="text-[28px] md:text-[36px] font-bold mb-4 text-white">
               Nosso <span className="text-primary">Compromisso</span>
             </h2>
           </AnimatedSection>
           <div className="max-w-4xl mx-auto">
-            <AnimatedSection animation="slideUp" delay={1400}>
+            <AnimatedSection animation="slideUp" delay={700}>
               <p className="text-[18px] text-white/90 leading-relaxed mb-8 font-normal">
                 Nossa equipe é formada por veterinários, especialistas em seguros e profissionais 
                 apaixonados por animais. Trabalhamos incansavelmente para garantir que cada pet 
@@ -95,7 +95,7 @@ export default function About() {
               </p>
             </AnimatedSection>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <AnimatedSection animation="slideUp" delay={1600}>
+              <AnimatedSection animation="slideUp" delay={800}>
                 <Card className="backdrop-blur-sm shadow-xl border-0 h-full" style={{backgroundColor: '#FBF9F7'}}>
                   <CardContent className="pt-6">
                     <h3 className="text-xl font-semibold text-[#302E2B] mb-4">Atendimento Humanizado</h3>
@@ -106,7 +106,7 @@ export default function About() {
                   </CardContent>
                 </Card>
               </AnimatedSection>
-              <AnimatedSection animation="slideUp" delay={1800}>
+              <AnimatedSection animation="slideUp" delay={900}>
                 <Card className="backdrop-blur-sm shadow-xl border-0 h-full" style={{backgroundColor: '#FBF9F7'}}>
                   <CardContent className="pt-6">
                     <h3 className="text-xl font-semibold text-[#302E2B] mb-4">Inovação Constante</h3>

@@ -41,10 +41,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (user: AdminUser) => {
       queryClient.setQueryData(["/api/admin/user"], user);
-      toast({
-        title: "Login realizado com sucesso",
-        description: "Bem-vindo ao painel administrativo!",
-      });
+      // Notificação de sucesso removida
     },
     onError: (error: Error) => {
       toast({
@@ -61,10 +58,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       queryClient.setQueryData(["/api/admin/user"], null);
-      toast({
-        title: "Logout realizado",
-        description: "Você foi desconectado do sistema.",
-      });
+      // Notificação de sucesso removida
     },
     onError: (error: Error) => {
       toast({

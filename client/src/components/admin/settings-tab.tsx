@@ -184,10 +184,7 @@ export default function SettingsTab() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-site-settings"] });
       queryClient.invalidateQueries({ queryKey: ["site-settings"] });
-      toast({
-        title: "Configurações atualizadas",
-        description: "As configurações do site foram salvas com sucesso.",
-      });
+      // Notificação de sucesso removida
       setIsSubmitting(false);
     },
     onError: (error: any) => {
