@@ -71,18 +71,18 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(process.cwd(), "dist", "public");
+  const distPath = path.resolve(import.meta.dirname, "..", "dist");
+  const publicPath = path.resolve(import.meta.dirname, "..", "dist", "public");
 
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
+  if (!fs.existsSync(publicPath)) {
+    console.warn(`Build directory not found at ${publicPath}. Make sure to run 'npm run build' first.`);
+    return;
   }
 
-  app.use(express.static(distPath));
+  app.use(express.static(publicPath));
 
   // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(publicPath, "index.html"));
   });
 }
