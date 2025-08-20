@@ -44,6 +44,8 @@ pids
 
 # Server files
 server/public
+uploads/
+temp-uploads/
 
 # Temporary files
 *.tmp

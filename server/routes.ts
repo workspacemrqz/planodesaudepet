@@ -18,14 +18,23 @@ import { fileTypeFromBuffer } from "file-type";
 
 // Configure multer for file uploads
 // In production, use a persistent directory that survives deploys
-// Use persistent storage in production (Easypanel/Docker)
+// Use writable directory in production
 const uploadDir = process.env.NODE_ENV === 'production' 
-  ? (process.env.UPLOADS_DIR || '/data/uploads')
+  ? path.join(process.cwd(), 'uploads')  // Use workspace uploads dir
   : path.join(process.cwd(), 'uploads');
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('Created upload directory:', uploadDir);
+// Ensure upload directory exists with proper error handling
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('Created upload directory:', uploadDir);
+  } else {
+    console.log('Upload directory exists:', uploadDir);
+  }
+} catch (error) {
+  console.error('Failed to create upload directory:', error);
+  console.log('Falling back to temp directory...');
+  // This shouldn't happen with workspace directory, but let's be safe
 }
 
 const upload = multer({

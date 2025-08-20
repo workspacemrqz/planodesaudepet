@@ -121,25 +121,22 @@ export function serveStatic(app: Express) {
   });
 
   // Serve uploads directory for images
-  // Try persistent storage first, then fallback to build directory
-  const persistentUploadsPath = process.env.NODE_ENV === 'production' 
-    ? (process.env.UPLOADS_DIR || '/data/uploads')
-    : path.join(process.cwd(), 'uploads');
+  const uploadsPath = path.join(process.cwd(), 'uploads');
   const buildUploadsPath = path.resolve(publicPath, 'uploads');
   
-  // Serve from persistent storage if it exists
-  if (fs.existsSync(persistentUploadsPath)) {
-    app.use('/uploads', express.static(persistentUploadsPath, {
+  // Serve from workspace uploads directory
+  if (fs.existsSync(uploadsPath)) {
+    app.use('/uploads', express.static(uploadsPath, {
       maxAge: '1y',
       etag: true,
       lastModified: true
     }));
-    console.log('Serving uploads from persistent storage:', persistentUploadsPath);
+    console.log('Serving uploads from workspace:', uploadsPath);
   }
   
   // Also serve from build directory as fallback
   if (fs.existsSync(buildUploadsPath)) {
-    app.use('/uploads-fallback', express.static(buildUploadsPath, {
+    app.use('/uploads', express.static(buildUploadsPath, {
       maxAge: '1y',
       etag: true,
       lastModified: true
