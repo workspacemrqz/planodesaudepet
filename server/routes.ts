@@ -187,10 +187,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filePath: metadata.filePath
       });
       
-      // Check if file exists on disk
-      if (!fs.existsSync(metadata.filePath)) {
-        console.log('File not found on disk:', metadata.filePath);
-        return res.status(404).json({ error: 'Arquivo não encontrado no disco' });
+      // Resolve file path. Metadata may contain path without extension; resolve by matching
+      let filePath = metadata.filePath;
+      if (!fs.existsSync(filePath)) {
+        // Try to locate by globbing common image extensions in the uploads directory
+        const baseName = path.basename(filePath, path.extname(filePath));
+        const dir = path.dirname(filePath);
+        const candidates = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
+          .map(ext => path.join(dir, `${baseName}${ext}`));
+        const existing = candidates.find(p => fs.existsSync(p));
+        if (existing) {
+          filePath = existing;
+        } else {
+          console.log('File not found on disk:', metadata.filePath, 'candidates:', candidates);
+          return res.status(404).json({ error: 'Arquivo não encontrado no disco' });
+        }
       }
       
       // Set correct Content-Type and serve file
@@ -199,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('ETag', `"${metadata.objectId}-${metadata.updatedAt.getTime()}"`);
       
       // Stream the file
-      const fileStream = fs.createReadStream(metadata.filePath);
+      const fileStream = fs.createReadStream(filePath);
       fileStream.pipe(res);
       
       fileStream.on('error', (error) => {

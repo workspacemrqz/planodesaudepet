@@ -21,14 +21,16 @@ export async function getImageUrl(imagePath: string | null | undefined, fallback
     return imagePath;
   }
 
-  // If it's an old-style path with /objects/uploads/, return as direct path
+  // Map legacy/object-style paths to the canonical API image endpoint that
+  // resolves the correct file (including extension) from metadata.
   if (imagePath.startsWith('/objects/uploads/')) {
-    return imagePath;
+    const objectId = imagePath.replace('/objects/uploads/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
+    return `/api/objects/${objectId}/image`;
   }
 
-  // For any other /objects/ path, return as direct path
   if (imagePath.startsWith('/objects/')) {
-    return imagePath;
+    const objectId = imagePath.replace('/objects/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
+    return `/api/objects/${objectId}/image`;
   }
 
   // Fallback to original path as relative
@@ -58,14 +60,15 @@ export function getImageUrlSync(imagePath: string | null | undefined, fallback?:
     return imagePath;
   }
 
-  // If it's an old-style path with /objects/uploads/, return as direct path
+  // Map legacy/object-style paths to the canonical API image endpoint
   if (imagePath.startsWith('/objects/uploads/')) {
-    return imagePath;
+    const objectId = imagePath.replace('/objects/uploads/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
+    return `/api/objects/${objectId}/image`;
   }
 
-  // For any other /objects/ path, return as direct path
   if (imagePath.startsWith('/objects/')) {
-    return imagePath;
+    const objectId = imagePath.replace('/objects/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
+    return `/api/objects/${objectId}/image`;
   }
 
   // Fallback to original path as relative
