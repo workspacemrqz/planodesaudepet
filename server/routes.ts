@@ -18,8 +18,9 @@ import { fileTypeFromBuffer } from "file-type";
 
 // Configure multer for file uploads
 // In production, use a persistent directory that survives deploys
+// Use persistent storage in production (Easypanel/Docker)
 const uploadDir = process.env.NODE_ENV === 'production' 
-  ? path.join(process.cwd(), 'dist', 'public', 'uploads')
+  ? (process.env.UPLOADS_DIR || '/data/uploads')
   : path.join(process.cwd(), 'uploads');
 
 if (!fs.existsSync(uploadDir)) {
@@ -189,19 +190,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filePath: metadata.filePath
       });
       
-      // Resolve file path. Metadata may contain path without extension; resolve by matching
-      let filePath = metadata.filePath;
+      // Resolve file path. Always use the current upload directory
+      // The stored metadata might point to an old location, so we reconstruct the path
+      const expectedFileName = `${objectId}.${metadata.extension?.replace('.', '') || 'jpg'}`;
+      let filePath = path.join(uploadDir, expectedFileName);
+      
       if (!fs.existsSync(filePath)) {
-        // Try to locate by globbing common image extensions in the uploads directory
-        const baseName = path.basename(filePath, path.extname(filePath));
-        const dir = path.dirname(filePath);
+        // Try common extensions if the exact file doesn't exist
         const candidates = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
-          .map(ext => path.join(dir, `${baseName}${ext}`));
+          .map(ext => path.join(uploadDir, `${objectId}${ext}`));
         const existing = candidates.find(p => fs.existsSync(p));
         if (existing) {
           filePath = existing;
+          console.log(`[IMAGE SERVING API] Found file with different extension: ${path.basename(existing)}`);
         } else {
-          console.log('File not found on disk:', metadata.filePath, 'candidates:', candidates);
+          console.log(`[IMAGE SERVING API] File not found in upload directory: ${uploadDir}`);
+          console.log(`[IMAGE SERVING API] Expected: ${expectedFileName}, Candidates checked:`, candidates.map(p => path.basename(p)));
           return res.status(404).json({ error: 'Arquivo não encontrado no disco' });
         }
       }
@@ -467,7 +471,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const base = path.join(uploadDir, path.basename(filename, ext));
         const candidates = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].map(e => base + e);
         const existing = candidates.find(p => fs.existsSync(p));
-        console.log(`[IMAGE SERVING] File not found: ${filePath}. Candidates:`, candidates);
+        console.log(`[IMAGE SERVING] File not found: ${filePath}. Upload dir: ${uploadDir}, Candidates:`, candidates.map(p => path.basename(p)));
         if (!existing) {
           return res.status(404).json({ error: "File not found" });
         }

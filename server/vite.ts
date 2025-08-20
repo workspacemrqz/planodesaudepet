@@ -121,14 +121,30 @@ export function serveStatic(app: Express) {
   });
 
   // Serve uploads directory for images
-  const uploadsPath = path.resolve(publicPath, 'uploads');
-  if (fs.existsSync(uploadsPath)) {
-    app.use('/uploads', express.static(uploadsPath, {
+  // Try persistent storage first, then fallback to build directory
+  const persistentUploadsPath = process.env.NODE_ENV === 'production' 
+    ? (process.env.UPLOADS_DIR || '/data/uploads')
+    : path.join(process.cwd(), 'uploads');
+  const buildUploadsPath = path.resolve(publicPath, 'uploads');
+  
+  // Serve from persistent storage if it exists
+  if (fs.existsSync(persistentUploadsPath)) {
+    app.use('/uploads', express.static(persistentUploadsPath, {
       maxAge: '1y',
       etag: true,
       lastModified: true
     }));
-    console.log('Serving uploads from:', uploadsPath);
+    console.log('Serving uploads from persistent storage:', persistentUploadsPath);
+  }
+  
+  // Also serve from build directory as fallback
+  if (fs.existsSync(buildUploadsPath)) {
+    app.use('/uploads-fallback', express.static(buildUploadsPath, {
+      maxAge: '1y',
+      etag: true,
+      lastModified: true
+    }));
+    console.log('Serving uploads fallback from build directory:', buildUploadsPath);
   }
 
   // Serve static assets with proper headers
