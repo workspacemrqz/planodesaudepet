@@ -1,9 +1,9 @@
 {
-  "name": "plano-de-saude-pet",
-  "description": "Sistema de plano de saúde para pets",
+  "name": "unipetplan",
+  "description": "Sistema de plano de saúde para pets - Deploy limpo com autenticação por variáveis de ambiente",
   "buildpacks": [
     {
-      "url": "heroku/builder:24"
+      "url": "heroku/nodejs"
     }
   ],
   "env": {
@@ -12,16 +12,28 @@
       "value": "production"
     },
     "DATABASE_URL": {
-      "description": "PostgreSQL database URL",
+      "description": "PostgreSQL database URL (required)",
+      "required": true
+    },
+    "ADMIN_USER": {
+      "description": "Admin username/email for login",
+      "required": true
+    },
+    "ADMIN_PASSWORD": {
+      "description": "Admin password (minimum 12 characters)",
       "required": true
     },
     "LOGIN": {
-      "description": "Admin login",
-      "required": true
+      "description": "Alternative admin login (legacy support)",
+      "required": false
     },
     "SENHA": {
-      "description": "Admin password",
-      "required": true
+      "description": "Alternative admin password (legacy support)",
+      "required": false
+    },
+    "SESSION_SECRET": {
+      "description": "Secret key for session management (minimum 32 characters)",
+      "generator": "secret"
     },
     "PORT": {
       "description": "Port number for the application",
@@ -30,13 +42,13 @@
     "HOST": {
       "description": "Host for the application",
       "value": "0.0.0.0"
-    },
-    "SESSION_SECRET": {
-      "description": "Secret key for session management",
-      "generator": "secret"
     }
   },
-  "scripts": {
-    "postdeploy": "npm run db:push"
-  }
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "stack": "heroku-24"
 }

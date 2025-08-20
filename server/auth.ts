@@ -1,116 +1,225 @@
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Express } from "express";
+import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
-import { AdminUser as SelectAdminUser } from "@shared/schema";
+import { AdminUser } from "@shared/schema";
+import rateLimit from "express-rate-limit";
 
 declare global {
   namespace Express {
-    interface User extends SelectAdminUser {}
+    interface User extends AdminUser {}
+    
+    interface Session {
+      user?: AdminUser;
+    }
   }
 }
 
-// Password hashing functions removed - no longer needed for .env authentication
+// Rate limiting for login attempts
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 requests per windowMs
+  message: {
+    error: "Muitas tentativas de login. Tente novamente em 15 minutos.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+});
+
+// In-memory store for failed login attempts (in production, use Redis or similar)
+const failedAttempts = new Map<string, { count: number; lockUntil?: number }>();
+
+// Lockout configuration
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCKOUT_TIME = 30 * 60 * 1000; // 30 minutes
+
+interface LoginRequest extends Request {
+  body: {
+    username: string;
+    password: string;
+  };
+}
+
+function validateEnvironmentVariables(): { username: string; password: string } | null {
+  const adminUsername = process.env.ADMIN_USER || process.env.LOGIN;
+  const adminPassword = process.env.ADMIN_PASSWORD || process.env.SENHA;
+  
+  if (!adminUsername || !adminPassword) {
+    console.error('❌ ADMIN_USER and ADMIN_PASSWORD environment variables must be defined in .env file');
+    console.error('   Alternative: LOGIN and SENHA environment variables');
+    return null;
+  }
+  
+  return { username: adminUsername, password: adminPassword };
+}
+
+function isAccountLocked(ip: string): boolean {
+  const attempts = failedAttempts.get(ip);
+  if (!attempts) return false;
+  
+  if (attempts.lockUntil && Date.now() < attempts.lockUntil) {
+    return true;
+  }
+  
+  // Reset if lockout period has passed
+  if (attempts.lockUntil && Date.now() >= attempts.lockUntil) {
+    failedAttempts.delete(ip);
+    return false;
+  }
+  
+  return false;
+}
+
+function recordFailedAttempt(ip: string): void {
+  const attempts = failedAttempts.get(ip) || { count: 0 };
+  attempts.count++;
+  
+  if (attempts.count >= MAX_FAILED_ATTEMPTS) {
+    attempts.lockUntil = Date.now() + LOCKOUT_TIME;
+    console.warn(`🔒 Account locked for IP ${ip} due to ${attempts.count} failed attempts`);
+  }
+  
+  failedAttempts.set(ip, attempts);
+}
+
+function recordSuccessfulLogin(ip: string): void {
+  failedAttempts.delete(ip);
+}
 
 export function setupAuth(app: Express) {
+  // Validate environment variables on startup
+  const credentials = validateEnvironmentVariables();
+  if (!credentials) {
+    throw new Error('Authentication setup failed: missing environment variables');
+  }
+
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "unipet-admin-secret-key",
+    secret: process.env.SESSION_SECRET || "unipet-admin-secret-key-change-in-production",
     resave: false,
     saveUninitialized: false,
-    // Session store removed - using default memory store for simplicity
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
   };
 
   app.set("trust proxy", 1);
   app.use(session(sessionSettings));
-  app.use(passport.initialize());
-  app.use(passport.session());
 
-  passport.use(
-    new LocalStrategy(async (username, password, done) => {
-      // Get credentials directly from environment variables
-      const adminUsername = process.env.LOGIN;
-      const adminPassword = process.env.SENHA;
+  // Admin login route with rate limiting and security
+  app.post("/api/admin/login", loginLimiter, async (req: LoginRequest, res: Response) => {
+    try {
+      const { username, password } = req.body;
+      const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
       
-      // Validate environment variables are set
-      if (!adminUsername || !adminPassword) {
-        console.error('LOGIN and SENHA environment variables must be defined in .env file');
-        return done(null, false);
+      // Validate input
+      if (!username || !password) {
+        return res.status(400).json({ error: "Username e senha são obrigatórios" });
       }
       
-      // Check credentials against environment variables
-      if (username === adminUsername && password === adminPassword) {
-        // Create a user object for the session
-        const user = {
+      // Check if account is locked
+      if (isAccountLocked(clientIp)) {
+        console.warn(`🔒 Login attempt on locked account from IP ${clientIp}`);
+        return res.status(423).json({ 
+          error: "Conta temporariamente bloqueada devido a muitas tentativas falhas. Tente novamente em 30 minutos." 
+        });
+      }
+      
+      // Get credentials from environment
+      const envCredentials = validateEnvironmentVariables();
+      if (!envCredentials) {
+        console.error('❌ Environment variables not configured for authentication');
+        return res.status(500).json({ error: "Erro de configuração do servidor" });
+      }
+      
+      // Validate credentials (timing-safe comparison would be ideal in production)
+      if (username === envCredentials.username && password === envCredentials.password) {
+        // Successful login
+        recordSuccessfulLogin(clientIp);
+        
+        const user: AdminUser = {
           id: 'admin',
-          username: adminUsername,
-          password: '', // Don't store password in session
+          username: envCredentials.username,
           createdAt: new Date()
         };
-        return done(null, user);
+        
+        req.session.user = user;
+        console.log(`✅ Successful admin login from IP ${clientIp}`);
+        
+        res.status(200).json(user);
       } else {
-        return done(null, false);
+        // Failed login
+        recordFailedAttempt(clientIp);
+        console.warn(`❌ Failed login attempt for username "${username}" from IP ${clientIp}`);
+        
+        // Generic error message to prevent username enumeration
+        res.status(401).json({ error: "Credenciais inválidas" });
       }
-    }),
-  );
-
-  passport.serializeUser((user, done) => done(null, user.id));
-  passport.deserializeUser(async (id: string, done) => {
-    try {
-      // For the new auth system, we only have one admin user
-      if (id === 'admin') {
-        const adminUsername = process.env.LOGIN;
-        if (adminUsername) {
-          const user = {
-            id: 'admin',
-            username: adminUsername,
-            password: '',
-            createdAt: new Date()
-          };
-          return done(null, user);
-        }
-      }
-      return done(null, false);
     } catch (error) {
-      console.error('Error deserializing user:', error);
-      done(error, null);
+      console.error('❌ Login error:', error);
+      res.status(500).json({ error: "Erro interno do servidor" });
     }
   });
 
-  // Admin login route
-  app.post("/api/admin/login", passport.authenticate("local"), (req, res) => {
-    res.status(200).json(req.user);
-  });
-
   // Admin logout route
-  app.post("/api/admin/logout", (req, res, next) => {
-    req.logout((err) => {
-      if (err) return next(err);
+  app.post("/api/admin/logout", (req: Request, res: Response) => {
+    const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
+    
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('❌ Logout error:', err);
+        return res.status(500).json({ error: "Erro ao fazer logout" });
+      }
+      
+      console.log(`✅ Admin logout from IP ${clientIp}`);
+      res.clearCookie('connect.sid'); // Clear session cookie
       res.sendStatus(200);
     });
   });
 
   // Admin user info route
-  app.get("/api/admin/user", (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
-    res.json(req.user);
+  app.get("/api/admin/user", (req: Request, res: Response) => {
+    if (!req.session.user) {
+      return res.sendStatus(401);
+    }
+    
+    res.json(req.session.user);
+  });
+
+  // Middleware to check admin authentication
+  app.use('/api/admin', (req: Request, res: Response, next: NextFunction) => {
+    // Skip authentication check for login and logout routes
+    if (req.path === '/login' || req.path === '/logout') {
+      return next();
+    }
+    
+    if (!req.session.user) {
+      return res.status(401).json({ error: "Acesso não autorizado" });
+    }
+    
+    next();
   });
 }
 
-// This function is no longer needed as we authenticate directly from .env variables
-// export async function initializeAdminUser() {
-//   // Authentication now uses LOGIN and SENHA from .env directly
-//   // No database operations required
-// }
-
-export async function validateAdminCredentials() {
-  // Validate that required environment variables are set
-  const adminUsername = process.env.LOGIN;
-  const adminPassword = process.env.SENHA;
-  
-  if (!adminUsername || !adminPassword) {
-    throw new Error("LOGIN and SENHA environment variables must be defined in .env file");
-  }
-  
-  console.log(`Admin credentials validated from .env: username='${adminUsername}'`);
-  return true;
+// Utility function to check if user is authenticated (for use in other parts of the app)
+export function isAuthenticated(req: Request): boolean {
+  return !!req.session.user;
 }
+
+// Middleware function for protecting routes
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
+  if (!isAuthenticated(req)) {
+    return res.status(401).json({ error: "Acesso não autorizado" });
+  }
+  next();
+}
+
+// Clean up expired lockouts periodically (run every hour)
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, attempts] of failedAttempts.entries()) {
+    if (attempts.lockUntil && now >= attempts.lockUntil) {
+      failedAttempts.delete(ip);
+    }
+  }
+}, 60 * 60 * 1000);

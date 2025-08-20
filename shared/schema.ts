@@ -5,12 +5,6 @@ import { z } from "zod";
 
 export const planTypeEnum = pgEnum('plan_type_enum', ['with_waiting_period', 'without_waiting_period']);
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
-
 export const contactSubmissions = pgTable("contact_submissions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
@@ -27,7 +21,7 @@ export const contactSubmissions = pgTable("contact_submissions", {
 
 export const plans = pgTable("plans", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   price: integer("price").notNull(),
   description: text("description").notNull(),
   features: text("features").array().notNull(),
@@ -59,13 +53,6 @@ export const faqItems = pgTable("faq_items", {
   answer: text("answer").notNull(),
   displayOrder: integer("display_order").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const adminUsers = pgTable("admin_users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -110,11 +97,6 @@ export const fileMetadata = pgTable("file_metadata", {
 });
 
 // Insert schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
 export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
   id: true,
   createdAt: true,
@@ -138,11 +120,6 @@ export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
   createdAt: true,
 });
 
-export const insertAdminUserSchema = createInsertSchema(adminUsers).omit({
-  id: true,
-  createdAt: true,
-});
-
 export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
   id: true,
   createdAt: true,
@@ -156,8 +133,6 @@ export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
 });
 
 // Types
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
 export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 export type InsertPlan = z.infer<typeof insertPlanSchema>;
@@ -166,9 +141,14 @@ export type InsertNetworkUnit = z.infer<typeof insertNetworkUnitSchema>;
 export type NetworkUnit = typeof networkUnits.$inferSelect;
 export type InsertFaqItem = z.infer<typeof insertFaqItemSchema>;
 export type FaqItem = typeof faqItems.$inferSelect;
-export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
-export type AdminUser = typeof adminUsers.$inferSelect;
 export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type SiteSettings = typeof siteSettings.$inferSelect;
 export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
 export type FileMetadata = typeof fileMetadata.$inferSelect;
+
+// Admin user type for session management (no database table)
+export interface AdminUser {
+  id: string;
+  username: string;
+  createdAt: Date;
+}

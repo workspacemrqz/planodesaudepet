@@ -1,6 +1,4 @@
 import { 
-  type User, 
-  type InsertUser, 
   type ContactSubmission, 
   type InsertContactSubmission,
   type Plan,
@@ -9,18 +7,14 @@ import {
   type InsertNetworkUnit,
   type FaqItem,
   type InsertFaqItem,
-  type AdminUser,
-  type InsertAdminUser,
   type SiteSettings,
   type InsertSiteSettings,
   type FileMetadata,
   type InsertFileMetadata,
-  users,
   contactSubmissions,
   plans,
   networkUnits,
   faqItems,
-  adminUsers,
   siteSettings,
   fileMetadata
 } from "@shared/schema";
@@ -33,16 +27,6 @@ import { pool } from "./db";
 const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
-  // Users
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  
-  // Admin Users
-  getAdminUser(id: string): Promise<AdminUser | undefined>;
-  getAdminUserByUsername(username: string): Promise<AdminUser | undefined>;
-  createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
-  
   // Contact Submissions
   createContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission>;
   getContactSubmissions(): Promise<ContactSubmission[]>;
@@ -88,38 +72,6 @@ export class DatabaseStorage implements IStorage {
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ pool, createTableIfMissing: true });
-  }
-
-  // Users
-  async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
-  }
-
-  // Admin Users
-  async getAdminUser(id: string): Promise<AdminUser | undefined> {
-    const [user] = await db.select().from(adminUsers).where(eq(adminUsers.id, id));
-    return user || undefined;
-  }
-
-  async getAdminUserByUsername(username: string): Promise<AdminUser | undefined> {
-    const [user] = await db.select().from(adminUsers).where(eq(adminUsers.username, username));
-    return user || undefined;
-  }
-
-  async createAdminUser(insertAdminUser: InsertAdminUser): Promise<AdminUser> {
-    const [user] = await db.insert(adminUsers).values(insertAdminUser).returning();
-    return user;
   }
 
   // Contact Submissions

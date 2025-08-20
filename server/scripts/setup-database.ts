@@ -14,11 +14,15 @@ async function setupDatabase() {
     console.log('');
     console.log('Your database is now ready with:');
     console.log('- ✅ All tables created with correct schema');
-    console.log('- ✅ 4 plans inserted (BASIC, INFINITY, COMFORT, PLATINUM)');
-    console.log('- ✅ Site settings configured');
-    console.log('- ✅ Admin user ready (check your .env file)');
+    console.log('- ✅ No automatic data insertion (clean deployment)');
+    console.log('- ✅ Authentication via environment variables only');
     console.log('');
-    console.log('🎉 You can now deploy without database setup issues!');
+    console.log('📋 Next steps:');
+    console.log('1. Configure environment variables (ADMIN_USER, ADMIN_PASSWORD)');
+    console.log('2. Access /admin to create plans and configure settings');
+    console.log('3. Optional: Run "npm run seed:data" for sample data');
+    console.log('');
+    console.log('🎉 Ready for clean deployment!');
     
   } catch (error) {
     console.log('================================');

@@ -39,14 +39,14 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Initialize database only in production if needed
+  // Initialize database schema only (no data insertion)
   if (process.env.NODE_ENV === 'production') {
     try {
-      log("Checking database in production...");
+      log("Checking database schema in production...");
       await initializeDatabase();
-      log("Database check completed");
+      log("Database schema check completed - no automatic data insertion");
     } catch (error) {
-      log("Database initialization failed:", error);
+      log("Database schema initialization failed:", error);
       // Continue anyway - the error will be caught by the API endpoints
     }
   }
