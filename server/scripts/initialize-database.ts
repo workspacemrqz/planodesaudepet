@@ -16,8 +16,114 @@ export async function initializeDatabase() {
     `);
     
     if (!tableExists[0]?.exists) {
-      console.log('❌ Plans table does not exist. Please run database migrations first.');
-      return;
+      console.log('📋 Plans table does not exist. Creating database schema...');
+      
+      // Create the enum first
+      await db.execute(sql`
+        DO $$ BEGIN
+          CREATE TYPE plan_type_enum AS ENUM ('with_waiting_period', 'without_waiting_period');
+        EXCEPTION
+          WHEN duplicate_object THEN null;
+        END $$;
+      `);
+      
+      // Create all necessary tables
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS users (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          username text NOT NULL UNIQUE,
+          password text NOT NULL
+        );
+      `);
+      
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS contact_submissions (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          name text NOT NULL,
+          email text NOT NULL,
+          phone text NOT NULL,
+          city text NOT NULL,
+          pet_name text NOT NULL,
+          animal_type text NOT NULL,
+          pet_age text NOT NULL,
+          plan_interest text NOT NULL,
+          message text,
+          created_at timestamp DEFAULT now() NOT NULL
+        );
+      `);
+      
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS plans (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          name text NOT NULL,
+          price integer NOT NULL,
+          description text NOT NULL,
+          features text[] NOT NULL,
+          button_text text DEFAULT 'Contratar Plano' NOT NULL,
+          redirect_url text DEFAULT '/contact' NOT NULL,
+          is_active boolean DEFAULT true NOT NULL,
+          display_order integer DEFAULT 0 NOT NULL,
+          plan_type plan_type_enum DEFAULT 'with_waiting_period' NOT NULL,
+          created_at timestamp DEFAULT now() NOT NULL
+        );
+      `);
+      
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS network_units (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          name text NOT NULL,
+          address text NOT NULL,
+          phone text NOT NULL,
+          whatsapp text,
+          google_maps_url text,
+          rating integer NOT NULL,
+          services text[] NOT NULL,
+          image_url text,
+          is_active boolean DEFAULT true NOT NULL,
+          display_order integer DEFAULT 0 NOT NULL,
+          created_at timestamp DEFAULT now() NOT NULL
+        );
+      `);
+      
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS faqs (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          question text NOT NULL,
+          answer text NOT NULL,
+          is_active boolean DEFAULT true NOT NULL,
+          display_order integer DEFAULT 0 NOT NULL,
+          created_at timestamp DEFAULT now() NOT NULL
+        );
+      `);
+      
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS site_settings (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          company_name text NOT NULL,
+          company_email text NOT NULL,
+          company_phone text NOT NULL,
+          company_whatsapp text,
+          company_address text NOT NULL,
+          company_cnpj text,
+          hero_title text NOT NULL,
+          hero_subtitle text NOT NULL,
+          hero_description text NOT NULL,
+          hero_cta_text text NOT NULL,
+          hero_cta_url text NOT NULL,
+          about_title text NOT NULL,
+          about_description text NOT NULL,
+          testimonials_title text NOT NULL,
+          contact_title text NOT NULL,
+          contact_description text NOT NULL,
+          footer_description text NOT NULL,
+          meta_title text,
+          meta_description text,
+          created_at timestamp DEFAULT now() NOT NULL,
+          updated_at timestamp DEFAULT now() NOT NULL
+        );
+      `);
+      
+      console.log('✅ Database schema created successfully!');
     }
     
     // Check current columns in plans table
@@ -198,6 +304,44 @@ export async function initializeDatabase() {
       console.log(`✅ Successfully inserted ${planData.length} plans!`);
     } else {
       console.log('✅ Plans data already exists');
+    }
+    
+    // Check and insert site settings if not exists
+    const siteSettingsCount = await db.execute(sql`SELECT COUNT(*) as count FROM site_settings`);
+    const currentSettingsCount = parseInt(siteSettingsCount[0]?.count || '0');
+    
+    if (currentSettingsCount === 0) {
+      console.log('📋 No site settings found. Inserting default settings...');
+      
+      await db.execute(sql`
+        INSERT INTO site_settings (
+          company_name, company_email, company_phone, company_whatsapp, company_address,
+          hero_title, hero_subtitle, hero_description, hero_cta_text, hero_cta_url,
+          about_title, about_description, testimonials_title, contact_title, contact_description,
+          footer_description, meta_title, meta_description
+        ) VALUES (
+          'UniPetPlan',
+          'contato@unipetplan.com.br',
+          '(11) 9999-9999',
+          '5511999999999',
+          'São Paulo, SP',
+          'Plano de Saúde Pet Completo',
+          'Cuidado e proteção para seu melhor amigo',
+          'O melhor plano de saúde para seu pet com cobertura completa e rede credenciada.',
+          'Ver Planos',
+          '/planos',
+          'Sobre a UniPetPlan',
+          'Somos especialistas em cuidados veterinários e oferecemos os melhores planos de saúde para pets.',
+          'O que nossos clientes dizem',
+          'Entre em Contato',
+          'Solicite sua cotação personalizada',
+          'UniPetPlan - O melhor cuidado para seu pet',
+          'UniPetPlan - Plano de Saúde Pet',
+          'Planos de saúde completos para seu pet com rede credenciada e cobertura total.'
+        )
+      `);
+      
+      console.log('✅ Site settings inserted successfully!');
     }
     
     // Verify the final result
