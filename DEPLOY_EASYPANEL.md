@@ -104,7 +104,10 @@ Após o primeiro deploy, execute as migrações:
 ### URLs de Teste:
 - `/` - Página inicial
 - `/admin/login` - Painel administrativo
-- `/api/health` - Health check (se implementado)
+- `/planos` - Página de planos
+- `/rede-credenciada` - Rede credenciada
+- `/sobre` - Página sobre
+- `/contato` - Página de contato
 
 ### Logs:
 - Monitore os logs no painel do Easypanel
