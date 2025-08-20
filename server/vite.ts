@@ -111,6 +111,12 @@ export function serveStatic(app: Express) {
   // Debug middleware to log all requests
   app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    
+    // Special logging for image requests
+    if (req.url.includes('/api/objects/') && req.url.includes('/image')) {
+      console.log(`[IMAGE REQUEST] URL: ${req.url}, Headers: ${JSON.stringify(req.headers.accept)}`);
+    }
+    
     next();
   });
 

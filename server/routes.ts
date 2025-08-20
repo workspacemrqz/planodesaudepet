@@ -170,7 +170,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/objects/:id/image", async (req, res) => {
     try {
       const objectId = req.params.id;
-      console.log('Serving image for objectId:', objectId);
+      console.log(`[IMAGE SERVING API] Request for objectId: ${objectId}`);
+      console.log(`[IMAGE SERVING API] Headers: ${JSON.stringify(req.headers)}`);
+      console.log(`[IMAGE SERVING API] Upload dir: ${uploadDir}`);
       
       // Get file metadata from database
       const metadata = await storage.getFileMetadata(objectId);

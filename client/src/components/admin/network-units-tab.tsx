@@ -519,7 +519,11 @@ export default function NetworkUnitsTab() {
                           </div>
                           <div className="w-32 h-32 rounded-lg square-image-container bg-gray-100">
                             <img 
-                              src={getImageUrlSync(uploadedImageUrl)} 
+                              src={(() => {
+                                const url = getImageUrlSync(uploadedImageUrl);
+                                console.log(`[IMAGE DEBUG] Original path: ${uploadedImageUrl}, Generated URL: ${url}`);
+                                return url;
+                              })()} 
                               alt="Preview" 
                               className="w-full h-full object-cover rounded-lg"
                               onError={(e) => {
