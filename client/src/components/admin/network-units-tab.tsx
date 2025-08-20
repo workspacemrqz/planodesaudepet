@@ -7,7 +7,7 @@ import { NetworkUnit, InsertNetworkUnit } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Slider } from "@/components/ui/slider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -98,8 +98,6 @@ export default function NetworkUnitsTab() {
 
   // Use predefined services list for filter dropdown
   const availableServices = useMemo(() => {
-    console.log(`[SERVICES DEBUG] Available services count: ${AVAILABLE_SERVICES.length}`);
-    console.log(`[SERVICES DEBUG] First 3 services:`, AVAILABLE_SERVICES.slice(0, 3));
     return AVAILABLE_SERVICES.sort();
   }, []);
 
@@ -253,14 +251,11 @@ export default function NetworkUnitsTab() {
   };
 
   const handleServiceToggle = (service: string) => {
-    console.log(`[SERVICE TOGGLE] Service: ${service}`);
-    setSelectedServices(prev => {
-      const newServices = prev.includes(service) 
+    setSelectedServices(prev => 
+      prev.includes(service) 
         ? prev.filter(s => s !== service)
-        : [...prev, service];
-      console.log(`[SERVICE TOGGLE] Updated services:`, newServices);
-      return newServices;
-    });
+        : [...prev, service]
+    );
   };
 
   const resetForm = () => {
@@ -353,9 +348,6 @@ export default function NetworkUnitsTab() {
 
   const onSubmit = (data: NetworkUnitFormData) => {
     const services = selectedServices;
-    console.log(`[SUBMIT DEBUG] Selected services:`, services);
-    console.log(`[SUBMIT DEBUG] Services count:`, services.length);
-    
     const unitData: InsertNetworkUnit = {
       ...data,
       rating: data.rating * 10, // Convert from display format (1-5) to stored format (10-50)
@@ -363,8 +355,6 @@ export default function NetworkUnitsTab() {
       isActive: true,
       imageUrl: uploadedImageUrl || data.imageUrl || "",
     };
-
-    console.log(`[SUBMIT DEBUG] Unit data:`, unitData);
 
     if (editingUnit) {
       updateUnitMutation.mutate({ id: editingUnit.id, data: unitData });
@@ -602,9 +592,7 @@ export default function NetworkUnitsTab() {
                     
                     <div className="max-h-64 overflow-y-auto border border-[#277677] rounded-md p-3 bg-[#195d5e]">
                       <div className="grid grid-cols-1 gap-2">
-                        {AVAILABLE_SERVICES.map((service, index) => {
-                          console.log(`[CHECKBOX RENDER] Service ${index}: ${service}`);
-                          return (
+                        {AVAILABLE_SERVICES.map((service, index) => (
                           <label
                             key={index}
                             className="flex items-center space-x-2 cursor-pointer hover:bg-[#2C8587] p-2 rounded"
@@ -617,8 +605,7 @@ export default function NetworkUnitsTab() {
                             />
                             <span className="text-[#FBF9F7] text-sm">{service}</span>
                           </label>
-                        );
-                        })}
+                        ))}
                       </div>
                     </div>
                     
