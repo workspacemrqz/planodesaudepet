@@ -452,21 +452,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve uploaded images
   app.get("/objects/uploads/:filename", async (req, res) => {
     try {
-      const filename = req.params.filename;
-      const filePath = path.join(uploadDir, filename);
+      const filename = req.params.filename; // may or may not include extension
+      let filePath = path.join(uploadDir, filename);
       
       console.log(`[IMAGE SERVING] Request for: ${filename}`);
       console.log(`[IMAGE SERVING] Looking at path: ${filePath}`);
       console.log(`[IMAGE SERVING] Upload dir: ${uploadDir}`);
-      console.log(`[IMAGE SERVING] File exists: ${fs.existsSync(filePath)}`);
-      
+
+      let ext = path.extname(filename).toLowerCase();
       if (!fs.existsSync(filePath)) {
-        console.log(`[IMAGE SERVING] File not found: ${filePath}`);
-        return res.status(404).json({ error: "File not found" });
+        // Try common extensions if none or wrong extension
+        const base = path.join(uploadDir, path.basename(filename, ext));
+        const candidates = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].map(e => base + e);
+        const existing = candidates.find(p => fs.existsSync(p));
+        console.log(`[IMAGE SERVING] File not found: ${filePath}. Candidates:`, candidates);
+        if (!existing) {
+          return res.status(404).json({ error: "File not found" });
+        }
+        filePath = existing;
+        ext = path.extname(existing).toLowerCase();
       }
       
       // Set proper content type
-      const ext = path.extname(filename).toLowerCase();
       let contentType = 'application/octet-stream';
       if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
       else if (ext === '.png') contentType = 'image/png';
@@ -476,7 +483,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Type', contentType);
       res.setHeader('Cache-Control', 'public, max-age=31536000');
       
-      console.log(`[IMAGE SERVING] Serving file: ${filename} as ${contentType}`);
+      console.log(`[IMAGE SERVING] Serving file: ${path.basename(filePath)} as ${contentType}`);
       res.sendFile(path.resolve(filePath));
     } catch (error) {
       console.error("Error serving file:", error);
