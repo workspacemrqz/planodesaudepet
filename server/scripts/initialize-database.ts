@@ -218,10 +218,66 @@ export async function initializeDatabase() {
       console.log('✅ Old schema cleanup completed!');
     }
     
-    // Plans table created - no automatic data insertion
-    console.log('✅ Plans table ready for manual configuration via admin panel');
+    // Check if plans exist and insert initial data if needed
+    const plansCount = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
+    const currentPlansCount = parseInt(plansCount[0]?.count || plansCount.rows?.[0]?.count || '0');
     
-    // No automatic data insertion - all data should be managed via admin panel
+    console.log(`Current plans count: ${currentPlansCount}`);
+    
+    if (currentPlansCount === 0) {
+      console.log('🌱 No plans found, inserting initial plans...');
+      
+      const initialPlans = [
+        {
+          name: 'BASIC',
+          price: 2000,
+          description: 'Plano essencial com carência e sem coparticipação',
+          features: ['Consulta Clínica Geral', 'Retorno Clínico', 'Vacina de Raiva', 'Vacinas V7 / V8 / V10 / V3 / V4'],
+          planType: 'with_waiting_period',
+          displayOrder: 1
+        },
+        {
+          name: 'INFINITY',
+          price: 20000,
+          description: 'Plano completo com carência e sem coparticipação',
+          features: ['Consulta Clínica Geral', 'Retorno Clínico', 'Atestado de Saúde', 'Consultas especializadas*'],
+          planType: 'with_waiting_period',
+          displayOrder: 2
+        },
+        {
+          name: 'COMFORT',
+          price: 5000,
+          description: 'Plano intermediário sem carência e com coparticipação',
+          features: ['Consulta Clínica Geral', 'Retorno Clínico', 'Vacina de Raiva', 'Ultrassonografia'],
+          planType: 'without_waiting_period',
+          displayOrder: 3
+        },
+        {
+          name: 'PLATINUM',
+          price: 10000,
+          description: 'Plano avançado sem carência e com coparticipação',
+          features: ['Consulta Clínica Geral', 'Retorno Clínico', 'Atestado de Saúde', 'Consultas especializadas*'],
+          planType: 'without_waiting_period',
+          displayOrder: 4
+        }
+      ];
+      
+      for (const plan of initialPlans) {
+        await db.execute(sql`
+          INSERT INTO plans (name, price, description, features, plan_type, display_order, is_active, button_text, redirect_url)
+          VALUES (${plan.name}, ${plan.price}, ${plan.description}, 
+                  ARRAY[${sql.join(plan.features.map(f => sql`${f}`), sql`, `)}], 
+                  ${plan.planType}::plan_type_enum, ${plan.displayOrder}, true, 'Contratar Plano', '/contact')
+          ON CONFLICT (name) DO NOTHING
+        `);
+      }
+      
+      console.log(`✅ Inserted ${initialPlans.length} initial plans`);
+    } else {
+      console.log('✅ Plans already exist, skipping initial data insertion');
+    }
+    
+    console.log('✅ Plans table ready and populated')
     
     // Check if site_settings table exists first
     const siteSettingsTableExists = await db.execute(sql`
@@ -262,10 +318,34 @@ export async function initializeDatabase() {
       console.log('✅ site_settings table created successfully!');
     }
     
-    // Site settings table created - no automatic data insertion
-    console.log('✅ Site settings table ready for manual configuration via admin panel');
+    // Check if site settings exist and insert initial data if needed
+    const settingsCount = await db.execute(sql`SELECT COUNT(*) as count FROM site_settings`);
+    const currentSettingsCount = parseInt(settingsCount[0]?.count || settingsCount.rows?.[0]?.count || '0');
     
-    console.log('✅ Database initialization completed - tables created, no automatic data insertion');
+    if (currentSettingsCount === 0) {
+      console.log('🌱 No site settings found, inserting initial settings...');
+      
+      await db.execute(sql`
+        INSERT INTO site_settings (
+          whatsapp, email, phone, cnpj, address, our_story
+        ) VALUES (
+          '5511999999999',
+          'contato@unipetplan.com.br',
+          '(11) 9999-9999',
+          '12.345.678/0001-90',
+          'São Paulo, SP',
+          'Somos especialistas em cuidados veterinários e oferecemos os melhores planos de saúde para pets.'
+        )
+      `);
+      
+      console.log('✅ Initial site settings inserted');
+    } else {
+      console.log('✅ Site settings already exist, skipping initial data insertion');
+    }
+    
+    console.log('✅ Site settings table ready and populated');
+    
+    console.log('✅ Database initialization completed - all tables created and populated with initial data');
     
   } catch (error) {
     console.error('❌ Error initializing database:', error);
