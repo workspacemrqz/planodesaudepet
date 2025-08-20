@@ -12,7 +12,6 @@
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --external:../vite.config.js --external:vite --external:nanoid --bundle --format=esm --outdir=dist",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "heroku-postbuild": "npm run build",
-    "postbuild": "npm run build",
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "migrate:uploads": "tsx server/scripts/migrate-existing-uploads.ts"
