@@ -384,15 +384,17 @@ div[class*="bg-[#195d5e]"] * {
     min-height: 100%;
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
+    background-color: #FBF9F7 !important; /* Force white/cream background */
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased text-foreground;
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    background-color: #FBF9F7 !important; /* Force white/cream background */
     /* Remover qualquer transição que possa causar flickering */
   }
 

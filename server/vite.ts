@@ -74,15 +74,69 @@ export function serveStatic(app: Express) {
   const distPath = path.resolve(import.meta.dirname, "..", "dist");
   const publicPath = path.resolve(import.meta.dirname, "..", "dist", "public");
 
+  console.log(`Attempting to serve static files from: ${publicPath}`);
+  
   if (!fs.existsSync(publicPath)) {
-    console.warn(`Build directory not found at ${publicPath}. Make sure to run 'npm run build' first.`);
+    console.error(`Build directory not found at ${publicPath}. Make sure to run 'npm run build' first.`);
     return;
   }
 
-  app.use(express.static(publicPath));
+  // List files in public directory for debugging
+  const files = fs.readdirSync(publicPath, { recursive: true });
+  console.log('Files in public directory:', files);
+  
+  // Add health check endpoint
+  app.get('/health', (req, res) => {
+    const indexPath = path.resolve(publicPath, 'index.html');
+    let indexContent = '';
+    try {
+      indexContent = fs.existsSync(indexPath) ? fs.readFileSync(indexPath, 'utf-8').substring(0, 500) : '';
+    } catch (e) {
+      indexContent = 'Error reading index.html';
+    }
+    
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      publicPath,
+      filesExist: fs.existsSync(publicPath),
+      indexExists: fs.existsSync(indexPath),
+      indexPreview: indexContent,
+      assetsPath: path.resolve(publicPath, 'assets'),
+      assetsExist: fs.existsSync(path.resolve(publicPath, 'assets')),
+      nodeEnv: process.env.NODE_ENV
+    });
+  });
 
-  // fall through to index.html if the file doesn't exist
+  // Debug middleware to log all requests
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
+
+  // Serve static assets with proper headers
+  app.use(express.static(publicPath, {
+    maxAge: '1y',
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+      console.log(`Serving static file: ${path}`);
+    }
+  }));
+
+  // Serve index.html for all routes (SPA fallback)
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(publicPath, "index.html"));
+    try {
+      const indexPath = path.resolve(publicPath, "index.html");
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        console.error(`Index file not found at ${indexPath}`);
+        res.status(404).send('Application not found');
+      }
+    } catch (error) {
+      console.error('Error serving index.html:', error);
+      res.status(500).send('Internal server error');
+    }
   });
 }
