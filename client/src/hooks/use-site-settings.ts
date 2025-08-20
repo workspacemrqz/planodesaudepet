@@ -2,6 +2,48 @@ import { useQuery } from "@tanstack/react-query";
 import { SiteSettings } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 
+// Função para formatar telefone brasileiro com formatação dinâmica para 8 ou 9 dígitos
+const formatBrazilianPhoneForDisplay = (value: string | null | undefined): string => {
+  if (!value) return '';
+  
+  // Remove todos os caracteres não numéricos
+  const numbers = value.replace(/\D/g, '');
+  
+  // Se não tem números, retorna vazio
+  if (!numbers) return '';
+  
+  // Garante que sempre comece com 55 (código do Brasil)
+  let cleanNumbers = numbers;
+  if (!cleanNumbers.startsWith('55')) {
+    cleanNumbers = '55' + cleanNumbers;
+  }
+  
+  // Aplica a formatação baseada no tamanho
+  if (cleanNumbers.length <= 2) {
+    return `+${cleanNumbers}`;
+  } else if (cleanNumbers.length <= 4) {
+    return `+${cleanNumbers.substring(0, 2)} (${cleanNumbers.substring(2)})`;
+  } else if (cleanNumbers.length <= 9) {
+    return `+${cleanNumbers.substring(0, 2)} (${cleanNumbers.substring(2, 4)}) ${cleanNumbers.substring(4)}`;
+  } else {
+    const areaCode = cleanNumbers.substring(2, 4);
+    const phoneDigits = cleanNumbers.substring(4);
+    
+    // Formatação dinâmica baseada na quantidade de dígitos após DDD
+    if (phoneDigits.length <= 8) {
+      // Formato para 8 dígitos: +55 (XX) XXXX-XXXX
+      const firstPart = phoneDigits.substring(0, 4);
+      const secondPart = phoneDigits.substring(4);
+      return `+55 (${areaCode}) ${firstPart}${secondPart ? '-' + secondPart : ''}`;
+    } else {
+      // Formato para 9 dígitos: +55 (XX) XXXXX-XXXX
+      const firstPart = phoneDigits.substring(0, 5);
+      const secondPart = phoneDigits.substring(5);
+      return `+55 (${areaCode}) ${firstPart}${secondPart ? '-' + secondPart : ''}`;
+    }
+  }
+};
+
 /**
  * Hook para buscar as configurações do site (versão pública)
  * Usado nos componentes do frontend para exibir informações de contato e conteúdo
@@ -62,6 +104,7 @@ export const defaultSettings: Partial<SiteSettings> = {
 /**
  * Hook que combina as configurações do site com valores padrão
  * Garante que sempre haverá valores disponíveis, mesmo durante o carregamento
+ * Aplica formatação automática aos números de telefone
  */
 export function useSiteSettingsWithDefaults() {
   const { data: settings, isLoading, error } = useSiteSettings();
@@ -72,6 +115,9 @@ export function useSiteSettingsWithDefaults() {
   const settingsWithDefaults = {
     ...defaultSettings,
     ...(typedSettings || {}),
+    // Aplicar formatação aos telefones se existirem
+    whatsapp: typedSettings?.whatsapp ? formatBrazilianPhoneForDisplay(typedSettings.whatsapp) : defaultSettings.whatsapp,
+    phone: typedSettings?.phone ? formatBrazilianPhoneForDisplay(typedSettings.phone) : defaultSettings.phone,
   };
   
   return {

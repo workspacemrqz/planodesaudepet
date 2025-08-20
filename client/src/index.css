@@ -50,27 +50,175 @@
 
 
 
-/* Remove all focus outlines and rings from admin forms */
-.admin-no-focus input:focus,
-.admin-no-focus textarea:focus,
-.admin-no-focus select:focus,
-.admin-no-focus input:focus-visible,
-.admin-no-focus textarea:focus-visible,
-.admin-no-focus select:focus-visible,
-.admin-no-focus [role="combobox"]:focus,
-.admin-no-focus [role="combobox"]:focus-visible {
+/* ADMIN CLEAN DESIGN - Remove ALL borders and outlines */
+
+/* Remove all borders from admin area components */
+.admin-no-focus input,
+.admin-no-focus textarea,
+.admin-no-focus select,
+.admin-no-focus button,
+.admin-no-focus [role="combobox"],
+.admin-dialog-content input,
+.admin-dialog-content textarea,
+.admin-dialog-content select,
+.admin-dialog-content button,
+.admin-dialog-content [role="combobox"],
+input[data-testid^="input-"],
+textarea[data-testid^="textarea-"],
+button[data-testid^="button-"],
+select[data-testid^="select-"] {
+  border: none !important;
   outline: none !important;
   ring: none !important;
   box-shadow: none !important;
-  border-color: #FBF9F7 !important;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-opacity: 0 !important;
+}
+
+/* Remove borders from all states (focus, hover, active) */
+.admin-no-focus input:focus,
+.admin-no-focus input:hover,
+.admin-no-focus input:active,
+.admin-no-focus textarea:focus,
+.admin-no-focus textarea:hover,
+.admin-no-focus textarea:active,
+.admin-no-focus select:focus,
+.admin-no-focus select:hover,
+.admin-no-focus select:active,
+.admin-no-focus button:focus,
+.admin-no-focus button:hover,
+.admin-no-focus button:active,
+.admin-no-focus input:focus-visible,
+.admin-no-focus textarea:focus-visible,
+.admin-no-focus select:focus-visible,
+.admin-no-focus button:focus-visible,
+.admin-no-focus [role="combobox"]:focus,
+.admin-no-focus [role="combobox"]:hover,
+.admin-no-focus [role="combobox"]:active,
+.admin-no-focus [role="combobox"]:focus-visible,
+.admin-dialog-content input:focus,
+.admin-dialog-content input:hover,
+.admin-dialog-content input:active,
+.admin-dialog-content textarea:focus,
+.admin-dialog-content textarea:hover,
+.admin-dialog-content textarea:active,
+.admin-dialog-content select:focus,
+.admin-dialog-content select:hover,
+.admin-dialog-content select:active,
+.admin-dialog-content button:focus,
+.admin-dialog-content button:hover,
+.admin-dialog-content button:active,
+.admin-dialog-content [role="combobox"]:focus,
+.admin-dialog-content [role="combobox"]:hover,
+.admin-dialog-content [role="combobox"]:active,
+input[data-testid^="input-"]:focus,
+input[data-testid^="input-"]:hover,
+input[data-testid^="input-"]:active,
+textarea[data-testid^="textarea-"]:focus,
+textarea[data-testid^="textarea-"]:hover,
+textarea[data-testid^="textarea-"]:active,
+button[data-testid^="button-"]:focus,
+button[data-testid^="button-"]:hover,
+button[data-testid^="button-"]:active,
+select[data-testid^="select-"]:focus,
+select[data-testid^="select-"]:hover,
+select[data-testid^="select-"]:active {
+  border: none !important;
+  outline: none !important;
+  ring: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-opacity: 0 !important;
+}
+
+/* Remove borders from admin containers, cards, and layout elements */
+.admin-no-focus .border,
+.admin-no-focus [class*="border"],
+.admin-dialog-content .border,
+.admin-dialog-content [class*="border"],
+.admin-no-focus .rounded-lg,
+.admin-no-focus .rounded-md,
+.admin-dialog-content .rounded-lg,
+.admin-dialog-content .rounded-md,
+div[class*="bg-[#145759]"],
+div[class*="bg-[#115051]"],
+.admin-no-focus div,
+.admin-dialog-content div {
+  border: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+}
+
+/* Remove borders from specific admin components */
+.admin-no-focus .grid,
+.admin-no-focus .flex,
+.admin-no-focus .space-y-4,
+.admin-no-focus .space-y-6,
+.admin-dialog-content .grid,
+.admin-dialog-content .flex,
+.admin-dialog-content .space-y-4,
+.admin-dialog-content .space-y-6 {
+  border: none !important;
+}
+
+/* Remove borders from Radix UI components in admin */
+.admin-no-focus [data-radix-select-trigger],
+.admin-no-focus [data-radix-select-content],
+.admin-no-focus [data-radix-dialog-content],
+.admin-no-focus [data-radix-accordion-content],
+.admin-dialog-content [data-radix-select-trigger],
+.admin-dialog-content [data-radix-select-content],
+.admin-dialog-content [data-radix-dialog-content],
+.admin-dialog-content [data-radix-accordion-content] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove borders from slider components */
+.admin-no-focus .relative,
+.admin-no-focus [role="slider"],
+.admin-dialog-content .relative,
+.admin-dialog-content [role="slider"] {
+  border: none !important;
+  outline: none !important;
 }
 
 .admin-no-focus input:hover,
 .admin-no-focus textarea:hover,
 .admin-no-focus select:hover {
-  border-color: #FBF9F7 !important;
+  border: none !important;
+}
+
+/* FINAL OVERRIDE - Remove ALL borders in admin context */
+.admin-no-focus *,
+.admin-dialog-content *,
+[data-testid^="input-"] *,
+[data-testid^="textarea-"] *,
+[data-testid^="button-"] *,
+[data-testid^="select-"] * {
+  border: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+}
+
+/* Specific admin page context - remove borders from everything in admin dashboard */
+div[class*="bg-[#145759]"] *,
+div[class*="bg-[#115051]"] *,
+div[class*="bg-[#195d5e]"] * {
+  border: none !important;
+  border-width: 0 !important;
+}
+
+/* Exception: Keep ring for popular plans indicator */
+.admin-no-focus .ring-2,
+.admin-dialog-content .ring-2 {
+  border: none !important;
 }
 
 /* Remove yellow outline from admin dropdown buttons */
@@ -453,7 +601,7 @@
     [data-testid="input-unit-google-maps"],
     [data-testid="textarea-unit-services"] {
       background-color: #195d5e !important;
-      color: white !important;
+      color: #FBF9F7 !important;
       border-color: #9ca3af !important;
     }
     
@@ -463,7 +611,7 @@
     [data-testid="input-unit-whatsapp"]::placeholder,
     [data-testid="input-unit-google-maps"]::placeholder,
     [data-testid="textarea-unit-services"]::placeholder {
-      color: #d1d5db !important;
+      color: #aaaaaa !important;
     }
     
     [data-testid="input-unit-name"]:focus,
@@ -489,7 +637,7 @@
     [data-testid="input-plan-price-copay"],
     [data-testid="textarea-plan-features"] {
       background-color: #195d5e !important;
-      color: white !important;
+      color: #FBF9F7 !important;
       border-color: #9ca3af !important;
     }
     
@@ -500,7 +648,7 @@
     [data-testid="input-plan-price-normal"]::placeholder,
     [data-testid="input-plan-price-copay"]::placeholder,
     [data-testid="textarea-plan-features"]::placeholder {
-      color: #d1d5db !important;
+      color: #aaaaaa !important;
     }
     
     [data-testid="input-plan-name"]:focus,
@@ -647,6 +795,118 @@
   .admin-dialog-content {
     border-radius: 1rem !important;
     overflow: hidden !important;
+  }
+
+  /* Slider rating styling for Editar/Nova Unidade popups - Multiple selectors for better coverage */
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb],
+  [data-testid="slider-unit-rating"] span[role="slider"],
+  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
+    box-shadow: 0 0 0 1px #E1AC33 !important;
+  }
+
+  /* Ensure consistent styling across all states */
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:hover,
+  [data-testid="slider-unit-rating"] span[role="slider"]:hover,
+  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:hover {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
+    box-shadow: 0 0 0 2px #E1AC33 !important;
+  }
+
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:focus,
+  [data-testid="slider-unit-rating"] span[role="slider"]:focus,
+  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:focus {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
+    box-shadow: 0 0 0 2px #E1AC33 !important;
+    outline: none !important;
+  }
+
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:active,
+  [data-testid="slider-unit-rating"] span[role="slider"]:active,
+  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:active {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
+    box-shadow: 0 0 0 2px #E1AC33 !important;
+  }
+
+  /* Disabled state styling */
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:disabled,
+  [data-testid="slider-unit-rating"] span[role="slider"]:disabled,
+  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:disabled {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
+    box-shadow: 0 0 0 1px #E1AC33 !important;
+    opacity: 0.6 !important;
+  }
+
+  /* Focus-visible state for better accessibility */
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:focus-visible,
+  [data-testid="slider-unit-rating"] span[role="slider"]:focus-visible,
+  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:focus-visible {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
+    box-shadow: 0 0 0 3px rgba(225, 172, 51, 0.3) !important;
+    outline: none !important;
+  }
+
+  /* Additional fallback selectors for slider thumb */
+  [data-testid="slider-unit-rating"] [data-radix-collection-item] {
+    background-color: #E1AC33 !important;
+    border-color: #E1AC33 !important;
+  }
+
+  /* Admin login input text color - Force color in ALL states */
+  [data-testid="input-username"],
+  [data-testid="input-password"] {
+    color: #302E2B !important;
+  }
+
+  /* Ensure consistent text color in all states */
+  [data-testid="input-username"]:focus,
+  [data-testid="input-password"]:focus,
+  [data-testid="input-username"]:active,
+  [data-testid="input-password"]:active,
+  [data-testid="input-username"]:hover,
+  [data-testid="input-password"]:hover,
+  [data-testid="input-username"]:focus-visible,
+  [data-testid="input-password"]:focus-visible,
+  [data-testid="input-username"]:focus-within,
+  [data-testid="input-password"]:focus-within,
+  [data-testid="input-username"]:not(:focus),
+  [data-testid="input-password"]:not(:focus),
+  [data-testid="input-username"]:blur,
+  [data-testid="input-password"]:blur {
+    color: #302E2B !important;
+  }
+
+  /* Additional fallback for input value text */
+  input[data-testid="input-username"],
+  input[data-testid="input-password"] {
+    color: #302E2B !important;
+    -webkit-text-fill-color: #302E2B !important;
+  }
+
+  /* Remove outline from admin network filter selects */
+  [data-testid="select-rating-filter"],
+  [data-testid="select-service-filter"] {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure no outline in all states */
+  [data-testid="select-rating-filter"]:focus,
+  [data-testid="select-service-filter"]:focus,
+  [data-testid="select-rating-filter"]:active,
+  [data-testid="select-service-filter"]:active,
+  [data-testid="select-rating-filter"]:hover,
+  [data-testid="select-service-filter"]:hover {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   /* Mobile admin optimizations */
@@ -981,16 +1241,43 @@
     --tw-ring-offset-shadow: none !important;
   }
 
-  /* Global placeholder styling - white color for all except contact form and login form */
-  input:not(.contact-form-field input):not([data-testid^="input-"])::placeholder,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"])::placeholder {
+  /* Admin panel input styling - applies to all admin fields */
+  .admin-no-focus input,
+  .admin-no-focus textarea,
+  .admin-dialog-content input,
+  .admin-dialog-content textarea,
+  input[data-testid^="input-"],
+  textarea[data-testid^="textarea-"],
+  input[data-testid="input-search-units"],
+  input[data-testid="input-faq-question"],
+  textarea[data-testid="textarea-faq-answer"] {
+    color: #FBF9F7 !important;
+  }
+
+  /* Admin panel placeholder styling - applies to all admin fields */
+  .admin-no-focus input::placeholder,
+  .admin-no-focus textarea::placeholder,
+  .admin-dialog-content input::placeholder,
+  .admin-dialog-content textarea::placeholder,
+  input[data-testid^="input-"]::placeholder,
+  textarea[data-testid^="textarea-"]::placeholder,
+  input[data-testid="input-search-units"]::placeholder,
+  input[data-testid="input-faq-question"]::placeholder,
+  textarea[data-testid="textarea-faq-answer"]::placeholder {
+    color: #aaaaaa !important;
+    opacity: 1 !important;
+  }
+
+  /* Global placeholder styling - white color for all except contact form and admin form */
+  input:not(.contact-form-field input):not([data-testid^="input-"]):not(.admin-no-focus input):not(.admin-dialog-content input)::placeholder,
+  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):not(.admin-no-focus textarea):not(.admin-dialog-content textarea)::placeholder {
     color: #FFFFFF !important;
     opacity: 1 !important;
   }
 
   /* Override existing global placeholder styling to be more specific */
-  input:not(.contact-form-field input):not([data-testid^="input-"])::placeholder,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"])::placeholder {
+  input:not(.contact-form-field input):not([data-testid^="input-"]):not(.admin-no-focus input):not(.admin-dialog-content input)::placeholder,
+  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):not(.admin-no-focus textarea):not(.admin-dialog-content textarea)::placeholder {
     color: #FFFFFF !important;
   }
 }

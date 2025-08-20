@@ -10,6 +10,7 @@ import PlansTab from "@/components/admin/plans-tab";
 import NetworkUnitsTab from "@/components/admin/network-units-tab";
 import FaqTab from "@/components/admin/faq-tab";
 import SettingsTab from "@/components/admin/settings-tab";
+import AdminCascadeMenu from "@/components/admin/admin-cascade-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function AdminDashboard() {
@@ -50,7 +51,7 @@ export default function AdminDashboard() {
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="bg-[#FBF9F7] border-[#FBF9F7] text-[#277677] hover:bg-[#FBF9F7] hover:text-[#277677] focus:bg-[#FBF9F7] focus:text-[#277677] active:bg-[#FBF9F7] active:text-[#277677]"
+                className="bg-[#145759] border-[#145759] text-[#FBF9F7] hover:bg-[#145759] hover:text-[#FBF9F7] focus:bg-[#145759] focus:text-[#FBF9F7] active:bg-[#145759] active:text-[#FBF9F7]"
                 disabled={logoutMutation.isPending}
                 data-testid="button-logout"
               >
@@ -75,48 +76,19 @@ export default function AdminDashboard() {
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <CardHeader className="pb-0 bg-gradient-to-r from-[#277677]/5 to-[#E1AC33]/5">
                 {isMobile ? (
-                  // Mobile Dropdown
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className="w-full justify-between bg-[#145759] text-[#FBF9F7] border-[#145759] hover:bg-[#145759] hover:text-[#FBF9F7] focus:bg-[#145759] focus:text-[#FBF9F7] active:bg-[#145759] active:text-[#FBF9F7] focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                      >
-                        <div className="flex items-center gap-2">
-                          {activeTabData && <activeTabData.icon className="h-4 w-4" />}
-                          {activeTabData?.label}
-                        </div>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-full bg-[#145759] border-[#145759]">
-                      {tabs.map((tab) => (
-                        <DropdownMenuItem
-                          key={tab.value}
-                          onClick={() => setActiveTab(tab.value)}
-                          className="flex items-center gap-2 text-[#FBF9F7] hover:bg-[#277677] focus:bg-[#277677] cursor-pointer"
-                        >
-                          <tab.icon className="h-4 w-4" />
-                          {tab.label}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  // Mobile Cascade Menu
+                  <AdminCascadeMenu 
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                  />
                 ) : (
-                  // Desktop Tabs
-                  <TabsList className="grid grid-cols-3 lg:grid-cols-5 gap-1 bg-transparent h-auto p-1">
-                    {tabs.map((tab) => (
-                      <TabsTrigger 
-                        key={tab.value}
-                        value={tab.value} 
-                        className="flex items-center gap-2 data-[state=active]:bg-[#145759] data-[state=active]:text-[#FBF9F7] py-3 px-4 rounded-lg font-medium"
-                        data-testid={`tab-${tab.value}`}
-                      >
-                        <tab.icon className="h-4 w-4" />
-                        <span className="hidden sm:inline">{tab.label}</span>
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
+                  // Desktop Cascade Menu
+                  <div className="max-w-md">
+                    <AdminCascadeMenu 
+                      activeTab={activeTab}
+                      onTabChange={setActiveTab}
+                    />
+                  </div>
                 )}
               </CardHeader>
 

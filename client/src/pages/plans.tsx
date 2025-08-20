@@ -11,6 +11,7 @@ import { useParallelData } from "@/hooks/use-parallel-data";
 import { PlansGridSkeleton } from "@/components/loading/plan-skeleton";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
+import { createRedirectHandler } from "@/lib/redirect-utils";
 
 const formatPrice = (priceInCents: number): string => {
   return (priceInCents / 100).toFixed(2).replace('.', ',');
@@ -145,25 +146,24 @@ export default function Plans() {
                   <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow text-left overflow-y-auto">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start space-x-3 text-left">
-                        <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
+                        <Check className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#277677]" />
                         <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed text-left">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   
                   <div className="mt-auto flex-shrink-0">
-                    <Link href={plan.redirectUrl || '/contact'}>
-                      <Button 
-                        className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
-                          plan.isPopular 
-                            ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
-                            : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
-                        }`}
-                        data-testid={`button-plan-${plan.name.toLowerCase()}`}
-                      >
-                        {plan.buttonText || `Contratar Plano ${plan.name}`}
-                      </Button>
-                    </Link>
+                    <Button 
+                      className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
+                        plan.isPopular 
+                          ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
+                          : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
+                      }`}
+                      data-testid={`button-plan-${plan.name.toLowerCase()}`}
+                      onClick={createRedirectHandler(plan.redirectUrl)}
+                    >
+                      {plan.buttonText || `Contratar Plano ${plan.name}`}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -172,69 +172,7 @@ export default function Plans() {
           </AnimatedList>
         </div>
       </section>
-      {/* Additional Information Section */}
-      <section className="py-20 bg-[#DED8CE]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pl-[20px] pr-[20px]">
-          <div className="text-center mb-16">
-            <AnimatedSection animation="slideUp" delay={600}>
-              <h2 className="font-bold mb-4 text-[#302e2b] text-[26px] md:text-[34px] whitespace-nowrap">
-                Informações <span className="text-[#277677]">importantes</span>
-              </h2>
-            </AnimatedSection>
-            <AnimatedSection animation="slideUp" delay={700}>
-              <p className="text-[18px] text-[#302e2b] max-w-2xl mx-auto font-normal">
-                Tudo que você precisa saber sobre nossos planos
-              </p>
-            </AnimatedSection>
-          </div>
 
-          <AnimatedList animation="slideUp" delay={800} staggerDelay={100}>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7] h-[480px] sm:h-[420px] flex flex-col">
-                <h3 className="text-[24px] font-bold text-[#302e2b] mb-6">Informações Gerais</h3>
-                <div className="space-y-6 flex-grow">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Carência</h4>
-                    <p className="text-[#302e2b] text-[16px]">Todos os planos têm início imediato, sem período de carência.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Limites de Uso</h4>
-                    <p className="text-[#302e2b] text-[16px]">Consulte os limites específicos de cada serviço no contrato do plano escolhido.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Coparticipação</h4>
-                    <p className="text-[#302e2b] text-[16px]">Nos planos com coparticipação, você paga uma taxa reduzida por alguns procedimentos.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-2xl p-8 shadow-xl bg-[#fbf9f7] h-[480px] sm:h-[420px] flex flex-col">
-                <h3 className="text-[24px] font-bold text-[#302e2b] mb-6">Planos Locais</h3>
-                <div className="space-y-6 mb-6 flex-grow">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Cobertura Regional</h4>
-                    <p className="text-[#302e2b] text-[16px]">Oferecemos também planos com processo simplificado e atendimento personalizado para nossa região de Teresina PI.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-[#302e2b] text-[18px]">Rede Credenciada Local</h4>
-                    <p className="text-[#302e2b] text-[16px]">Acesso facilitado a veterinários e clínicas parceiras próximas à sua localidade.</p>
-                  </div>
-                  
-                </div>
-                <div className="mt-auto">
-                  <Button 
-                    className="bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7] font-semibold px-8 py-3 text-[18px] rounded-lg h-12"
-                    data-testid="button-local-plans"
-                    onClick={() => redirectToWhatsApp('Olá! Gostaria de consultar os planos locais disponíveis na minha região.')}
-                  >
-                    Consultar Planos Locais
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </AnimatedList>
-        </div>
-      </section>
     </main>
   );
 }

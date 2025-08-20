@@ -34,6 +34,7 @@ export const plans = pgTable("plans", {
   redirectUrl: text("redirect_url").default("/contact").notNull(),
   isPopular: boolean("is_popular").default(false).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
+  displayOrder: integer("display_order").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

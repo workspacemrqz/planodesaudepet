@@ -1,0 +1,298 @@
+/* PrimeReact Admin Theme Customization */
+
+/* CascadeSelect Base Styles - BORDERLESS CLEAN DESIGN */
+.p-cascadeselect {
+  background: #145759 !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  color: #FBF9F7 !important;
+  min-width: 100% !important;
+  width: 100% !important;
+}
+
+.p-cascadeselect:not(.p-disabled):hover {
+  border: none !important;
+  background: #277677 !important;
+}
+
+.p-cascadeselect:not(.p-disabled).p-focus {
+  outline: 0 none !important;
+  outline-offset: 0 !important;
+  border: none !important;
+  background: #277677 !important;
+}
+
+.p-cascadeselect .p-cascadeselect-label {
+  color: #FBF9F7 !important;
+  padding: 0.75rem 1rem !important;
+  font-weight: 500 !important;
+}
+
+.p-cascadeselect .p-cascadeselect-trigger {
+  color: #FBF9F7 !important;
+  width: 2.5rem !important;
+}
+
+.p-cascadeselect .p-cascadeselect-trigger:hover {
+  color: #FBF9F7 !important;
+}
+
+/* Panel Styles - BORDERLESS */
+.p-cascadeselect-panel {
+  background: #145759 !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  z-index: 1000 !important;
+}
+
+.p-cascadeselect-items {
+  padding: 0.25rem !important;
+}
+
+.p-cascadeselect-item {
+  margin: 0 !important;
+  border-radius: 0.375rem !important;
+}
+
+.p-cascadeselect-item .p-cascadeselect-item-content {
+  color: #FBF9F7 !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.375rem !important;
+  font-weight: 500 !important;
+}
+
+.p-cascadeselect-item .p-cascadeselect-item-content:hover {
+  background: #277677 !important;
+  color: #FBF9F7 !important;
+}
+
+.p-cascadeselect-item.p-highlight .p-cascadeselect-item-content {
+  background: #277677 !important;
+  color: #FBF9F7 !important;
+  font-weight: 600 !important;
+}
+
+.p-cascadeselect-item .p-cascadeselect-group-icon {
+  color: #FBF9F7 !important;
+}
+
+.p-cascadeselect-item:hover .p-cascadeselect-group-icon {
+  color: #FBF9F7 !important;
+}
+
+/* VERTICAL LAYOUT - Force all sublists to appear below, not beside */
+.cascade-vertical-layout .p-cascadeselect-sublist,
+.p-cascadeselect-sublist {
+  background: #145759 !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  
+  /* CRITICAL: Force vertical positioning */
+  position: static !important;
+  left: 0 !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  
+  /* Layout adjustments */
+  margin-left: 0 !important;
+  margin-top: 0.5rem !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  
+  /* Disable any animations that might interfere */
+  transition: none !important;
+  animation: none !important;
+}
+
+/* COMPREHENSIVE VERTICAL LAYOUT OVERRIDE */
+/* Target all possible cascade sublist selectors */
+.cascade-vertical-layout .p-cascadeselect-panel .p-cascadeselect-sublist,
+.p-cascadeselect-panel .p-cascadeselect-sublist,
+.p-cascadeselect-panel .p-cascadeselect-item .p-cascadeselect-sublist,
+.p-cascadeselect-sublist .p-cascadeselect-sublist,
+.p-cascadeselect-panel .p-cascadeselect-sublist .p-cascadeselect-sublist,
+.p-cascadeselect-panel .p-cascadeselect-sublist .p-cascadeselect-sublist .p-cascadeselect-sublist {
+  /* ABSOLUTE POSITIONING OVERRIDE */
+  position: static !important;
+  left: 0 !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  
+  /* LAYOUT CONTROL */
+  margin-left: 1rem !important;
+  margin-top: 0.5rem !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  width: calc(100% - 1rem) !important;
+  max-width: calc(100% - 1rem) !important;
+  min-width: 200px !important;
+  
+  /* DISPLAY CONTROL */
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+  
+  /* DISABLE ANIMATIONS */
+  transition: none !important;
+  animation: none !important;
+}
+
+/* First level sublists - no indentation */
+.cascade-vertical-layout .p-cascadeselect-panel > .p-cascadeselect-items > .p-cascadeselect-item > .p-cascadeselect-sublist {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Disable ALL PrimeReact cascade animations and transitions */
+.cascade-vertical-layout .p-cascadeselect-sublist.p-cascadeselect-sublist-enter,
+.cascade-vertical-layout .p-cascadeselect-sublist.p-cascadeselect-sublist-enter-active,
+.cascade-vertical-layout .p-cascadeselect-sublist.p-cascadeselect-sublist-exit,
+.cascade-vertical-layout .p-cascadeselect-sublist.p-cascadeselect-sublist-exit-active,
+.p-cascadeselect-sublist.p-cascadeselect-sublist-enter,
+.p-cascadeselect-sublist.p-cascadeselect-sublist-enter-active,
+.p-cascadeselect-sublist.p-cascadeselect-sublist-exit,
+.p-cascadeselect-sublist.p-cascadeselect-sublist-exit-active {
+  position: static !important;
+  transform: none !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+}
+
+.p-cascadeselect-item-text {
+  color: inherit !important;
+}
+
+
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .p-cascadeselect {
+    font-size: 0.875rem !important;
+  }
+  
+  .p-cascadeselect .p-cascadeselect-label {
+    padding: 0.625rem 0.875rem !important;
+  }
+  
+  .p-cascadeselect-item .p-cascadeselect-item-content {
+    padding: 0.625rem 0.875rem !important;
+  }
+  
+  .p-cascadeselect-panel {
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .p-cascadeselect-sublist,
+  .cascade-vertical-layout .p-cascadeselect-sublist {
+    margin-left: 0 !important;
+    margin-top: 0.25rem !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    left: 0 !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    float: none !important;
+    clear: both !important;
+  }
+  
+  /* Mobile: Ensure ALL nested sublists are vertical */
+  .cascade-vertical-layout .p-cascadeselect-panel .p-cascadeselect-sublist,
+  .p-cascadeselect-panel .p-cascadeselect-item .p-cascadeselect-sublist,
+  .p-cascadeselect-sublist .p-cascadeselect-sublist {
+    margin-left: 1rem !important;
+    margin-top: 0.5rem !important;
+    width: calc(100% - 1rem) !important;
+    max-width: calc(100% - 1rem) !important;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+  }
+}
+
+/* Focus and accessibility improvements */
+.p-cascadeselect:focus-within {
+  border-color: #277677 !important;
+}
+
+.p-cascadeselect-item .p-cascadeselect-item-content:focus {
+  outline: 1px solid #277677 !important;
+  outline-offset: -1px !important;
+}
+
+/* Custom scrollbar for long lists */
+.p-cascadeselect-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.p-cascadeselect-items::-webkit-scrollbar-track {
+  background: #145759;
+}
+
+.p-cascadeselect-items::-webkit-scrollbar-thumb {
+  background: #277677;
+  border-radius: 3px;
+}
+
+.p-cascadeselect-items::-webkit-scrollbar-thumb:hover {
+  background: #277677;
+}
+
+/* ULTIMATE OVERRIDE: Force vertical behavior at DOM level */
+.cascade-vertical-layout .p-cascadeselect-sublist[style*="position"],
+.p-cascadeselect-sublist[style*="position"] {
+  position: static !important;
+}
+
+.cascade-vertical-layout .p-cascadeselect-sublist[style*="left"],
+.p-cascadeselect-sublist[style*="left"] {
+  left: 0 !important;
+}
+
+.cascade-vertical-layout .p-cascadeselect-sublist[style*="top"],
+.p-cascadeselect-sublist[style*="top"] {
+  top: auto !important;
+}
+
+.cascade-vertical-layout .p-cascadeselect-sublist[style*="transform"],
+.p-cascadeselect-sublist[style*="transform"] {
+  transform: none !important;
+}
+
+/* Extra enforcement for runtime style overrides */
+.cascade-vertical-layout .p-cascadeselect-sublist {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  margin-top: 0.5rem !important;
+  margin-left: 1rem !important;
+  width: calc(100% - 1rem) !important;
+  display: block !important;
+}
+
+/* First level exception */
+.cascade-vertical-layout .p-cascadeselect-panel > .p-cascadeselect-items > .p-cascadeselect-item > .p-cascadeselect-sublist {
+  margin-left: 0 !important;
+  width: 100% !important;
+}

@@ -78,7 +78,7 @@ export function ConfirmationModal({
       {/* Modal */}
       <div className="relative bg-[#FBF9F7] rounded-lg shadow-xl max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#277677]/10">
+        <div className="flex items-center justify-between p-6">
           <div className="flex items-center gap-3">
             {icon && (
               <div className="flex-shrink-0 text-[#277677]">
@@ -115,7 +115,7 @@ export function ConfirmationModal({
             onClick={handleCancel}
             disabled={isLoading}
             variant="outline"
-            className="flex-1 bg-[#E1AC33] text-[#FBF9F7] border-[#E1AC33] hover:bg-[#E1AC33] hover:text-[#FBF9F7] focus:bg-[#E1AC33] focus:text-[#FBF9F7] active:bg-[#E1AC33] active:text-[#FBF9F7]"
+            className="flex-1 bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] hover:text-[#FBF9F7] focus:bg-[#E1AC33] focus:text-[#FBF9F7] active:bg-[#E1AC33] active:text-[#FBF9F7]"
           >
             {cancelText}
           </Button>

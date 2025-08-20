@@ -120,15 +120,7 @@ export default function Footer() {
                   </div>
                 </div>
               )}
-              {shouldShow.businessHours && (
-                <div className="flex items-start gap-3">
-                  <Clock className="h-4 w-4 text-[#277677] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-[#302e2b] font-semibold text-sm sm:text-base">Horário</div>
-                    <div className="text-[#302e2b] text-sm sm:text-base leading-relaxed whitespace-pre-line">{settings.businessHours}</div>
-                  </div>
-                </div>
-              )}
+
             </div>
           </div>
         </div>

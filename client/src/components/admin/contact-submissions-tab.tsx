@@ -67,7 +67,7 @@ export default function ContactSubmissionsTab() {
   return (
     <div className="space-y-4">
       {submissions.map((submission) => (
-        <div key={submission.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+        <div key={submission.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
           <Collapsible>
             <CollapsibleTrigger 
               className="flex w-full items-center justify-between py-4 hover:bg-[#145759]/90 transition-colors"
@@ -118,7 +118,7 @@ export default function ContactSubmissionsTab() {
                     </div>
                     <div className="text-sm">
                       <span className="font-medium text-[#FBF9F7]">Idade:</span>
-                      <Badge variant="outline" className="ml-2 border-[#2C8587] text-[#FBF9F7]">
+                      <Badge variant="outline" className="ml-2 text-[#FBF9F7]">
                         {submission.petAge}
                       </Badge>
                     </div>
@@ -137,7 +137,7 @@ export default function ContactSubmissionsTab() {
 
                 {/* Message */}
                 {submission.message && (
-                  <div className="border-l-4 border-[#2C8587] pl-4">
+                  <div className="pl-4">
                     <p className="text-sm font-medium text-[#FBF9F7] mb-1">Mensagem:</p>
                     <p className="text-sm text-[#FBF9F7] leading-relaxed">
                       {submission.message}

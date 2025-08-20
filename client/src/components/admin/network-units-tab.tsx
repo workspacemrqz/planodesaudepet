@@ -335,7 +335,7 @@ export default function NetworkUnitsTab() {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl admin-dialog-content p-0">
             <div className="p-6">
               <DialogHeader className="pb-2">
-                <DialogTitle className="text-[#e5e7eb] mb-0">
+                <DialogTitle className="text-[#ffffff] mb-0">
                   {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
                 </DialogTitle>
               </DialogHeader>
@@ -359,12 +359,13 @@ export default function NetworkUnitsTab() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nome da Unidade</FormLabel>
+                          <FormLabel className="text-[#FBF9F7]">Nome da Unidade</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Hospital Veterinário São Paulo"
                               {...field}
                               data-testid="input-unit-name"
+                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                             />
                           </FormControl>
                           <FormMessage />
@@ -377,12 +378,13 @@ export default function NetworkUnitsTab() {
                       name="address"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Endereço</FormLabel>
+                          <FormLabel className="text-[#FBF9F7]">Endereço</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Rua das Flores, 123 - Centro"
                               {...field}
                               data-testid="input-unit-address"
+                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                             />
                           </FormControl>
                           <FormMessage />
@@ -395,12 +397,13 @@ export default function NetworkUnitsTab() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Telefone</FormLabel>
+                          <FormLabel className="text-[#FBF9F7]">Telefone</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="(11) 99999-9999"
                               {...field}
                               data-testid="input-unit-phone"
+                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                             />
                           </FormControl>
                           <FormMessage />
@@ -413,16 +416,16 @@ export default function NetworkUnitsTab() {
                       name="whatsapp"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>WhatsApp</FormLabel>
+                          <FormLabel className="text-[#FBF9F7]">WhatsApp</FormLabel>
                           <FormControl>
                             <div className="flex">
-                              <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                              <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md">
                                 https://wa.me/
                               </span>
                               <Input
                                 placeholder="11999999999"
                                 {...field}
-                                className="rounded-l-none"
+                                className="rounded-l-none bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                                 maxLength={11}
                                 onChange={(e) => {
                                   const value = e.target.value.replace(/\D/g, '');
@@ -442,12 +445,13 @@ export default function NetworkUnitsTab() {
                       name="googleMapsUrl"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Link do Google Maps</FormLabel>
+                          <FormLabel className="text-[#FBF9F7]">Link do Google Maps</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="https://maps.google.com/..."
                               {...field}
                               data-testid="input-unit-google-maps"
+                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                             />
                           </FormControl>
                           <FormMessage />
@@ -461,7 +465,7 @@ export default function NetworkUnitsTab() {
                       render={({ field }) => (
                         <FormItem className="space-y-3 mt-[40px] mb-[40px]">
                           <div className="flex items-center gap-2">
-                            <FormLabel>Avaliação</FormLabel>
+                            <FormLabel className="text-[#FBF9F7]">Avaliação</FormLabel>
                             <span className="font-medium text-[#e1ac33]">{field.value.toFixed(1)}</span>
                           </div>
                           <FormControl>
@@ -492,10 +496,10 @@ export default function NetworkUnitsTab() {
                       
                       {uploadedImageUrl && !isUploading && (
                         <div className="space-y-3">
-                          <div className="text-sm p-2 rounded border bg-[#277677] text-[#ffffff]">
+                          <div className="text-sm p-2 rounded bg-[#277677] text-[#ffffff]">
                             ✓ Imagem carregada com sucesso
                           </div>
-                          <div className="w-32 h-32 border-2 border-[#277677] rounded-lg square-image-container bg-gray-100">
+                          <div className="w-32 h-32 rounded-lg square-image-container bg-gray-100">
                             <img 
                               src={getImageUrlSync(uploadedImageUrl)} 
                               alt="Preview" 
@@ -519,13 +523,13 @@ export default function NetworkUnitsTab() {
                     <h4 className="font-medium text-[#FBF9F7]">Serviços Disponíveis</h4>
                     
                     <div>
-                      <FormLabel>Serviços (um por linha)</FormLabel>
+                      <FormLabel className="text-[#FBF9F7]">Serviços (um por linha)</FormLabel>
                       <Textarea
                         value={servicesInput}
                         onChange={(e) => setServicesInput(e.target.value)}
                         placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
                         rows={8}
-                        className="mt-2"
+                        className="mt-2 bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                         data-testid="textarea-unit-services"
                       />
                     </div>
@@ -542,7 +546,7 @@ export default function NetworkUnitsTab() {
                         variant="outline" 
                         onClick={() => setIsDialogOpen(false)}
                         data-testid="button-cancel-unit"
-                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] border-[#2C8587] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
+                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
                       >
                         Cancelar
                       </Button>
@@ -564,7 +568,7 @@ export default function NetworkUnitsTab() {
                         variant="outline"
                         onClick={prevStep}
                         data-testid="button-prev-step"
-                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] border-[#2C8587] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
+                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
                       >
                         <ChevronLeft className="h-4 w-4 mr-2" />
                         Anterior
@@ -619,7 +623,7 @@ export default function NetworkUnitsTab() {
                 placeholder="Digite o nome ou endereço..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="pl-10 text-[#FBF9F7] border-[#277677] bg-[#145759] placeholder:text-[#FBF9F7]/60"
+                className="pl-10 text-[#FBF9F7] bg-[#145759] placeholder:text-[#FBF9F7]/60"
                 data-testid="input-search-units"
               />
             </div>
@@ -631,7 +635,7 @@ export default function NetworkUnitsTab() {
               Filtrar por avaliação
             </label>
             <Select value={filterByRating} onValueChange={setFilterByRating}>
-              <SelectTrigger className="border-[#277677] bg-[#145759] text-[#fbf9f7]" data-testid="select-rating-filter">
+              <SelectTrigger className="bg-[#145759] text-[#fbf9f7]" data-testid="select-rating-filter">
                 <SelectValue placeholder="Todas as avaliações" />
               </SelectTrigger>
               <SelectContent>
@@ -649,7 +653,7 @@ export default function NetworkUnitsTab() {
               Filtrar por serviço
             </label>
             <Select value={filterByService} onValueChange={setFilterByService}>
-              <SelectTrigger className="border-[#277677] bg-[#145759] text-[#fbf9f7]" data-testid="select-service-filter">
+              <SelectTrigger className="bg-[#145759] text-[#fbf9f7]" data-testid="select-service-filter">
                 <SelectValue placeholder="Todos os serviços" />
               </SelectTrigger>
               <SelectContent>
@@ -674,7 +678,7 @@ export default function NetworkUnitsTab() {
                 setFilterByRating("all");
                 setFilterByService("all");
               }}
-              className="border-[#277677] hover:bg-[#277677] hover:text-[#fbf9f7] text-[#fbf9f7] bg-[#145759] flex items-center justify-center"
+              className="hover:bg-[#277677] hover:text-[#fbf9f7] text-[#fbf9f7] bg-[#145759] flex items-center justify-center"
               data-testid="button-clear-filters"
             >
               <X className="h-4 w-4 mr-1" />
@@ -693,7 +697,7 @@ export default function NetworkUnitsTab() {
       </div>
       <div className="space-y-4">
         {filteredUnits?.map((unit) => (
-          <div key={unit.id} className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+          <div key={unit.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
             <div className="flex items-center justify-between py-4">
               <div className="flex-1">
                 <h3 className="text-[#FBF9F7] font-medium">{unit.name}</h3>

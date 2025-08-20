@@ -10,6 +10,7 @@ import { useHomePageData } from "@/hooks/use-parallel-data";
 import { PlansGridSkeleton } from "@/components/loading/plan-skeleton";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
+import { createRedirectHandler } from "@/lib/redirect-utils";
 
 const formatPrice = (priceInCents: number): string => {
   return (priceInCents / 100).toFixed(2).replace('.', ',');
@@ -149,49 +150,30 @@ export default function PlansSection() {
                 <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 flex-grow text-left overflow-y-auto">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start space-x-3 text-left">
-                      <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${plan.name === 'Padrão' ? 'text-[#E1AC33]' : 'text-[#277677]'}`} />
+                      <Check className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#277677]" />
                       <span className="text-sm sm:text-base lg:text-[17px] font-normal text-[#302e2b] leading-relaxed text-left">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
                 <div className="mt-auto flex-shrink-0">
-                  <Link href={plan.redirectUrl || '/contact'}>
-                    <Button 
-                      className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
-                        plan.isPopular 
-                          ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
-                          : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
-                      }`}
-                    >
-                      {plan.buttonText || `Contratar Plano ${plan.name}`}
-                    </Button>
-                  </Link>
+                  <Button 
+                    className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
+                      plan.isPopular 
+                        ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
+                        : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
+                    }`}
+                    onClick={createRedirectHandler(plan.redirectUrl)}
+                  >
+                    {plan.buttonText || `Contratar Plano ${plan.name}`}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
         </AnimatedList>
 
-        {/* Local Plans CTA */}
-        <AnimatedSection animation="slideUp" delay={600}>
-          <div className="mt-16 text-center">
-            <Card className="bg-gradient-to-br from-primary/10 to-primary/20 max-w-4xl mx-auto shadow-xl border-primary/30 shadow-lg">
-              <CardContent className="pt-8">
-                <h3 className="font-bold mb-4 text-[#fbf9f7] text-[30px]">Plano Local com Menos Burocracia</h3>
-                <p className="mb-4 text-[#fbf9f7] text-[18px] font-normal">
-                  Oferecemos também planos com processo simplificado e atendimento personalizado para nossa região de Teresina PI.
-                </p>
-                <Button 
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33]/90 h-10 px-4 py-2 text-base mobile-touch-target"
-                  onClick={() => redirectToWhatsApp('Olá! Gostaria de consultar os planos locais disponíveis na minha região.')}
-                >
-                  Consultar Planos Locais
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </AnimatedSection>
+
       </div>
     </section>
   );

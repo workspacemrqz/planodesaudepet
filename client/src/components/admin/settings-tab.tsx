@@ -16,10 +16,67 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
 import { getImageUrlSync } from "@/lib/image-utils";
 
+// Função para formatar telefone brasileiro com formatação dinâmica para 8 ou 9 dígitos
+const formatBrazilianPhone = (value: string): string => {
+  // Remove todos os caracteres não numéricos
+  const numbers = value.replace(/\D/g, '');
+  
+  // Se não tem números, retorna vazio
+  if (!numbers) return '';
+  
+  // Garante que sempre comece com 55 (código do Brasil)
+  let cleanNumbers = numbers;
+  if (!cleanNumbers.startsWith('55')) {
+    cleanNumbers = '55' + cleanNumbers;
+  }
+  
+  // Limita a 13 dígitos (55 + 11 dígitos locais máximo)
+  cleanNumbers = cleanNumbers.substring(0, 13);
+  
+  // Aplica a formatação baseada no tamanho
+  if (cleanNumbers.length <= 2) {
+    return `+${cleanNumbers}`;
+  } else if (cleanNumbers.length <= 4) {
+    return `+${cleanNumbers.substring(0, 2)} (${cleanNumbers.substring(2)})`;
+  } else if (cleanNumbers.length <= 9) {
+    return `+${cleanNumbers.substring(0, 2)} (${cleanNumbers.substring(2, 4)}) ${cleanNumbers.substring(4)}`;
+  } else {
+    const areaCode = cleanNumbers.substring(2, 4);
+    const phoneDigits = cleanNumbers.substring(4);
+    
+    // Formatação dinâmica baseada na quantidade de dígitos após DDD
+    if (phoneDigits.length <= 8) {
+      // Formato para 8 dígitos: +55 (XX) XXXX-XXXX
+      const firstPart = phoneDigits.substring(0, 4);
+      const secondPart = phoneDigits.substring(4);
+      return `+55 (${areaCode}) ${firstPart}${secondPart ? '-' + secondPart : ''}`;
+    } else {
+      // Formato para 9 dígitos: +55 (XX) XXXXX-XXXX
+      const firstPart = phoneDigits.substring(0, 5);
+      const secondPart = phoneDigits.substring(5);
+      return `+55 (${areaCode}) ${firstPart}${secondPart ? '-' + secondPart : ''}`;
+    }
+  }
+};
+
+// Função para extrair apenas números de um telefone formatado
+const extractPhoneNumbers = (formattedPhone: string): string => {
+  return formattedPhone.replace(/\D/g, '');
+};
+
+// Validação para telefones brasileiros (8 ou 9 dígitos após DDD)
+const brazilianPhoneSchema = z.string()
+  .refine((value) => {
+    if (!value) return true; // Campo opcional
+    const numbers = extractPhoneNumbers(value);
+    // Aceita 55 + 2 dígitos (DDD) + 8 ou 9 dígitos = 12 ou 13 dígitos total
+    return (numbers.length === 12 || numbers.length === 13) && numbers.startsWith('55');
+  }, "Telefone deve ter o formato +55 (XX) XXXX-XXXX ou +55 (XX) XXXXX-XXXX");
+
 const settingsFormSchema = z.object({
-  whatsapp: z.string().optional(),
+  whatsapp: brazilianPhoneSchema.optional(),
   email: z.string().email("Email inválido").optional().or(z.literal("")),
-  phone: z.string().optional(),
+  phone: brazilianPhoneSchema.optional(),
   address: z.string().optional(),
   instagramUrl: z.string().url("URL inválida").optional().or(z.literal("")),
   facebookUrl: z.string().url("URL inválida").optional().or(z.literal("")),
@@ -156,9 +213,9 @@ export default function SettingsTab() {
   React.useEffect(() => {
     if (settings) {
       form.reset({
-        whatsapp: settings.whatsapp || "",
+        whatsapp: settings.whatsapp ? formatBrazilianPhone(settings.whatsapp) : "",
         email: settings.email || "",
-        phone: settings.phone || "",
+        phone: settings.phone ? formatBrazilianPhone(settings.phone) : "",
         address: settings.address || "",
         instagramUrl: settings.instagramUrl || "",
         facebookUrl: settings.facebookUrl || "",
@@ -199,14 +256,21 @@ export default function SettingsTab() {
   });
 
   const onSubmit = (data: SettingsFormData) => {
-    console.log('Form data being submitted:', data);
+    // Preparar dados para envio - salvar telefones apenas com números para compatibilidade
+    const dataToSubmit = {
+      ...data,
+      whatsapp: data.whatsapp ? extractPhoneNumbers(data.whatsapp) : '',
+      phone: data.phone ? extractPhoneNumbers(data.phone) : ''
+    };
+    
+    console.log('Form data being submitted:', dataToSubmit);
     console.log('Image URLs:', {
-      mainImage: data.mainImage,
-      networkImage: data.networkImage,
-      aboutImage: data.aboutImage
+      mainImage: dataToSubmit.mainImage,
+      networkImage: dataToSubmit.networkImage,
+      aboutImage: dataToSubmit.aboutImage
     });
     setIsSubmitting(true);
-    updateSettingsMutation.mutate(data);
+    updateSettingsMutation.mutate(dataToSubmit);
   };
 
   if (isLoading) {
@@ -250,12 +314,22 @@ export default function SettingsTab() {
                       <FormLabel className="text-[#FBF9F7]">WhatsApp</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="(11) 99999-9999"
-                          {...field}
+                          placeholder="+55 (11) 91234-5678 ou +55 (11) 1234-5678"
+                          value={field.value || ''}
+                          onChange={(e) => {
+                            const formatted = formatBrazilianPhone(e.target.value);
+                            field.onChange(formatted);
+                          }}
+                          onPaste={(e) => {
+                            e.preventDefault();
+                            const pastedText = e.clipboardData.getData('text');
+                            const formatted = formatBrazilianPhone(pastedText);
+                            field.onChange(formatted);
+                          }}
                         />
                       </FormControl>
                       <FormDescription className="text-[#9fb8b8]">
-                        Número do WhatsApp que aparecerá no rodapé e página de contato
+                        Número do WhatsApp
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -293,12 +367,22 @@ export default function SettingsTab() {
                       <FormLabel className="text-[#FBF9F7]">Telefone</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="0800 123 4567"
-                          {...field}
+                          placeholder="+55 (11) 91234-5678 ou +55 (11) 1234-5678"
+                          value={field.value || ''}
+                          onChange={(e) => {
+                            const formatted = formatBrazilianPhone(e.target.value);
+                            field.onChange(formatted);
+                          }}
+                          onPaste={(e) => {
+                            e.preventDefault();
+                            const pastedText = e.clipboardData.getData('text');
+                            const formatted = formatBrazilianPhone(pastedText);
+                            field.onChange(formatted);
+                          }}
                         />
                       </FormControl>
                       <FormDescription className="text-[#9fb8b8]">
-                        Telefone fixo que aparecerá no rodapé e página de contato
+                        Número do Telefone
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -476,7 +560,7 @@ export default function SettingsTab() {
                                type="button"
                                variant="outline"
                                size="sm"
-                               className="mt-1 text-white hover:text-white border-white hover:bg-white hover:text-red-600"
+                               className="mt-1 text-white hover:text-white hover:bg-white hover:text-red-600"
                                onClick={() => {
                                  setMainImageUrl(null);
                                  field.onChange("");
@@ -518,7 +602,7 @@ export default function SettingsTab() {
                                type="button"
                                variant="outline"
                                size="sm"
-                               className="mt-1 text-white hover:text-white border-white hover:bg-white hover:text-red-600"
+                               className="mt-1 text-white hover:text-white hover:bg-white hover:text-red-600"
                                onClick={() => {
                                  setNetworkImageUrl(null);
                                  field.onChange("");
@@ -560,7 +644,7 @@ export default function SettingsTab() {
                                type="button"
                                variant="outline"
                                size="sm"
-                               className="mt-1 text-white hover:text-white border-white hover:bg-white hover:text-red-600"
+                               className="mt-1 text-white hover:text-white hover:bg-white hover:text-red-600"
                                onClick={() => {
                                  setAboutImageUrl(null);
                                  field.onChange("");

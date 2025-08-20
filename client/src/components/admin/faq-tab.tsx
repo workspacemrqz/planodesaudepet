@@ -74,7 +74,7 @@ function SortableFaqItem({
       style={style}
       key={item.id} 
       value={item.id} 
-      className="border rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]"
+      className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]"
     >
       <div className="flex items-center justify-between pr-2">
         <div className="flex items-center gap-2 flex-1">
@@ -337,7 +337,7 @@ export default function FaqTab() {
                           placeholder="Digite a pergunta..." 
                           {...field}
                           data-testid="input-faq-question"
-                          className="bg-[#195d5e] text-white placeholder:text-gray-300 border-gray-300 focus:border-gray-300 focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -356,7 +356,7 @@ export default function FaqTab() {
                           rows={4}
                           {...field}
                           data-testid="textarea-faq-answer"
-                          className="bg-[#195d5e] text-white placeholder:text-gray-300 border-gray-300 focus:border-gray-300 focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -369,7 +369,7 @@ export default function FaqTab() {
                     variant="outline"
                     onClick={() => setIsDialogOpen(false)}
                     data-testid="button-cancel-faq"
-                    className="bg-[#2C8587] text-[#F7F5F3] border-[#2C8587] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
+                    className="bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
                   >
                     Cancelar
                   </Button>

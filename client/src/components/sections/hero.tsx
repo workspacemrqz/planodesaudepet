@@ -77,7 +77,7 @@ export default function Hero() {
               </Button>
               <Button 
                 className="text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 bg-[#277677]/20 backdrop-blur-sm hover:bg-[#277677]/30 rounded-lg h-12 sm:h-14 min-w-0 sm:min-w-[180px] border border-[#277677]/30 text-[#277677] mobile-touch-target"
-                onClick={() => redirectToWhatsApp('Olá! Gostaria de solicitar uma cotação para o plano de saúde pet.')}
+                onClick={() => window.open('https://wa.me/558632327374', '_blank')}
               >
                 Solicitar Cotação
               </Button>
