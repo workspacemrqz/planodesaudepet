@@ -237,7 +237,8 @@ export async function initializeDatabase() {
     
     // Check if we have any plans data
     const plansCount = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
-    const currentCount = parseInt(plansCount[0]?.count || '0');
+    const countResult = plansCount[0]?.count || plansCount.rows?.[0]?.count || '0';
+    const currentCount = parseInt(countResult.toString());
     
     console.log(`Current plans count: ${currentCount}`);
     
@@ -245,6 +246,7 @@ export async function initializeDatabase() {
     if (currentCount === 0) {
       console.log('No plans found. Inserting default plans...');
       
+      // Use UPSERT to prevent duplicates in case of concurrent executions
       const planData = [
         {
           name: 'BASIC',
@@ -332,6 +334,9 @@ export async function initializeDatabase() {
         }
       ];
       
+      // Clear any existing plans first to prevent duplicates
+      await db.execute(sql`DELETE FROM plans`);
+      
       for (const plan of planData) {
         await db.execute(sql`
           INSERT INTO plans (name, price, description, features, plan_type, display_order, is_active, button_text, redirect_url)
@@ -410,9 +415,13 @@ export async function initializeDatabase() {
     // Verify the final result
     const finalPlans = await db.execute(sql`SELECT name, price, plan_type FROM plans WHERE is_active = true ORDER BY display_order`);
     console.log('Active plans in database:');
-    finalPlans.forEach((plan: any) => {
-      console.log(`- ${plan.name}: R$ ${(plan.price / 100).toFixed(2)} (${plan.plan_type})`);
-    });
+    if (Array.isArray(finalPlans) && finalPlans.length > 0) {
+      finalPlans.forEach((plan: any) => {
+        console.log(`- ${plan.name}: R$ ${(plan.price / 100).toFixed(2)} (${plan.plan_type})`);
+      });
+    } else {
+      console.log('No active plans found in database');
+    }
     
   } catch (error) {
     console.error('❌ Error initializing database:', error);

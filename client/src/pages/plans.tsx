@@ -175,6 +175,1492 @@ export default function Plans() {
         </div>
       </section>
 
+      {/* Detailed Plan Sections */}
+      {/* PLANO BASIC */}
+      <section className="py-16 bg-[#FBF9F7]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#277677] mb-4">
+                Plano <span className="text-[#E1AC33]">BASIC</span>
+              </h2>
+              <p className="text-lg text-[#302e2b] max-w-2xl mx-auto">
+                O plano essencial para cuidar da saúde do seu pet com qualidade e economia
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Serviços Inclusos */}
+              <div className="space-y-6">
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Consultas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Clínica Geral</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Retorno Clínico</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Exames Laboratoriais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Alanina Aminotransferase (TGP/ALT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Albumina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Aspartato Aminotransferase (TGO/AST)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Bilirrubinas - totais e frações</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Creatinina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fosfatase Alcalina (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fósforo UV (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Gama Glutamil Transferase (GGT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Hemograma (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Parasitológico de Fezes (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Proteínas Totais</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Relação Proteína / Creatinina Urinária (UPC) (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Sumário de Urina (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia (Aparelho)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Uréia</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Procedimentos e Benefícios */}
+              <div className="space-y-6">
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Procedimentos e Anestesia
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-[#277677] mb-2">Procedimento Ambulatorial</h4>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Coleta de Exames de Sangue</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-[#277677] mb-2">Anestesia</h4>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Anestesia local / Tranquilização</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Vacinas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina de Raiva</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Polivalente (V7, V8, V10)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Quádrupla V4</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Tríplice (V3)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#277677] text-white shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Benefícios Especiais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Desconto de 10% nos serviços, medicamentos e materiais oferecidos pelo parceiro e não cobertos pelo plano</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta em horário normal (segunda a sábado de 08 às 20h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Vacinas (consultar cobertura)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Exames de sangue simples (consultar cobertura)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PLANO COMFORT */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#277677] mb-4">
+                Plano <span className="text-[#E1AC33]">COMFORT</span>
+              </h2>
+              <p className="text-lg text-[#302e2b] max-w-2xl mx-auto">
+                Mais conforto e praticidade para o cuidado completo do seu pet
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Consultas e Exames */}
+              <div className="space-y-6">
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Consultas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Clínica Geral</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Retorno Clínico</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Exames Laboratoriais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Alanina Aminotransferase (TGP/ALT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Albumina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Aspartato Aminotransferase (TGO/AST)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Bilirrubinas - totais e frações</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Creatinina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fosfatase Alcalina (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fósforo UV (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Gama Glutamil Transferase (GGT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Hemograma (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Parasitológico de Fezes (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Proteínas Totais</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Relação Proteína / Creatinina Urinária (UPC) (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Sumário de Urina (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia (Aparelho)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Uréia</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Exames de Imagem e Demais Serviços */}
+              <div className="space-y-6">
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Exames de Imagem
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassonografia (prazo 02 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassonografia Guiada</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cistocentese guiada para coleta de urina</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-xl font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Procedimentos e Vacinas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-[#277677] mb-2">Procedimento Ambulatorial</h4>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Coleta de Exames de sangue</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-[#277677] mb-2">Anestesias</h4>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Anestesia local / Tranquilização</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-[#277677] mb-2">Vacinas</h4>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Vacina de Raiva</span>
+                          </li>
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Vacina Polivalente (V7, V8, V10)</span>
+                          </li>
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Vacina Quádrupla V4</span>
+                          </li>
+                          <li className="flex items-start">
+                            <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                            <span className="text-[#302e2b]">Vacina Tríplice (V3)</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#277677] text-white shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Benefícios Especiais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Desconto de 10% nos serviços, medicamentos e materiais oferecidos pelo parceiro e não cobertos pelo plano</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta em horário normal (segunda a sábado de 08 às 20h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Vacinas (consultar cobertura)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Exames de sangue e imagem (consultar cobertura)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PLANO PLATINUM */}
+      <section className="py-16 bg-[#FBF9F7]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#277677] mb-4">
+                Plano <span className="text-[#E1AC33]">PLATINUM</span>
+              </h2>
+              <p className="text-lg text-[#302e2b] max-w-2xl mx-auto">
+                Cuidado premium com consultas especializadas e cirurgias eletivas incluídas
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Consultas */}
+              <div className="space-y-6">
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Consultas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Clínica Geral</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Retorno Clínico</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Especialistas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Atestado de Saúde</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Cardiologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Dentista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Dermatologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Oncologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Ortopedista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Plantão</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Cirurgia Eletiva
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Drenagem de Abscesso/Hematoma</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Drenagem de Otohematoma Unilateral</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Orquiectomia (até 15kg)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Orquiectomia (gato)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Orquiectomia/Ablação (acima de 15kg)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">OSH / Ovariohisterectomia (acima de 15kg)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">OSH / Ovariohisterectomia (gata)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">OSH / Ovariohisterectomia (coelhos e similares)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">OSH / Ovariohisterectomia (até 15kg)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Exames */}
+              <div className="space-y-6">
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Exames Laboratoriais Simples
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 max-h-64 overflow-y-auto">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Alanina Aminotransferase (TGP/ALT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Albumina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Aspartato Aminotransferase (TGO/AST)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Bilirrubinas – totais e frações</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Creatinina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fosfatase Alcalina (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fósforo UV (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Gama Glutamil Transferase (GGT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Hemograma (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Parasitológico de Fezes (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Proteínas Totais</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Relação Proteína/Creatinina Urinária (UPC) (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Sumário de Urina (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia (Aparelho)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Uréia</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Exames Laboratoriais Complexos
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 max-h-64 overflow-y-auto">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cálcio sérico ou urinário</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cálculo Renal – Análise físico-química</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Citologia do Ouvido (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Citologia Vaginal (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Colesterol Total</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Curva Glicêmica</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Dosagem de Cálcio Iônico (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fibrinogênio (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Função Hepática (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Função Renal (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Hemograma c/ Reticulócitos (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Lipidograma (Colesterol + HDL + LDL + Triglicerídeos) (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Microscopia para Sarna (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Pesquisa de Hemoparasitas (prazo 12h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Pesquisa de Microfilárias</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Tricograma</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Triglicerídeos</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Vacinas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina de Raiva</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Polivalente (V7, V8, V10)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Quádrupla (V4)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Tríplice (V3)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina de Gripe</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Exames de Imagem e Procedimentos */}
+              <div className="space-y-6">
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Exames de Imagem
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 max-h-80 overflow-y-auto">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassonografia (prazo 02 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassonografia Guiada</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">ECG Canino/Felino (prazo 2 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudos Radiológicos de Coluna (Caudal, Cervical, Cervicotorácica, Lombossacral, Toracolombar)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo de Pelve</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo Radiológico de Traqueia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo do Pescoço</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudos de Membros Pélvicos e Torácicos (diversos segmentos)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo Radiográfico de Abdômen</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo Radiográfico de Crânio</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo Radiográfico de Tórax</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo Radiológico de Esôfago</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassom Guiada p/ CAAF</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassonografia Controle (prazo 2 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Ultrassonografia Ocular</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-2 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Estudo Radiográfico de Animal Silvestre</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-lg font-bold text-[#277677] flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Procedimentos e Anestesia
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <h5 className="font-semibold text-[#277677] mb-1">Procedimento Ambulatorial 1</h5>
+                        <ul className="space-y-1 text-xs">
+                          <li>• Coleta de Exames de Sangue</li>
+                          <li>• Aplicação IM, SC, IV (sem material)</li>
+                          <li>• Aplicação IM, SC, IV (sem material/domicílio)</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-[#277677] mb-1">Procedimento Ambulatorial 2</h5>
+                        <ul className="space-y-1 text-xs">
+                          <li>• Aferição de Pressão Arterial</li>
+                          <li>• Avaliação para Cirurgia</li>
+                          <li>• Avaliação p/ Internação</li>
+                          <li>• Limpeza de Pós-Operatório</li>
+                          <li>• Nebulização</li>
+                          <li>• Oxigenioterapia</li>
+                          <li>• Teste de Fluoresceína</li>
+                          <li>• Teste de Shirmer</li>
+                          <li>• Tratamento Miíase (remoção grande)</li>
+                          <li>• Tratamento Miíase (remoção pequena)</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-[#277677] mb-1">Anestesia</h5>
+                        <ul className="space-y-1 text-xs">
+                          <li>• Anestesia Local / Tranquilização</li>
+                          <li>• Adicional Hora Cirúrgica</li>
+                          <li>• Anestesia Epidural</li>
+                          <li>• Anestesia Geral Endovenosa</li>
+                          <li>• Anestesia Inalatória (até 5kg)</li>
+                          <li>• Anestesia Inalatória (5 a 15kg)</li>
+                          <li>• Anestesia Inalatória (acima de 15kg)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#277677] text-white shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-bold flex items-center">
+                      <Check className="h-5 w-5 mr-2 text-[#E1AC33]" />
+                      Benefícios Especiais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Desconto de 20% em serviços, medicamentos e materiais não cobertos pelo plano</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta em horário normal: segunda a sábado, 08h–20h</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta em horário de plantão: segunda a sábado, 20h–08h + domingos e feriados</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consultas com especialistas: verificar especialidades disponíveis</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mt-0.5 mr-2 text-[#E1AC33] flex-shrink-0" />
+                        <span>Vacinas, exames de sangue, exames de imagem e cirurgias eletivas: consultar cobertura</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PLANO INFINIT */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#277677] mb-4">
+                Plano <span className="text-[#E1AC33]">INFINITY</span>
+              </h2>
+              <p className="text-lg text-[#302e2b] max-w-2xl mx-auto">
+                Cobertura completa e ilimitada para o cuidado total do seu pet
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Consultas e Especialistas */}
+              <div className="space-y-4">
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Consultas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Clínica Geral</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Retorno Clínico</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Especialistas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Atestado de Saúde</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Cardiologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Dentista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Dermatologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Oncologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Ortopedista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Plantão</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Nefrologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Consulta Neurologista</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Taxa de Retorno</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Vacinas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina de Raiva</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Polivalente (V7, V8, V10)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Quádrupla v4</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Tríplice (V3)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina de Gripe</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Giardia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Vacina Quíntupla (V5, v3 ou v4+felv)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Exames Laboratoriais */}
+              <div className="space-y-4">
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Exames Laboratoriais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3 max-h-96 overflow-y-auto">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Alanina Aminotransferase (TGP/ALT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Albumina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Aspartato Aminotransferase (TGO/AST)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Bilirrubinas - totais e frações</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Creatinina</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fosfatase Alcalina (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Fósforo UV (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Gama Glutamil Transferase (GGT)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Hemograma (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Parasitológico de Fezes (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Proteínas Totais</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Relação Proteína / Creatinina Urinária (UPC) (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Sumário de Urina (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de Glicemia (Aparelho)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Uréia</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cálcio sérico ou urinário</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cálculo renal Análise físico química</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Citologia do Ouvido (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Citologia Vaginal (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Colesterol total</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Curva Glicêmica</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Dosagem de Cálcio Iônico (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">FIBRINOGÊNIO (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Função hepática (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Função renal (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Hemograma com contagem de reticulócitos (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Lipidograma (Colesterol + HDL + LDL + Triglicerídeos) (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Microscopia para Sarna (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Pesquisa de hemoparasitas (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Pesquisa de Microfilárias</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Tricograma</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Triglicerídeos</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Exames Complexos */}
+              <div className="space-y-4">
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Exames Laboratoriais Complexos
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3 max-h-96 overflow-y-auto">
+                    <ul className="space-y-1 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Análise de Líquido Cavitário (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Análise de líquor (LCR) (prazo para laudo 24 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Biópsia / histopatológico (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Biópsia de pele (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Citologia / CAAF - nódulo superficial (prazo para laudo 7 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">CITOLOGIA DE LAVADO BRONCOALVEOLAR</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Citologia de pele (Fungo e Bactéria) (prazo para laudo 07 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Compatibilidade sanguínea (doador adicional) (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cortisol Pós Supressão Dexametasona (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Cortisol Pré e Pós Dexametasona (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">ELISA (LEISHMANIOSE CANINA) LEISH IDEXX (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Lactato (prazo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Mielograma (prazo para laudo 10 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Necropsia (05 até 15kg) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Necropsia (acima de 15kg) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Necropsia (até 05kg) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Necropsia Estética (05kg até 15kg) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Necropsia Estética (acima de 15kg) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Necropsia Estética (até 05kg) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">NT PROBNP CANINO (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">PERFIL HEMOGASOMETRIA/ELETRÓLITOS</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Pesquisa/parasitológico para Leishmania (pele, medula e linfonodo) (prazo para laudo 15 dias úteis)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">SOROLOGIA PARA CORONA VIROSE</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste de compatibilidade sanguínea (prazo para laudo 12 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">TESTE FELV</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">TESTE FIV FELV PRODVET/BIOCLIN (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">TESTE RÁPIDO CINOMOSE E PARVOVIROSE ACCUVET (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste rápido de cinomose/antígeno (ALERE) (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste Rápido de Erliquiose (Immunocombo IGG) (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste Rápido de Erliquiose SNAP 4DX (IDEXX) (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste Rápido de Fiv/Felv (IDEXX)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">TESTE RÁPIDO LEISHMANIOSE AC ACCUVET (prazo 01 dia útil)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste rápido para cinomose e parvovirose (IGM) (prazo 06 horas)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">Teste Rápido Parvo/Corona (ALERE)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#277677] flex-shrink-0" />
+                        <span className="text-[#302e2b]">TESTE RÁPIDO TOXOPLASMOSE IGG/IGM ACCUVET (prazo 12 horas)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Exames de Imagem, Cirurgias e Benefícios */}
+              <div className="space-y-4">
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Exames de Imagem
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3 max-h-64 overflow-y-auto">
+                    <ul className="space-y-1 text-xs">
+                      <li>• Ultrassonografia (prazo 02 dias úteis)</li>
+                      <li>• ECG (Eletrocardiograma) canino / felino</li>
+                      <li>• Estudos Radiológicos de Coluna (Caudal, Cervical, Cervicotorácica, Lombossacral, Toracolombar)</li>
+                      <li>• Estudo de Pelve</li>
+                      <li>• Estudo Radiológico de Traqueia</li>
+                      <li>• Estudo do Pescoço</li>
+                      <li>• Estudos de Membros Pélvicos</li>
+                      <li>• Estudos de Membros Torácicos</li>
+                      <li>• Estudo Radiográfico de Abdômen</li>
+                      <li>• Estudo Radiográfico de Crânio</li>
+                      <li>• Estudo Radiográfico de Tórax</li>
+                      <li>• Ultrassom Guiada para CAAF</li>
+                      <li>• Ultrassonografia Controle</li>
+                      <li>• Ultrassonografia Ocular</li>
+                      <li>• BRONCOSCOPIA E LAVADO BRONQUEOALVEOLAR</li>
+                      <li>• COLONOSCOPIA DIAGNÓSTICA</li>
+                      <li>• ECO (Ecocardiograma)</li>
+                      <li>• ELETROQUIMIOTERAPIA</li>
+                      <li>• Eletroretinograma</li>
+                      <li>• Tomografia Computadorizada</li>
+                      <li>• Mielografia Contrastada</li>
+                      <li>• E muitos outros exames especializados</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Cirurgias
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <div className="space-y-2 text-xs">
+                      <div>
+                        <h5 className="font-semibold text-[#277677] mb-1">Cirurgias Simples</h5>
+                        <p className="text-[#302e2b]">Inclui procedimentos como ablação, amputação, cateterismo, correção de hérnias, exodontia, sutura de pele e muito mais.</p>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-[#277677] mb-1">Cirurgias Eletivas</h5>
+                        <p className="text-[#302e2b]">Drenagem de abscesso, orquiectomia, ovariohisterectomia e outras cirurgias programadas.</p>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-[#277677] mb-1">Cirurgias Complexas</h5>
+                        <p className="text-[#302e2b]">Procedimentos avançados como alongamento de calcâneo, artrodese, cesariana, cistotomia, correção de fraturas complexas e muito mais.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#FBF9F7] border-[#277677]/20 shadow-lg">
+                  <CardHeader className="bg-[#277677]/5 border-b border-[#277677]/10">
+                    <CardTitle className="text-base font-bold text-[#277677] flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Procedimentos Ambulatoriais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <div className="space-y-2 text-xs">
+                      <p className="text-[#302e2b]">• Coleta de Exames de Sangue</p>
+                      <p className="text-[#302e2b]">• Aplicações IM, SC, IV</p>
+                      <p className="text-[#302e2b]">• Aferição da Pressão arterial</p>
+                      <p className="text-[#302e2b]">• Nebulização</p>
+                      <p className="text-[#302e2b]">• Oxigenioterapia</p>
+                      <p className="text-[#302e2b]">• Acupuntura</p>
+                      <p className="text-[#302e2b]">• Bomba de infusão</p>
+                      <p className="text-[#302e2b]">• Fluidoterapia</p>
+                      <p className="text-[#302e2b]">• Transfusão de sangue</p>
+                      <p className="text-[#302e2b]">• E muitos outros procedimentos</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-[#277677] text-white shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-base font-bold flex items-center">
+                      <Check className="h-4 w-4 mr-2 text-[#E1AC33]" />
+                      Benefícios Especiais
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <ul className="space-y-2 text-xs">
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#E1AC33] flex-shrink-0" />
+                        <span>Desconto de 30% em medicamentos e materiais oferecidos pelo parceiro e não cobertos pelo plano</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta em horário normal (segunda a sábado de 08 às 20h)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta em horário plantão (segunda a sábado de 20 às 08h, domingos e feriados)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#E1AC33] flex-shrink-0" />
+                        <span>Consulta especialista (consultar especialidades)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-3 w-3 mt-0.5 mr-1 text-[#E1AC33] flex-shrink-0" />
+                        <span>Vacinas, exames de sangue, exames de imagem, cirurgias eletivas e complexas (consultar cobertura)</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }

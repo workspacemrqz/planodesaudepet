@@ -21,9 +21,10 @@ async function testPlansAPI() {
         AND table_name = 'plans'
       ) as exists
     `);
-    console.log('✅ Plans table exists:', tableExists[0]?.exists);
+    const exists = tableExists[0]?.exists || tableExists.rows?.[0]?.exists;
+    console.log('✅ Plans table exists:', exists);
     
-    if (!tableExists[0]?.exists) {
+    if (!exists) {
       console.log('❌ Plans table does not exist! Run database initialization first.');
       return;
     }
@@ -38,19 +39,26 @@ async function testPlansAPI() {
     `);
     
     console.log('Table columns:');
-    columns.forEach((col: any) => {
-      console.log(`  - ${col.column_name}: ${col.data_type} (nullable: ${col.is_nullable})`);
-    });
+    const columnRows = columns.rows || columns;
+    if (Array.isArray(columnRows)) {
+      columnRows.forEach((col: any) => {
+        console.log(`  - ${col.column_name}: ${col.data_type} (nullable: ${col.is_nullable})`);
+      });
+    } else {
+      console.log('Could not parse columns result');
+    }
     
     // Count all plans
     console.log('4. Counting all plans...');
     const totalPlans = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
-    console.log('✅ Total plans in database:', totalPlans[0]?.count);
+    const totalCount = totalPlans[0]?.count || totalPlans.rows?.[0]?.count;
+    console.log('✅ Total plans in database:', totalCount);
     
     // Count active plans
     console.log('5. Counting active plans...');
     const activePlans = await db.execute(sql`SELECT COUNT(*) as count FROM plans WHERE is_active = true`);
-    console.log('✅ Active plans in database:', activePlans[0]?.count);
+    const activeCount = activePlans[0]?.count || activePlans.rows?.[0]?.count;
+    console.log('✅ Active plans in database:', activeCount);
     
     // List all plans
     console.log('6. Listing all plans...');
@@ -61,11 +69,16 @@ async function testPlansAPI() {
     `);
     
     console.log('All plans:');
-    allPlans.forEach((plan: any, index: number) => {
-      const status = plan.is_active ? '✅ Active' : '❌ Inactive';
-      const price = `R$ ${(plan.price / 100).toFixed(2)}`;
-      console.log(`  ${index + 1}. ${plan.name} - ${price} - ${plan.plan_type} - ${status}`);
-    });
+    const planRows = allPlans.rows || allPlans;
+    if (Array.isArray(planRows)) {
+      planRows.forEach((plan: any, index: number) => {
+        const status = plan.is_active ? '✅ Active' : '❌ Inactive';
+        const price = `R$ ${(plan.price / 100).toFixed(2)}`;
+        console.log(`  ${index + 1}. ${plan.name} - ${price} - ${plan.plan_type} - ${status}`);
+      });
+    } else {
+      console.log('Could not parse plans result');
+    }
     
     // Test API simulation (what the frontend would get)
     console.log('7. Simulating API call for active plans...');
@@ -75,15 +88,22 @@ async function testPlansAPI() {
       ORDER BY display_order
     `);
     
-    console.log(`✅ API would return ${apiPlans.length} active plans:`);
-    apiPlans.forEach((plan: any, index: number) => {
-      console.log(`  ${index + 1}. ${plan.name} - R$ ${(plan.price / 100).toFixed(2)}`);
-    });
+    const apiPlanRows = apiPlans.rows || apiPlans;
+    const apiPlansLength = Array.isArray(apiPlanRows) ? apiPlanRows.length : 0;
+    console.log(`✅ API would return ${apiPlansLength} active plans:`);
+    
+    if (Array.isArray(apiPlanRows)) {
+      apiPlanRows.forEach((plan: any, index: number) => {
+        console.log(`  ${index + 1}. ${plan.name} - R$ ${(plan.price / 100).toFixed(2)}`);
+      });
+    } else {
+      console.log('Could not parse API plans result');
+    }
     
     console.log('================================');
     console.log('🎉 Plans API test completed successfully!');
     
-    if (apiPlans.length === 0) {
+    if (apiPlansLength === 0) {
       console.log('⚠️  WARNING: No active plans found! This would cause the frontend error.');
       console.log('   Make sure to run the database initialization script.');
     }
