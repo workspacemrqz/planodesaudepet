@@ -117,6 +117,11 @@ export function serveStatic(app: Express) {
       console.log(`[IMAGE REQUEST] URL: ${req.url}, Headers: ${JSON.stringify(req.headers.accept)}`);
     }
     
+    // Log all /objects/ requests
+    if (req.url.includes('/objects/')) {
+      console.log(`[OBJECTS REQUEST] ${req.method} ${req.url}`);
+    }
+    
     next();
   });
 

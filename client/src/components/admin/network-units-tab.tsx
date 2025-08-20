@@ -527,6 +527,7 @@ export default function NetworkUnitsTab() {
                               alt="Preview" 
                               className="w-full h-full object-cover rounded-lg"
                               onError={(e) => {
+                                console.error(`[IMAGE ERROR] Failed to load image:`, e.currentTarget.src);
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
                               }}
