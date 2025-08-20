@@ -71,19 +71,43 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "..", "dist");
-  const publicPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  // Try multiple possible paths for the build directory
+  const possiblePaths = [
+    path.resolve(import.meta.dirname, "..", "dist", "public"),
+    path.resolve(process.cwd(), "dist", "public"),
+    path.resolve("/workspace", "dist", "public"),
+    path.resolve("/app", "dist", "public"),
+  ];
 
-  console.log(`Attempting to serve static files from: ${publicPath}`);
+  let publicPath: string | null = null;
   
-  if (!fs.existsSync(publicPath)) {
-    console.error(`Build directory not found at ${publicPath}. Make sure to run 'npm run build' first.`);
+  for (const testPath of possiblePaths) {
+    if (fs.existsSync(testPath)) {
+      publicPath = testPath;
+      console.log(`[PRODUCTION] Found build directory at: ${publicPath}`);
+      break;
+    }
+  }
+
+  if (!publicPath) {
+    console.error(`[ERROR] Build directory not found. Tried paths:`);
+    possiblePaths.forEach(p => console.error(`  - ${p}: ${fs.existsSync(p) ? 'EXISTS' : 'NOT FOUND'}`));
+    console.error(`[ERROR] Current working directory: ${process.cwd()}`);
+    console.error(`[ERROR] __dirname: ${import.meta.dirname}`);
+    
+    // List directories in current working directory
+    const cwdContents = fs.readdirSync(process.cwd());
+    console.error(`[ERROR] Contents of ${process.cwd()}:`, cwdContents);
     return;
   }
 
   // List files in public directory for debugging
-  const files = fs.readdirSync(publicPath, { recursive: true });
-  console.log('Files in public directory:', files);
+  try {
+    const files = fs.readdirSync(publicPath, { recursive: true }) as string[];
+    console.log('[PRODUCTION] Files in public directory:', files.slice(0, 10), files.length > 10 ? `... and ${files.length - 10} more` : '');
+  } catch (e) {
+    console.log('[PRODUCTION] Could not list files in public directory');
+  }
   
   // Add health check endpoint
   app.get('/health', (req, res) => {

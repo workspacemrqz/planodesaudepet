@@ -69,6 +69,44 @@ const requireAdmin = (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Diagnostic endpoint for production debugging
+  app.get('/api/diagnostic', (req, res) => {
+    const distPath = path.resolve(process.cwd(), 'dist');
+    const publicPath = path.resolve(distPath, 'public');
+    const uploadsPath = path.resolve(process.cwd(), 'uploads');
+    
+    res.json({
+      status: 'ok',
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        PORT: process.env.PORT,
+        DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET',
+      },
+      paths: {
+        cwd: process.cwd(),
+        dist: {
+          path: distPath,
+          exists: fs.existsSync(distPath)
+        },
+        public: {
+          path: publicPath,
+          exists: fs.existsSync(publicPath),
+          files: fs.existsSync(publicPath) ? fs.readdirSync(publicPath).slice(0, 10) : []
+        },
+        uploads: {
+          path: uploadsPath,
+          exists: fs.existsSync(uploadsPath)
+        }
+      },
+      server: {
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        version: process.version
+      },
+      timestamp: new Date().toISOString()
+    });
+  });
+  
   // Simple upload routes (before auth setup to avoid session issues)
   app.post("/api/objects/upload", async (req, res) => {
     console.log('POST /api/objects/upload - Starting upload process');

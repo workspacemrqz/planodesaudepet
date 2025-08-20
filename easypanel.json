@@ -1,0 +1,13 @@
+{
+  "build": {
+    "type": "buildpacks",
+    "builder": "heroku/builder:24"
+  },
+  "env": {
+    "NODE_ENV": "production",
+    "NPM_CONFIG_PRODUCTION": "false"
+  },
+  "scripts": {
+    "postbuild": "npm run build"
+  }
+}
