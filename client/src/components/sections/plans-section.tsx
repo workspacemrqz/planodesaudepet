@@ -58,7 +58,36 @@ export default function PlansSection() {
     return (
       <section className="py-20 bg-gradient-to-br from-[#2C8587] to-[#1a5a5c]">
         <div className="container mx-auto px-4">
-          <div className="text-center text-white">Erro ao carregar planos. Tente novamente.</div>
+          <div className="text-center text-white max-w-md mx-auto">
+            <h3 className="text-xl font-bold mb-4">Erro ao carregar planos</h3>
+            <p className="mb-4">Tente atualizar a página</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-[#E1AC33] text-[#2C8587] px-4 py-2 rounded-lg font-semibold hover:bg-[#d4a02b] transition-colors"
+            >
+              Atualizar
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  
+  // If no plans available, show a friendly message
+  if (!isLoading && (!plansData || plansData.length === 0)) {
+    return (
+      <section className="py-20 bg-gradient-to-br from-[#2C8587] to-[#1a5a5c]">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-white max-w-md mx-auto">
+            <h3 className="text-xl font-bold mb-4">Planos em Breve!</h3>
+            <p className="mb-4">Estamos preparando os melhores planos para seu pet</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-[#E1AC33] text-[#2C8587] px-4 py-2 rounded-lg font-semibold hover:bg-[#d4a02b] transition-colors"
+            >
+              Atualizar
+            </button>
+          </div>
         </div>
       </section>
     );

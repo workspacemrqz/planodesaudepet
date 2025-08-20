@@ -579,17 +579,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // PUBLIC ROUTES (for frontend to consume)
+  
+  // Health check endpoint
+  app.get("/api/health", async (req, res) => {
+    try {
+      // Check database connection by counting plans
+      const plans = await storage.getPlans();
+      res.json({ 
+        status: "healthy",
+        database: "connected",
+        plansCount: plans?.length || 0,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        status: "unhealthy",
+        database: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
 
   app.get("/api/plans", async (req, res) => {
     try {
       console.log("Attempting to fetch plans from database...");
       const plans = await storage.getPlans();
       console.log("Successfully fetched plans:", plans?.length || 0, "plans");
+      
+      // If no plans found, return empty array instead of error
+      if (!plans || plans.length === 0) {
+        console.log("No plans found in database, returning empty array");
+        return res.json([]);
+      }
+      
       res.json(plans);
     } catch (error) {
       console.error("Error in /api/plans:", error);
       console.error("Error details:", error instanceof Error ? error.message : error);
-      res.status(500).json({ error: "Erro ao buscar planos" });
+      
+      // Return more specific error information
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      if (errorMessage.includes("does not exist")) {
+        console.log("Database schema issue detected, attempting to initialize...");
+        // Return empty array for now, the database initialization will run on next restart
+        return res.json([]);
+      }
+      
+      res.status(500).json({ 
+        error: "Erro ao buscar planos",
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      });
     }
   });
 

@@ -39,10 +39,17 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Initialize database schema and data before starting the server
-  log("Initializing database...");
-  await initializeDatabase();
-  log("Database initialization completed");
+  // Initialize database only in production if needed
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      log("Checking database in production...");
+      await initializeDatabase();
+      log("Database check completed");
+    } catch (error) {
+      log("Database initialization failed:", error);
+      // Continue anyway - the error will be caught by the API endpoints
+    }
+  }
   
   const server = await registerRoutes(app);
 

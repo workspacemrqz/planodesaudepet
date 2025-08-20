@@ -53,7 +53,34 @@ export default function Plans() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2C8587] to-[#1a5a5c] flex items-center justify-center">
-        <div className="text-white text-xl">Erro ao carregar planos. Tente novamente.</div>
+        <div className="text-center text-white max-w-md mx-auto px-4">
+          <h2 className="text-2xl font-bold mb-4">Ops! Algo deu errado</h2>
+          <p className="text-lg mb-6">Não conseguimos carregar os planos no momento.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-[#E1AC33] text-[#2C8587] px-6 py-3 rounded-lg font-semibold hover:bg-[#d4a02b] transition-colors"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  // If no plans available, show a friendly message
+  if (!isLoading && (!plansData || plansData.length === 0)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#2C8587] to-[#1a5a5c] flex items-center justify-center">
+        <div className="text-center text-white max-w-md mx-auto px-4">
+          <h2 className="text-2xl font-bold mb-4">Planos em Breve!</h2>
+          <p className="text-lg mb-6">Estamos preparando os melhores planos para seu pet. Volte em breve!</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-[#E1AC33] text-[#2C8587] px-6 py-3 rounded-lg font-semibold hover:bg-[#d4a02b] transition-colors"
+          >
+            Atualizar Página
+          </button>
+        </div>
       </div>
     );
   }
