@@ -17,9 +17,14 @@ import fs from "fs";
 import { fileTypeFromBuffer } from "file-type";
 
 // Configure multer for file uploads
-const uploadDir = path.join(process.cwd(), 'uploads');
+// In production, use a persistent directory that survives deploys
+const uploadDir = process.env.NODE_ENV === 'production' 
+  ? path.join(process.cwd(), 'dist', 'public', 'uploads')
+  : path.join(process.cwd(), 'uploads');
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
+  console.log('Created upload directory:', uploadDir);
 }
 
 const upload = multer({
@@ -64,8 +69,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const objectId = crypto.randomUUID();
       const objectPath = `/objects/uploads/${objectId}`;
       
-      // Return a mock upload URL that points to our local upload endpoint
-      const uploadURL = `http://localhost:3005/api/objects/upload-file/${objectId}`;
+      // Return relative upload URL that works in both dev and production
+      const uploadURL = `/api/objects/upload-file/${objectId}`;
       
       console.log('Generated upload URL:', uploadURL);
       console.log('Generated object path:', objectPath);
@@ -450,18 +455,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Legacy object serving route
+  // Legacy object serving route - now handles local storage
   app.get("/objects/:objectPath(*)", async (req, res) => {
     try {
-      const objectStorageService = new ObjectStorageService();
-      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
-      objectStorageService.downloadObject(objectFile, res);
+      const objectPath = req.params.objectPath;
+      console.log('Legacy object serving route - objectPath:', objectPath);
+      
+      // Extract filename from path (uploads/filename)
+      const pathParts = objectPath.split('/');
+      if (pathParts.length >= 2 && pathParts[0] === 'uploads') {
+        const filename = pathParts[1];
+        const filePath = path.join(uploadDir, filename);
+        
+        console.log('Looking for file at:', filePath);
+        
+        if (fs.existsSync(filePath)) {
+          console.log('File found, serving:', filename);
+          
+          // Get file stats for proper headers
+          const stats = fs.statSync(filePath);
+          const ext = path.extname(filename).toLowerCase();
+          
+          // Set content type based on extension
+          let contentType = 'application/octet-stream';
+          if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
+          else if (ext === '.png') contentType = 'image/png';
+          else if (ext === '.gif') contentType = 'image/gif';
+          else if (ext === '.webp') contentType = 'image/webp';
+          
+          res.setHeader('Content-Type', contentType);
+          res.setHeader('Content-Length', stats.size);
+          res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache
+          
+          return res.sendFile(path.resolve(filePath));
+        }
+      }
+      
+      // If file not found, return 404
+      console.log('File not found for objectPath:', objectPath);
+      res.status(404).json({ error: "Objeto não encontrado" });
     } catch (error) {
       console.error("Error serving object:", error);
-      if (error instanceof ObjectNotFoundError) {
-        return res.sendStatus(404);
-      }
-      return res.sendStatus(500);
+      res.status(500).json({ error: "Erro interno do servidor" });
     }
   });
 

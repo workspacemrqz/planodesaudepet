@@ -114,6 +114,17 @@ export function serveStatic(app: Express) {
     next();
   });
 
+  // Serve uploads directory for images
+  const uploadsPath = path.resolve(publicPath, 'uploads');
+  if (fs.existsSync(uploadsPath)) {
+    app.use('/uploads', express.static(uploadsPath, {
+      maxAge: '1y',
+      etag: true,
+      lastModified: true
+    }));
+    console.log('Serving uploads from:', uploadsPath);
+  }
+
   // Serve static assets with proper headers
   app.use(express.static(publicPath, {
     maxAge: '1y',
