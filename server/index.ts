@@ -58,11 +58,11 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 3000 if not specified.
+  // Other ports are firewalled. Default to 80 for production, 3000 for development.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '3000', 10);
-  const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+  const port = parseInt(process.env.PORT || (process.env.NODE_ENV === 'production' ? '80' : '3000'), 10);
+  const host = process.env.HOST || (process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost');
   server.listen(port, host, () => {
     log(`serving on http://${host}:${port}`);
   });

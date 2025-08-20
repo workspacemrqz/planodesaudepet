@@ -3,7 +3,7 @@
   "description": "Sistema de plano de saúde para pets",
   "buildpacks": [
     {
-      "url": "heroku/builder:24"
+      "url": "heroku/nodejs"
     }
   ],
   "stack": "heroku-24",
@@ -26,7 +26,7 @@
     },
     "PORT": {
       "description": "Port number for the application",
-      "value": "3000"
+      "value": "80"
     },
     "HOST": {
       "description": "Host for the application",
@@ -38,6 +38,6 @@
     }
   },
   "scripts": {
-    "postdeploy": "npm run db:push"
+    "postdeploy": "npm run db:push && npm run migrate:plans"
   }
 }

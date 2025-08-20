@@ -1,5 +1,9 @@
 import { db } from "../db";
 import { sql } from "drizzle-orm";
+import dotenv from "dotenv";
+
+// Carregar variáveis de ambiente
+dotenv.config();
 
 async function applyPlanMigration() {
   try {

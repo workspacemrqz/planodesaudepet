@@ -1,0 +1,25 @@
+# EasyPanel Configuration
+name: plano-de-saude-pet
+type: app
+
+build:
+  type: buildpack
+  buildpack: heroku/nodejs
+  
+environment:
+  NODE_ENV: production
+  PORT: 80
+  HOST: "0.0.0.0"
+
+healthcheck:
+  path: "/"
+  timeout: 30s
+  interval: 30s
+  retries: 3
+
+resources:
+  memory: 512Mi
+  cpu: 250m
+
+scale:
+  replicas: 1
