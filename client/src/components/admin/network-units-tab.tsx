@@ -34,10 +34,49 @@ const networkUnitFormSchema = z.object({
 
 type NetworkUnitFormData = z.infer<typeof networkUnitFormSchema>;
 
+const AVAILABLE_SERVICES = [
+  "Consulta clínica geral",
+  "Consulta especializada (dermatologia, cardiologia, etc.)",
+  "Atendimento emergencial / urgência 24h",
+  "Avaliação comportamental",
+  "Aplicação de vacinas obrigatórias",
+  "Aplicação de vacinas opcionais",
+  "Controle de ectoparasitas (pulgas e carrapatos)",
+  "Vermifugação",
+  "Exames laboratoriais (sangue, urina, fezes)",
+  "Exames de imagem (raio-X, ultrassonografia, endoscopia)",
+  "Eletrocardiograma (ECG)",
+  "Testes alérgicos",
+  "Castração",
+  "Cirurgias de emergência",
+  "Cirurgias ortopédicas",
+  "Cirurgias odontológicas",
+  "Cirurgias oftalmológicas",
+  "Internação clínica",
+  "Internação cirúrgica",
+  "Terapia intensiva / UTI veterinária",
+  "Tratamento com fluidoterapia",
+  "Aplicação de medicamentos",
+  "Limpeza dental (profilaxia)",
+  "Extração dentária",
+  "Avaliação odontológica",
+  "Banho e tosa higiênica",
+  "Tosa por padrão de raça",
+  "Hidratação de pelagem",
+  "Limpeza de ouvidos / corte de unhas",
+  "Avaliação nutricional",
+  "Plano alimentar personalizado",
+  "Programa de controle de obesidade",
+  "Microchipagem",
+  "Emissão de atestados de saúde",
+  "Emissão de passaporte pet / documentação para viagens",
+  "Venda de produtos pet (ração, medicamentos, acessórios)"
+];
+
 export default function NetworkUnitsTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUnit, setEditingUnit] = useState<NetworkUnit | null>(null);
-  const [servicesInput, setServicesInput] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -57,12 +96,10 @@ export default function NetworkUnitsTab() {
     queryKey: ["/api/admin/network-units"],
   });
 
-  // Get unique services for filter dropdown
+  // Use predefined services list for filter dropdown
   const availableServices = useMemo(() => {
-    if (!units) return [];
-    const allServices = units.flatMap(unit => unit.services);
-    return Array.from(new Set(allServices)).sort();
-  }, [units]);
+    return AVAILABLE_SERVICES.sort();
+  }, []);
 
   // Get unique cities for filter dropdown
   const availableCities = useMemo(() => {
@@ -213,6 +250,14 @@ export default function NetworkUnitsTab() {
     }
   };
 
+  const handleServiceToggle = (service: string) => {
+    setSelectedServices(prev => 
+      prev.includes(service) 
+        ? prev.filter(s => s !== service)
+        : [...prev, service]
+    );
+  };
+
   const resetForm = () => {
     form.reset({
       name: "",
@@ -222,7 +267,7 @@ export default function NetworkUnitsTab() {
       services: [],
       imageUrl: "",
     });
-    setServicesInput("");
+    setSelectedServices([]);
     setUploadedImageUrl(null);
     setCurrentStep(1);
     setEditingUnit(null);
@@ -241,7 +286,7 @@ export default function NetworkUnitsTab() {
       whatsapp: unit.whatsapp || "",
       googleMapsUrl: unit.googleMapsUrl || "",
     });
-    setServicesInput(unit.services.join("\n"));
+    setSelectedServices(unit.services);
     // Handle different URL types for preview
     let previewUrl = null;
     if (unit.imageUrl) {
@@ -302,7 +347,7 @@ export default function NetworkUnitsTab() {
   };
 
   const onSubmit = (data: NetworkUnitFormData) => {
-    const services = servicesInput.split("\n").filter(s => s.trim().length > 0);
+    const services = selectedServices;
     const unitData: InsertNetworkUnit = {
       ...data,
       rating: data.rating * 10, // Convert from display format (1-5) to stored format (10-50)
@@ -545,16 +590,27 @@ export default function NetworkUnitsTab() {
                   <div className="space-y-4">
                     <h4 className="font-medium text-[#FBF9F7]">Serviços Disponíveis</h4>
                     
-                    <div>
-                      <FormLabel className="text-[#FBF9F7]">Serviços (um por linha)</FormLabel>
-                      <Textarea
-                        value={servicesInput}
-                        onChange={(e) => setServicesInput(e.target.value)}
-                        placeholder="Emergência 24h&#10;Cirurgia&#10;Internação&#10;Exames"
-                        rows={8}
-                        className="mt-2 bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                        data-testid="textarea-unit-services"
-                      />
+                    <div className="max-h-64 overflow-y-auto border border-[#277677] rounded-md p-3 bg-[#195d5e]">
+                      <div className="grid grid-cols-1 gap-2">
+                        {AVAILABLE_SERVICES.map((service, index) => (
+                          <label
+                            key={index}
+                            className="flex items-center space-x-2 cursor-pointer hover:bg-[#2C8587] p-2 rounded"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedServices.includes(service)}
+                              onChange={() => handleServiceToggle(service)}
+                              className="rounded border-[#277677] text-[#E1AC33] focus:ring-[#E1AC33] focus:ring-offset-0 bg-[#195d5e]"
+                            />
+                            <span className="text-[#FBF9F7] text-sm">{service}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="text-xs text-[#aaaaaa]">
+                      Selecionados: {selectedServices.length} serviços
                     </div>
                   </div>
                 )}
