@@ -3,10 +3,9 @@
   "description": "Sistema de plano de saúde para pets",
   "buildpacks": [
     {
-      "url": "heroku/nodejs"
+      "url": "heroku/builder:24"
     }
   ],
-  "stack": "heroku-24",
   "env": {
     "NODE_ENV": {
       "description": "Node environment",
@@ -38,6 +37,6 @@
     }
   },
   "scripts": {
-    "postdeploy": "npm run db:push && npm run migrate:plans"
+    "postdeploy": "npm run db:push"
   }
 }
