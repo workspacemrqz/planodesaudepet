@@ -48,6 +48,7 @@ export default function NetworkUnitsTab() {
   const [searchText, setSearchText] = useState("");
   const [filterByRating, setFilterByRating] = useState<string>("all");
   const [filterByService, setFilterByService] = useState<string>("all");
+  const [filterByCity, setFilterByCity] = useState<string>("all");
   
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -63,6 +64,17 @@ export default function NetworkUnitsTab() {
     return Array.from(new Set(allServices)).sort();
   }, [units]);
 
+  // Get unique cities for filter dropdown
+  const availableCities = useMemo(() => {
+    if (!units) return [];
+    const cities = units.map(unit => {
+      // Extract city from address (assuming format like "Street, City, State")
+      const addressParts = unit.address.split(',');
+      return addressParts.length > 1 ? addressParts[1].trim() : addressParts[0].trim();
+    });
+    return Array.from(new Set(cities)).sort();
+  }, [units]);
+
   // Filter units based on search and filter criteria
   const filteredUnits = useMemo(() => {
     if (!units) return [];
@@ -73,19 +85,25 @@ export default function NetworkUnitsTab() {
         unit.name.toLowerCase().includes(searchText.toLowerCase()) ||
         unit.address.toLowerCase().includes(searchText.toLowerCase());
       
-      // Filter by rating range
+      // Filter by city
+      const matchesCity = filterByCity === "all" || 
+        unit.address.toLowerCase().includes(filterByCity.toLowerCase());
+      
+      // Filter by rating (using same logic as public page)
+      const unitRating = unit.rating / 10; // Convert from stored format (10-50) to display format (1-5)
       const matchesRating = filterByRating === "all" || 
-        (filterByRating === "high" && unit.rating >= 40) ||
-        (filterByRating === "medium" && unit.rating >= 30 && unit.rating < 40) ||
-        (filterByRating === "low" && unit.rating < 30);
+        (filterByRating === "4.5" && unitRating >= 4.5) ||
+        (filterByRating === "4.0" && unitRating >= 4.0) ||
+        (filterByRating === "3.5" && unitRating >= 3.5) ||
+        (filterByRating === "3.0" && unitRating >= 3.0);
       
       // Filter by service
       const matchesService = filterByService === "all" || 
         unit.services.includes(filterByService);
       
-      return matchesSearch && matchesRating && matchesService;
+      return matchesSearch && matchesCity && matchesRating && matchesService;
     });
-  }, [units, searchText, filterByRating, filterByService]);
+  }, [units, searchText, filterByCity, filterByRating, filterByService]);
 
   const form = useForm<NetworkUnitFormData>({
     resolver: zodResolver(networkUnitFormSchema),
@@ -611,7 +629,7 @@ export default function NetworkUnitsTab() {
       <div className="mb-6 space-y-4">
 
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search by name/address */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#fbf9f7]">
@@ -629,6 +647,26 @@ export default function NetworkUnitsTab() {
             </div>
           </div>
 
+          {/* Filter by city */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#fbf9f7]">
+              Filtrar por cidade
+            </label>
+            <Select value={filterByCity} onValueChange={setFilterByCity}>
+              <SelectTrigger className="bg-[#145759] text-[#fbf9f7]" data-testid="select-city-filter">
+                <SelectValue placeholder="Todas as cidades" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as cidades</SelectItem>
+                {availableCities.map((city) => (
+                  <SelectItem key={city} value={city}>
+                    {city}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Filter by rating */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#fbf9f7]">
@@ -639,10 +677,11 @@ export default function NetworkUnitsTab() {
                 <SelectValue placeholder="Todas as avaliações" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas as avaliações</SelectItem>
-                <SelectItem value="high">Alta (4.0+ estrelas)</SelectItem>
-                <SelectItem value="medium">Média (3.0-3.9 estrelas)</SelectItem>
-                <SelectItem value="low">Baixa (menos de 3.0)</SelectItem>
+                <SelectItem value="all">Qualquer avaliação</SelectItem>
+                <SelectItem value="4.5">4.5+ estrelas</SelectItem>
+                <SelectItem value="4.0">4.0+ estrelas</SelectItem>
+                <SelectItem value="3.5">3.5+ estrelas</SelectItem>
+                <SelectItem value="3.0">3.0+ estrelas</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -669,12 +708,13 @@ export default function NetworkUnitsTab() {
         </div>
 
         {/* Clear filters button */}
-        {(searchText || filterByRating !== "all" || filterByService !== "all") && (
+        {(searchText || filterByCity !== "all" || filterByRating !== "all" || filterByService !== "all") && (
           <div className="flex justify-end">
             <Button
               variant="outline"
               onClick={() => {
                 setSearchText("");
+                setFilterByCity("all");
                 setFilterByRating("all");
                 setFilterByService("all");
               }}
