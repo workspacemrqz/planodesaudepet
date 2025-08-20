@@ -34,7 +34,7 @@ export default function Footer() {
             <p className="text-[#302e2b] mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
               Cuidando da saúde do seu pet com carinho, qualidade e preços acessíveis.
             </p>
-            <div className="flex">
+            <div className="flex space-x-4">
               {shouldShow.facebookUrl && (
                 <a href={settings.facebookUrl || undefined} target="_blank" rel="noopener noreferrer" className="text-[#277677]">
                   <Facebook className="h-6 w-6" />

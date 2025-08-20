@@ -609,7 +609,7 @@ export default function NetworkUnitsTab() {
                       </div>
                     </div>
                     
-                    <div className="text-xs text-[#aaaaaa]">
+                    <div className="text-xs text-[#FBF9F7]">
                       Selecionados: {selectedServices.length} serviços
                     </div>
                   </div>
@@ -668,6 +668,8 @@ export default function NetworkUnitsTab() {
                           type="button"
                           onClick={(e) => {
                             e.preventDefault();
+                            // Sincronizar serviços selecionados com o formulário
+                            form.setValue('services', selectedServices);
                             form.handleSubmit(onSubmit)(e);
                           }}
                           disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
