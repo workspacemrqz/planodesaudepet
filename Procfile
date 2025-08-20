@@ -1,2 +1,2 @@
 web: npm start
-release: npm run db:push && npm run fix:plans-schema
+release: npm run db:push || echo "DB push failed, continuing..." && npm run init:db

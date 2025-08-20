@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { initializeDatabase } from "./scripts/initialize-database";
 
 const app = express();
 app.use(express.json());
@@ -38,6 +39,11 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize database schema and data before starting the server
+  log("Initializing database...");
+  await initializeDatabase();
+  log("Database initialization completed");
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

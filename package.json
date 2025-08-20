@@ -16,7 +16,8 @@
     "db:push": "drizzle-kit push",
     "migrate:uploads": "tsx server/scripts/migrate-existing-uploads.ts",
     "ensure:plans": "tsx server/scripts/ensure-plans-data.ts",
-    "fix:plans-schema": "tsx server/scripts/fix-plans-schema.ts"
+    "fix:plans-schema": "tsx server/scripts/fix-plans-schema.ts",
+    "init:db": "tsx server/scripts/initialize-database.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
