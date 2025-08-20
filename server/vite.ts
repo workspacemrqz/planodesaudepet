@@ -17,8 +17,6 @@ export function log(message: string, source = "express") {
 export async function setupVite(app: Express, server: Server) {
   // Import Vite dynamically only in development
   const { createServer: createViteServer, createLogger } = await import("vite");
-  const viteConfigModule = await import("../vite.config.js");
-  const viteConfig = viteConfigModule.default;
   const { nanoid } = await import("nanoid");
   
   const viteLogger = createLogger();
@@ -30,8 +28,7 @@ export async function setupVite(app: Express, server: Server) {
   };
 
   const vite = await createViteServer({
-    ...viteConfig,
-    configFile: false,
+    configFile: path.resolve(process.cwd(), 'vite.config.ts'),
     customLogger: {
       ...viteLogger,
       error: (msg, options) => {

@@ -2,13 +2,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import fs from "fs";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
   base: '/',
   plugins: [
     react(),
-    runtimeErrorOverlay(),
     // Plugin to create uploads directory
     {
       name: 'create-uploads-dir',
@@ -21,21 +19,14 @@ export default defineConfig({
           fs.writeFileSync(path.join(uploadsDir, '.gitkeep'), '# This ensures the uploads directory exists\n');
         }
       }
-    },
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-        ]
-      : []),
+    }
   ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      "date-fns": path.resolve(import.meta.dirname, "node_modules", "date-fns")
     },
   },
   root: path.resolve(import.meta.dirname, "client"),

@@ -1,6 +1,16 @@
 # Deploy no EasyPanel - Guia Completo
 
-## Correções Aplicadas
+## Correções Aplicadas (Atualizado)
+
+### NOVA CORREÇÃO - Erro de Build com Dependências do Replit
+- **Problema:** O pacote `@replit/vite-plugin-runtime-error-modal` estava causando erro no build
+- **Solução:** Removido o plugin do Replit do vite.config.ts
+- **Problema 2:** `@tailwindcss/typography` estava como devDependency
+- **Solução:** Movido para dependencies
+- **Problema 3:** date-fns v3 tem estrutura de módulos diferente
+- **Solução:** Adicionado alias no vite.config.ts para resolver corretamente
+
+## Correções Anteriores
 
 ### 1. **Build Duplicado Removido**
 - Removido o script `postinstall` do package.json que estava causando build duplicado
