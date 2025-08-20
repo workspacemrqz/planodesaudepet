@@ -49,6 +49,7 @@ export interface IStorage {
   
   // Plans
   getPlans(): Promise<Plan[]>;
+  getAllPlans(): Promise<Plan[]>; // For admin - includes inactive plans
   getPlan(id: string): Promise<Plan | undefined>;
   createPlan(plan: InsertPlan): Promise<Plan>;
   updatePlan(id: string, plan: Partial<InsertPlan>): Promise<Plan | undefined>;
@@ -135,11 +136,23 @@ export class DatabaseStorage implements IStorage {
   async getPlans(): Promise<Plan[]> {
     try {
       console.log("Executing getPlans query...");
-      const result = await db.select().from(plans).where(eq(plans.isActive, true));
+      const result = await db.select().from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
       console.log("Plans query result:", result);
       return result;
     } catch (error) {
       console.error("Error in getPlans:", error);
+      throw error;
+    }
+  }
+
+  async getAllPlans(): Promise<Plan[]> {
+    try {
+      console.log("Executing getAllPlans query (admin)...");
+      const result = await db.select().from(plans).orderBy(asc(plans.displayOrder));
+      console.log("All plans query result:", result);
+      return result;
+    } catch (error) {
+      console.error("Error in getAllPlans:", error);
       throw error;
     }
   }

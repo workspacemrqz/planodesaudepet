@@ -283,9 +283,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Plans Management
   app.get("/api/admin/plans", requireAdmin, async (req, res) => {
     try {
-      const plans = await storage.getPlans();
+      const plans = await storage.getAllPlans(); // Use getAllPlans for admin to see all plans
       res.json(plans);
     } catch (error) {
+      console.error("Error in /api/admin/plans:", error);
       res.status(500).json({ error: "Erro ao buscar planos" });
     }
   });

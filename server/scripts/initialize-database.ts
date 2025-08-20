@@ -69,6 +69,30 @@ export async function initializeDatabase() {
     `);
     
     await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS site_settings (
+        id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+        whatsapp text,
+        email text,
+        phone text,
+        address text,
+        instagram_url text,
+        facebook_url text,
+        linkedin_url text,
+        youtube_url text,
+        cnpj text,
+        business_hours text,
+        our_story text,
+        privacy_policy text,
+        terms_of_use text,
+        main_image text,
+        network_image text,
+        about_image text,
+        created_at timestamp DEFAULT now() NOT NULL,
+        updated_at timestamp DEFAULT now() NOT NULL
+      );
+    `);
+    
+    await db.execute(sql`
       CREATE TABLE IF NOT EXISTS network_units (
         id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
         name text NOT NULL,
@@ -96,7 +120,26 @@ export async function initializeDatabase() {
       );
     `);
     
-    // Note: site_settings table already exists with different schema
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+        username text NOT NULL UNIQUE,
+        password text NOT NULL,
+        created_at timestamp DEFAULT now() NOT NULL
+      );
+    `);
+    
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS file_metadata (
+        object_id varchar PRIMARY KEY,
+        original_filename text NOT NULL,
+        mime_type text NOT NULL,
+        size_bytes bigint NOT NULL,
+        upload_date timestamp DEFAULT now() NOT NULL,
+        uploader_id text,
+        metadata jsonb DEFAULT '{}' NOT NULL
+      );
+    `);
     
     console.log('✅ Database schema created successfully!');
     
@@ -311,8 +354,33 @@ export async function initializeDatabase() {
     `);
     
     if (!siteSettingsTableExists[0]?.exists) {
-      console.log('⚠️ site_settings table does not exist. It should have been created above.');
-      return;
+      console.log('⚠️ site_settings table does not exist. Creating it now...');
+      
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS site_settings (
+          id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+          whatsapp text,
+          email text,
+          phone text,
+          address text,
+          instagram_url text,
+          facebook_url text,
+          linkedin_url text,
+          youtube_url text,
+          cnpj text,
+          business_hours text,
+          our_story text,
+          privacy_policy text,
+          terms_of_use text,
+          main_image text,
+          network_image text,
+          about_image text,
+          created_at timestamp DEFAULT now() NOT NULL,
+          updated_at timestamp DEFAULT now() NOT NULL
+        );
+      `);
+      
+      console.log('✅ site_settings table created successfully!');
     }
     
     // Check and insert site settings if not exists
