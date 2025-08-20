@@ -8,33 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Star, GripVertical, CreditCard } from "lucide-react";
+import { Edit, CreditCard, Check } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable';
-import {
-  CSS,
-} from '@dnd-kit/utilities';
 
 const planFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -47,73 +27,9 @@ const planFormSchema = z.object({
 
 type PlanFormData = z.infer<typeof planFormSchema>;
 
-// Componente sortable para cada plano
-function SortablePlan({ 
-  plan, 
-  onEdit,
-  isMobile,
-  index
-}: { 
-  plan: Plan; 
-  onEdit: (plan: Plan) => void;
-  isMobile: boolean;
-  index: number;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: plan.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-
-
-  return (
-    <Card 
-      ref={setNodeRef} 
-      style={style}
-      className="bg-[#145759] shadow-lg min-h-[120px] flex"
-    >
-      <div className="flex items-center justify-center w-full py-8">
-        <div className="flex items-center justify-between w-full px-6">
-          <div className="flex items-center gap-3">
-            <div
-              {...attributes}
-              {...listeners}
-              className="cursor-grab active:cursor-grabbing p-1 rounded"
-            >
-              <GripVertical className="h-5 w-5 text-[#FBF9F7]" />
-            </div>
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-[#FBF9F7] text-xl">{plan.name}</CardTitle>
-              <span className="text-[#9fb8b8] text-xs font-medium bg-[#277677]/30 px-2 py-1 rounded-md">
-                {plan.planType === 'with_waiting_period' ? 'Com carência' : 'Sem carência'}
-              </span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              onClick={() => onEdit(plan)}
-              className="h-8 w-8 p-0 text-[#FBF9F7] !bg-[#277677] hover:!bg-[#2F8585]"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
-    </Card>
-  );
-}
+const formatPrice = (priceInCents: number): string => {
+  return (priceInCents / 100).toFixed(2).replace('.', ',');
+};
 
 export default function PlansTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -126,13 +42,6 @@ export default function PlansTab() {
   const { data: plans, isLoading } = useQuery<Plan[]>({
     queryKey: ["/api/admin/plans"],
   });
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   const form = useForm<PlanFormData>({
     resolver: zodResolver(planFormSchema),
@@ -153,56 +62,16 @@ export default function PlansTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      // Notificação de sucesso removida
       setIsDialogOpen(false);
       setEditingPlan(null);
       form.reset();
       setFeaturesInput("");
+      toast({ title: "Plano atualizado com sucesso!", variant: "default" });
     },
     onError: () => {
       toast({ title: "Erro ao atualizar plano", variant: "destructive" });
     },
   });
-
-
-
-
-
-  // Mutation para reordenar planos
-  const reorderMutation = useMutation({
-    mutationFn: async (updates: { id: string; displayOrder: number }[]) => {
-      const promises = updates.map(update => 
-        apiRequest("PUT", `/api/admin/plans/${update.id}`, { displayOrder: update.displayOrder })
-      );
-      await Promise.all(promises);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      // Notificação de sucesso removida
-    },
-    onError: () => {
-      toast({ title: "Erro ao atualizar ordem", variant: "destructive" });
-    },
-  });
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (active.id !== over?.id && plans) {
-      const oldIndex = plans.findIndex(plan => plan.id === active.id);
-      const newIndex = plans.findIndex(plan => plan.id === over?.id);
-      
-      const reorderedPlans = arrayMove(plans, oldIndex, newIndex);
-      
-      // Atualizar displayOrder baseado na nova ordem
-      const updates = reorderedPlans.map((plan, index) => ({
-        id: plan.id,
-        displayOrder: index + 1,
-      }));
-      
-      reorderMutation.mutate(updates);
-    }
-  };
 
   const handleEdit = (plan: Plan) => {
     setEditingPlan(plan);
@@ -219,15 +88,10 @@ export default function PlansTab() {
     setIsDialogOpen(true);
   };
 
-
-
-
-
   const parsePrice = (priceString: string): number => {
-    // Remove espaços e substitui vírgula por ponto
     const cleanPrice = priceString.replace(/\s/g, '').replace(',', '.');
     const price = parseFloat(cleanPrice);
-    return isNaN(price) ? 0 : Math.round(price * 100); // Converte para centavos
+    return isNaN(price) ? 0 : Math.round(price * 100);
   };
 
   const onSubmit = (data: PlanFormData) => {
@@ -253,10 +117,10 @@ export default function PlansTab() {
 
   if (isLoading) {
     return (
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(3)].map((_, i) => (
+      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
+        {[...Array(4)].map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className="h-64 bg-gray-200 rounded-lg"></div>
+            <div className="h-80 bg-gray-200 rounded-lg"></div>
           </div>
         ))}
       </div>
@@ -272,6 +136,8 @@ export default function PlansTab() {
           Gerenciar Planos
         </h3>
       </div>
+
+      {/* Dialog de Edição */}
       <Dialog open={isDialogOpen} onOpenChange={(open) => {
         setIsDialogOpen(open);
         if (!open) resetForm();
@@ -285,191 +151,244 @@ export default function PlansTab() {
             </DialogHeader>
             
             <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
-              <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                                      <FormItem>
-                    <FormLabel className="text-[#FBF9F7]">Nome do Plano</FormLabel>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
+                <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[#FBF9F7]">Nome do Plano</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Ex: BASIC" 
+                            {...field} 
+                            data-testid="input-plan-name"
+                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[#FBF9F7]">Descrição</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Ex: Plano essencial" 
+                            {...field} 
+                            data-testid="input-plan-description"
+                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
+                  <FormItem>
+                    <FormLabel className="text-[#FBF9F7]">Preço (R$)</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="Ex: Padrão" 
-                        {...field} 
-                        data-testid="input-plan-name"
+                        type="text" 
+                        placeholder="0,00" 
+                        value={priceInput}
+                        onChange={(e) => setPriceInput(e.target.value)}
+                        data-testid="input-plan-price"
                         className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                                      <FormItem>
-                    <FormLabel className="text-[#FBF9F7]">Descrição</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Ex: Proteção essencial" 
-                        {...field} 
-                        data-testid="input-plan-description"
-                        className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                  )}
-                />
-              </div>
+                  
+                  <FormField
+                    control={form.control}
+                    name="planType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[#FBF9F7]">Tipo de Plano</FormLabel>
+                        <FormControl>
+                          <select 
+                            {...field}
+                            className="w-full p-2 bg-[#195d5e] text-[#FBF9F7] border border-[#277677] rounded-md focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                            data-testid="select-plan-type"
+                          >
+                            <option value="with_waiting_period">Com carência e sem coparticipação</option>
+                            <option value="without_waiting_period">Sem carência e com coparticipação</option>
+                          </select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-              <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
-                <FormItem>
-                  <FormLabel className="text-[#FBF9F7]">Preço (R$)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="text" 
-                      placeholder="0,00" 
-                      value={priceInput}
-                      onChange={(e) => setPriceInput(e.target.value)}
-                      data-testid="input-plan-price"
-                      className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                    />
-                  </FormControl>
-                </FormItem>
-                
-                <FormField
-                  control={form.control}
-                  name="planType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[#FBF9F7]">Tipo de Plano</FormLabel>
-                      <FormControl>
-                        <select 
-                          {...field}
-                          className="w-full p-2 bg-[#195d5e] text-[#FBF9F7] border border-[#277677] rounded-md focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                          data-testid="select-plan-type"
-                        >
-                          <option value="with_waiting_period">Com carência e sem coparticipação</option>
-                          <option value="without_waiting_period">Sem carência e com coparticipação</option>
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
+                  <FormField
+                    control={form.control}
+                    name="buttonText"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[#FBF9F7]">Texto do Botão</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Ex: Contratar Plano" 
+                            {...field} 
+                            data-testid="input-plan-button-text"
+                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="redirectUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[#FBF9F7]">URL de Redirecionamento</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Ex: /contact" 
+                            {...field} 
+                            data-testid="input-plan-redirect-url"
+                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-              <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
-                <FormField
-                  control={form.control}
-                  name="buttonText"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[#FBF9F7]">Texto do Botão</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Ex: Contratar Plano" 
-                          {...field} 
-                          data-testid="input-plan-button-text"
-                          className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="redirectUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[#FBF9F7]">URL de Redirecionamento</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Ex: /contact" 
-                          {...field} 
-                          data-testid="input-plan-redirect-url"
-                          className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                <div>
+                  <FormLabel className="text-[#FBF9F7]">Funcionalidades (uma por linha)</FormLabel>
+                  <Textarea
+                    value={featuresInput}
+                    onChange={(e) => setFeaturesInput(e.target.value)}
+                    placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
+                    rows={6}
+                    className="mt-2 bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                    data-testid="textarea-plan-features"
+                  />
+                </div>
 
-              <div>
-                <FormLabel className="text-[#FBF9F7]">Funcionalidades (uma por linha)</FormLabel>
-                <Textarea
-                  value={featuresInput}
-                  onChange={(e) => setFeaturesInput(e.target.value)}
-                  placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
-                  rows={6}
-                  className="mt-2 bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                  data-testid="textarea-plan-features"
-                />
-              </div>
-
-
-
-              <div className="flex justify-end gap-2">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => setIsDialogOpen(false)}
-                  data-testid="button-cancel-plan"
-                  className="bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  type="submit"
-                  disabled={updatePlanMutation.isPending}
-                  data-testid="button-save-plan"
-                  className="text-[#ffffff]"
-                >
-                  Atualizar Plano
-                </Button>
-              </div>
-            </form>
-          </Form>
+                <div className="flex justify-end gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setIsDialogOpen(false)}
+                    data-testid="button-cancel-plan"
+                    className="bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    type="submit"
+                    disabled={updatePlanMutation.isPending}
+                    data-testid="button-save-plan"
+                    className="text-[#ffffff]"
+                  >
+                    Atualizar Plano
+                  </Button>
+                </div>
+              </form>
+            </Form>
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Listagem dos Planos */}
       {plans && plans.length > 0 ? (
-        <div className="space-y-4">
-          <div className="mb-4">
-            <p className="text-sm text-[#FBF9F7]">
-              Arraste e solte para reordenar os planos
-            </p>
-          </div>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext 
-              items={sortedPlans.map(plan => plan.id)} 
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-4">
-                {sortedPlans.map((plan, index) => (
-                  <SortablePlan
-                    key={plan.id}
-                    plan={plan}
-                    onEdit={handleEdit}
-                    isMobile={isMobile}
-                    index={index}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {sortedPlans.map((plan) => (
+            <Card key={plan.id} className="bg-[#145759] shadow-lg">
+              <CardHeader className="text-center pb-4">
+                {/* Ícone do Plano */}
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-[#277677]/20 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8" fill="#277677">
+                      <path d="M88.13,17.28c-6.14-5.5-14.37-6-22.06-1.32-2.58,2-5.43,2-9,.15l-.94-.39C35,7.41,22.07,19.63,9.54,31.44L8.93,32h0A4.1,4.1,0,0,0,7.4,35c-.32,3,1.48,7.2,4.71,11C5.7,64.47,0,84.79,12.52,93a.5.5,0,0,0,.27.08H91a.49.49,0,0,0,.4-.2.5.5,0,0,0,.08-.43L85,68.46A5.68,5.68,0,0,0,86,69a2.13,2.13,0,0,0,.81.16,2.19,2.19,0,0,0,1.37-.49,2.16,2.16,0,0,0,.76-2.09C86.8,54.91,84.48,49,81.11,46.66a13.42,13.42,0,0,0,7.4-5.32l3.13,3a.51.51,0,0,0,.44.13.47.47,0,0,0,.36-.28C97.69,33,94.06,22.58,88.13,17.28Z"/>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Nome do Plano */}
+                <CardTitle className="text-2xl font-bold text-[#FBF9F7] mb-2">
+                  {plan.name}
+                </CardTitle>
+
+                {/* Preço */}
+                <div className="mb-3">
+                  <span className="text-3xl font-bold text-[#E1AC33]">R${formatPrice(plan.price)}</span>
+                  <span className="text-sm font-medium text-[#FBF9F7]">/mês</span>
+                </div>
+
+                {/* Tipo do Plano */}
+                <Badge 
+                  variant="secondary" 
+                  className="bg-[#277677]/30 text-[#FBF9F7] text-xs"
+                >
+                  {plan.planType === 'with_waiting_period' ? 'Com carência e sem coparticipação' : 'Sem carência e com coparticipação'}
+                </Badge>
+              </CardHeader>
+              
+              <CardContent className="px-6 pb-6">
+                {/* Descrição */}
+                <p className="text-[#FBF9F7] text-center mb-4 opacity-90">
+                  {plan.description}
+                </p>
+
+                {/* Funcionalidades */}
+                <ul className="space-y-2 mb-6">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start space-x-3">
+                      <Check className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#E1AC33]" />
+                      <span className="text-sm text-[#FBF9F7] leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Texto do Botão */}
+                <div className="mb-4">
+                  <div className="text-center p-3 bg-[#277677]/20 rounded-lg">
+                    <span className="text-sm font-medium text-[#FBF9F7]">Texto do Botão:</span>
+                    <br />
+                    <span className="text-[#E1AC33]">{plan.buttonText}</span>
+                  </div>
+                </div>
+
+                {/* URL de Redirecionamento */}
+                <div className="mb-6">
+                  <div className="text-center p-3 bg-[#277677]/20 rounded-lg">
+                    <span className="text-sm font-medium text-[#FBF9F7]">Redireciona para:</span>
+                    <br />
+                    <span className="text-[#E1AC33]">{plan.redirectUrl}</span>
+                  </div>
+                </div>
+
+                {/* Botão de Editar */}
+                <div className="flex justify-center">
+                  <Button
+                    onClick={() => handleEdit(plan)}
+                    className="bg-[#277677] hover:bg-[#2F8585] text-[#FBF9F7] px-6"
+                    data-testid={`button-edit-plan-${plan.id}`}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Editar Plano
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       ) : (
         <Card>
