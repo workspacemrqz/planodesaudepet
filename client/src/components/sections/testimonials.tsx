@@ -7,19 +7,19 @@ export default function Testimonials() {
     {
       name: "Maria Silva",
       location: "",
-      image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100",
+      image: "dist/public/Maria Silva.png",
       testimonial: "Minha Luna foi atendida super rápido quando precisou de uma cirurgia de emergência. O processo foi simples e sem burocracia. Recomendo demais!"
     },
     {
       name: "Carlos Mendes", 
       location: "",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100",
+      image: "dist/public/Carlos Mendes.png",
       testimonial: "O plano familiar cobriu tudo que meus dois cães precisaram. Desde vacinas até exames especializados. Vale cada centavo!"
     },
     {
       name: "Ana Costa",
       location: "", 
-      image: "https://images.unsplash.com/photo-1554224154-22dec7ec8818?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100",
+      image: "dist/public/Ana Costa.png",
       testimonial: "Atendimento 24h salvou a vida do meu gato. A equipe é muito profissional e o suporte sempre disponível. Indico para todos!"
     }
   ];

@@ -2,9 +2,11 @@ import { Link } from "wouter";
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, Clock, Building } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
+import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
 
 export default function Footer() {
   const { settings, shouldShow } = useSiteSettingsWithDefaults();
+  const { getWhatsAppLink } = useWhatsAppRedirect();
   
   const quickLinks = [
     { name: "Início", href: "/" },
@@ -116,7 +118,14 @@ export default function Footer() {
                   <FaWhatsapp className="h-4 w-4 text-[#277677] flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[#302e2b] font-semibold text-sm sm:text-base">WhatsApp</div>
-                    <div className="text-[#302e2b] text-sm sm:text-base">{settings.whatsapp}</div>
+                    <a 
+                      href={getWhatsAppLink()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#302e2b] text-sm sm:text-base hover:text-[#277677] transition-colors cursor-pointer"
+                    >
+                      {settings.whatsapp}
+                    </a>
                   </div>
                 </div>
               )}

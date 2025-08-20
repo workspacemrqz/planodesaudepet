@@ -1,7 +1,9 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean, json } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, json, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export const planTypeEnum = pgEnum('plan_type_enum', ['with_waiting_period', 'without_waiting_period']);
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -26,15 +28,14 @@ export const contactSubmissions = pgTable("contact_submissions", {
 export const plans = pgTable("plans", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
-  priceNormal: integer("price_normal").notNull(),
-  priceWithCopay: integer("price_with_copay").notNull(),
+  price: integer("price").notNull(),
   description: text("description").notNull(),
   features: text("features").array().notNull(),
   buttonText: text("button_text").default("Contratar Plano").notNull(),
   redirectUrl: text("redirect_url").default("/contact").notNull(),
-  isPopular: boolean("is_popular").default(false).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   displayOrder: integer("display_order").default(0).notNull(),
+  planType: planTypeEnum("plan_type").default("with_waiting_period").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

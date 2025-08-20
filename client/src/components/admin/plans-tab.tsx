@@ -42,7 +42,7 @@ const planFormSchema = z.object({
   features: z.array(z.string()).min(1, "Pelo menos uma funcionalidade é obrigatória"),
   buttonText: z.string().min(1, "Texto do botão é obrigatório"),
   redirectUrl: z.string().min(1, "URL de redirecionamento é obrigatória"),
-  isPopular: z.boolean().default(false),
+  planType: z.enum(["with_waiting_period", "without_waiting_period"]).default("with_waiting_period"),
 });
 
 type PlanFormData = z.infer<typeof planFormSchema>;
@@ -50,14 +50,12 @@ type PlanFormData = z.infer<typeof planFormSchema>;
 // Componente sortable para cada plano
 function SortablePlan({ 
   plan, 
-  onEdit, 
-  onTogglePopular,
+  onEdit,
   isMobile,
   index
 }: { 
   plan: Plan; 
-  onEdit: (plan: Plan) => void; 
-  onTogglePopular: (planId: string) => void;
+  onEdit: (plan: Plan) => void;
   isMobile: boolean;
   index: number;
 }) {
@@ -82,7 +80,7 @@ function SortablePlan({
     <Card 
       ref={setNodeRef} 
       style={style}
-      className={`bg-[#145759] shadow-lg ${plan.isPopular ? 'ring-2 ring-[#E1AC33]' : ''} min-h-[120px] flex`}
+      className="bg-[#145759] shadow-lg min-h-[120px] flex"
     >
       <div className="flex items-center justify-center w-full py-8">
         <div className="flex items-center justify-between w-full px-6">
@@ -97,23 +95,12 @@ function SortablePlan({
             <div className="flex items-center gap-2">
               <CardTitle className="text-[#FBF9F7] text-xl">{plan.name}</CardTitle>
               <span className="text-[#9fb8b8] text-xs font-medium bg-[#277677]/30 px-2 py-1 rounded-md">
-                {index === 0 ? 'Esquerda' : 'Direita'}
+                {plan.planType === 'with_waiting_period' ? 'Com carência' : 'Sem carência'}
               </span>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              onClick={() => onTogglePopular(plan.id)}
-              variant="ghost"
-              className={plan.isPopular 
-                ? "bg-[#E1AC33] text-[#FBF9F7] border-0 hover:bg-[#E1AC33] hover:text-[#FBF9F7]" 
-                : "bg-[#bababa] text-[#F0EEEC] border-0 hover:bg-[#bababa] hover:text-[#F0EEEC]"
-              }
-            >
-              <Star className={`h-4 w-4 ${plan.isPopular ? 'fill-[#FBF9F7]' : 'fill-[#F0EEEC]'}`} />
-            </Button>
             <Button
               size="sm"
               onClick={() => onEdit(plan)}
@@ -132,8 +119,7 @@ export default function PlansTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [featuresInput, setFeaturesInput] = useState("");
-  const [priceNormalInput, setPriceNormalInput] = useState("0,00");
-  const [priceWithCopayInput, setPriceWithCopayInput] = useState("0,00");
+  const [priceInput, setPriceInput] = useState("0,00");
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -156,7 +142,7 @@ export default function PlansTab() {
       features: [],
       buttonText: "Contratar Plano",
       redirectUrl: "/contact",
-      isPopular: false,
+      planType: "with_waiting_period",
     },
   });
 
@@ -180,25 +166,7 @@ export default function PlansTab() {
 
 
 
-  const togglePopularMutation = useMutation({
-    mutationFn: async (planId: string) => {
-      // First, set all plans to not popular
-      if (plans) {
-        const updates = plans.map(async (plan) => {
-          const isPopular = plan.id === planId ? !plan.isPopular : false;
-          return apiRequest("PUT", `/api/admin/plans/${plan.id}`, { isPopular });
-        });
-        await Promise.all(updates);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      // Notificação de sucesso removida
-    },
-    onError: () => {
-      toast({ title: "Erro ao atualizar popularidade", variant: "destructive" });
-    },
-  });
+
 
   // Mutation para reordenar planos
   const reorderMutation = useMutation({
@@ -244,19 +212,16 @@ export default function PlansTab() {
       features: plan.features,
       buttonText: plan.buttonText || "Contratar Plano",
       redirectUrl: plan.redirectUrl || "/contact",
-      isPopular: plan.isPopular,
+      planType: plan.planType || "with_waiting_period",
     });
     setFeaturesInput(plan.features.join('\n'));
-    setPriceNormalInput((plan.priceNormal / 100).toFixed(2).replace('.', ','));
-    setPriceWithCopayInput((plan.priceWithCopay / 100).toFixed(2).replace('.', ','));
+    setPriceInput((plan.price / 100).toFixed(2).replace('.', ','));
     setIsDialogOpen(true);
   };
 
 
 
-  const handleTogglePopular = (plan: Plan) => {
-    togglePopularMutation.mutate(plan.id);
-  };
+
 
   const parsePrice = (priceString: string): number => {
     // Remove espaços e substitui vírgula por ponto
@@ -269,8 +234,7 @@ export default function PlansTab() {
     const features = featuresInput.split('\n').filter(f => f.trim()).map(f => f.trim());
     const planData = {
       ...data,
-      priceNormal: parsePrice(priceNormalInput),
-      priceWithCopay: parsePrice(priceWithCopayInput),
+      price: parsePrice(priceInput),
       features,
       isActive: true,
     };
@@ -283,8 +247,7 @@ export default function PlansTab() {
   const resetForm = () => {
     form.reset();
     setFeaturesInput("");
-    setPriceNormalInput("0,00");
-    setPriceWithCopayInput("0,00");
+    setPriceInput("0,00");
     setEditingPlan(null);
   };
 
@@ -365,32 +328,39 @@ export default function PlansTab() {
 
               <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
                 <FormItem>
-                  <FormLabel className="text-[#FBF9F7]">Preço Normal (R$)</FormLabel>
+                  <FormLabel className="text-[#FBF9F7]">Preço (R$)</FormLabel>
                   <FormControl>
                     <Input 
                       type="text" 
                       placeholder="0,00" 
-                      value={priceNormalInput}
-                      onChange={(e) => setPriceNormalInput(e.target.value)}
-                      data-testid="input-plan-price-normal"
+                      value={priceInput}
+                      onChange={(e) => setPriceInput(e.target.value)}
+                      data-testid="input-plan-price"
                       className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
                     />
                   </FormControl>
                 </FormItem>
                 
-                <FormItem>
-                  <FormLabel className="text-[#FBF9F7]">Preço com Coparticipação (R$)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="text" 
-                      placeholder="0,00" 
-                      value={priceWithCopayInput}
-                      onChange={(e) => setPriceWithCopayInput(e.target.value)}
-                      data-testid="input-plan-price-copay"
-                      className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                    />
-                  </FormControl>
-                </FormItem>
+                <FormField
+                  control={form.control}
+                  name="planType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[#FBF9F7]">Tipo de Plano</FormLabel>
+                      <FormControl>
+                        <select 
+                          {...field}
+                          className="w-full p-2 bg-[#195d5e] text-[#FBF9F7] border border-[#277677] rounded-md focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                          data-testid="select-plan-type"
+                        >
+                          <option value="with_waiting_period">Com carência e sem coparticipação</option>
+                          <option value="without_waiting_period">Sem carência e com coparticipação</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
@@ -493,7 +463,6 @@ export default function PlansTab() {
                     key={plan.id}
                     plan={plan}
                     onEdit={handleEdit}
-                    onTogglePopular={(planId) => togglePopularMutation.mutate(planId)}
                     isMobile={isMobile}
                     index={index}
                   />

@@ -18,35 +18,23 @@ const formatPrice = (priceInCents: number): string => {
 
 export default function PlansSection() {
   const { redirectToWhatsApp } = useWhatsAppRedirect();
-  const [showCopay, setShowCopay] = useState(false);
+  const [activeTab, setActiveTab] = useState("with_waiting_period");
 
   // Usar hook otimizado para carregamento paralelo de dados da home
   const { data, isLoading, hasError } = useHomePageData();
   const plansData = data.plans || [];
   const error = hasError;
 
-  // Sort plans to put the popular one in the center
-  const plans = [...plansData].sort((a, b) => {
-    if (a.isPopular && !b.isPopular) return 0; // Popular plan goes to middle
-    if (!a.isPopular && b.isPopular) return 0;
-    return 0;
-  });
+  // Separar planos por tipo
+  const plansWithWaitingPeriod = plansData.filter(plan => plan.planType === "with_waiting_period");
+  const plansWithoutWaitingPeriod = plansData.filter(plan => plan.planType === "without_waiting_period");
 
-  // Reorder to put popular plan in center position for 3-column layout
-  const orderedPlans = plans.length === 3 ? (() => {
-    const popularIndex = plans.findIndex(plan => plan.isPopular);
-    if (popularIndex !== -1 && popularIndex !== 1) {
-      const reordered = [...plans];
-      const popularPlan = reordered.splice(popularIndex, 1)[0];
-      reordered.splice(1, 0, popularPlan); // Insert at middle position (index 1)
-      return reordered;
-    }
-    return plans;
-  })() : plans;
+  // Ordenar planos por displayOrder
+  const sortPlans = (plans: Plan[]) => [...plans].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
-  // Grid columns responsive to number of plans (keeps grid visually centered)
-  const gridColsMd = orderedPlans.length >= 2 ? 'md:grid-cols-2' : '';
-  const gridColsLg = orderedPlans.length >= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2';
+  const currentPlans = activeTab === "with_waiting_period" 
+    ? sortPlans(plansWithWaitingPeriod)
+    : sortPlans(plansWithoutWaitingPeriod);
 
   if (isLoading) {
     return (
@@ -92,27 +80,27 @@ export default function PlansSection() {
           </AnimatedSection>
         </div>
 
-        {/* Plan Comparison Toggle */}
+        {/* Plan Tabs */}
         <AnimatedSection animation="scale" delay={300}>
           <div className="mb-8 sm:mb-12">
             <div className="p-1 rounded-lg bg-[#e1ac33] text-[#fbf9f7] mx-auto max-w-2xl">
               <Button
-                onClick={() => setShowCopay(false)}
-                className={`w-1/2 py-3 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${!showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
+                onClick={() => setActiveTab("with_waiting_period")}
+                className={`w-1/2 py-3 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${activeTab === "with_waiting_period" ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
                 style={{ transition: 'none' }}
                 onMouseEnter={(e) => { e.preventDefault(); }}
                 onMouseLeave={(e) => { e.preventDefault(); }}
               >
-                Sem Coparticipação
+                Com carência e sem coparticipação
               </Button>
               <Button
-                onClick={() => setShowCopay(true)}
-                className={`w-1/2 py-3 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${showCopay ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
+                onClick={() => setActiveTab("without_waiting_period")}
+                className={`w-1/2 py-3 text-[#FBF9F7] font-medium rounded-md text-sm sm:text-base mobile-touch-target ${activeTab === "without_waiting_period" ? 'bg-[#2C8587]' : 'bg-[#E1AC33]'}`}
                 style={{ transition: 'none' }}
                 onMouseEnter={(e) => { e.preventDefault(); }}
                 onMouseLeave={(e) => { e.preventDefault(); }}
               >
-                Com Coparticipação
+                Sem carência e com coparticipação
               </Button>
             </div>
           </div>
@@ -123,22 +111,16 @@ export default function PlansSection() {
           animation="slideUp" 
           delay={400} 
           staggerDelay={100}
-          className={`grid grid-cols-1 ${gridColsMd} ${gridColsLg} gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-4xl mx-auto px-4 sm:px-0 pl-[0px] pr-[0px]`}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-16 sm:mb-20 max-w-4xl mx-auto px-4 sm:px-0 pl-[0px] pr-[0px]"
         >
-          {orderedPlans.map((plan, index) => (
-            <Card key={plan.id || index} className={`relative transition-all duration-300 hover:shadow-2xl flex flex-col h-[480px] sm:h-[560px] w-full ${plan.isPopular ? 'bg-[#FBF9F7] border-[#E1AC33] border-2' : 'bg-[#FBF9F7] border-[#277677]/30'}`}>
-              {plan.isPopular && (
-                <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-[#E1AC33] text-[#FBF9F7] px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold">
-                    Mais Popular
-                  </Badge>
-                </div>
-              )}
+          {currentPlans.map((plan, index) => (
+            <Card key={plan.id || index} className="relative transition-all duration-300 hover:shadow-2xl flex flex-col h-[480px] sm:h-[560px] w-full bg-[#FBF9F7] border-[#277677]/30">
+
               
               <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6 flex-shrink-0">
                 <CardTitle className="tracking-tight sm:text-2xl lg:text-3xl font-bold text-[#277677] sm:mb-4 text-[26px] mt-[0px] mb-[0px] pt-[4px] pb-[4px]">{plan.name}</CardTitle>
                 <div className="mb-3 sm:mb-4">
-                  <span className="sm:text-3xl lg:text-4xl font-bold text-[#277677] text-[28px]">R${formatPrice(showCopay ? plan.priceWithCopay : plan.priceNormal)}</span>
+                  <span className="sm:text-3xl lg:text-4xl font-bold text-[#277677] text-[28px]">R${formatPrice(plan.price)}</span>
                   <span className="text-sm sm:text-base lg:text-lg font-medium text-[#302e2b]">/mês</span>
                 </div>
                 <div className="bg-[#277677]/10 px-3 sm:px-4 py-2 sm:py-3 rounded-xl">
@@ -158,11 +140,7 @@ export default function PlansSection() {
                 
                 <div className="mt-auto flex-shrink-0">
                   <Button 
-                    className={`w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target ${
-                      plan.isPopular 
-                        ? 'bg-[#E1AC33] hover:bg-[#E1AC33]/90 text-[#FBF9F7]' 
-                        : 'bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]'
-                    }`}
+                    className="w-full h-10 sm:h-12 text-sm sm:text-base lg:text-lg font-semibold rounded-lg transition-all duration-200 mobile-touch-target bg-[#277677] hover:bg-[#277677]/90 text-[#FBF9F7]"
                     onClick={createRedirectHandler(plan.redirectUrl)}
                   >
                     {plan.buttonText || `Contratar Plano ${plan.name}`}

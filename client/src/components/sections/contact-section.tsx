@@ -13,6 +13,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
+import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -32,6 +33,7 @@ export default function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { settings, shouldShow } = useSiteSettingsWithDefaults();
+  const { getWhatsAppLink } = useWhatsAppRedirect();
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -300,7 +302,14 @@ export default function ContactSection() {
                       <FaWhatsapp className="h-4 w-4 text-[#fbf9f7] flex-shrink-0 mt-0.5" />
                       <div>
                         <div className="font-semibold text-[#fbf9f7]">WhatsApp</div>
-                        <div className="text-muted-foreground">{settings.whatsapp}</div>
+                        <a 
+                          href={getWhatsAppLink()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-[#fbf9f7] transition-colors cursor-pointer"
+                        >
+                          {settings.whatsapp}
+                        </a>
                       </div>
                     </div>
                   )}
