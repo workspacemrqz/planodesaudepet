@@ -98,6 +98,8 @@ export default function NetworkUnitsTab() {
 
   // Use predefined services list for filter dropdown
   const availableServices = useMemo(() => {
+    console.log(`[SERVICES DEBUG] Available services count: ${AVAILABLE_SERVICES.length}`);
+    console.log(`[SERVICES DEBUG] First 3 services:`, AVAILABLE_SERVICES.slice(0, 3));
     return AVAILABLE_SERVICES.sort();
   }, []);
 
@@ -251,11 +253,14 @@ export default function NetworkUnitsTab() {
   };
 
   const handleServiceToggle = (service: string) => {
-    setSelectedServices(prev => 
-      prev.includes(service) 
+    console.log(`[SERVICE TOGGLE] Service: ${service}`);
+    setSelectedServices(prev => {
+      const newServices = prev.includes(service) 
         ? prev.filter(s => s !== service)
-        : [...prev, service]
-    );
+        : [...prev, service];
+      console.log(`[SERVICE TOGGLE] Updated services:`, newServices);
+      return newServices;
+    });
   };
 
   const resetForm = () => {
@@ -348,6 +353,9 @@ export default function NetworkUnitsTab() {
 
   const onSubmit = (data: NetworkUnitFormData) => {
     const services = selectedServices;
+    console.log(`[SUBMIT DEBUG] Selected services:`, services);
+    console.log(`[SUBMIT DEBUG] Services count:`, services.length);
+    
     const unitData: InsertNetworkUnit = {
       ...data,
       rating: data.rating * 10, // Convert from display format (1-5) to stored format (10-50)
@@ -355,6 +363,8 @@ export default function NetworkUnitsTab() {
       isActive: true,
       imageUrl: uploadedImageUrl || data.imageUrl || "",
     };
+
+    console.log(`[SUBMIT DEBUG] Unit data:`, unitData);
 
     if (editingUnit) {
       updateUnitMutation.mutate({ id: editingUnit.id, data: unitData });
@@ -592,7 +602,9 @@ export default function NetworkUnitsTab() {
                     
                     <div className="max-h-64 overflow-y-auto border border-[#277677] rounded-md p-3 bg-[#195d5e]">
                       <div className="grid grid-cols-1 gap-2">
-                        {AVAILABLE_SERVICES.map((service, index) => (
+                        {AVAILABLE_SERVICES.map((service, index) => {
+                          console.log(`[CHECKBOX RENDER] Service ${index}: ${service}`);
+                          return (
                           <label
                             key={index}
                             className="flex items-center space-x-2 cursor-pointer hover:bg-[#2C8587] p-2 rounded"
@@ -605,7 +617,8 @@ export default function NetworkUnitsTab() {
                             />
                             <span className="text-[#FBF9F7] text-sm">{service}</span>
                           </label>
-                        ))}
+                        );
+                        })}
                       </div>
                     </div>
                     
