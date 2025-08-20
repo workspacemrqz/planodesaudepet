@@ -1,12 +1,26 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import fs from "fs";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
   plugins: [
     react(),
     runtimeErrorOverlay(),
+    // Plugin to create uploads directory
+    {
+      name: 'create-uploads-dir',
+      writeBundle() {
+        const uploadsDir = path.resolve(import.meta.dirname, "dist/public/uploads");
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+          console.log('Created uploads directory after build:', uploadsDir);
+          // Create a gitkeep file to ensure the directory is tracked
+          fs.writeFileSync(path.join(uploadsDir, '.gitkeep'), '# This ensures the uploads directory exists\n');
+        }
+      }
+    },
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
@@ -47,6 +61,10 @@ export default defineConfig({
         }
       }
     }
+  },
+  define: {
+    // This helps create the uploads directory during build
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString())
   },
   server: {
     fs: {

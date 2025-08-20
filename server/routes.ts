@@ -444,11 +444,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const filename = req.params.filename;
       const filePath = path.join(uploadDir, filename);
       
+      console.log(`[IMAGE SERVING] Request for: ${filename}`);
+      console.log(`[IMAGE SERVING] Looking at path: ${filePath}`);
+      console.log(`[IMAGE SERVING] Upload dir: ${uploadDir}`);
+      console.log(`[IMAGE SERVING] File exists: ${fs.existsSync(filePath)}`);
+      
       if (!fs.existsSync(filePath)) {
+        console.log(`[IMAGE SERVING] File not found: ${filePath}`);
         return res.status(404).json({ error: "File not found" });
       }
       
-      res.sendFile(filePath);
+      // Set proper content type
+      const ext = path.extname(filename).toLowerCase();
+      let contentType = 'application/octet-stream';
+      if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
+      else if (ext === '.png') contentType = 'image/png';
+      else if (ext === '.gif') contentType = 'image/gif';
+      else if (ext === '.webp') contentType = 'image/webp';
+      
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+      
+      console.log(`[IMAGE SERVING] Serving file: ${filename} as ${contentType}`);
+      res.sendFile(path.resolve(filePath));
     } catch (error) {
       console.error("Error serving file:", error);
       res.status(500).json({ error: "Erro ao servir arquivo" });

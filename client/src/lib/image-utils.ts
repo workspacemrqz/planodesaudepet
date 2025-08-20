@@ -1,5 +1,5 @@
 /**
- * Utility function to construct canonical image URLs
+ * Utility function to construct canonical image URLs (production compatible)
  */
 export async function getImageUrl(imagePath: string | null | undefined, fallback?: string): Promise<string> {
   if (!imagePath) {
@@ -16,29 +16,27 @@ export async function getImageUrl(imagePath: string | null | undefined, fallback
     return imagePath;
   }
 
-  // If it's already a canonical API path, return the full URL
+  // If it's already a canonical API path, return as relative URL
   if (imagePath.startsWith('/api/objects/') && imagePath.endsWith('/image')) {
-    return `http://localhost:3005${imagePath}`;
+    return imagePath;
   }
 
-  // If it's an old-style path with /objects/uploads/, extract objectId and use canonical URL
+  // If it's an old-style path with /objects/uploads/, return as direct path
   if (imagePath.startsWith('/objects/uploads/')) {
-    const objectId = imagePath.replace('/objects/uploads/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
-    return `http://localhost:3005/api/objects/${objectId}/image`;
+    return imagePath;
   }
 
-  // For any other /objects/ path, assume it's an objectId and use canonical URL
+  // For any other /objects/ path, return as direct path
   if (imagePath.startsWith('/objects/')) {
-    const objectId = imagePath.replace('/objects/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
-    return `http://localhost:3005/api/objects/${objectId}/image`;
+    return imagePath;
   }
 
-  // Fallback to original path
-  return `http://localhost:3005${imagePath}`;
+  // Fallback to original path as relative
+  return imagePath;
 }
 
 /**
- * Synchronous version that uses the same canonical URL logic
+ * Synchronous version that returns relative URLs for production compatibility
  */
 export function getImageUrlSync(imagePath: string | null | undefined, fallback?: string): string {
   if (!imagePath) {
@@ -55,23 +53,21 @@ export function getImageUrlSync(imagePath: string | null | undefined, fallback?:
     return imagePath;
   }
 
-  // If it's already a canonical API path, return the full URL
+  // If it's already a canonical API path, return as relative URL
   if (imagePath.startsWith('/api/objects/') && imagePath.endsWith('/image')) {
-    return `http://localhost:3005${imagePath}`;
+    return imagePath;
   }
 
-  // If it's an old-style path with /objects/uploads/, extract objectId and use canonical URL
+  // If it's an old-style path with /objects/uploads/, return as direct path
   if (imagePath.startsWith('/objects/uploads/')) {
-    const objectId = imagePath.replace('/objects/uploads/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
-    return `http://localhost:3005/api/objects/${objectId}/image`;
+    return imagePath;
   }
 
-  // For any other /objects/ path, assume it's an objectId and use canonical URL
+  // For any other /objects/ path, return as direct path
   if (imagePath.startsWith('/objects/')) {
-    const objectId = imagePath.replace('/objects/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
-    return `http://localhost:3005/api/objects/${objectId}/image`;
+    return imagePath;
   }
 
-  // Fallback to original path
-  return `http://localhost:3005${imagePath}`;
+  // Fallback to original path as relative
+  return imagePath;
 }
