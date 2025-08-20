@@ -582,9 +582,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/plans", async (req, res) => {
     try {
+      console.log("Attempting to fetch plans from database...");
       const plans = await storage.getPlans();
+      console.log("Successfully fetched plans:", plans?.length || 0, "plans");
       res.json(plans);
     } catch (error) {
+      console.error("Error in /api/plans:", error);
+      console.error("Error details:", error instanceof Error ? error.message : error);
       res.status(500).json({ error: "Erro ao buscar planos" });
     }
   });

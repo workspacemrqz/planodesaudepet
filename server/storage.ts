@@ -133,7 +133,15 @@ export class DatabaseStorage implements IStorage {
 
   // Plans
   async getPlans(): Promise<Plan[]> {
-    return await db.select().from(plans).where(eq(plans.isActive, true));
+    try {
+      console.log("Executing getPlans query...");
+      const result = await db.select().from(plans).where(eq(plans.isActive, true));
+      console.log("Plans query result:", result);
+      return result;
+    } catch (error) {
+      console.error("Error in getPlans:", error);
+      throw error;
+    }
   }
 
   async getPlan(id: string): Promise<Plan | undefined> {
