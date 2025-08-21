@@ -1,8 +1,23 @@
 # Deploy no EasyPanel - Guia Completo
 
-## Correções Aplicadas (Atualizado)
+## Configuração Atualizada para heroku/builder:24
 
-### NOVA CORREÇÃO - Erro de Build com Dependências do Replit
+### ✅ NOVA CONFIGURAÇÃO - Buildpacks com heroku/builder:24
+- **Atualizado:** `easypanel.json` com configuração correta do builder
+- **Criado:** `project.toml` para especificar buildpacks e stack
+- **Melhorado:** Scripts de build no `package.json` com `postinstall`
+- **Configurado:** Variáveis de ambiente necessárias com descrições
+- **Stack:** heroku-24 (Ubuntu 24.04 LTS)
+
+### Arquivos de Configuração Principais
+1. **project.toml** - Especifica buildpacks e stack
+2. **easypanel.json** - Configuração do EasyPanel
+3. **Procfile** - Comando de inicialização
+4. **.buildpacks** - Lista de buildpacks (legacy)
+
+## Correções Anteriores
+
+### CORREÇÃO - Erro de Build com Dependências do Replit
 - **Problema:** O pacote `@replit/vite-plugin-runtime-error-modal` estava causando erro no build
 - **Solução:** Removido o plugin do Replit do vite.config.ts
 - **Problema 2:** `@tailwindcss/typography` estava como devDependency
@@ -62,17 +77,30 @@ git push origin main
 2. **Configurar Build**
    - Método: `Buildpacks`
    - Builder: `heroku/builder:24`
-   - Build Command: deixe vazio (usa heroku-postbuild automaticamente)
+   - Build Command: `npm run heroku-postbuild` (configurado automaticamente)
+   - Stack: heroku-24 (Ubuntu 24.04 LTS)
 
-3. **Variáveis de Ambiente**
+3. **Variáveis de Ambiente Obrigatórias**
    Adicione as seguintes variáveis:
    ```
    NODE_ENV=production
-   DATABASE_URL=sua_url_do_banco_postgres
+   DATABASE_URL=sua_url_completa_do_postgres
+   ADMIN_USER=seu_email_admin
+   ADMIN_PASSWORD=sua_senha_admin_minimo_12_chars
+   SESSION_SECRET=chave_secreta_minimo_32_chars
    NPM_CONFIG_PRODUCTION=false
+   PORT=8080
+   HOST=0.0.0.0
    ```
 
-4. **Configurar Domínio**
+4. **Variáveis de Ambiente Opcionais**
+   Para compatibilidade com versões anteriores:
+   ```
+   LOGIN=seu_login_admin_legacy
+   SENHA=sua_senha_admin_legacy
+   ```
+
+5. **Configurar Domínio**
    - Configure seu domínio personalizado ou use o subdomínio fornecido
 
 ### Passo 3: Deploy
@@ -129,6 +157,41 @@ ls -la dist/public/
 rm -rf dist node_modules
 npm install
 npm run build
+```
+
+## Arquivos de Configuração para Buildpacks
+
+### project.toml
+Especifica o builder e buildpacks a serem usados:
+```toml
+[_]
+schema-version = "0.2"
+
+[io.buildpacks.stacks]
+id = "heroku-24"
+
+[[io.buildpacks.group]]
+id = "heroku/nodejs"
+version = "*"
+
+[io.buildpacks.build.env]
+NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
+```
+
+### easypanel.json
+Configuração específica do EasyPanel:
+```json
+{
+  "build": {
+    "type": "buildpacks",
+    "builder": "heroku/builder:24",
+    "buildCommand": "npm run heroku-postbuild"
+  },
+  "start": {
+    "cmd": "npm start"
+  }
+}
 ```
 
 ## Estrutura de Arquivos Esperada Após Build

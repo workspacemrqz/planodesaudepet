@@ -13,14 +13,17 @@
     "start": "node server/start-production.js",
     "start:direct": "cross-env NODE_ENV=production node dist/index.js",
     "heroku-postbuild": "npm run build",
-    "check": "tsc",
+    "postinstall": "npm run build",
+    "prebuild": "npm run check",
+    "check": "tsc --noEmit",
     "setup:db": "tsx server/scripts/setup-database.ts",
     "seed:data": "tsx server/scripts/seed-initial-data.ts",
     "test": "vitest",
     "test:run": "vitest run",
     "test:auth": "vitest run server/tests/auth.test.ts",
     "test:no-insert": "vitest run server/tests/no-auto-insert.test.ts",
-    "test:production": "node scripts/test-production.js"
+    "test:production": "node scripts/test-production.js",
+    "clean": "rm -rf dist node_modules/.cache"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.15",
