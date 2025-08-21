@@ -1,5 +1,5 @@
 {
-  "name": "rest-express",
+  "name": "planodesaudepet",
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
@@ -19,7 +19,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:auth": "vitest run server/tests/auth.test.ts",
-    "test:no-insert": "vitest run server/tests/no-auto-insert.test.ts"
+    "test:no-insert": "vitest run server/tests/no-auto-insert.test.ts",
+    "test:production": "node scripts/test-production.js"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.15",
