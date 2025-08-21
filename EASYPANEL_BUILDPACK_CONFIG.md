@@ -170,27 +170,33 @@ echo $SESSION_SECRET
 
 ---
 
-## 🔧 Correção Aplicada
+## 🔧 Correções Aplicadas
 
-**PROBLEMA RESOLVIDO:** Erro TOML na linha 14  
-- ❌ **Antes:** Estrutura TOML conflitante entre `[io.buildpacks.stacks]` e `[[io.buildpacks.build.buildpacks]]`
-- ✅ **Depois:** Estrutura TOML simplificada e correta
+### ✅ PROBLEMA 1 RESOLVIDO: Erro TOML  
+- ❌ **Antes:** Estrutura TOML conflitante causando erro na linha 8/14
+- ✅ **Depois:** Removido `project.toml` problemático, usando apenas `.buildpacks`
 
-### Estrutura TOML Corrigida:
-```toml
-[_]
-schema-version = "0.2"
+### ✅ PROBLEMA 2 IDENTIFICADO: URL Encoding na DATABASE_URL
+- ⚠️ **Detectado:** Caracteres especiais na senha podem causar problemas de conexão
+- 🔧 **Solução:** Verificar se DATABASE_URL está corretamente configurada
 
-[[io.buildpacks.group]]
-id = "heroku/nodejs"
-version = "*"
-
-[io.buildpacks.build.env]
-NODE_ENV = "production"
-NPM_CONFIG_PRODUCTION = "false"
-YARN_PRODUCTION = "false"
-NODE_VERBOSE = "true"
+### Estrutura de Buildpack Simplificada:
 ```
+projeto/
+├── .buildpacks              # heroku/nodejs
+├── easypanel.json          # Configuração EasyPanel  
+├── Procfile               # Comando de inicialização
+├── package.json           # Scripts e dependências
+└── server/start-production.js
+```
+
+### ⚠️ Atenção para DATABASE_URL:
+Se sua senha contém caracteres especiais (`@`, `#`, `%`, etc.), certifique-se de que estão corretamente codificados:
+- `@` → `%40`  
+- `#` → `%23`
+- `%` → `%25`
+
+Ou use aspas simples na variável de ambiente.
 
 ---
 
