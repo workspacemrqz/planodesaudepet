@@ -1,26 +1,12 @@
 [_]
 schema-version = "0.2"
 
-# Stack configuration for heroku/builder:24
-[io.buildpacks.stacks]
-id = "heroku-24"
-
-# Buildpack group configuration
 [[io.buildpacks.group]]
 id = "heroku/nodejs"
 version = "*"
 
-# Build environment variables
 [io.buildpacks.build.env]
 NODE_ENV = "production"
 NPM_CONFIG_PRODUCTION = "false"
 YARN_PRODUCTION = "false"
-# Force Node.js version detection
 NODE_VERBOSE = "true"
-# Optimize build performance
-YARN_CACHE_FOLDER = ".yarn-cache"
-
-# Buildpack configuration
-[[io.buildpacks.build.buildpacks]]
-id = "heroku/nodejs"
-version = "*"

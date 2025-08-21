@@ -170,6 +170,30 @@ echo $SESSION_SECRET
 
 ---
 
-**Status:** ✅ **PRONTO PARA DEPLOY**  
+## 🔧 Correção Aplicada
+
+**PROBLEMA RESOLVIDO:** Erro TOML na linha 14  
+- ❌ **Antes:** Estrutura TOML conflitante entre `[io.buildpacks.stacks]` e `[[io.buildpacks.build.buildpacks]]`
+- ✅ **Depois:** Estrutura TOML simplificada e correta
+
+### Estrutura TOML Corrigida:
+```toml
+[_]
+schema-version = "0.2"
+
+[[io.buildpacks.group]]
+id = "heroku/nodejs"
+version = "*"
+
+[io.buildpacks.build.env]
+NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
+YARN_PRODUCTION = "false"
+NODE_VERBOSE = "true"
+```
+
+---
+
+**Status:** ✅ **PRONTO PARA DEPLOY** *(Erro TOML corrigido)*  
 **Última atualização:** Janeiro 2025  
 **Testado com:** heroku/builder:24, Node.js 18+, EasyPanel v2.0+
