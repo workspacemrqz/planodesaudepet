@@ -3,13 +3,15 @@ import session from "express-session";
 import { AdminUser } from "@shared/schema";
 import rateLimit from "express-rate-limit";
 
+declare module 'express-session' {
+  interface SessionData {
+    user?: AdminUser;
+  }
+}
+
 declare global {
   namespace Express {
     interface User extends AdminUser {}
-    
-    interface Session {
-      user?: AdminUser;
-    }
   }
 }
 

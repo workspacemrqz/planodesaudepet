@@ -349,7 +349,7 @@ export default function PlansTab() {
 
                 {/* Funcionalidades */}
                 <ul className="space-y-2 mb-6">
-                  {plan.features.map((feature, featureIndex) => (
+                  {plan.features.map((feature: string, featureIndex: number) => (
                     <li key={featureIndex} className="flex items-start space-x-3">
                       <Check className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#E1AC33]" />
                       <span className="text-sm text-[#FBF9F7] leading-relaxed">{feature}</span>

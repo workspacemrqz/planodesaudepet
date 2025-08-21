@@ -77,7 +77,7 @@ export default function Network() {
 
       // Service filter
       const matchesService = selectedService === "" || selectedService === "all" ||
-        unit.services.some(service => service.toLowerCase().includes(selectedService.toLowerCase()));
+        unit.services.some((service: string) => service.toLowerCase().includes(selectedService.toLowerCase()));
 
       // Rating filter
       const matchesRating = minRating === "" || minRating === "all" || 
@@ -282,7 +282,7 @@ export default function Network() {
                     <div className="mb-6 flex-1">
                       <h4 className="font-semibold text-[#277677] mb-3">Serviços Disponíveis:</h4>
                       <div className="flex flex-wrap gap-2">
-                        {unit.services.slice(0, 3).map((service, serviceIndex) => (
+                        {unit.services.slice(0, 3).map((service: string, serviceIndex: number) => (
                           <Badge 
                             key={serviceIndex} 
                             className="bg-[#277677]/10 text-[#277677] border-[#277677]/20"

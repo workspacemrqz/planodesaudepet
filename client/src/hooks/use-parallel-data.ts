@@ -1,5 +1,7 @@
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, UseQueryResult } from "@tanstack/react-query";
 import { Plan, NetworkUnit, FaqItem, SiteSettings } from "@shared/schema";
+
+type QueryResult = UseQueryResult<Plan[] | NetworkUnit[] | FaqItem[] | SiteSettings, Error>;
 
 /**
  * Hook para carregamento paralelo de múltiplos tipos de dados
@@ -61,7 +63,7 @@ export function useParallelData(options: {
     });
   }
 
-  const results = useQueries({ queries });
+  const results = useQueries({ queries }) as QueryResult[];
 
   // Mapear resultados para um objeto mais fácil de usar
   let index = 0;
@@ -87,28 +89,28 @@ export function useParallelData(options: {
   } = {};
 
   if (options.plans) {
-    data.plans = results[index]?.data;
+    data.plans = results[index]?.data as Plan[];
     loading.plans = results[index]?.isLoading;
     errors.plans = results[index]?.error;
     index++;
   }
 
   if (options.networkUnits) {
-    data.networkUnits = results[index]?.data;
+    data.networkUnits = results[index]?.data as NetworkUnit[];
     loading.networkUnits = results[index]?.isLoading;
     errors.networkUnits = results[index]?.error;
     index++;
   }
 
   if (options.faq) {
-    data.faq = results[index]?.data;
+    data.faq = results[index]?.data as FaqItem[];
     loading.faq = results[index]?.isLoading;
     errors.faq = results[index]?.error;
     index++;
   }
 
   if (options.siteSettings) {
-    data.siteSettings = results[index]?.data;
+    data.siteSettings = results[index]?.data as SiteSettings;
     loading.siteSettings = results[index]?.isLoading;
     errors.siteSettings = results[index]?.error;
     index++;

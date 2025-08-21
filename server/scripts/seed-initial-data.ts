@@ -14,7 +14,7 @@ async function seedInitialData() {
     
     // Check current state
     const plansCount = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
-    const currentCount = parseInt(plansCount[0]?.count || plansCount.rows?.[0]?.count || '0');
+    const currentCount = parseInt((plansCount[0] as any)?.count || (plansCount as any).rows?.[0]?.count || '0');
     
     console.log(`Current plans count: ${currentCount}`);
     
@@ -72,7 +72,7 @@ async function seedInitialData() {
     
     // Check site settings
     const settingsCount = await db.execute(sql`SELECT COUNT(*) as count FROM site_settings`);
-    const currentSettingsCount = parseInt(settingsCount[0]?.count || settingsCount.rows?.[0]?.count || '0');
+    const currentSettingsCount = parseInt((settingsCount[0] as any)?.count || (settingsCount as any).rows?.[0]?.count || '0');
     
     if (currentSettingsCount > 0) {
       console.log('⚠️  Site settings already exist. Skipping settings insertion.');
@@ -99,8 +99,8 @@ async function seedInitialData() {
     const finalPlansCount = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
     const finalSettingsCount = await db.execute(sql`SELECT COUNT(*) as count FROM site_settings`);
     
-    const plansTotal = finalPlansCount[0]?.count || finalPlansCount.rows?.[0]?.count;
-    const settingsTotal = finalSettingsCount[0]?.count || finalSettingsCount.rows?.[0]?.count;
+    const plansTotal = (finalPlansCount[0] as any)?.count || (finalPlansCount as any).rows?.[0]?.count;
+  const settingsTotal = (finalSettingsCount[0] as any)?.count || (finalSettingsCount as any).rows?.[0]?.count;
     
     console.log(`- Plans: ${plansTotal}`);
     console.log(`- Site settings: ${settingsTotal}`);

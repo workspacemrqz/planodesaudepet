@@ -220,7 +220,7 @@ export async function initializeDatabase() {
     
     // Check if plans exist and insert initial data if needed
     const plansCount = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
-    const currentPlansCount = parseInt(plansCount[0]?.count || plansCount.rows?.[0]?.count || '0');
+    const currentPlansCount = parseInt((plansCount[0] as any)?.count || (plansCount as any).rows?.[0]?.count || '0');
     
     console.log(`Current plans count: ${currentPlansCount}`);
     
@@ -288,7 +288,7 @@ export async function initializeDatabase() {
       );
     `);
     
-    if (!siteSettingsTableExists[0]?.exists) {
+    if (!(siteSettingsTableExists[0] as any)?.exists) {
       console.log('⚠️ site_settings table does not exist. Creating it now...');
       
       await db.execute(sql`
@@ -320,7 +320,7 @@ export async function initializeDatabase() {
     
     // Check if site settings exist and insert initial data if needed
     const settingsCount = await db.execute(sql`SELECT COUNT(*) as count FROM site_settings`);
-    const currentSettingsCount = parseInt(settingsCount[0]?.count || settingsCount.rows?.[0]?.count || '0');
+    const currentSettingsCount = parseInt((settingsCount[0] as any)?.count || (settingsCount as any).rows?.[0]?.count || '0');
     
     if (currentSettingsCount === 0) {
       console.log('🌱 No site settings found, inserting initial settings...');

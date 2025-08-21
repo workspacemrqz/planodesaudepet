@@ -66,7 +66,7 @@ app.use((req, res, next) => {
       await initializeDatabase();
       log("Database schema check completed - no automatic data insertion");
     } catch (error) {
-      log("Database schema initialization failed:", error);
+      log("Database schema initialization failed:", String(error));
       // Continue anyway - the error will be caught by the API endpoints
     }
   }

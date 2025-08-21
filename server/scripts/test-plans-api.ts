@@ -21,7 +21,7 @@ async function testPlansAPI() {
         AND table_name = 'plans'
       ) as exists
     `);
-    const exists = tableExists[0]?.exists || tableExists.rows?.[0]?.exists;
+    const exists = (tableExists[0] as any)?.exists || (tableExists as any).rows?.[0]?.exists;
     console.log('✅ Plans table exists:', exists);
     
     if (!exists) {
@@ -51,13 +51,13 @@ async function testPlansAPI() {
     // Count all plans
     console.log('4. Counting all plans...');
     const totalPlans = await db.execute(sql`SELECT COUNT(*) as count FROM plans`);
-    const totalCount = totalPlans[0]?.count || totalPlans.rows?.[0]?.count;
+    const totalCount = (totalPlans[0] as any)?.count || (totalPlans as any).rows?.[0]?.count;
     console.log('✅ Total plans in database:', totalCount);
     
     // Count active plans
     console.log('5. Counting active plans...');
     const activePlans = await db.execute(sql`SELECT COUNT(*) as count FROM plans WHERE is_active = true`);
-    const activeCount = activePlans[0]?.count || activePlans.rows?.[0]?.count;
+    const activeCount = (activePlans[0] as any)?.count || (activePlans as any).rows?.[0]?.count;
     console.log('✅ Active plans in database:', activeCount);
     
     // List all plans
