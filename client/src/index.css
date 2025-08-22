@@ -48,6 +48,38 @@
   --unipet-light: hsl(0, 0%, 95%);
 }
 
+/* SCROLL SUAVE E ANIMAÇÕES */
+/* Melhorar a transição de scroll em toda a aplicação */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Compensar header fixo */
+}
+
+/* Adicionar easing personalizado para o scroll */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Melhorar transições de botões */
+  .btn-ver-detalhes {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-ver-detalhes:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+  
+  /* Animações de ícones */
+  .icon-arrow {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-ver-detalhes:hover .icon-arrow {
+    transform: translateX(4px) scale(1.1);
+  }
+}
 
 
 /* ADMIN CLEAN DESIGN - Remove ALL borders and outlines */

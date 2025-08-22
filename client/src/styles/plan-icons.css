@@ -1,0 +1,27 @@
+/* Estilos para posicionar os ícones dos planos na parte inferior */
+.plan-icon-bottom {
+  position: absolute !important;
+  bottom: -20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
+  width: 192px !important;
+  height: 192px !important;
+}
+
+.icon-container {
+  position: relative !important;
+  min-height: 192px !important;
+}
+
+.plan-card-with-bottom-icon {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Remover margens e alturas que afetam o layout interno */
+.plan-card-with-bottom-icon .icon-container {
+  position: relative !important;
+  min-height: 192px !important;
+}
