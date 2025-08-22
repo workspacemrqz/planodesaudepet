@@ -126,7 +126,7 @@ export function CacheDebugPanel({ isVisible = false, onToggle }: CacheDebugPanel
                         {query.queryKey.join(' > ')}
                       </span>
                       <div className="flex items-center gap-1">
-                        {(query.state as any).isFetching && (
+                        {query.state.isFetching && (
                           <Refresh className="h-3 w-3 animate-spin text-blue-500" />
                         )}
                         {query.state.error ? (
