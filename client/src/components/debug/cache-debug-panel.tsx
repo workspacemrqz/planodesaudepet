@@ -8,7 +8,7 @@ import {
   Trash2, 
   Database, 
   Clock, 
-  AlertTriangle,
+  AlertCircle,
   CheckCircle,
   X,
   ChevronDown,
@@ -126,11 +126,11 @@ export function CacheDebugPanel({ isVisible = false, onToggle }: CacheDebugPanel
                         {query.queryKey.join(' > ')}
                       </span>
                       <div className="flex items-center gap-1">
-                        {query.state.isFetching && (
+                        {(query.state as any).isFetching && (
                           <Refresh className="h-3 w-3 animate-spin text-blue-500" />
                         )}
                         {query.state.error ? (
-                          <AlertTriangle className="h-3 w-3 text-red-500" />
+                          <AlertCircle className="h-3 w-3 text-red-500" />
                         ) : (
                           <CheckCircle className="h-3 w-3 text-green-500" />
                         )}
