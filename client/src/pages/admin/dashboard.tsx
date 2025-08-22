@@ -2,42 +2,33 @@ import { useState } from "react";
 import { useAdminAuth } from "@/hooks/use-admin-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Users, Settings, MessageSquare, CreditCard, MapPin, HelpCircle, Shield, ChevronDown } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
 import ContactSubmissionsTab from "@/components/admin/contact-submissions-tab";
 import PlansTab from "@/components/admin/plans-tab";
 import NetworkUnitsTab from "@/components/admin/network-units-tab";
 import FaqTab from "@/components/admin/faq-tab";
+
 import SettingsTab from "@/components/admin/settings-tab";
-import AdminCascadeMenu from "@/components/admin/admin-cascade-menu";
-import { useIsMobile } from "@/hooks/use-mobile";
+import AdminChipTabs from "@/components/admin/admin-chip-tabs";
 
 export default function AdminDashboard() {
   const { user, logoutMutation } = useAdminAuth();
   const [activeTab, setActiveTab] = useState("contact");
-  const isMobile = useIsMobile();
 
   const handleLogout = () => {
     logoutMutation.mutate();
   };
 
-  const tabs = [
-    { value: "contact", label: "Formulários", icon: MessageSquare },
-    { value: "plans", label: "Planos", icon: CreditCard },
-    { value: "network", label: "Rede", icon: MapPin },
-    { value: "faq", label: "FAQ", icon: HelpCircle },
-    { value: "settings", label: "Configurações", icon: Settings },
-  ];
-
-  const activeTabData = tabs.find(tab => tab.value === activeTab);
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
 
   return (
     <div className="min-h-screen bg-[#FBF9F7]">
       {/* Header */}
       <header className="bg-[#277677] shadow-lg border-b border-[#277677]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`${isMobile ? 'flex justify-between items-center' : 'flex justify-between items-center'} py-4`}>
+          <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
               <div>
                 <h1 className="text-xl font-bold text-[#FBF9F7]">
@@ -73,47 +64,51 @@ export default function AdminDashboard() {
 
         <Card className="shadow-lg border-none">
           <CardContent className="p-0">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <CardHeader className="pb-0 bg-gradient-to-r from-[#277677]/5 to-[#E1AC33]/5">
-                {isMobile ? (
-                  // Mobile Cascade Menu
-                  <AdminCascadeMenu 
-                    activeTab={activeTab}
-                    onTabChange={setActiveTab}
-                  />
-                ) : (
-                  // Desktop Cascade Menu
-                  <div className="max-w-md">
-                    <AdminCascadeMenu 
-                      activeTab={activeTab}
-                      onTabChange={setActiveTab}
-                    />
-                  </div>
-                )}
-              </CardHeader>
+            <CardHeader className="pb-0 p-0">
+              <AdminChipTabs 
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+              />
+            </CardHeader>
 
-              <div className={`${isMobile ? 'p-4' : 'p-6'}`}>
-                <TabsContent value="contact" className="mt-0">
+            <div className="p-6">
+              {/* Renderização condicional simples e direta */}
+              {activeTab === "contact" && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Formulários de Contato</h3>
                   <ContactSubmissionsTab />
-                </TabsContent>
-                
-                <TabsContent value="plans" className="mt-0">
+                </div>
+              )}
+              
+              {activeTab === "plans" && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Gerenciamento de Planos</h3>
                   <PlansTab />
-                </TabsContent>
-                
-                <TabsContent value="network" className="mt-0">
+                </div>
+              )}
+              
+              {activeTab === "network" && (
+                <div>
                   <NetworkUnitsTab />
-                </TabsContent>
-                
-                <TabsContent value="faq" className="mt-0">
+                </div>
+              )}
+              
+              {activeTab === "faq" && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Perguntas Frequentes</h3>
                   <FaqTab />
-                </TabsContent>
-                
-                <TabsContent value="settings" className="mt-0">
+                </div>
+              )}
+              
+
+              
+              {activeTab === "settings" && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Configurações</h3>
                   <SettingsTab />
-                </TabsContent>
-              </div>
-            </Tabs>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </main>

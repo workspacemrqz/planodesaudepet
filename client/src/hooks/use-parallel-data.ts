@@ -92,6 +92,7 @@ export function useParallelData(options: {
     data.plans = results[index]?.data as Plan[];
     loading.plans = results[index]?.isLoading;
     errors.plans = results[index]?.error;
+
     index++;
   }
 

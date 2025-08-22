@@ -1,13 +1,13 @@
-import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./scripts/initialize-database";
+import { autoConfig } from "./config";
 
 const app = express();
 
 // Trust proxy for proper IP handling in production
-if (process.env.NODE_ENV === 'production') {
+if (autoConfig.get('NODE_ENV') === 'production') {
   app.set('trust proxy', true);
 }
 
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Add CORS headers for production
 app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production') {
+  if (autoConfig.get('NODE_ENV') === 'production') {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -60,13 +60,23 @@ app.use((req, res, next) => {
 
 (async () => {
   // Initialize database schema only (no data insertion)
-  if (process.env.NODE_ENV === 'production') {
+  if (autoConfig.get('NODE_ENV') === 'production') {
     try {
       log("Checking database schema in production...");
       await initializeDatabase();
       log("Database schema check completed - no automatic data insertion");
     } catch (error) {
       log("Database schema initialization failed:", String(error));
+      // Continue anyway - the error will be caught by the API endpoints
+    }
+  } else {
+    // In development, always try to initialize database
+    try {
+      log("Initializing database in development...");
+      await initializeDatabase();
+      log("Database initialization completed successfully");
+    } catch (error) {
+      log("Database initialization failed in development:", String(error));
       // Continue anyway - the error will be caught by the API endpoints
     }
   }
@@ -77,14 +87,15 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    console.error('Error middleware caught:', err);
     res.status(status).json({ message });
-    throw err;
+    // Não fazer throw do erro para evitar crash do servidor
   });
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  if (autoConfig.get('NODE_ENV') === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
@@ -94,9 +105,11 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 8080 for production, 3000 for development.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || (process.env.NODE_ENV === 'production' ? '8080' : '3000'), 10);
-  const host = process.env.HOST || '0.0.0.0';
+  const port = parseInt(autoConfig.get('PORT'), 10);
+  const host = autoConfig.get('HOST');
   server.listen(port, host, () => {
     log(`serving on http://${host}:${port}`);
+    log(`Environment: ${autoConfig.get('NODE_ENV')}`);
+    log(`Cache headers: Configured for optimal performance`);
   });
 })();

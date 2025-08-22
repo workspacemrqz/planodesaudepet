@@ -1,8 +1,9 @@
 import { Storage, File } from "@google-cloud/storage";
 import { Response } from "express";
 import { randomUUID } from "crypto";
+import { autoConfig } from "./config";
 
-const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
+const REPLIT_SIDECAR_ENDPOINT = autoConfig.get('REPLIT_SIDECAR_ENDPOINT') || "http://127.0.0.1:1106";
 
 // The object storage client is used to interact with the object storage service.
 export const objectStorageClient = new Storage({
@@ -20,7 +21,7 @@ export const objectStorageClient = new Storage({
     },
     universe_domain: "googleapis.com",
   },
-  projectId: "",
+  projectId: autoConfig.get('GOOGLE_CLOUD_PROJECT_ID') || "",
 });
 
 export class ObjectNotFoundError extends Error {
@@ -37,7 +38,7 @@ export class ObjectStorageService {
 
   // Gets the private object directory.
   getPrivateObjectDir(): string {
-    const dir = process.env.PRIVATE_OBJECT_DIR || "";
+    const dir = autoConfig.get('PRIVATE_OBJECT_DIR') || "";
     if (!dir) {
       throw new Error(
         "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' " +

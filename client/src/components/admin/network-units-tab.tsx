@@ -11,13 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Stepper, { Step } from "@/components/ui/Stepper";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Edit, Trash2, MapPin, Phone, Star, ChevronLeft, ChevronRight, Search, Filter, X } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SimpleImageUploader } from "@/components/SimpleImageUploader";
-import { getImageUrlSync } from "@/lib/image-utils";
+import { RobustImage } from "@/components/ui/image";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
@@ -79,21 +80,31 @@ export default function NetworkUnitsTab() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [unitToDelete, setUnitToDelete] = useState<NetworkUnit | null>(null);
   
   // Filter states
   const [searchText, setSearchText] = useState("");
-  const [filterByRating, setFilterByRating] = useState<string>("all");
   const [filterByService, setFilterByService] = useState<string>("all");
   const [filterByCity, setFilterByCity] = useState<string>("all");
   
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  const { data: units, isLoading } = useQuery<NetworkUnit[]>({
+  const { data: units, isLoading, error } = useQuery<NetworkUnit[]>({
     queryKey: ["/api/admin/network-units"],
+    queryFn: async () => {
+      const response = await fetch("/api/admin/network-units", {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Falha ao carregar unidades da rede");
+      }
+      return response.json();
+    },
+    retry: 2,
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
   // Use predefined services list for filter dropdown
@@ -126,21 +137,13 @@ export default function NetworkUnitsTab() {
       const matchesCity = filterByCity === "all" || 
         unit.address.toLowerCase().includes(filterByCity.toLowerCase());
       
-      // Filter by rating (using same logic as public page)
-      const unitRating = unit.rating / 10; // Convert from stored format (10-50) to display format (1-5)
-      const matchesRating = filterByRating === "all" || 
-        (filterByRating === "4.5" && unitRating >= 4.5) ||
-        (filterByRating === "4.0" && unitRating >= 4.0) ||
-        (filterByRating === "3.5" && unitRating >= 3.5) ||
-        (filterByRating === "3.0" && unitRating >= 3.0);
-      
       // Filter by service
       const matchesService = filterByService === "all" || 
         unit.services.includes(filterByService);
       
-      return matchesSearch && matchesCity && matchesRating && matchesService;
+      return matchesSearch && matchesCity && matchesService;
     });
-  }, [units, searchText, filterByCity, filterByRating, filterByService]);
+  }, [units, searchText, filterByCity, filterByService]);
 
   const form = useForm<NetworkUnitFormData>({
     resolver: zodResolver(networkUnitFormSchema),
@@ -269,7 +272,6 @@ export default function NetworkUnitsTab() {
     });
     setSelectedServices([]);
     setUploadedImageUrl(null);
-    setCurrentStep(1);
     setEditingUnit(null);
     setIsUploading(false);
   };
@@ -297,7 +299,6 @@ export default function NetworkUnitsTab() {
       }
     }
     setUploadedImageUrl(previewUrl);
-    setCurrentStep(1);
     setIsDialogOpen(true);
   };
 
@@ -306,13 +307,7 @@ export default function NetworkUnitsTab() {
     setIsDialogOpen(true);
   };
 
-  const nextStep = () => {
-    if (currentStep < 3) setCurrentStep(currentStep + 1);
-  };
 
-  const prevStep = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
-  };
 
   const handleDelete = (unit: NetworkUnit) => {
     setUnitToDelete(unit);
@@ -363,6 +358,15 @@ export default function NetworkUnitsTab() {
     }
   };
 
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500 mb-4">Erro ao carregar unidades da rede: {error.message}</p>
+        <Button onClick={() => window.location.reload()}>Tentar novamente</Button>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -395,295 +399,280 @@ export default function NetworkUnitsTab() {
               Nova Unidade
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-full sm:max-w-2xl admin-dialog-content p-0">
+          <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mx-auto rounded-lg md:rounded-xl">
             <div className="p-6">
-              <DialogHeader className="pb-2">
-                <DialogTitle className="text-[#ffffff] mb-0">
-                  {editingUnit ? "Editar Unidade" : "Nova Unidade"} - Passo {currentStep} de 3
+              <DialogHeader className="px-2 md:px-0">
+                <DialogTitle className="text-[#ffffff] text-lg md:text-xl text-center md:text-left">
+                  {editingUnit ? "Editar Unidade" : "Nova Unidade"}
                 </DialogTitle>
               </DialogHeader>
               
               
 
               <Form {...form}>
-                <div className="space-y-4 admin-no-focus" onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                  }
-                }}>
-                
-                {/* Step 1: Basic Information */}
-                {currentStep === 1 && (
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-[#FBF9F7]">Informações Básicas</h4>
-                    
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#FBF9F7]">Nome da Unidade</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Hospital Veterinário São Paulo"
-                              {...field}
-                              data-testid="input-unit-name"
-                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#FBF9F7]">Endereço</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Rua das Flores, 123 - Centro"
-                              {...field}
-                              data-testid="input-unit-address"
-                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#FBF9F7]">Telefone</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="(11) 99999-9999"
-                              {...field}
-                              data-testid="input-unit-phone"
-                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="whatsapp"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#FBF9F7]">WhatsApp</FormLabel>
-                          <FormControl>
-                            <div className="flex">
-                              <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md">
-                                https://wa.me/
-                              </span>
-                              <Input
-                                placeholder="11999999999"
-                                {...field}
-                                className="rounded-l-none bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                                maxLength={11}
-                                onChange={(e) => {
-                                  const value = e.target.value.replace(/\D/g, '');
-                                  field.onChange(value);
-                                }}
-                                data-testid="input-unit-whatsapp"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="googleMapsUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#FBF9F7]">Link do Google Maps</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="https://maps.google.com/..."
-                              {...field}
-                              data-testid="input-unit-google-maps"
-                              className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="rating"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3 mt-[40px] mb-[40px]">
-                          <div className="flex items-center gap-2">
-                            <FormLabel className="text-[#FBF9F7]">Avaliação</FormLabel>
-                            <span className="font-medium text-[#e1ac33]">{field.value.toFixed(1)}</span>
-                          </div>
-                          <FormControl>
-                            <Slider
-                              min={1}
-                              max={5}
-                              step={0.1}
-                              value={[field.value]}
-                              onValueChange={(values) => field.onChange(values[0])}
-                              className="w-full"
-                              data-testid="slider-unit-rating"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-
-                {/* Step 2: Image Upload */}
-                {currentStep === 2 && (
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-[#FBF9F7]">Imagem da Unidade</h4>
-                    
-                    <div className="space-y-3">
-                      <SimpleImageUploader onFileSelect={handleImageUpload} isUploading={isUploading} hasImage={!!uploadedImageUrl} />
+                <div className="mt-2 md:mt-4 px-2 md:px-0">
+                  <Stepper
+                  initialStep={1}
+                  onStepChange={(step) => {
+                    console.log(`Network units dialog: Step changed to ${step}`);
+                  }}
+                  onFinalStepCompleted={() => {
+                    console.log("Network units dialog: Todos os steps completados!");
+                    // Sincronizar serviços selecionados com o formulário
+                    form.setValue('services', selectedServices);
+                    form.handleSubmit(onSubmit)();
+                  }}
+                  backButtonText="Anterior"
+                  nextButtonText="Próximo"
+                  backButtonProps={{
+                    className: "bg-[#2C8587] text-[#F7F5F3] border-[#277677] hover:bg-[#277677] px-3 py-2 md:px-4 rounded text-sm md:text-base w-full md:w-auto"
+                  }}
+                  nextButtonProps={{
+                    className: "bg-[#277677] text-[#FBF9F7] hover:bg-[#1c6363] px-3 py-2 md:px-4 rounded text-sm md:text-base w-full md:w-auto"
+                  }}
+                >
+                  <Step>
+                    <div className="space-y-3 md:space-y-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Informações Básicas</h3>
                       
-                      {uploadedImageUrl && !isUploading && (
-                        <div className="space-y-3">
-                          <div className="text-sm p-2 rounded bg-[#277677] text-[#ffffff]">
-                            ✓ Imagem carregada com sucesso
-                          </div>
-                          <div className="w-32 h-32 rounded-lg square-image-container bg-gray-100">
-                            <img 
-                              src={(() => {
-                                const url = getImageUrlSync(uploadedImageUrl);
-                                console.log(`[IMAGE DEBUG] Original path: ${uploadedImageUrl}, Generated URL: ${url}`);
-                                return url;
-                              })()} 
-                              alt="Preview" 
-                              className="w-full h-full object-cover rounded-lg"
-                              onError={(e) => {
-                                console.error(`[IMAGE ERROR] Failed to load image:`, e.currentTarget.src);
-                                e.currentTarget.style.display = 'none';
-                                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                              }}
-                            />
-                            <div className="hidden text-gray-500 text-xs items-center justify-center h-full">Erro ao carregar</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="block text-sm font-medium text-[#FBF9F7] mb-2">Nome da Unidade</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Hospital Veterinário São Paulo"
+                                {...field}
+                                data-testid="input-unit-name"
+                                className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                {/* Step 3: Services */}
-                {currentStep === 3 && (
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-[#FBF9F7]">Serviços Disponíveis</h4>
-                    
-                    <div className="max-h-64 overflow-y-auto border border-[#277677] rounded-md p-3 bg-[#195d5e]">
-                      <div className="grid grid-cols-1 gap-2">
-                        {AVAILABLE_SERVICES.map((service, index) => (
-                          <label
-                            key={index}
-                            className="flex items-center space-x-2 cursor-pointer hover:bg-[#2C8587] p-2 rounded"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={selectedServices.includes(service)}
-                              onChange={() => handleServiceToggle(service)}
-                              className="rounded border-[#277677] text-[#E1AC33] focus:ring-[#E1AC33] focus:ring-offset-0 bg-[#195d5e]"
-                            />
-                            <span className="text-[#FBF9F7] text-sm">{service}</span>
-                          </label>
-                        ))}
+                      <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="block text-sm font-medium text-[#FBF9F7] mb-2">Endereço</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Rua das Flores, 123 - Centro"
+                                {...field}
+                                data-testid="input-unit-address"
+                                className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="block text-sm font-medium text-[#FBF9F7] mb-2">Telefone</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="(11) 99999-9999"
+                                {...field}
+                                data-testid="input-unit-phone"
+                                className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="whatsapp"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="block text-sm font-medium text-[#FBF9F7] mb-2">WhatsApp</FormLabel>
+                            <FormControl>
+                              <div className="flex">
+                                <span className="inline-flex items-center px-3 text-sm text-[#302e2b] bg-[#DED8CE] rounded-l-md border border-[#c7c1b7]">
+                                  https://wa.me/
+                                </span>
+                                <Input
+                                  placeholder="11999999999"
+                                  {...field}
+                                  className="rounded-l-none bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                                  maxLength={11}
+                                  onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, '');
+                                    field.onChange(value);
+                                  }}
+                                  data-testid="input-unit-whatsapp"
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="googleMapsUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="block text-sm font-medium text-[#FBF9F7] mb-2">Link do Google Maps</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="https://maps.google.com/..."
+                                {...field}
+                                data-testid="input-unit-google-maps"
+                                className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="rating"
+                        render={({ field }) => (
+                          <FormItem className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <FormLabel className="block text-sm font-medium text-[#FBF9F7] mb-2">Avaliação</FormLabel>
+                              <span className="font-medium text-[#e1ac33]">{field.value.toFixed(1)}</span>
+                            </div>
+                            <FormControl>
+                              <Slider
+                                min={1}
+                                max={5}
+                                step={0.1}
+                                value={[field.value]}
+                                onValueChange={(values) => field.onChange(values[0])}
+                                className="w-full"
+                                data-testid="slider-unit-rating"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </Step>
+                  
+                  <Step>
+                    <div className="space-y-3 md:space-y-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Imagem da Unidade</h3>
+                      
+                      <div className="space-y-3">
+                        <SimpleImageUploader onFileSelect={handleImageUpload} isUploading={isUploading} hasImage={!!uploadedImageUrl} />
+                        
+                        {uploadedImageUrl && !isUploading && (
+                          <div className="space-y-3">
+                            <div className="text-sm p-2 rounded bg-[#195d5e] text-[#FBF9F7] border border-[#277677]/20">
+                              ✓ Imagem carregada com sucesso
+                            </div>
+                            <div className="w-32 h-32 rounded-lg square-image-container bg-gray-100">
+                              <img 
+                                src={(() => {
+                                  const url = uploadedImageUrl;
+                                  console.log(`[IMAGE DEBUG] Original path: ${uploadedImageUrl}, Generated URL: ${url}`);
+                                  return url;
+                                })()} 
+                                alt="Preview" 
+                                className="w-full h-full object-cover rounded-lg"
+                                onError={(e) => {
+                                  console.error(`[IMAGE ERROR] Failed to load image:`, e.currentTarget.src);
+                                  e.currentTarget.style.display = 'none';
+                                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                }}
+                              />
+                              <div className="hidden text-gray-500 text-xs items-center justify-center h-full">Erro ao carregar</div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    
-                    <div className="text-xs text-[#FBF9F7]">
-                      Selecionados: {selectedServices.length} serviços
-                    </div>
-                  </div>
-                )}
-
-                {/* Navigation Buttons */}
-                <div className="flex justify-center gap-2">
-                  {currentStep === 1 ? (
-                    // Step 1: Cancel + Next buttons side by side
-                    <>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={() => setIsDialogOpen(false)}
-                        data-testid="button-cancel-unit"
-                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
-                      >
-                        Cancelar
-                      </Button>
-                      <Button 
-                        type="button"
-                        onClick={nextStep}
-                        data-testid="button-next-step"
-                        className="text-[#ffffff] mobile-touch-target flex-1 max-w-[140px]"
-                      >
-                        Próximo
-                        <ChevronRight className="h-4 w-4 ml-2" />
-                      </Button>
-                    </>
-                  ) : (
-                    // Steps 2-3: Previous + Next/Save buttons
-                    <>
-                      <Button 
-                        type="button" 
-                        variant="outline"
-                        onClick={prevStep}
-                        data-testid="button-prev-step"
-                        className="mobile-touch-target flex-1 max-w-[140px] bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
-                      >
-                        <ChevronLeft className="h-4 w-4 mr-2" />
-                        Anterior
-                      </Button>
+                  </Step>
+                  
+                  <Step>
+                    <div className="space-y-3 md:space-y-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Serviços Disponíveis</h3>
                       
-                      {currentStep < 3 ? (
-                        <Button 
-                          type="button"
-                          onClick={nextStep}
-                          data-testid="button-next-step"
-                          className="text-[#ffffff] mobile-touch-target flex-1 max-w-[140px]"
-                        >
-                          Próximo
-                          <ChevronRight className="h-4 w-4 ml-2" />
-                        </Button>
-                      ) : (
-                        <Button 
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // Sincronizar serviços selecionados com o formulário
-                            form.setValue('services', selectedServices);
-                            form.handleSubmit(onSubmit)(e);
-                          }}
-                          disabled={createUnitMutation.isPending || updateUnitMutation.isPending}
-                          data-testid="button-save-unit"
-                          className="text-[#ffffff] mobile-touch-target flex-1 max-w-[200px]"
-                        >
-                          {editingUnit ? "Atualizar" : "Criar"} Unidade
-                        </Button>
-                      )}
-                    </>
-                  )}
-                </div>
-                </div>
-              </Form>
+                      <div className="max-h-64 overflow-y-auto border border-[#277677] rounded-md p-3 bg-[#195d5e]">
+                        <div className="grid grid-cols-1 gap-2">
+                          {AVAILABLE_SERVICES.map((service, index) => (
+                            <label
+                              key={index}
+                              className="flex items-center space-x-2 cursor-pointer hover:bg-[#2C8587] p-2 rounded"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedServices.includes(service)}
+                                onChange={() => handleServiceToggle(service)}
+                                className="rounded border-[#277677] text-[#E1AC33] focus:ring-[#E1AC33] focus:ring-offset-0 bg-[#195d5e]"
+                              />
+                              <span className="text-[#FBF9F7] text-sm">{service}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="text-xs text-[#FBF9F7]/70 mt-1">
+                        Selecionados: {selectedServices.length} serviços
+                      </div>
+                    </div>
+                  </Step>
+                  
+                  <Step>
+                    <div className="space-y-3 md:space-y-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Revisão e Confirmação</h3>
+                      
+                      <div className="bg-[#195d5e] p-3 md:p-4 rounded-lg border border-[#277677]/20">
+                        <h4 className="font-medium text-[#FBF9F7] mb-2 md:mb-3 text-left">Resumo da Unidade:</h4>
+                        
+                        <div className="text-sm leading-tight">
+                          <div className="text-[#FBF9F7] font-medium mb-1 text-left">{form.getValues('name')}</div>
+                          <div className="text-[#FBF9F7] font-medium mb-1 text-left">{form.getValues('address')}</div>
+                          <div className="text-[#FBF9F7] font-medium mb-1 text-left">{form.getValues('phone')}</div>
+                          <div className="text-[#FBF9F7] font-medium mb-1 text-left">{form.getValues('whatsapp')}</div>
+                          <div className="text-[#FBF9F7] font-medium mb-1 text-left">{form.getValues('googleMapsUrl')}</div>
+                          <div className="text-[#FBF9F7] font-medium mb-1 text-left">Avaliação: {form.getValues('rating').toFixed(1)}</div>
+                        </div>
+                        
+                        <div className="mt-3 md:mt-4">
+                          <h5 className="font-medium text-[#FBF9F7] mb-2 text-left">Serviços Selecionados:</h5>
+                          <ul className="text-sm text-[#FBF9F7]/80 space-y-1">
+                            {selectedServices.map((service, index) => (
+                              <li key={index} className="flex items-center">
+                                <span className="text-[#277677] mr-2">•</span>
+                                {service}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        {uploadedImageUrl && (
+                          <div className="mt-3 md:mt-4">
+                            <h5 className="font-medium text-[#FBF9F7] mb-2 text-left">Imagem:</h5>
+                            <div className="text-sm text-[#FBF9F7]/80">
+                              ✓ Imagem carregada com sucesso
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Step>
+                                   </Stepper>
+                 </div>
+               </Form>
             </div>
           </DialogContent>
         </Dialog>
@@ -692,7 +681,7 @@ export default function NetworkUnitsTab() {
       <div className="mb-6 space-y-4">
 
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Search by name/address */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#fbf9f7]">
@@ -701,10 +690,10 @@ export default function NetworkUnitsTab() {
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-[#FBF9F7]" />
               <Input
-                placeholder="Digite o nome ou endereço..."
+                placeholder="Buscar..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="pl-10 text-[#FBF9F7] bg-[#145759] placeholder:text-[#FBF9F7]/60"
+                className="pl-10 text-[#FBF9F7] bg-[#195d5e] placeholder:text-[#FBF9F7] admin-rede-search"
                 data-testid="input-search-units"
               />
             </div>
@@ -716,7 +705,7 @@ export default function NetworkUnitsTab() {
               Filtrar por cidade
             </label>
             <Select value={filterByCity} onValueChange={setFilterByCity}>
-              <SelectTrigger className="bg-[#145759] text-[#fbf9f7]" data-testid="select-city-filter">
+              <SelectTrigger className="bg-[#195d5e] text-[#fbf9f7]" data-testid="select-city-filter">
                 <SelectValue placeholder="Todas as cidades" />
               </SelectTrigger>
               <SelectContent>
@@ -730,32 +719,13 @@ export default function NetworkUnitsTab() {
             </Select>
           </div>
 
-          {/* Filter by rating */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[#fbf9f7]">
-              Filtrar por avaliação
-            </label>
-            <Select value={filterByRating} onValueChange={setFilterByRating}>
-              <SelectTrigger className="bg-[#145759] text-[#fbf9f7]" data-testid="select-rating-filter">
-                <SelectValue placeholder="Todas as avaliações" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Qualquer avaliação</SelectItem>
-                <SelectItem value="4.5">4.5+ estrelas</SelectItem>
-                <SelectItem value="4.0">4.0+ estrelas</SelectItem>
-                <SelectItem value="3.5">3.5+ estrelas</SelectItem>
-                <SelectItem value="3.0">3.0+ estrelas</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Filter by service */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#fbf9f7]">
               Filtrar por serviço
             </label>
             <Select value={filterByService} onValueChange={setFilterByService}>
-              <SelectTrigger className="bg-[#145759] text-[#fbf9f7]" data-testid="select-service-filter">
+              <SelectTrigger className="bg-[#195d5e] text-[#fbf9f7]" data-testid="select-service-filter">
                 <SelectValue placeholder="Todos os serviços" />
               </SelectTrigger>
               <SelectContent>
@@ -771,17 +741,19 @@ export default function NetworkUnitsTab() {
         </div>
 
         {/* Clear filters button */}
-        {(searchText || filterByCity !== "all" || filterByRating !== "all" || filterByService !== "all") && (
+        {(searchText || filterByCity !== "all" || filterByService !== "all") && (
           <div className="flex justify-end">
             <Button
               variant="outline"
               onClick={() => {
                 setSearchText("");
                 setFilterByCity("all");
-                setFilterByRating("all");
                 setFilterByService("all");
               }}
-              className="hover:bg-[#277677] hover:text-[#fbf9f7] text-[#fbf9f7] bg-[#145759] flex items-center justify-center"
+              className="hover:text-[#fbf9f7] text-[#fbf9f7] flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(to top, #1c6363, #277677)'
+              }}
               data-testid="button-clear-filters"
             >
               <X className="h-4 w-4 mr-1" />
@@ -800,7 +772,7 @@ export default function NetworkUnitsTab() {
       </div>
       <div className="space-y-4">
         {filteredUnits?.map((unit) => (
-          <div key={unit.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+          <div key={unit.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#195d5e]">
             <div className="flex items-center justify-between py-4">
               <div className="flex-1">
                 <h3 className="text-[#FBF9F7] font-medium">{unit.name}</h3>
@@ -809,19 +781,26 @@ export default function NetworkUnitsTab() {
                 <Button
                   size="sm"
                   onClick={() => handleEdit(unit)}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 rounded-md h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585]"
+                  className="text-[#FBF9F7]"
+                  style={{
+                    background: 'linear-gradient(to top, #1c6363, #277677)'
+                  }}
                   data-testid={`button-edit-unit-${unit.id}`}
                 >
-                  <Edit className="h-4 w-4" />
+                  <Edit className="h-4 w-4 mr-2" />
+                  Editar
                 </Button>
                 <Button
                   size="sm"
-                  variant="ghost"
                   onClick={() => handleDelete(unit)}
-                  className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] focus:bg-[#FBF9F7] active:bg-[#FBF9F7] hover:text-[#2F8585] focus:text-[#2F8585] active:text-[#2F8585]"
+                  className="text-[#FBF9F7]"
+                  style={{
+                    background: 'linear-gradient(to top, #c99524, #E1AC33)'
+                  }}
                   data-testid={`button-delete-unit-${unit.id}`}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4 mr-2 text-[#FBF9F7]" />
+                  Apagar
                 </Button>
               </div>
             </div>

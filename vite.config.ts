@@ -2,6 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import fs from "fs";
+import { config } from "dotenv";
+
+// Carrega as variáveis de ambiente
+config();
 
 export default defineConfig({
   base: '/',

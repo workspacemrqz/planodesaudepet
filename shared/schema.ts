@@ -3,8 +3,6 @@ import { pgTable, text, varchar, timestamp, integer, boolean, json, pgEnum } fro
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const planTypeEnum = pgEnum('plan_type_enum', ['with_waiting_period', 'without_waiting_period']);
-
 export const contactSubmissions = pgTable("contact_submissions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
@@ -19,6 +17,9 @@ export const contactSubmissions = pgTable("contact_submissions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Enum para tipos de plano
+export const planTypeEnum = pgEnum("plan_type_enum", ["with_waiting_period", "without_waiting_period"]);
+
 export const plans = pgTable("plans", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull().unique(),
@@ -27,9 +28,9 @@ export const plans = pgTable("plans", {
   features: text("features").array().notNull(),
   buttonText: text("button_text").default("Contratar Plano").notNull(),
   redirectUrl: text("redirect_url").default("/contact").notNull(),
+  planType: planTypeEnum("plan_type").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   displayOrder: integer("display_order").default(0).notNull(),
-  planType: planTypeEnum("plan_type").default("with_waiting_period").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -96,6 +97,52 @@ export const fileMetadata = pgTable("file_metadata", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Tabelas para a área do cliente
+export const clientes = pgTable("clientes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  nome: text("nome").notNull(),
+  cpf: varchar("cpf").notNull().unique(),
+  email: text("email").notNull().unique(),
+  telefone: text("telefone").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const planosClientes = pgTable("planos_clientes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clienteId: varchar("cliente_id").notNull().references(() => clientes.id),
+  planoId: varchar("plano_id").notNull().references(() => plans.id),
+  numeroApolice: varchar("numero_apolice").notNull().unique(),
+  mensalidade: integer("mensalidade").notNull(), // em centavos
+  vencimento: integer("vencimento").notNull(), // dia do mês
+  formaPagamento: text("forma_pagamento").notNull(),
+  coparticipacao: text("coparticipacao").notNull(),
+  status: text("status").default("ativo").notNull(), // ativo, cancelado, suspenso
+  dataInicio: timestamp("data_inicio").notNull(),
+  dataFim: timestamp("data_fim"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const beneficiosPlanos = pgTable("beneficios_planos", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  planoId: varchar("plano_id").notNull().references(() => plans.id),
+  tipoBeneficio: text("tipo_beneficio").notNull(), // consultas, exames, cirurgias, emergencias
+  carencia: text("carencia").notNull(), // em dias ou "imediato"
+  descricao: text("descricao").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const informacoesContato = pgTable("informacoes_contato", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  atendimento: text("atendimento").notNull(),
+  app: text("app").notNull(),
+  site: text("site").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
   id: true,
@@ -132,6 +179,31 @@ export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
   updatedAt: true,
 });
 
+// Schemas para a área do cliente
+export const insertClienteSchema = createInsertSchema(clientes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPlanoClienteSchema = createInsertSchema(planosClientes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertBeneficioPlanoSchema = createInsertSchema(beneficiosPlanos).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertInformacaoContatoSchema = createInsertSchema(informacoesContato).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
@@ -146,9 +218,21 @@ export type SiteSettings = typeof siteSettings.$inferSelect;
 export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
 export type FileMetadata = typeof fileMetadata.$inferSelect;
 
+// Types para a área do cliente
+export type InsertCliente = z.infer<typeof insertClienteSchema>;
+export type Cliente = typeof clientes.$inferSelect;
+export type InsertPlanoCliente = z.infer<typeof insertPlanoClienteSchema>;
+export type PlanoCliente = typeof planosClientes.$inferSelect;
+export type InsertBeneficioPlano = z.infer<typeof insertBeneficioPlanoSchema>;
+export type BeneficioPlano = typeof beneficiosPlanos.$inferSelect;
+export type InsertInformacaoContato = z.infer<typeof insertInformacaoContatoSchema>;
+export type InformacaoContato = typeof informacoesContato.$inferSelect;
+
 // Admin user type for session management (no database table)
 export interface AdminUser {
   id: string;
   username: string;
   createdAt: Date;
 }
+
+

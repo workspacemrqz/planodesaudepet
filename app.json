@@ -15,11 +15,11 @@
       "description": "PostgreSQL database URL (required)",
       "required": true
     },
-    "ADMIN_USER": {
+    "LOGIN": {
       "description": "Admin username/email for login",
       "required": true
     },
-    "ADMIN_PASSWORD": {
+    "SENHA": {
       "description": "Admin password (minimum 12 characters)",
       "required": true
     },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
+import Stepper, { Step } from "@/components/ui/Stepper";
 import {
   DndContext,
   closestCenter,
@@ -97,22 +98,29 @@ function SortableFaqItem({
               e.stopPropagation();
               onEdit(item);
             }}
-            className="h-8 w-8 p-0 text-[#FBF9F7] !bg-[#2F8585] hover:!bg-[#2F8585] focus:!bg-[#2F8585] active:!bg-[#2F8585]"
+            className="text-[#fbf9f7]"
+            style={{
+              background: 'linear-gradient(to top, #1c6363, #277677)'
+            }}
             data-testid={`button-edit-faq-${item.id}`}
           >
-            <Edit className="h-4 w-4" />
+            <Edit className="h-4 w-4 mr-2" />
+            Editar
           </Button>
           <Button
             size="sm"
-            variant="ghost"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(item);
             }}
-            className="h-8 w-8 p-0 bg-[#FBF9F7] text-[#2F8585] hover:bg-[#FBF9F7] focus:bg-[#FBF9F7] active:bg-[#FBF9F7] hover:text-[#2F8585] focus:text-[#2F8585] active:text-[#2F8585]"
+            className="text-[#fbf9f7] faq-delete-button"
+            style={{
+              background: 'linear-gradient(to top, #c99524, #E1AC33)'
+            }}
             data-testid={`button-delete-faq-${item.id}`}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 mr-2 text-[#fbf9f7]" />
+            Apagar
           </Button>
         </div>
       </div>
@@ -133,8 +141,19 @@ export default function FaqTab() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  const { data: faqItems = [], isLoading } = useQuery<FaqItem[]>({
+  const { data: faqItems, isLoading, error } = useQuery<FaqItem[]>({
     queryKey: ["/api/admin/faq"],
+    queryFn: async () => {
+      const response = await fetch("/api/admin/faq", {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Falha ao carregar FAQ");
+      }
+      return response.json();
+    },
+    retry: 2,
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
   const sensors = useSensors(
@@ -156,7 +175,7 @@ export default function FaqTab() {
     mutationFn: async (data: InsertFaqItem) => {
       // Determinar nova ordem baseado no número atual de itens
       const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
-      const itemData = { ...data, displayOrder: maxOrder + 1 };
+      const itemData = { ...data, displayOrder: maxOrder + 1, isActive: true };
       
       const response = await apiRequest("POST", "/api/admin/faq", itemData);
       return response.json();
@@ -164,8 +183,7 @@ export default function FaqTab() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
       // Notificação de sucesso removida
-      setIsDialogOpen(false);
-      form.reset();
+      clearFormAndClose();
     },
     onError: () => {
       toast({ title: "Erro ao adicionar pergunta", variant: "destructive" });
@@ -180,9 +198,7 @@ export default function FaqTab() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
       // Notificação de sucesso removida
-      setIsDialogOpen(false);
-      setEditingItem(null);
-      form.reset();
+      clearFormAndClose();
     },
     onError: () => {
       toast({ title: "Erro ao atualizar pergunta", variant: "destructive" });
@@ -280,6 +296,47 @@ export default function FaqTab() {
     setItemToDelete(null);
   };
 
+  const openNewQuestionDialog = () => {
+    setEditingItem(null);
+    // Limpar formulário antes de abrir
+    form.reset({
+      question: "",
+      answer: "",
+    });
+    setIsDialogOpen(true);
+  };
+
+  const clearFormAndClose = () => {
+    setEditingItem(null);
+    setIsDialogOpen(false);
+    // Forçar reset do formulário
+    setTimeout(() => {
+      form.reset({
+        question: "",
+        answer: "",
+      });
+    }, 0);
+  };
+
+  // Garantir que o formulário esteja limpo quando necessário
+  useEffect(() => {
+    if (isDialogOpen && !editingItem) {
+      // Garantir que o formulário esteja limpo para nova pergunta
+      form.reset({
+        question: "",
+        answer: "",
+      });
+    }
+  }, [isDialogOpen, editingItem]);
+
+  // Garantir que o formulário esteja limpo quando o componente for montado
+  useEffect(() => {
+    form.reset({
+      question: "",
+      answer: "",
+    });
+  }, []);
+
   const onSubmit = (data: FaqItemFormData) => {
     if (editingItem) {
       updateItemMutation.mutate({ id: editingItem.id, data });
@@ -289,27 +346,51 @@ export default function FaqTab() {
     }
   };
 
-  const sortedFaqItems = [...faqItems].sort((a, b) => a.displayOrder - b.displayOrder);
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500 mb-4">Erro ao carregar FAQ: {error.message}</p>
+        <Button onClick={() => window.location.reload()}>Tentar novamente</Button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="animate-pulse">
+            <div className="h-24 bg-gray-200 rounded-lg"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const sortedItems = faqItems ? [...faqItems].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)) : [];
 
   return (
     <div>
       <div className={`${isMobile ? 'block space-y-4' : 'flex items-center justify-between'} mb-6`}>
         <div>
-          <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
-            Gerenciar FAQ
-          </h3>
           <p className="text-sm text-[#fbf9f7]">
             Arraste e solte para reordenar as perguntas
           </p>
         </div>
         
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog 
+          open={isDialogOpen} 
+          onOpenChange={(open) => {
+            if (!open) {
+              clearFormAndClose();
+            } else {
+              setIsDialogOpen(true);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button 
-              onClick={() => {
-                setEditingItem(null);
-                form.reset();
-              }}
+              onClick={openNewQuestionDialog}
               className="text-[#fbf9f7] bg-[#E1AC33] w-full sm:w-auto"
               data-testid="button-add-faq"
             >
@@ -317,73 +398,98 @@ export default function FaqTab() {
               Adicionar Pergunta
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl w-full sm:max-w-2xl admin-dialog-content p-0">
-            <div className="p-6">
-              <DialogHeader>
-                <DialogTitle className="text-[#ffffff]">
-                  {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
-                </DialogTitle>
-              </DialogHeader>
-              <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
-                <FormField
-                  control={form.control}
-                  name="question"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[#FBF9F7]">Pergunta</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Digite a pergunta..." 
-                          {...field}
-                          data-testid="input-faq-question"
-                          className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="answer"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[#FBF9F7]">Resposta</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Digite a resposta..." 
-                          rows={4}
-                          {...field}
-                          data-testid="textarea-faq-answer"
-                          className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex justify-end gap-2">
-                  <Button 
-                    type="button" 
-                    variant="outline"
-                    onClick={() => setIsDialogOpen(false)}
-                    data-testid="button-cancel-faq"
-                    className="bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button 
-                    type="submit"
-                    disabled={createItemMutation.isPending || updateItemMutation.isPending}
-                    data-testid="button-save-faq"
-                    className="text-[#ffffff]"
-                  >
-                    {editingItem ? "Atualizar" : "Criar"} Pergunta
-                  </Button>
-                </div>
-              </form>
-            </Form>
+          <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mx-auto rounded-lg md:rounded-xl">
+            <DialogHeader className="px-2 md:px-0">
+              <DialogTitle className="text-[#ffffff] text-lg md:text-xl text-center md:text-left">
+                {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
+              </DialogTitle>
+            </DialogHeader>
+            
+            <div className="mt-2 md:mt-4 px-2 md:px-0">
+                             <Stepper
+                 initialStep={1}
+                 onStepChange={(step) => {
+                   console.log(`FAQ dialog: Step changed to ${step}`);
+                 }}
+                 onFinalStepCompleted={() => {
+                   console.log("FAQ dialog: Todos os steps completados!");
+                   form.handleSubmit(onSubmit)();
+                 }}
+                 backButtonText="Anterior"
+                 nextButtonText="Próximo"
+                 backButtonProps={{
+                   className: "bg-[#2C8587] text-[#F7F5F3] border-[#277677] hover:bg-[#277677] px-3 py-2 md:px-4 rounded text-sm md:text-base w-full md:w-auto"
+                 }}
+                 nextButtonProps={{
+                   className: "bg-[#277677] text-[#FBF9F7] hover:bg-[#1c6363] px-3 py-2 md:px-4 rounded text-sm md:text-base w-full md:w-auto"
+                 }}
+               >
+                                 <Step>
+                   <div className="space-y-3 md:space-y-4">
+                     <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Pergunta</h3>
+                     
+                     <div>
+                       <Input
+                         value={form.watch("question")}
+                         onChange={(e) => form.setValue("question", e.target.value)}
+                         className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                         placeholder="Digite a pergunta..."
+                       />
+                     </div>
+                   </div>
+                 </Step>
+                
+                                 <Step>
+                   <div className="space-y-3 md:space-y-4">
+                     <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Resposta</h3>
+                     
+                     <div>
+                       <Textarea
+                         value={form.watch("answer")}
+                         onChange={(e) => form.setValue("answer", e.target.value)}
+                         rows={8}
+                         className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] resize-none w-full placeholder:text-[#FBF9F7]/60"
+                         placeholder="Digite a resposta..."
+                       />
+                     </div>
+                   </div>
+                 </Step>
+                 
+                 <Step>
+                   <div className="space-y-3 md:space-y-4">
+                     <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Revisão e Confirmação</h3>
+                     
+                     <div className="bg-[#145759] p-3 md:p-4 rounded-lg border border-[#277677]/20">
+                       <h4 className="font-medium text-[#FBF9F7] mb-2 md:mb-3 text-left">Resumo da Pergunta:</h4>
+                       
+                       <div className="text-sm leading-tight">
+                         <div className="text-[#FBF9F7] font-medium mb-1 text-left">
+                           <span className="text-[#277677] mr-2">•</span>
+                           Pergunta: {form.watch("question")}
+                         </div>
+                         <div className="text-[#FBF9F7] font-medium mb-1 text-left">
+                           <span className="text-[#277677] mr-2">•</span>
+                           Resposta: {form.watch("answer")}
+                         </div>
+                       </div>
+                       
+                       <div className="mt-3 md:mt-4">
+                         <h5 className="font-medium text-[#FBF9F7] mb-2 text-left">Detalhes:</h5>
+                         <ul className="text-sm text-[#FBF9F7]/80 space-y-1">
+                           <li className="flex items-center">
+                             <span className="text-[#277677] mr-2">•</span>
+                             {editingItem ? "Editando pergunta existente" : "Nova pergunta será criada"}
+                           </li>
+                           <li className="flex items-center">
+                             <span className="text-[#277677] mr-2">•</span>
+                             Ordem de exibição será ajustada automaticamente
+                           </li>
+                         </ul>
+                       </div>
+                     </div>
+                   </div>
+                 </Step>
+              </Stepper>
             </div>
           </DialogContent>
         </Dialog>
@@ -402,11 +508,11 @@ export default function FaqTab() {
             onDragEnd={handleDragEnd}
           >
             <SortableContext 
-              items={sortedFaqItems.map(item => item.id)} 
+              items={sortedItems.map(item => item.id)} 
               strategy={verticalListSortingStrategy}
             >
               <Accordion type="single" collapsible className="w-full">
-                {sortedFaqItems.map((item) => (
+                {sortedItems.map((item) => (
                   <SortableFaqItem
                     key={item.id}
                     item={item}

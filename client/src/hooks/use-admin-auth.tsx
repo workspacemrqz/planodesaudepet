@@ -1,12 +1,7 @@
-import { createContext, ReactNode, useContext } from "react";
-import {
-  useQuery,
-  useMutation,
-  UseMutationResult,
-} from "@tanstack/react-query";
+import { createContext, ReactNode, useContext, useState } from "react";
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { AdminUser } from "@shared/schema";
-import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "../lib/queryClient";
 
 type AdminAuthContextType = {
   user: AdminUser | null;
@@ -24,55 +19,45 @@ type LoginData = {
 export const AdminAuthContext = createContext<AdminAuthContextType | null>(null);
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
-  const { toast } = useToast();
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useQuery<AdminUser | undefined, Error>({
-    queryKey: ["/api/admin/user"],
-    queryFn: getQueryFn({ on401: "returnNull" }),
-  });
+  const [user, setUser] = useState<AdminUser | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/admin/login", credentials);
-      return await res.json();
-    },
-    onSuccess: (user: AdminUser) => {
-      queryClient.setQueryData(["/api/admin/user"], user);
-      // Notificação de sucesso removida
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Erro no login",
-        description: "Usuário ou senha incorretos.",
-        variant: "destructive",
-      });
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await apiRequest("POST", "/api/admin/login", credentials);
+        const userData = await res.json();
+        setUser(userData);
+        queryClient.setQueryData(["/api/admin/user"], userData);
+        return userData;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Login failed');
+        setError(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest("POST", "/api/admin/logout");
-    },
-    onSuccess: () => {
-      queryClient.setQueryData(["/api/admin/user"], null);
-      // Notificação de sucesso removida
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Erro no logout",
-        description: error.message,
-        variant: "destructive",
-      });
+      try {
+        await apiRequest("POST", "/api/admin/logout");
+      } finally {
+        setUser(null);
+        queryClient.setQueryData(["/api/admin/user"], null);
+      }
     },
   });
 
   return (
     <AdminAuthContext.Provider
       value={{
-        user: user ?? null,
+        user,
         isLoading,
         error,
         loginMutation,

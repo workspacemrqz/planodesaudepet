@@ -70,7 +70,10 @@ export default function AdminCascadeMenu({ activeTab, onTabChange }: AdminCascad
         {/* Botão do Dropdown */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg bg-[#145759] text-[#FBF9F7] transition-all duration-200 shadow-md"
+          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-[#FBF9F7] transition-all duration-200 shadow-md"
+          style={{
+            background: 'linear-gradient(to top, #1c6363, #277677)'
+          }}
         >
           <div className="flex items-center gap-3">
             <SelectedIcon className="h-5 w-5 flex-shrink-0" />
@@ -111,9 +114,14 @@ export default function AdminCascadeMenu({ activeTab, onTabChange }: AdminCascad
                     className={cn(
                       "w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200 border-b border-[#277677]/20 last:border-b-0",
                       isActive 
-                        ? "bg-[#277677] text-[#FBF9F7]" 
-                        : "bg-[#145759] text-[#FBF9F7] hover:bg-[#277677]"
+                        ? "text-[#FBF9F7]"
+                        : "text-[#FBF9F7]"
                     )}
+                    style={{
+                      background: isActive 
+                        ? 'linear-gradient(to top, #1c6363, #277677)'
+                        : 'linear-gradient(to top, #1c6363, #277677)'
+                    }}
                   >
                     <IconComponent className="h-5 w-5 flex-shrink-0" />
                     <span className="font-medium">{option.cname}</span>

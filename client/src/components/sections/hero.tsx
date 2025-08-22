@@ -5,7 +5,9 @@ import { useLocation } from "wouter";
 import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
 import { AnimatedSection, AnimatedList } from "@/components/ui/animated-section";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
-import { getImageUrlSync } from "@/lib/image-utils";
+import { RobustImage } from "@/components/ui/image";
+import { Typewriter } from "@/components/ui/typewriter";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
@@ -40,7 +42,25 @@ export default function Hero() {
               <h1 
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-[#302e2b] leading-tight"
               >
-                Cuidado completo para o seu <span className="text-primary">melhor amigo</span>
+                Cuidado completo para o seu{" "}
+                <span className="text-primary">
+                  <Typewriter 
+                    text={[
+                      "melhor amigo",
+                      "companheiro de quatro patas",
+                      "membro da família",
+                      "xodó da casa",
+                      "pet"
+                    ]}
+                    speed={100}
+                    waitTime={3000}
+                    deleteSpeed={50}
+                    loop={true}
+                    showCursor={true}
+                    cursorChar="|"
+                    cursorClassName="ml-1"
+                  />
+                </span>
               </h1>
             </AnimatedSection>
             <AnimatedSection animation="slideUp" delay={200}>
@@ -67,7 +87,10 @@ export default function Hero() {
             <AnimatedSection animation="slideUp" delay={400}>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button 
-                className="text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 text-white bg-[#277677] hover:bg-[#277677]/90 rounded-lg h-12 sm:h-14 min-w-0 sm:min-w-[150px] mobile-touch-target"
+                className="text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 text-white rounded-lg h-12 sm:h-14 min-w-0 sm:min-w-[150px] mobile-touch-target"
+                style={{
+                  background: 'linear-gradient(to top, #1c6363, #277677)'
+                }}
                 onClick={() => {
                   setLocation('/planos');
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
@@ -89,10 +112,13 @@ export default function Hero() {
             <AnimatedSection animation="slideLeft" delay={150}>
               {/* Happy pets with owners image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src={getImageUrlSync(settings.mainImage, '/Cachorros.jpg')} 
+                <OptimizedImage 
+                  src={settings.mainImage}
+                  fallback="/Cachorros.jpg"
                   alt="Família brasileira feliz com seus pets" 
+                  fallbackSrc="/Cachorros.jpg"
                   className="w-full h-auto max-h-[400px] sm:max-h-[500px] lg:max-h-none object-cover" 
+                  onError={(error) => console.warn('Hero image error:', error)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
               </div>

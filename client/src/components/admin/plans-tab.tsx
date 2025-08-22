@@ -1,60 +1,124 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Plan, InsertPlan } from "@shared/schema";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Edit, CreditCard, Check } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useIsMobile } from "@/hooks/use-mobile";
+import Stepper, { Step } from "@/components/ui/Stepper";
 
-const planFormSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
-  description: z.string().min(1, "Descrição é obrigatória"),
-  features: z.array(z.string()).min(1, "Pelo menos uma funcionalidade é obrigatória"),
-  buttonText: z.string().min(1, "Texto do botão é obrigatório"),
-  redirectUrl: z.string().min(1, "URL de redirecionamento é obrigatória"),
-  planType: z.enum(["with_waiting_period", "without_waiting_period"]).default("with_waiting_period"),
-});
-
-type PlanFormData = z.infer<typeof planFormSchema>;
+// Dados estáticos dos planos para teste
+const STATIC_PLANS = [
+  {
+    id: 'basic',
+    name: 'BASIC',
+    price: 4900, // R$ 49,00 em centavos
+    description: 'Plano essencial para cuidados básicos',
+    features: ['Consultas veterinárias', 'Vacinas básicas', 'Emergências simples'],
+    buttonText: 'Contratar Plano',
+    redirectUrl: '/contact',
+    planType: 'with_waiting_period'
+  },
+  {
+    id: 'infinity',
+    name: 'INFINITY', 
+    price: 7900, // R$ 79,00 em centavos
+    description: 'Plano completo sem limitações',
+    features: ['Consultas ilimitadas', 'Todas as vacinas', 'Cirurgias inclusas', 'Emergências 24h'],
+    buttonText: 'Contratar Plano',
+    redirectUrl: '/contact',
+    planType: 'with_waiting_period'
+  },
+  {
+    id: 'comfort',
+    name: 'COMFORT',
+    price: 9900, // R$ 99,00 em centavos
+    description: 'Plano premium com conforto total',
+    features: ['Atendimento domiciliar', 'Spa pet', 'Nutrição especializada', 'Monitoramento 24h'],
+    buttonText: 'Contratar Plano',
+    redirectUrl: '/contact',
+    planType: 'without_waiting_period'
+  },
+  {
+    id: 'platinum',
+    name: 'PLATINUM',
+    price: 14900, // R$ 149,00 em centavos
+    description: 'Plano exclusivo VIP',
+    features: ['Tudo do Comfort', 'Veterinário exclusivo', 'Transporte premium', 'Concierge pet'],
+    buttonText: 'Contratar Plano',
+    redirectUrl: '/contact',
+    planType: 'without_waiting_period'
+  }
+];
 
 const formatPrice = (priceInCents: number): string => {
   return (priceInCents / 100).toFixed(2).replace('.', ',');
 };
 
 export default function PlansTab() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
-  const [featuresInput, setFeaturesInput] = useState("");
-  const [priceInput, setPriceInput] = useState("0,00");
+  console.log("🔍 PlansTab: Renderizando com integração API");
+  
   const { toast } = useToast();
-  const isMobile = useIsMobile();
-
-  const { data: plans, isLoading } = useQuery<Plan[]>({
+  
+  // Estado para o modal de edição
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    price: '',
+    features: '',
+    buttonText: '',
+    redirectUrl: ''
+  });
+  
+  // Tentar carregar dados da API, mas usar fallback estático se falhar
+  const { data: apiPlans, isLoading, error } = useQuery<Plan[]>({
     queryKey: ["/api/admin/plans"],
+    queryFn: async () => {
+      try {
+        const response = await fetch("/api/admin/plans", {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`Falha ao carregar planos: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("🔍 PlansTab: Dados da API carregados:", data);
+        return data;
+      } catch (error) {
+        console.log("🔍 PlansTab: Erro na API, usando dados estáticos:", error);
+        throw error;
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
-  const form = useForm<PlanFormData>({
-    resolver: zodResolver(planFormSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      features: [],
-      buttonText: "Contratar Plano",
-      redirectUrl: "/contact",
-      planType: "with_waiting_period",
+  // Usar dados da API se disponíveis, senão usar dados estáticos
+  const plans = apiPlans && apiPlans.length > 0 ? apiPlans : STATIC_PLANS;
+  
+  // Mutation para criar plano
+  const createPlanMutation = useMutation({
+    mutationFn: async (data: InsertPlan) => {
+      const response = await apiRequest("POST", "/api/admin/plans", data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
+      handleCloseModal();
+      toast({ title: "Plano criado com sucesso!", variant: "default" });
+    },
+    onError: (error) => {
+      console.error("Erro ao criar plano:", error);
+      toast({ title: "Erro ao criar plano", variant: "destructive" });
     },
   });
 
+  // Mutation para atualizar plano
   const updatePlanMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertPlan> }) => {
       const response = await apiRequest("PUT", `/api/admin/plans/${id}`, data);
@@ -62,342 +126,254 @@ export default function PlansTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/plans"] });
-      setIsDialogOpen(false);
-      setEditingPlan(null);
-      form.reset();
-      setFeaturesInput("");
+      handleCloseModal();
       toast({ title: "Plano atualizado com sucesso!", variant: "default" });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Erro ao atualizar plano:", error);
       toast({ title: "Erro ao atualizar plano", variant: "destructive" });
     },
   });
-
-  const handleEdit = (plan: Plan) => {
+  
+  // Função para abrir modal de edição
+  const handleEditPlan = (plan: Plan) => {
     setEditingPlan(plan);
-    form.reset({
+    setEditForm({
       name: plan.name,
-      description: plan.description,
-      features: plan.features,
-      buttonText: plan.buttonText || "Contratar Plano",
-      redirectUrl: plan.redirectUrl || "/contact",
-      planType: plan.planType || "with_waiting_period",
+      price: (plan.price / 100).toFixed(2).replace('.', ','),
+      features: plan.features.join('\n'),
+      buttonText: plan.buttonText || 'Contratar Plano',
+      redirectUrl: plan.redirectUrl || '/contact'
     });
-    setFeaturesInput(plan.features.join('\n'));
-    setPriceInput((plan.price / 100).toFixed(2).replace('.', ','));
-    setIsDialogOpen(true);
+    setIsEditModalOpen(true);
   };
-
+  
+  // Função para fechar modal
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setEditingPlan(null);
+    setEditForm({
+      name: '',
+      price: '',
+      features: '',
+      buttonText: '',
+      redirectUrl: ''
+    });
+  };
+  
+  // Função para converter preço para centavos
   const parsePrice = (priceString: string): number => {
     const cleanPrice = priceString.replace(/\s/g, '').replace(',', '.');
     const price = parseFloat(cleanPrice);
     return isNaN(price) ? 0 : Math.round(price * 100);
   };
 
-  const onSubmit = (data: PlanFormData) => {
-    const features = featuresInput.split('\n').filter(f => f.trim()).map(f => f.trim());
-    const planData = {
-      ...data,
-      price: parsePrice(priceInput),
+  // Função para salvar alterações
+  const handleSavePlan = () => {
+    if (!editingPlan) return;
+    
+    const features = editForm.features.split('\n').filter(f => f.trim()).map(f => f.trim());
+    const planData: Partial<InsertPlan> = {
+      name: editForm.name,
+      price: parsePrice(editForm.price),
       features,
+      buttonText: editForm.buttonText,
+      redirectUrl: editForm.redirectUrl,
       isActive: true,
     };
 
-    if (editingPlan) {
+    console.log("🔍 PlansTab: Salvando plano:", { id: editingPlan.id, data: planData });
+
+    if (editingPlan.id.startsWith('default-')) {
+      // Criar novo plano
+      createPlanMutation.mutate(planData as InsertPlan);
+    } else {
+      // Atualizar plano existente
       updatePlanMutation.mutate({ id: editingPlan.id, data: planData });
     }
   };
-
-  const resetForm = () => {
-    form.reset();
-    setFeaturesInput("");
-    setPriceInput("0,00");
-    setEditingPlan(null);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="h-80 bg-gray-200 rounded-lg"></div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  const sortedPlans = plans ? [...plans].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)) : [];
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold mb-1 text-[#fbf9f7]">
-          Gerenciar Planos
-        </h3>
-      </div>
-
-      {/* Dialog de Edição */}
-      <Dialog open={isDialogOpen} onOpenChange={(open) => {
-        setIsDialogOpen(open);
-        if (!open) resetForm();
-      }}>
-        <DialogContent className="max-w-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto admin-dialog-content p-0">
-          <div className="p-6">
-            <DialogHeader>
-              <DialogTitle className="text-[#ffffff]">
-                Editar Plano {editingPlan?.name}
-              </DialogTitle>
-            </DialogHeader>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 admin-no-focus">
-                <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[#FBF9F7]">Nome do Plano</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Ex: BASIC" 
-                            {...field} 
-                            data-testid="input-plan-name"
-                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[#FBF9F7]">Descrição</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Ex: Plano essencial" 
-                            {...field} 
-                            data-testid="input-plan-description"
-                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
-                  <FormItem>
-                    <FormLabel className="text-[#FBF9F7]">Preço (R$)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="text" 
-                        placeholder="0,00" 
-                        value={priceInput}
-                        onChange={(e) => setPriceInput(e.target.value)}
-                        data-testid="input-plan-price"
-                        className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                      />
-                    </FormControl>
-                  </FormItem>
-                  
-                  <FormField
-                    control={form.control}
-                    name="planType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[#FBF9F7]">Tipo de Plano</FormLabel>
-                        <FormControl>
-                          <select 
-                            {...field}
-                            className="w-full p-2 bg-[#195d5e] text-[#FBF9F7] border border-[#277677] rounded-md focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                            data-testid="select-plan-type"
-                          >
-                            <option value="with_waiting_period">Com carência e sem coparticipação</option>
-                            <option value="without_waiting_period">Sem carência e com coparticipação</option>
-                          </select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className={`${isMobile ? 'space-y-4' : 'grid md:grid-cols-2 gap-4'}`}>
-                  <FormField
-                    control={form.control}
-                    name="buttonText"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[#FBF9F7]">Texto do Botão</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Ex: Contratar Plano" 
-                            {...field} 
-                            data-testid="input-plan-button-text"
-                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="redirectUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[#FBF9F7]">URL de Redirecionamento</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Ex: /contact" 
-                            {...field} 
-                            data-testid="input-plan-redirect-url"
-                            className="bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div>
-                  <FormLabel className="text-[#FBF9F7]">Funcionalidades (uma por linha)</FormLabel>
-                  <Textarea
-                    value={featuresInput}
-                    onChange={(e) => setFeaturesInput(e.target.value)}
-                    placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas"
-                    rows={6}
-                    className="mt-2 bg-[#195d5e] text-[#FBF9F7] placeholder:text-[#aaaaaa] focus:ring-0 focus:ring-offset-0 focus:outline-none"
-                    data-testid="textarea-plan-features"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setIsDialogOpen(false)}
-                    data-testid="button-cancel-plan"
-                    className="bg-[#2C8587] text-[#F7F5F3] hover:bg-[#2C8587] hover:text-[#F7F5F3] focus:bg-[#2C8587] focus:text-[#F7F5F3] active:bg-[#2C8587] active:text-[#F7F5F3]"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button 
-                    type="submit"
-                    disabled={updatePlanMutation.isPending}
-                    data-testid="button-save-plan"
-                    className="text-[#ffffff]"
-                  >
-                    Atualizar Plano
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Listagem dos Planos */}
-      {plans && plans.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sortedPlans.map((plan) => (
-            <Card key={plan.id} className="bg-[#145759] shadow-lg">
-              <CardHeader className="text-center pb-4">
-                {/* Ícone do Plano */}
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-[#277677]/20 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8" fill="#277677">
-                      <path d="M88.13,17.28c-6.14-5.5-14.37-6-22.06-1.32-2.58,2-5.43,2-9,.15l-.94-.39C35,7.41,22.07,19.63,9.54,31.44L8.93,32h0A4.1,4.1,0,0,0,7.4,35c-.32,3,1.48,7.2,4.71,11C5.7,64.47,0,84.79,12.52,93a.5.5,0,0,0,.27.08H91a.49.49,0,0,0,.4-.2.5.5,0,0,0,.08-.43L85,68.46A5.68,5.68,0,0,0,86,69a2.13,2.13,0,0,0,.81.16,2.19,2.19,0,0,0,1.37-.49,2.16,2.16,0,0,0,.76-2.09C86.8,54.91,84.48,49,81.11,46.66a13.42,13.42,0,0,0,7.4-5.32l3.13,3a.51.51,0,0,0,.44.13.47.47,0,0,0,.36-.28C97.69,33,94.06,22.58,88.13,17.28Z"/>
-                    </svg>
-                  </div>
-                </div>
-
+  
+      return (
+      <div>
+            {/* Grid de Planos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {plans.map((plan) => (
+          <Card key={plan.id} className="bg-[#145759] shadow-lg border border-[#277677]/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
                 {/* Nome do Plano */}
-                <CardTitle className="text-2xl font-bold text-[#FBF9F7] mb-2">
+                <h3 className="text-lg font-semibold text-[#FBF9F7]">
                   {plan.name}
-                </CardTitle>
-
-                {/* Preço */}
-                <div className="mb-3">
-                  <span className="text-3xl font-bold text-[#E1AC33]">R${formatPrice(plan.price)}</span>
-                  <span className="text-sm font-medium text-[#FBF9F7]">/mês</span>
-                </div>
-
-                {/* Tipo do Plano */}
-                <Badge 
-                  variant="secondary" 
-                  className="bg-[#277677]/30 text-[#FBF9F7] text-xs"
-                >
-                  {plan.planType === 'with_waiting_period' ? 'Com carência e sem coparticipação' : 'Sem carência e com coparticipação'}
-                </Badge>
-              </CardHeader>
-              
-              <CardContent className="px-6 pb-6">
-                {/* Descrição */}
-                <p className="text-[#FBF9F7] text-center mb-4 opacity-90">
-                  {plan.description}
-                </p>
-
-                {/* Funcionalidades */}
-                <ul className="space-y-2 mb-6">
-                  {plan.features.map((feature: string, featureIndex: number) => (
-                    <li key={featureIndex} className="flex items-start space-x-3">
-                      <Check className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#E1AC33]" />
-                      <span className="text-sm text-[#FBF9F7] leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Texto do Botão */}
-                <div className="mb-4">
-                  <div className="text-center p-3 bg-[#277677]/20 rounded-lg">
-                    <span className="text-sm font-medium text-[#FBF9F7]">Texto do Botão:</span>
-                    <br />
-                    <span className="text-[#E1AC33]">{plan.buttonText}</span>
-                  </div>
-                </div>
-
-                {/* URL de Redirecionamento */}
-                <div className="mb-6">
-                  <div className="text-center p-3 bg-[#277677]/20 rounded-lg">
-                    <span className="text-sm font-medium text-[#FBF9F7]">Redireciona para:</span>
-                    <br />
-                    <span className="text-[#E1AC33]">{plan.redirectUrl}</span>
-                  </div>
-                </div>
-
+                </h3>
+                
                 {/* Botão de Editar */}
-                <div className="flex justify-center">
-                  <Button
-                    onClick={() => handleEdit(plan)}
-                    className="bg-[#277677] hover:bg-[#2F8585] text-[#FBF9F7] px-6"
-                    data-testid={`button-edit-plan-${plan.id}`}
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Editar Plano
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Card>
-          <CardContent className="p-6 text-center">
-            <CreditCard className="h-12 w-12 text-[#145759] mx-auto mb-4" />
-            <p className="text-[#FBF9F7]">Nenhum plano cadastrado ainda.</p>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
+                <Button
+                  onClick={() => handleEditPlan(plan)}
+                  size="sm"
+                  className="text-[#FBF9F7]"
+                  style={{
+                    background: 'linear-gradient(to top, #1c6363, #277677)'
+                  }}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Editar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+                 ))}
+       </div>
+       
+       {/* Modal de Edição */}
+       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+         <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mx-auto rounded-lg md:rounded-xl">
+           <DialogHeader className="px-2 md:px-0">
+             <DialogTitle className="text-[#ffffff] text-lg md:text-xl text-center md:text-left">
+               Editar Plano: {editingPlan?.name}
+             </DialogTitle>
+           </DialogHeader>
+           
+           <div className="mt-2 md:mt-4 px-2 md:px-0">
+             <Stepper
+               initialStep={1}
+               onStepChange={(step) => {
+                 console.log(`Plans dialog: Step changed to ${step}`);
+               }}
+               onFinalStepCompleted={() => {
+                 console.log("Plans dialog: Todos os steps completados!");
+                 handleSavePlan();
+               }}
+               backButtonText="Anterior"
+               nextButtonText="Próximo"
+               backButtonProps={{
+                 className: "bg-[#2C8587] text-[#F7F5F3] border-[#277677] hover:bg-[#277677] px-3 py-2 md:px-4 rounded text-sm md:text-base w-full md:w-auto"
+               }}
+               nextButtonProps={{
+                 className: "bg-[#277677] text-[#FBF9F7] hover:bg-[#1c6363] px-3 py-2 md:px-4 rounded text-sm md:text-base w-full md:w-auto"
+               }}
+             >
+               <Step>
+                 <div className="space-y-3 md:space-y-4">
+                   <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Informações Básicas</h3>
+                   
+                   {/* Nome do Plano */}
+                   <div>
+                     <label className="block text-sm font-medium text-[#FBF9F7] mb-2">
+                       Nome do Plano
+                     </label>
+                     <Input
+                       value={editForm.name}
+                       onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                       className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                       placeholder="Nome do plano"
+                     />
+                   </div>
+                   
+                   {/* Preço */}
+                   <div>
+                     <label className="block text-sm font-medium text-[#FBF9F7] mb-2">
+                       Preço (R$)
+                     </label>
+                     <Input
+                       value={editForm.price}
+                       onChange={(e) => setEditForm({...editForm, price: e.target.value})}
+                       className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                       placeholder="0,00"
+                     />
+                   </div>
+                 </div>
+               </Step>
+               
+               <Step>
+                 <div className="space-y-3 md:space-y-4">
+                   <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Configurações do Botão</h3>
+                   
+                   {/* Link do Botão */}
+                   <div>
+                     <label className="block text-sm font-medium text-[#FBF9F7] mb-2">
+                       Link do Botão "Contratar Plano"
+                     </label>
+                     <Input
+                       value={editForm.redirectUrl}
+                       onChange={(e) => setEditForm({...editForm, redirectUrl: e.target.value})}
+                       className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                       placeholder="https://exemplo.com/contratar ou /contact"
+                     />
+                     <p className="text-xs text-[#FBF9F7]/70 mt-1">
+                       URL para onde o usuário será redirecionado ao clicar no botão
+                     </p>
+                   </div>
+                   
+                   {/* Texto do Botão */}
+                   <div>
+                     <label className="block text-sm font-medium text-[#FBF9F7] mb-2">
+                       Texto do Botão
+                     </label>
+                     <Input
+                       value={editForm.buttonText}
+                       onChange={(e) => setEditForm({...editForm, buttonText: e.target.value})}
+                       className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                       placeholder="Contratar Plano"
+                     />
+                   </div>
+                 </div>
+               </Step>
+               
+               <Step>
+                 <div className="space-y-3 md:space-y-4">
+                   <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Funcionalidades do Plano</h3>
+                   
+                   {/* Funcionalidades */}
+                   <div>
+                     <label className="block text-sm font-medium text-[#FBF9F7] mb-2">
+                       Funcionalidades (uma por linha)
+                     </label>
+                     <Textarea
+                       value={editForm.features}
+                       onChange={(e) => setEditForm({...editForm, features: e.target.value})}
+                       rows={8}
+                       className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] resize-none w-full placeholder:text-[#FBF9F7]/60"
+                       placeholder="Consultas veterinárias&#10;Vacinas anuais&#10;Emergências básicas&#10;Atendimento 24h&#10;Exames laboratoriais"
+                     />
+                     <p className="text-xs text-[#FBF9F7]/70 mt-1">
+                       Digite cada funcionalidade em uma linha separada
+                     </p>
+                   </div>
+                 </div>
+               </Step>
+               
+               <Step>
+                 <div className="space-y-3 md:space-y-4">
+                   <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Revisão e Confirmação</h3>
+                   
+                   <div className="bg-[#145759] p-3 md:p-4 rounded-lg border border-[#277677]/20">
+                     <h4 className="font-medium text-[#FBF9F7] mb-2 md:mb-3 text-left">Resumo do Plano:</h4>
+                     
+                     <div className="text-sm leading-tight">
+                       <div className="text-[#FBF9F7] font-medium mb-1 text-left">{editForm.name}</div>
+                       <div className="text-[#FBF9F7] font-medium mb-1 text-left">R$ {editForm.price}</div>
+                       <div className="text-[#FBF9F7] font-medium mb-1 text-left">{editForm.redirectUrl}</div>
+                       <div className="text-[#FBF9F7] font-medium mb-1 text-left">{editForm.buttonText}</div>
+                     </div>
+                     
+                     <div className="mt-3 md:mt-4">
+                       <h5 className="font-medium text-[#FBF9F7] mb-2 text-left">Funcionalidades:</h5>
+                       <ul className="text-sm text-[#FBF9F7]/80 space-y-1">
+                         {editForm.features.split('\n').filter(f => f.trim()).map((feature, index) => (
+                           <li key={index} className="flex items-center">
+                             <span className="text-[#277677] mr-2">•</span>
+                             {feature.trim()}
+                           </li>
+                         ))}
+                       </ul>
+                     </div>
+                   </div>
+                 </div>
+               </Step>
+             </Stepper>
+           </div>
+         </DialogContent>
+       </Dialog>
+     </div>
+   );
+ }

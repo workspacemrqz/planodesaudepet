@@ -1,0 +1,78 @@
+{
+  "timestamp": "2025-08-22T18:16:41.677Z",
+  "images": [
+    {
+      "path": "public\\Ana Costa.png",
+      "size": 730996,
+      "extension": ".png",
+      "lastModified": "2025-08-20T15:11:51.497Z"
+    },
+    {
+      "path": "public\\BASICicon.svg",
+      "size": 4498,
+      "extension": ".svg",
+      "lastModified": "2025-08-21T23:21:38.938Z"
+    },
+    {
+      "path": "public\\Cachorros.jpg",
+      "size": 273660,
+      "extension": ".jpg",
+      "lastModified": "2025-08-19T20:49:15.068Z"
+    },
+    {
+      "path": "public\\Carlos Mendes.png",
+      "size": 766321,
+      "extension": ".png",
+      "lastModified": "2025-08-20T15:12:55.179Z"
+    },
+    {
+      "path": "public\\COMFORT.svg",
+      "size": 4164,
+      "extension": ".svg",
+      "lastModified": "2025-08-20T21:32:58.817Z"
+    },
+    {
+      "path": "public\\favicon.png",
+      "size": 581,
+      "extension": ".png",
+      "lastModified": "2025-08-22T06:51:53.534Z"
+    },
+    {
+      "path": "public\\INFINITY.svg",
+      "size": 4180,
+      "extension": ".svg",
+      "lastModified": "2025-08-20T21:33:40.365Z"
+    },
+    {
+      "path": "public\\inicio-sobre.jpg",
+      "size": 139894,
+      "extension": ".jpg",
+      "lastModified": "2025-08-19T20:49:15.069Z"
+    },
+    {
+      "path": "public\\Maria Silva.png",
+      "size": 809594,
+      "extension": ".png",
+      "lastModified": "2025-08-20T15:11:28.417Z"
+    },
+    {
+      "path": "public\\placeholder-image.svg",
+      "size": 404,
+      "extension": ".svg",
+      "lastModified": "2025-08-22T18:04:50.549Z"
+    },
+    {
+      "path": "public\\PLATINUM.svg",
+      "size": 3495,
+      "extension": ".svg",
+      "lastModified": "2025-08-20T21:33:34.028Z"
+    },
+    {
+      "path": "public\\unipet-logo.png",
+      "size": 76129,
+      "extension": ".png",
+      "lastModified": "2025-08-19T20:49:15.070Z"
+    }
+  ],
+  "totalSize": 2813916
+}

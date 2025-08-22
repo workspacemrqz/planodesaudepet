@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
 import { type Server } from "http";
+import { autoConfig } from "./config";
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -33,14 +34,30 @@ export async function setupVite(app: Express, server: Server) {
       ...viteLogger,
       error: (msg, options) => {
         viteLogger.error(msg, options);
-        process.exit(1);
+        // Não fazer exit automaticamente, deixar o servidor continuar
+        console.warn('Vite error (não fatal):', msg);
       },
     },
     server: serverOptions,
     appType: "custom",
   });
 
+  // Middleware para headers anti-cache em desenvolvimento
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/src/') || req.path.startsWith('/@vite/')) {
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'X-Dev-Mode': 'true',
+        'X-Build-Time': new Date().toISOString(),
+      });
+    }
+    next();
+  });
+
   app.use(vite.middlewares);
+  
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 
@@ -54,12 +71,25 @@ export async function setupVite(app: Express, server: Server) {
 
       // always reload the index.html file from disk incase it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      
+      // Adicionar timestamp único para evitar cache
+      const timestamp = nanoid();
       template = template.replace(
         `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`,
+        `src="/src/main.tsx?v=${timestamp}"`,
       );
+      
       const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      
+      // Headers anti-cache para HTML
+      res.status(200).set({ 
+        "Content-Type": "text/html",
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'X-Dev-Mode': 'true',
+        'X-Build-Time': new Date().toISOString(),
+      }).end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -125,58 +155,69 @@ export function serveStatic(app: Express) {
       indexPreview: indexContent,
       assetsPath: path.resolve(publicPath, 'assets'),
       assetsExist: fs.existsSync(path.resolve(publicPath, 'assets')),
-      nodeEnv: process.env.NODE_ENV
+      nodeEnv: autoConfig.get('NODE_ENV')
     });
   });
 
-  // Debug middleware to log all requests
+  // Serve uploads directory for images (workspace)
+  // REMOVED: This is now configured in routes.ts to avoid conflicts with Vite's catch-all route
+  // const uploadsPath = path.join(process.cwd(), 'uploads');
+  // if (fs.existsSync(uploadsPath)) {
+  //   app.use('/uploads', express.static(uploadsPath, {
+  //     maxAge: '1y',
+  //     etag: true,
+  //     lastModified: true,
+  //     setHeaders: (res, filePath) => {
+  //       // Headers específicos para imagens
+  //       if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/i)) {
+  //         res.set({
+  //           'Cache-Control': 'public, max-age=86400', // 1 dia
+  //           'X-Image-Cache': 'medium-term',
+  //         });
+  //       }
+  //     }
+  //   }));
+  //   console.log('Serving uploads from workspace:', uploadsPath);
+  // }
+
+  // Middleware para headers de cache consistentes
   app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    const path = req.path;
     
-    // Special logging for image requests
-    if (req.url.includes('/api/objects/') && req.url.includes('/image')) {
-      console.log(`[IMAGE REQUEST] URL: ${req.url}, Headers: ${JSON.stringify(req.headers.accept)}`);
+    // Headers anti-cache para HTML e rotas da aplicação
+    if (path === '/' || path.endsWith('.html') || path.startsWith('/admin') || path.startsWith('/planos') || path.startsWith('/sobre') || path.startsWith('/contato') || path.startsWith('/faq') || path.startsWith('/rede-credenciada')) {
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'X-No-Cache': 'true',
+        'X-Build-Time': new Date().toISOString(),
+      });
+    } else if (path.match(/\.(js|css)$/)) {
+      // Cache longo para assets com hash
+      res.set({
+        'Cache-Control': 'public, max-age=31536000, immutable', // 1 ano
+        'X-Asset-Cache': 'long-term',
+      });
+    } else if (path.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
+      // Cache médio para imagens
+      res.set({
+        'Cache-Control': 'public, max-age=86400', // 1 dia
+        'X-Image-Cache': 'medium-term',
+      });
     }
-    
-    // Log all /objects/ requests
-    if (req.url.includes('/objects/')) {
-      console.log(`[OBJECTS REQUEST] ${req.method} ${req.url}`);
-    }
-    
     next();
   });
 
-  // Serve uploads directory for images
-  const uploadsPath = path.join(process.cwd(), 'uploads');
-  const buildUploadsPath = path.resolve(publicPath, 'uploads');
-  
-  // Serve from workspace uploads directory
-  if (fs.existsSync(uploadsPath)) {
-    app.use('/uploads', express.static(uploadsPath, {
-      maxAge: '1y',
-      etag: true,
-      lastModified: true
-    }));
-    console.log('Serving uploads from workspace:', uploadsPath);
-  }
-  
-  // Also serve from build directory as fallback
-  if (fs.existsSync(buildUploadsPath)) {
-    app.use('/uploads', express.static(buildUploadsPath, {
-      maxAge: '1y',
-      etag: true,
-      lastModified: true
-    }));
-    console.log('Serving uploads fallback from build directory:', buildUploadsPath);
-  }
-
   // Serve static assets with proper headers
   app.use(express.static(publicPath, {
-    maxAge: '1y',
     etag: true,
     lastModified: true,
-    setHeaders: (res, path) => {
-      console.log(`Serving static file: ${path}`);
+    setHeaders: (res, filePath) => {
+      // Log apenas para debug
+      if (autoConfig.get('NODE_ENV') === 'development') {
+        console.log(`Serving static file: ${filePath}`);
+      }
     }
   }));
 
@@ -185,6 +226,14 @@ export function serveStatic(app: Express) {
     try {
       const indexPath = path.resolve(publicPath, "index.html");
       if (fs.existsSync(indexPath)) {
+        // Headers anti-cache para HTML principal
+        res.set({
+          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'X-Prod-Mode': 'true',
+          'X-Build-Time': new Date().toISOString(),
+        });
         res.sendFile(indexPath);
       } else {
         console.error(`Index file not found at ${indexPath}`);

@@ -12,6 +12,17 @@ import { ptBR } from "date-fns/locale/pt-BR";
 export default function ContactSubmissionsTab() {
   const { data: submissions, isLoading, error } = useQuery<ContactSubmission[]>({
     queryKey: ["/api/admin/contact/submissions"],
+    queryFn: async () => {
+      const response = await fetch("/api/admin/contact/submissions", {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Falha ao carregar formulários");
+      }
+      return response.json();
+    },
+    retry: 2,
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
   if (isLoading) {

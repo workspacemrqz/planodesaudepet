@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
-import { getImageUrlSync } from "@/lib/image-utils";
+import { RobustImage } from "@/components/ui/image";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 export default function About() {
   const { settings, shouldShow } = useSiteSettingsWithDefaults();
@@ -40,10 +41,13 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           <AnimatedSection animation="slideRight" delay={200}>
             <div>
-              <img 
-                src={getImageUrlSync(settings.aboutImage, '/inicio-sobre.jpg')} 
+              <OptimizedImage 
+                src={settings.aboutImage}
+                fallback="/inicio-sobre.jpg"
                 alt="Conceito de seguro pet com veterinário cuidando de animal"
+                fallbackSrc="/inicio-sobre.jpg"
                 className="rounded-2xl shadow-xl w-full h-auto sm:mt-0 mt-[-2rem]"
+                onError={(error) => console.warn('About page image error:', error)}
               />
             </div>
           </AnimatedSection>

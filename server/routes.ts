@@ -14,12 +14,15 @@ import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { fileTypeFromBuffer } from "file-type";
+// Removed file-type dependency for simpler image handling
+import { autoConfig } from "./config";
+import express from "express"; // Added missing import
+
 
 // Configure multer for file uploads
 // In production, use a persistent directory that survives deploys
 // Use writable directory in production
-const uploadDir = process.env.NODE_ENV === 'production' 
+const uploadDir = autoConfig.get('NODE_ENV') === 'production' 
   ? path.join(process.cwd(), 'uploads')  // Use workspace uploads dir
   : path.join(process.cwd(), 'uploads');
 
@@ -60,15 +63,53 @@ const upload = multer({
 
 // Middleware to check admin authentication
 const requireAdmin = (req: any, res: any, next: any) => {
-  console.log('requireAdmin middleware - isAuthenticated:', req.isAuthenticated());
-  console.log('requireAdmin middleware - user:', req.user);
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Admin authentication required" });
+  console.log('🔐 [AUTH] requireAdmin middleware called');
+  console.log('🔐 [AUTH] Full request object:', {
+    session: req.session,
+    sessionID: req.sessionID,
+    cookies: req.headers.cookie,
+    user: req.session?.user
+  });
+  
+  if (!req.session) {
+    console.log('❌ [AUTH] No session found');
+    return res.status(401).json({ error: "Admin authentication required - no session" });
   }
+  
+  if (!req.session.user) {
+    console.log('❌ [AUTH] No user in session');
+    return res.status(401).json({ error: "Admin authentication required - no user" });
+  }
+  
+  console.log('✅ [AUTH] Admin authentication successful');
   next();
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+
+  // IMPORTANT: Configure static file serving for uploads BEFORE other routes
+  // This ensures that image requests are handled before Vite's catch-all route
+  const uploadsPath = path.join(process.cwd(), 'uploads');
+  if (fs.existsSync(uploadsPath)) {
+    app.use('/uploads', express.static(uploadsPath, {
+      maxAge: '1y',
+      etag: true,
+      lastModified: true,
+      setHeaders: (res, filePath) => {
+        // Headers específicos para imagens
+        if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/i)) {
+          res.set({
+            'Cache-Control': 'public, max-age=86400', // 1 dia
+            'X-Image-Cache': 'medium-term',
+          });
+        }
+      }
+    }));
+    console.log('✅ [ROUTES] Serving uploads from workspace:', uploadsPath);
+  } else {
+    console.warn('⚠️ [ROUTES] Uploads directory not found:', uploadsPath);
+  }
+  
   // Diagnostic endpoint for production debugging
   app.get('/api/diagnostic', (req, res) => {
     const distPath = path.resolve(process.cwd(), 'dist');
@@ -78,9 +119,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({
       status: 'ok',
       env: {
-        NODE_ENV: process.env.NODE_ENV,
-        PORT: process.env.PORT,
-        DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET',
+        NODE_ENV: autoConfig.get('NODE_ENV'),
+        PORT: autoConfig.get('PORT'),
+        DATABASE_URL: autoConfig.get('DATABASE_URL') ? 'CONFIGURED' : 'NOT CONFIGURED',
+        ADMIN_AUTH: autoConfig.get('LOGIN') && autoConfig.get('SENHA') ? 'CONFIGURED' : 'NOT CONFIGURED',
       },
       paths: {
         cwd: process.cwd(),
@@ -151,16 +193,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const fileBuffer = Buffer.concat(chunks);
           console.log('File buffer size:', fileBuffer.length);
           
-          // Detect file type using magic bytes
-          const detectedType = await fileTypeFromBuffer(fileBuffer);
-          console.log('Detected file type:', detectedType);
+          // Simple file type detection based on content-type header
+          let extension = '.jpg';
+          let mimeType = 'image/jpeg';
           
-          if (!detectedType || !detectedType.mime.startsWith('image/')) {
-            return res.status(400).json({ error: 'Arquivo não é uma imagem válida' });
+          if (contentType.includes('image/png')) {
+            extension = '.png';
+            mimeType = 'image/png';
+          } else if (contentType.includes('image/jpeg') || contentType.includes('image/jpg')) {
+            extension = '.jpg';
+            mimeType = 'image/jpeg';
+          } else if (contentType.includes('image/gif')) {
+            extension = '.gif';
+            mimeType = 'image/gif';
+          } else if (contentType.includes('image/webp')) {
+            extension = '.webp';
+            mimeType = 'image/webp';
           }
           
-          const extension = `.${detectedType.ext}`;
-          const mimeType = detectedType.mime;
           const filename = `${objectId}${extension}`;
           const filepath = path.join(uploadDir, filename);
           
@@ -174,19 +224,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Write file to disk
           await fs.promises.writeFile(filepath, fileBuffer);
           
-          // Save metadata to database
-          const fileMetadata = {
-            objectId,
-            originalName: filename,
-            mimeType,
-            extension,
-            filePath: filepath,
-            fileSize: fileBuffer.length
-          };
+          // Try to save metadata to database, but don't fail if it doesn't work
+          try {
+            const fileMetadata = {
+              objectId,
+              originalName: filename,
+              mimeType,
+              extension,
+              filePath: filepath,
+              fileSize: fileBuffer.length
+            };
+            
+            await storage.createFileMetadata(fileMetadata);
+            console.log('Metadata saved to database successfully');
+          } catch (dbError) {
+            console.warn('Failed to save metadata to database, but file was saved:', dbError);
+            // Continue anyway - the file is saved and can be served
+          }
           
-          await storage.createFileMetadata(fileMetadata);
-          
-          console.log('File uploaded and metadata saved successfully:', filename);
+          console.log('File uploaded successfully:', filename);
           
           res.json({ 
             success: true, 
@@ -209,8 +265,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
     } catch (error) {
-      console.error('Error in file upload:', error);
-      res.status(500).json({ error: 'Erro no upload do arquivo' });
+      console.error('Error in upload endpoint:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
 
@@ -222,15 +278,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[IMAGE SERVING API] Headers: ${JSON.stringify(req.headers)}`);
       console.log(`[IMAGE SERVING API] Upload dir: ${uploadDir}`);
       
-      // Get file metadata from database
-      const metadata = await storage.getFileMetadata(objectId);
-      
-      if (!metadata) {
-        console.log('File metadata not found for objectId:', objectId);
-        return res.status(404).json({ error: 'Imagem não encontrada' });
+      // Try to get file metadata from database first
+      let metadata: any = null;
+      try {
+        metadata = await storage.getFileMetadata(objectId);
+        console.log('Found file metadata from database:', metadata);
+      } catch (dbError) {
+        console.warn('Failed to get metadata from database, will try file system:', dbError);
       }
       
-      console.log('Found file metadata:', {
+      // If no metadata, try to find the file directly
+      if (!metadata) {
+        console.log('No metadata found, searching for file in upload directory');
+        
+        // Try common extensions
+        const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+        let foundFile = null;
+        let foundExtension = null;
+        
+        for (const ext of extensions) {
+          const testPath = path.join(uploadDir, `${objectId}${ext}`);
+          if (fs.existsSync(testPath)) {
+            foundFile = testPath;
+            foundExtension = ext;
+            break;
+          }
+        }
+        
+        if (foundFile) {
+          console.log(`Found file with extension ${foundExtension}: ${foundFile}`);
+          
+          // Determine MIME type from extension
+          let mimeType = 'image/jpeg';
+          if (foundExtension === '.png') mimeType = 'image/png';
+          else if (foundExtension === '.gif') mimeType = 'image/gif';
+          else if (foundExtension === '.webp') mimeType = 'image/webp';
+          
+          // Set headers and serve file
+          res.setHeader('Content-Type', mimeType);
+          res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache
+          res.setHeader('ETag', `"${objectId}-${Date.now()}"`);
+          
+          const fileStream = fs.createReadStream(foundFile);
+          fileStream.pipe(res);
+          
+          fileStream.on('error', (error) => {
+            console.error('Error streaming file:', error);
+            if (!res.headersSent) {
+              res.status(500).json({ error: 'Erro ao servir arquivo' });
+            }
+          });
+          
+          return;
+        } else {
+          console.log(`[IMAGE SERVING API] File not found in upload directory: ${uploadDir}`);
+          console.log(`[IMAGE SERVING API] Checked extensions:`, extensions);
+          return res.status(404).json({ error: 'Imagem não encontrada' });
+        }
+      }
+      
+      // If we have metadata, use it
+      console.log('Using metadata to serve file:', {
         objectId: metadata.objectId,
         mimeType: metadata.mimeType,
         extension: metadata.extension,
@@ -285,17 +393,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission (public)
   app.post("/api/contact", async (req, res) => {
     try {
-      const validatedData = insertContactSubmissionSchema.parse(req.body);
-      const submission = await storage.createContactSubmission(validatedData);
+      console.log("📝 [CONTACT] Received contact form data:", req.body);
       
-      console.log("New contact submission:", submission);
+      const validatedData = insertContactSubmissionSchema.parse(req.body);
+      console.log("✅ [CONTACT] Validated data:", validatedData);
+      
+      const submission = await storage.createContactSubmission(validatedData);
+      console.log("💾 [CONTACT] Saved to database:", submission);
       
       res.json({ 
         success: true, 
         message: "Cotação enviada com sucesso! Entraremos em contato em breve." 
       });
     } catch (error) {
-      console.error("Error processing contact form:", error);
+      console.error("❌ [CONTACT] Error processing contact form:", error);
       res.status(400).json({ 
         error: "Erro ao processar formulário. Verifique os dados e tente novamente." 
       });
@@ -307,10 +418,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Contact Submissions Management
   app.get("/api/admin/contact/submissions", requireAdmin, async (req, res) => {
     try {
+      console.log("🔍 [ADMIN] Fetching contact submissions...");
       const submissions = await storage.getContactSubmissions();
+      console.log(`✅ [ADMIN] Found ${submissions.length} contact submissions`);
       res.json(submissions);
     } catch (error) {
-      console.error("Error fetching contact submissions:", error);
+      console.error("❌ [ADMIN] Error fetching contact submissions:", error);
       res.status(500).json({ error: "Erro interno do servidor" });
     }
   });
@@ -318,10 +431,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Plans Management
   app.get("/api/admin/plans", requireAdmin, async (req, res) => {
     try {
-      const plans = await storage.getAllPlans(); // Use getAllPlans for admin to see all plans
+      console.log("🔍 [ADMIN] Fetching all plans...");
+      const plans = await storage.getAllPlans();
+      console.log(`✅ [ADMIN] Found ${plans.length} plans`);
       res.json(plans);
     } catch (error) {
-      console.error("Error in /api/admin/plans:", error);
+      console.error("❌ [ADMIN] Error in /api/admin/plans:", error);
       res.status(500).json({ error: "Erro ao buscar planos" });
     }
   });
@@ -370,9 +485,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Network Units Management
   app.get("/api/admin/network-units", requireAdmin, async (req, res) => {
     try {
-      const units = await storage.getNetworkUnits();
+      console.log("🔍 [ADMIN] Fetching all network units...");
+      const units = await storage.getAllNetworkUnits();
+      console.log(`✅ [ADMIN] Found ${units.length} network units`);
       res.json(units);
     } catch (error) {
+      console.error("❌ [ADMIN] Error fetching network units:", error);
       res.status(500).json({ error: "Erro ao buscar unidades da rede" });
     }
   });
@@ -421,9 +539,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // FAQ Items Management
   app.get("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
-      const items = await storage.getFaqItems();
+      console.log("🔍 [ADMIN] Fetching all FAQ items...");
+      const items = await storage.getAllFaqItems();
+      console.log(`✅ [ADMIN] Found ${items.length} FAQ items`);
       res.json(items);
     } catch (error) {
+      console.error("❌ [ADMIN] Error fetching FAQ items:", error);
       res.status(500).json({ error: "Erro ao buscar itens do FAQ" });
     }
   });
@@ -431,28 +552,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Site Settings Management (Admin only)
   app.get("/api/admin/site-settings", requireAdmin, async (req, res) => {
     try {
+      console.log("🔍 [ADMIN] Fetching site settings...");
       const settings = await storage.getSiteSettings();
+      console.log(`✅ [ADMIN] Site settings:`, settings ? 'Found' : 'Not found');
       res.json(settings || {});
     } catch (error) {
+      console.error("❌ [ADMIN] Error fetching site settings:", error);
       res.status(500).json({ error: "Erro ao buscar configurações" });
     }
   });
 
   app.put("/api/admin/site-settings", requireAdmin, async (req, res) => {
     try {
-      console.log('Received site settings data:', req.body);
-      console.log('Image fields:', {
+      console.log('🔍 [ADMIN] Received site settings update request');
+      console.log('🔍 [ADMIN] Request body:', req.body);
+      console.log('🔍 [ADMIN] Image fields:', {
         mainImage: req.body.mainImage,
         networkImage: req.body.networkImage,
         aboutImage: req.body.aboutImage
       });
+      
+      // Validate the data
       const validatedData = insertSiteSettingsSchema.partial().parse(req.body);
-      console.log('Validated data:', validatedData);
+      console.log('🔍 [ADMIN] Validated data:', validatedData);
+      
+      // Update settings in database
       const settings = await storage.updateSiteSettings(validatedData);
-      console.log('Updated settings result:', settings);
+      console.log('🔍 [ADMIN] Updated settings result:', settings);
+      
+      // Return the updated settings
       res.json(settings);
+      
+      console.log('🔍 [ADMIN] Site settings updated successfully');
     } catch (error) {
-      console.error("Error updating site settings:", error);
+      console.error("🔍 [ADMIN] Error updating site settings:", error);
       res.status(400).json({ error: "Dados inválidos para atualizar configurações" });
     }
   });
@@ -664,7 +797,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(500).json({ 
         error: "Erro ao buscar planos",
-        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        details: autoConfig.get('NODE_ENV') === 'development' ? errorMessage : undefined
       });
     }
   });

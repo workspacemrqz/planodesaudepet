@@ -72,27 +72,27 @@ export function ConfirmationModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50" />
+             {/* Overlay */}
+       <div className="absolute inset-0 bg-black/80" />
       
-      {/* Modal */}
-      <div className="relative bg-[#FBF9F7] rounded-lg shadow-xl max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
+             {/* Modal */}
+       <div className="relative bg-[#277677] rounded-lg shadow-xl max-w-md w-full mx-4 animate-in fade-in-0 zoom-in-95 duration-200 border">
         {/* Header */}
         <div className="flex items-center justify-between p-6">
           <div className="flex items-center gap-3">
             {icon && (
-              <div className="flex-shrink-0 text-[#277677]">
+              <div className="flex-shrink-0 text-[#FBF9F7]">
                 {icon}
               </div>
             )}
-            <h2 className="text-lg font-semibold text-[#277677]">
+            <h2 className="text-lg font-semibold text-[#FBF9F7]">
               {title}
             </h2>
           </div>
           <button
             onClick={handleCancel}
             disabled={isLoading}
-            className="text-[#302e2b] hover:text-[#277677] transition-colors disabled:opacity-50"
+            className="text-[#FBF9F7] hover:text-[#277677] transition-colors disabled:opacity-50"
             aria-label="Fechar modal"
           >
             <X className="h-5 w-5" />
@@ -101,10 +101,10 @@ export function ConfirmationModal({
 
         {/* Content */}
         <div className="p-6">
-          <p className="text-[#302e2b] leading-relaxed">
+          <p className="text-[#FBF9F7] leading-relaxed">
             {message}
           </p>
-          <p className="text-sm text-[#302e2b]/70 mt-2">
+          <p className="text-sm text-[#FBF9F7]/70 mt-2">
             Esta ação é irreversível.
           </p>
         </div>
@@ -115,14 +115,19 @@ export function ConfirmationModal({
             onClick={handleCancel}
             disabled={isLoading}
             variant="outline"
-            className="flex-1 bg-[#E1AC33] text-[#FBF9F7] hover:bg-[#E1AC33] hover:text-[#FBF9F7] focus:bg-[#E1AC33] focus:text-[#FBF9F7] active:bg-[#E1AC33] active:text-[#FBF9F7]"
+            className="flex-1 border-[#e1ac33]"
+            style={{
+              backgroundColor: '#e1ac33',
+              color: '#FBF9F7',
+              borderColor: '#e1ac33'
+            }}
           >
             {cancelText}
           </Button>
           <Button
             onClick={handleConfirm}
             disabled={isLoading}
-            className="flex-1 bg-[#277677] text-[#FBF9F7]"
+            className="flex-1 bg-[#145759] text-[#FBF9F7] hover:bg-[#145759]"
           >
             {isLoading ? "Processando..." : confirmText}
           </Button>

@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
+import { usePlans, getPlanDisplayText } from "@/hooks/use-plans";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -23,7 +24,9 @@ const contactFormSchema = z.object({
   petName: z.string().min(1, "Nome do pet é obrigatório"),
   animalType: z.string().min(1, "Tipo de animal é obrigatório"),
   petAge: z.string().min(1, "Idade do pet é obrigatória"),
-  planInterest: z.string().min(1, "Selecione um plano"),
+  planInterest: z.string().min(1, "Selecione um plano").refine((val) => val.trim().length > 0, {
+    message: "Selecione um plano válido"
+  }),
   message: z.string().optional(),
 });
 
@@ -34,6 +37,9 @@ export default function ContactSection() {
   const { toast } = useToast();
   const { settings, shouldShow } = useSiteSettingsWithDefaults();
   const { getWhatsAppLink } = useWhatsAppRedirect();
+  const { data: plans, isLoading: plansLoading, error: plansError } = usePlans();
+
+
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -217,16 +223,34 @@ export default function ContactSection() {
                       render={({ field }) => (
                         <FormItem className="contact-form-field">
                           <FormLabel>Plano de Interesse</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value || ""}>
                             <FormControl>
                               <SelectTrigger className="mobile-form-input">
                                 <SelectValue placeholder="Selecione um plano..." />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="padrao">Padrão - R$45/mês</SelectItem>
-                              <SelectItem value="premium">Premium - R$80/mês</SelectItem>
-                              <SelectItem value="local">Plano Local</SelectItem>
+                                                              {plansLoading ? (
+                                  <SelectItem value="loading" disabled>
+                                    Carregando planos...
+                                  </SelectItem>
+                                ) : plansError ? (
+                                  <SelectItem value="error" disabled>
+                                    Erro ao carregar planos
+                                  </SelectItem>
+                                ) : plans && plans.length > 0 ? (
+                                  plans
+                                    .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+                                    .map((plan) => (
+                                      <SelectItem key={plan.id} value={plan.name}>
+                                        {getPlanDisplayText(plan)}
+                                      </SelectItem>
+                                    ))
+                                ) : (
+                                  <SelectItem value="no-plans" disabled>
+                                    Nenhum plano disponível
+                                  </SelectItem>
+                                )}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -267,46 +291,53 @@ export default function ContactSection() {
             </div>
 
             {/* Contact Information Container */}
-            <div className="space-y-4 pl-0 lg:pl-2 mt-5 lg:mt-0">
+            <div className="space-y-6 pl-0 lg:pl-2 mt-5 lg:mt-0">
             {/* Contact Information */}
-            <Card className="bg-card/95 backdrop-blur-sm shadow-xl rounded-xl w-full">
-              <CardContent className="p-3 sm:p-6 sm:pt-6 bg-[#2776776e] pt-[12px] pb-[12px] pl-[12px] pr-[12px] text-left rounded-xl">
-                <div className="mb-4">
-                  <div className="text-lg sm:text-xl font-bold text-[#fbf9f7]">
+            <Card className="shadow-md rounded-xl w-full border-0 bg-transparent">
+              <CardContent className="p-6 sm:p-8 text-left">
+                <div className="mb-6">
+                  <div className="text-xl sm:text-2xl font-bold text-[#FBF9F7] mb-3">
                     Outras Formas de Contato
                   </div>
+                  <div className="w-12 h-0.5 bg-[#E1AC33]"></div>
                 </div>
-                <div className="space-y-4 text-muted-foreground text-xs sm:text-sm">
+                <div className="space-y-5 text-sm sm:text-base">
                   {shouldShow.phone && (
-                    <div className="flex items-start gap-3">
-                      <Phone className="h-4 w-4 text-[#fbf9f7] flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-[#fbf9f7]">Telefone</div>
-                        <div className="text-muted-foreground">{settings.phone}</div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E1AC33] flex items-center justify-center flex-shrink-0">
+                        <Phone className="h-4 w-4 text-[#FBF9F7]" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-[#FBF9F7] text-sm">Telefone</div>
+                        <div className="text-[#FBF9F7] opacity-80">{settings.phone}</div>
                       </div>
                     </div>
                   )}
 
                   {shouldShow.email && (
-                    <div className="flex items-start gap-3">
-                      <Mail className="h-4 w-4 text-[#fbf9f7] flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-[#fbf9f7]">E-mail</div>
-                        <div className="text-muted-foreground">{settings.email}</div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E1AC33] flex items-center justify-center flex-shrink-0">
+                        <Mail className="h-4 w-4 text-[#FBF9F7]" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-[#FBF9F7] text-sm">E-mail</div>
+                        <div className="text-[#FBF9F7] opacity-80">{settings.email}</div>
                       </div>
                     </div>
                   )}
 
                   {shouldShow.whatsapp && (
-                    <div className="flex items-start gap-3">
-                      <FaWhatsapp className="h-4 w-4 text-[#fbf9f7] flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-[#fbf9f7]">WhatsApp</div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E1AC33] flex items-center justify-center flex-shrink-0">
+                        <FaWhatsapp className="h-4 w-4 text-[#FBF9F7]" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-[#FBF9F7] text-sm">WhatsApp</div>
                         <a 
                           href={getWhatsAppLink()}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-[#fbf9f7] transition-colors cursor-pointer"
+                          className="text-[#FBF9F7] opacity-80 hover:text-[#E1AC33] transition-colors cursor-pointer"
                         >
                           {settings.whatsapp}
                         </a>
@@ -315,14 +346,16 @@ export default function ContactSection() {
                   )}
 
                   {shouldShow.address && (
-                    <div className="flex items-start gap-3">
-                      <svg className="h-4 w-4 text-[#fbf9f7] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <div>
-                        <div className="font-semibold text-[#fbf9f7]">Endereço</div>
-                        <div className="text-muted-foreground">{settings.address}</div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E1AC33] flex items-center justify-center flex-shrink-0">
+                        <svg className="h-4 w-4 text-[#FBF9F7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium text-[#FBF9F7] text-sm">Endereço</div>
+                        <div className="text-[#FBF9F7] opacity-80">{settings.address}</div>
                       </div>
                     </div>
                   )}
@@ -330,50 +363,54 @@ export default function ContactSection() {
               </CardContent>
             </Card>
 
-            {/* Service Hours */}
-            {shouldShow.businessHours && (
-              <Card className="bg-card/95 backdrop-blur-sm shadow-xl rounded-xl w-full">
-                <CardContent className="p-3 sm:p-6 sm:pt-6 bg-[#2776776e] pt-[12px] pb-[12px] pl-[12px] pr-[12px] text-left rounded-xl">
-                  <div className="flex items-start gap-2 mb-2">
-                    <Clock className="h-5 w-5 text-[#fbf9f7] flex-shrink-0 mt-0.5" />
-                    <div className="text-lg sm:text-xl font-bold text-[#fbf9f7]">
-                      Horário de Atendimento
-                    </div>
+            {/* Social Media */}
+            {(shouldShow.facebookUrl || shouldShow.instagramUrl || shouldShow.linkedinUrl || shouldShow.youtubeUrl) && (
+              <Card className="shadow-md rounded-xl w-full border-0 bg-transparent">
+                <CardContent className="p-6 sm:p-8 text-left">
+                  <div className="mb-6">
+                    <div className="text-xl sm:text-2xl font-bold text-[#FBF9F7] mb-3">Siga-nos</div>
+                    <div className="w-12 h-0.5 bg-[#E1AC33]"></div>
                   </div>
-                  <div className="text-muted-foreground text-xs sm:text-sm whitespace-pre-line">
-                    {settings.businessHours}
+                  <div className="flex space-x-4">
+                    {shouldShow.facebookUrl && (
+                      <a href={settings.facebookUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677] hover:bg-[#E1AC33] hover:text-[#FBF9F7] transition-colors duration-200">
+                        <Facebook className="h-4 w-4" />
+                      </a>
+                    )}
+                    {shouldShow.instagramUrl && (
+                      <a href={settings.instagramUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677] hover:bg-[#E1AC33] hover:text-[#FBF9F7] transition-colors duration-200">
+                        <Instagram className="h-4 w-4" />
+                      </a>
+                    )}
+                    {shouldShow.linkedinUrl && (
+                      <a href={settings.linkedinUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677] hover:bg-[#E1AC33] hover:text-[#FBF9F7] transition-colors duration-200">
+                        <Linkedin className="h-4 w-4" />
+                      </a>
+                    )}
+                    {shouldShow.youtubeUrl && (
+                      <a href={settings.youtubeUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677] hover:bg-[#E1AC33] hover:text-[#FBF9F7] transition-colors duration-200">
+                        <Youtube className="h-4 w-4" />
+                      </a>
+                    )}
                   </div>
                 </CardContent>
               </Card>
             )}
 
-            {/* Social Media */}
-            {(shouldShow.facebookUrl || shouldShow.instagramUrl || shouldShow.linkedinUrl || shouldShow.youtubeUrl) && (
-              <div>
-                <h4 className="text-xl font-bold mb-4 text-[#FBF9F7]">Siga-nos</h4>
-                <div className="flex space-x-4">
-                  {shouldShow.facebookUrl && (
-                    <a href={settings.facebookUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677]">
-                      <Facebook className="h-4 w-4" />
-                    </a>
-                  )}
-                  {shouldShow.instagramUrl && (
-                    <a href={settings.instagramUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677]">
-                      <Instagram className="h-4 w-4" />
-                    </a>
-                  )}
-                  {shouldShow.linkedinUrl && (
-                    <a href={settings.linkedinUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677]">
-                      <Linkedin className="h-4 w-4" />
-                    </a>
-                  )}
-                  {shouldShow.youtubeUrl && (
-                    <a href={settings.youtubeUrl || undefined} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-[#FBF9F7] text-[#277677]">
-                      <Youtube className="h-4 w-4" />
-                    </a>
-                  )}
-                </div>
-              </div>
+            {/* Service Hours */}
+            {shouldShow.businessHours && (
+              <Card className="shadow-md rounded-xl w-full border-0 bg-transparent">
+                <CardContent className="p-6 sm:p-8 text-center">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="text-xl sm:text-2xl font-bold text-[#FBF9F7]">
+                      Horário de Atendimento
+                    </div>
+                  </div>
+                  <div className="text-[#FBF9F7] text-sm sm:text-base leading-relaxed">
+                    {settings.businessHours}
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </div>
           </div>

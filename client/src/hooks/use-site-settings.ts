@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { SiteSettings } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { clientConfig } from "../config";
 
 // Função para formatar telefone brasileiro com formatação dinâmica para 8 ou 9 dígitos
 const formatBrazilianPhoneForDisplay = (value: string | null | undefined): string => {
@@ -52,11 +53,21 @@ export function useSiteSettings() {
   return useQuery<SiteSettings>({
     queryKey: ["site-settings"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/site-settings");
-      return await res.json();
+      try {
+        const res = await apiRequest("GET", "/api/site-settings");
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return await res.json();
+      } catch (error) {
+        console.warn('Failed to fetch site settings, using defaults:', error);
+        return null;
+      }
     },
     staleTime: 5 * 60 * 1000, // 5 minutos
     gcTime: 10 * 60 * 1000, // 10 minutos (anteriormente cacheTime)
+    retry: 2, // Tentar apenas 2 vezes
+    retryDelay: 1000, // Esperar 1 segundo entre tentativas
   });
 }
 
@@ -68,11 +79,21 @@ export function useAdminSiteSettings() {
   return useQuery<SiteSettings>({
     queryKey: ["admin-site-settings"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/admin/site-settings");
-      return await res.json();
+      try {
+        const res = await apiRequest("GET", "/api/admin/site-settings");
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return await res.json();
+      } catch (error) {
+        console.warn('Failed to fetch admin site settings:', error);
+        throw error; // Re-throw para admin, pois é crítico
+      }
     },
     staleTime: 1 * 60 * 1000, // 1 minuto
     gcTime: 5 * 60 * 1000, // 5 minutos (anteriormente cacheTime)
+    retry: 3,
+    retryDelay: 1000,
   });
 }
 
@@ -89,11 +110,11 @@ export function shouldShowField(value: string | null | undefined): boolean {
  * Usado como fallback durante o carregamento ou em caso de erro
  */
 export const defaultSettings: Partial<SiteSettings> = {
-  whatsapp: "(11) 99999-9999",
-  email: "contato@unipetplan.com.br",
-  phone: "0800 123 4567",
-  address: "AVENIDA DOM SEVERINO, 1372, FATIMA - Teresina/PI",
-  cnpj: "00.000.000/0001-00",
+  whatsapp: clientConfig.contact.whatsapp,
+  email: clientConfig.contact.email,
+  phone: clientConfig.contact.phone,
+  address: clientConfig.contact.address,
+  cnpj: clientConfig.contact.cnpj,
   businessHours: "Segunda a Sexta: 8h às 18h\nSábado: 8h às 14h\nEmergências: 24h todos os dias",
   ourStory: "A UNIPET PLAN nasceu da paixão de veterinários experientes que acreditam que todo animal merece cuidados de qualidade, independentemente da condição financeira de seus tutores. Nossa missão é tornar os cuidados veterinários acessíveis a todos, oferecendo planos de saúde que garantem o bem-estar dos pets.",
   mainImage: "/Cachorros.jpg",

@@ -5,7 +5,9 @@ import { useLocation } from "wouter";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
-import { getImageUrlSync } from "@/lib/image-utils";
+import { RobustImage } from "@/components/ui/image";
+import { cn } from "@/lib/utils";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 export default function Features() {
   const [, setLocation] = useLocation();
@@ -69,38 +71,31 @@ export default function Features() {
           </AnimatedSection>
         </div>
 
-        <AnimatedList 
-          animation="slideUp" 
-          delay={300} 
-          staggerDelay={75}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-16 sm:mb-20 px-4 sm:px-0 pl-[0px] pr-[0px]"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 mb-16 sm:mb-20 px-4 sm:px-0 pl-[0px] pr-[0px] relative z-10">
           {mainFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div 
+              <Feature 
                 key={index} 
-                className="text-center border border-primary/30 rounded-lg p-4 sm:p-6 shadow-md text-[#fbf9f7] bg-[#277677] mt-[0px] mb-[0px] pt-[12px] pb-[12px] pl-[16px] pr-[16px] ml-[0px] mr-[0px] h-[200px] sm:h-[240px] flex flex-col items-center"
-              >
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 text-[#fbf9f7] bg-[#036566]">
-                  <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-[#FBF9F7]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-[#fbf9f7]">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-[#fbf9f7] leading-relaxed px-0 sm:px-2">{feature.description}</p>
-              </div>
+                feature={feature} 
+                index={index} 
+              />
             );
           })}
-        </AnimatedList>
+        </div>
 
         {/* Network Information */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center px-4 sm:px-0 pl-[0px] pr-[0px]">
           <div className="order-2 lg:order-1">
             <AnimatedSection animation="slideRight" delay={500}>
               {/* Network credentialed image */}
-              <img 
-                src={getImageUrlSync(settings.networkImage, 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600')} 
+              <OptimizedImage 
+                src={settings.networkImage}
+                fallback="https://images.unsplash.com/logo.png"
                 alt="Rede credenciada de hospitais veterinários" 
+                fallbackSrc="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600"
                 className="rounded-2xl shadow-xl w-full h-auto max-h-[300px] sm:max-h-[400px] lg:max-h-none object-cover" 
+                onError={(error) => console.warn('Features network image error:', error)}
               />
             </AnimatedSection>
           </div>
@@ -133,7 +128,10 @@ export default function Features() {
             
             <AnimatedSection animation="scale" delay={800}>
               <Button 
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 sm:h-12 px-4 py-2 unipet-button-primary text-white bg-[#277677] mobile-touch-target w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10 sm:h-12 px-4 py-2 unipet-button-primary text-white mobile-touch-target w-full sm:w-auto"
+                style={{
+                  background: 'linear-gradient(to top, #1c6363, #277677)'
+                }}
                 onClick={() => {
                   setLocation('/rede-credenciada');
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
@@ -148,3 +146,60 @@ export default function Features() {
     </section>
   );
 }
+
+const Feature = ({
+  feature,
+  index,
+}: {
+  feature: {
+    icon: any;
+    title: string;
+    description: string;
+  };
+  index: number;
+}) => {
+  const Icon = feature.icon;
+  
+  return (
+    <div
+      className={cn(
+        "flex flex-col py-10 relative group/feature text-[#FBF9F7]",
+        (index === 0 || index === 4) && "lg:border-l border-[#036566]",
+        index < 4 && "lg:border-b border-[#036566]",
+        // Adiciona borda direita apenas para os containers que não são o último
+        index < 3 && "lg:border-r border-[#036566]",
+        // Desktop: Início Imediato (index 0) - bordas esquerda arredondadas
+        index === 0 && "lg:rounded-l-lg lg:rounded-tr-none",
+        // Desktop: Rede 24h (index 3) - bordas direita arredondadas  
+        index === 3 && "lg:rounded-r-lg",
+        // Mobile: Início Imediato (index 0) - bordas topo arredondadas
+        index === 0 && "rounded-t-lg",
+        // Mobile: Rede 24h (index 3) - bordas base arredondadas
+        index === 3 && "rounded-b-lg lg:rounded-b-none"
+      )}
+      style={{ backgroundColor: '#277677' }}
+    >
+      {index < 4 && (
+        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-t from-neutral-100/10 to-transparent pointer-events-none" />
+      )}
+      {index >= 4 && (
+        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-b from-neutral-100/10 to-transparent pointer-events-none" />
+      )}
+      
+      <div className="mb-4 relative z-10 px-10 text-neutral-600 dark:text-neutral-400">
+        <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-[#FBF9F7]" />
+      </div>
+      
+      <div className="text-lg font-bold mb-2 relative z-10 px-10">
+        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-[#E1AC33] transition-all duration-200 origin-center" />
+        <span className="group-hover/feature:translate-x-2 transition duration-200 inline-block text-[#FBF9F7]">
+          {feature.title}
+        </span>
+      </div>
+      
+      <p className="text-sm text-[#FBF9F7] max-w-xs relative z-10 px-10">
+        {feature.description}
+      </p>
+    </div>
+  );
+};

@@ -41,6 +41,7 @@ export interface IStorage {
   
   // Network Units
   getNetworkUnits(): Promise<NetworkUnit[]>;
+  getAllNetworkUnits(): Promise<NetworkUnit[]>; // For admin
   getNetworkUnit(id: string): Promise<NetworkUnit | undefined>;
   createNetworkUnit(unit: InsertNetworkUnit): Promise<NetworkUnit>;
   updateNetworkUnit(id: string, unit: Partial<InsertNetworkUnit>): Promise<NetworkUnit | undefined>;
@@ -48,6 +49,7 @@ export interface IStorage {
   
   // FAQ Items
   getFaqItems(): Promise<FaqItem[]>;
+  getAllFaqItems(): Promise<FaqItem[]>; // For admin
   getFaqItem(id: string): Promise<FaqItem | undefined>;
   createFaqItem(item: InsertFaqItem): Promise<FaqItem>;
   updateFaqItem(id: string, item: Partial<InsertFaqItem>): Promise<FaqItem | undefined>;
@@ -88,8 +90,23 @@ export class DatabaseStorage implements IStorage {
   async getPlans(): Promise<Plan[]> {
     try {
       console.log("Executing getPlans query...");
-      const result = await db.select().from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
+      const result = await db.select({
+        id: plans.id,
+        name: plans.name,
+        price: plans.price,
+        description: plans.description,
+        features: plans.features,
+        buttonText: plans.buttonText,
+        redirectUrl: plans.redirectUrl,
+        planType: plans.planType,
+        isActive: plans.isActive,
+        displayOrder: plans.displayOrder,
+        createdAt: plans.createdAt,
+      }).from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
       console.log("Plans query result:", result);
+      
+
+      
       return result;
     } catch (error) {
       console.error("Error in getPlans:", error);
@@ -100,7 +117,19 @@ export class DatabaseStorage implements IStorage {
   async getAllPlans(): Promise<Plan[]> {
     try {
       console.log("Executing getAllPlans query (admin)...");
-      const result = await db.select().from(plans).orderBy(asc(plans.displayOrder));
+      const result = await db.select({
+        id: plans.id,
+        name: plans.name,
+        price: plans.price,
+        description: plans.description,
+        features: plans.features,
+        buttonText: plans.buttonText,
+        redirectUrl: plans.redirectUrl,
+        planType: plans.planType,
+        isActive: plans.isActive,
+        displayOrder: plans.displayOrder,
+        createdAt: plans.createdAt,
+      }).from(plans).orderBy(asc(plans.displayOrder));
       console.log("All plans query result:", result);
       return result;
     } catch (error) {
@@ -110,7 +139,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPlan(id: string): Promise<Plan | undefined> {
-    const [plan] = await db.select().from(plans).where(eq(plans.id, id));
+    const [plan] = await db.select({
+      id: plans.id,
+      name: plans.name,
+      price: plans.price,
+      description: plans.description,
+      features: plans.features,
+      buttonText: plans.buttonText,
+      redirectUrl: plans.redirectUrl,
+      planType: plans.planType,
+      isActive: plans.isActive,
+      displayOrder: plans.displayOrder,
+      createdAt: plans.createdAt,
+    }).from(plans).where(eq(plans.id, id));
     return plan || undefined;
   }
 
@@ -125,13 +166,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deletePlan(id: string): Promise<boolean> {
-    const result = await db.update(plans).set({ isActive: false }).where(eq(plans.id, id));
+    const result = await db.delete(plans).where(eq(plans.id, id));
     return (result.rowCount || 0) > 0;
   }
 
   // Network Units
   async getNetworkUnits(): Promise<NetworkUnit[]> {
     return await db.select().from(networkUnits).where(eq(networkUnits.isActive, true));
+  }
+
+  async getAllNetworkUnits(): Promise<NetworkUnit[]> {
+    return await db.select().from(networkUnits).orderBy(desc(networkUnits.createdAt));
   }
 
   async getNetworkUnit(id: string): Promise<NetworkUnit | undefined> {
@@ -150,13 +195,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteNetworkUnit(id: string): Promise<boolean> {
-    const result = await db.update(networkUnits).set({ isActive: false }).where(eq(networkUnits.id, id));
+    const result = await db.delete(networkUnits).where(eq(networkUnits.id, id));
     return (result.rowCount || 0) > 0;
   }
 
   // FAQ Items
   async getFaqItems(): Promise<FaqItem[]> {
     return await db.select().from(faqItems).where(eq(faqItems.isActive, true)).orderBy(asc(faqItems.displayOrder));
+  }
+
+  async getAllFaqItems(): Promise<FaqItem[]> {
+    return await db.select().from(faqItems).orderBy(asc(faqItems.displayOrder));
   }
 
   async getFaqItem(id: string): Promise<FaqItem | undefined> {
@@ -175,7 +224,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteFaqItem(id: string): Promise<boolean> {
-    const result = await db.update(faqItems).set({ isActive: false }).where(eq(faqItems.id, id));
+    const result = await db.delete(faqItems).where(eq(faqItems.id, id));
     return (result.rowCount || 0) > 0;
   }
 

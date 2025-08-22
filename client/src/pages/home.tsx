@@ -17,7 +17,6 @@ export default function Home() {
       <Features />
       <FaqSection 
         showTitle={true} 
-        maxItems={5} 
         customColors={{
           backgroundColor: '#277677',
           titleColor: '#FBF9F7',

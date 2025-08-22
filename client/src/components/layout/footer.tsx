@@ -143,7 +143,7 @@ export default function Footer() {
                 <div className="mt-1">CNPJ: {settings.cnpj}</div>
               )}
             </div>
-            <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm text-center">
+            <div className="flex flex-row justify-center sm:justify-end gap-4 sm:gap-6 text-xs sm:text-sm text-center">
               <Link href="/politica-privacidade" className="text-[#302e2b] hover:text-[#277677] transition-colors">
                 Política de Privacidade
               </Link>

@@ -1,4 +1,20 @@
-import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+
+// Função para gerar timestamp único para evitar cache
+function generateCacheBuster(): string {
+  return `t=${Date.now()}`;
+}
+
+// Função para adicionar headers anti-cache
+function addAntiCacheHeaders(headers: HeadersInit = {}): HeadersInit {
+  return {
+    ...headers,
+    'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+    'X-Request-Timestamp': Date.now().toString(),
+  };
+}
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -11,49 +27,74 @@ export async function apiRequest(
   method: string,
   url: string,
   data?: unknown | undefined,
+  options?: {
+    noCache?: boolean;
+    timeout?: number;
+  }
 ): Promise<Response> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
-
-  await throwIfResNotOk(res);
-  return res;
-}
-
-type UnauthorizedBehavior = "returnNull" | "throw";
-export const getQueryFn: <T>(options: {
-  on401: UnauthorizedBehavior;
-}) => QueryFunction<T> =
-  ({ on401: unauthorizedBehavior }) =>
-  async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+  const { noCache = true, timeout = 10000 } = options || {};
+  
+  // Adicionar timestamp para evitar cache
+  const separator = url.includes('?') ? '&' : '?';
+  const cacheBuster = noCache ? `${separator}${generateCacheBuster()}` : '';
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const res = await fetch(`${url}${cacheBuster}`, {
+      method,
+      headers: {
+        ...(data ? { "Content-Type": "application/json" } : {}),
+        ...(noCache ? addAntiCacheHeaders() : {}),
+      },
+      body: data ? JSON.stringify(data) : undefined,
       credentials: "include",
+      signal: controller.signal,
     });
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
-    }
-
+    clearTimeout(timeoutId);
     await throwIfResNotOk(res);
-    return await res.json();
-  };
+    return res;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`Request timeout after ${timeout}ms`);
+    }
+    throw error;
+  }
+}
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutos - dados ficam frescos por mais tempo
-      gcTime: 10 * 60 * 1000, // 10 minutos - cache mantido por mais tempo
-      retry: 1, // Retry uma vez em caso de falha
-      retryDelay: 1000, // 1 segundo entre tentativas
+      refetchOnReconnect: false,
+      refetchOnMount: true,
+      staleTime: 5 * 60 * 1000, // 5 minutos
+      gcTime: 10 * 60 * 1000, // 10 minutos
+      retry: 1, // Retry apenas 1 vez
+      retryDelay: 1000,
+      networkMode: 'online',
     },
     mutations: {
-      retry: false,
+      retry: 1,
+      retryDelay: 1000,
     },
   },
 });
+
+// Função para limpar cache específico
+export function invalidateCache(queryKey: string[]) {
+  queryClient.invalidateQueries({ queryKey });
+}
+
+// Função para limpar todo o cache
+export function clearAllCache() {
+  queryClient.clear();
+}
+
+// Função para forçar refresh de dados específicos
+export function forceRefresh(queryKey: string[]) {
+  queryClient.refetchQueries({ queryKey, exact: true });
+}

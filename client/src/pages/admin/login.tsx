@@ -135,7 +135,10 @@ export default function AdminLogin() {
 
                 <Button 
                   type="submit" 
-                  className="w-full h-14 bg-[#277677] text-[#FBF9F7] font-bold text-lg rounded-xl mb-8"
+                  className="w-full h-14 text-[#FBF9F7] font-bold text-lg rounded-xl mb-8"
+            style={{
+              background: 'linear-gradient(to top, #1c6363, #277677)'
+            }}
                   disabled={loginMutation.isPending}
                   data-testid="button-login"
                 >

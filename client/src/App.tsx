@@ -1,7 +1,8 @@
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
@@ -13,6 +14,7 @@ import FAQ from "@/pages/faq";
 import Network from "@/pages/network";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfUse from "@/pages/terms-of-use";
+import AreaCliente from "@/pages/area-cliente";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import AdminLogin from "@/pages/admin/login";
@@ -20,8 +22,22 @@ import AdminDashboard from "@/pages/admin/dashboard";
 import { AdminAuthProvider } from "@/hooks/use-admin-auth";
 import { AdminProtectedRoute } from "@/components/admin/admin-protected-route";
 import ScrollToTop from "@/components/scroll-to-top";
+import ErrorBoundary from "@/components/error-boundary";
 
+// Componente de loading global com fallback robusto
+function GlobalLoading() {
+  return (
+    <div className="fixed inset-0 bg-gradient-to-br from-[#277677] to-[#1a5a5c] flex items-center justify-center z-50">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-[#E1AC33] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+        <div className="text-[#FBF9F7] text-2xl font-bold mb-2">UNIPET PLAN</div>
+        <div className="text-[#E1AC33] text-lg">Carregando...</div>
+      </div>
+    </div>
+  );
+}
 
+// Componente de roteamento principal
 function Router() {
   return (
     <>
@@ -35,17 +51,20 @@ function Router() {
         <Route>
           <div className="min-h-screen bg-background">
             <Header />
-            <Switch>
-              <Route path="/" component={Home} />
-              <Route path="/planos" component={Plans} />
-              <Route path="/sobre" component={About} />
-              <Route path="/contato" component={Contact} />
-              <Route path="/faq" component={FAQ} />
-              <Route path="/rede-credenciada" component={Network} />
-              <Route path="/politica-privacidade" component={PrivacyPolicy} />
-              <Route path="/termos-uso" component={TermsOfUse} />
-              <Route component={NotFound} />
-            </Switch>
+            <Suspense fallback={<GlobalLoading />}>
+              <Switch>
+                <Route path="/" component={Home} />
+                <Route path="/planos" component={Plans} />
+                <Route path="/sobre" component={About} />
+                <Route path="/contato" component={Contact} />
+                <Route path="/faq" component={FAQ} />
+                <Route path="/rede-credenciada" component={Network} />
+                <Route path="/politica-privacidade" component={PrivacyPolicy} />
+                <Route path="/termos-uso" component={TermsOfUse} />
+                <Route path="/area-cliente" component={AreaCliente} />
+                <Route component={NotFound} />
+              </Switch>
+            </Suspense>
             <Footer />
           </div>
         </Route>
@@ -55,83 +74,18 @@ function Router() {
 }
 
 function App() {
-  // Suprimir erro ResizeObserver que não afeta a funcionalidade
-  useEffect(() => {
-    const handleResizeObserverError = (e: ErrorEvent) => {
-      if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
-        e.stopImmediatePropagation();
-        return false;
-      }
-    };
-
-    window.addEventListener('error', handleResizeObserverError);
-
-    return () => {
-      window.removeEventListener('error', handleResizeObserverError);
-    };
-  }, []);
-
-  // Prefetch dados críticos assim que a aplicação carrega
-  useEffect(() => {
-    const prefetchCriticalData = async () => {
-      try {
-        // Prefetch dados que são usados em múltiplas páginas
-        await Promise.all([
-          queryClient.prefetchQuery({
-            queryKey: ['plans'],
-            queryFn: async () => {
-              const response = await fetch('/api/plans');
-              if (!response.ok) throw new Error('Failed to fetch plans');
-              return response.json();
-            },
-            staleTime: 5 * 60 * 1000, // 5 minutos
-          }),
-          queryClient.prefetchQuery({
-            queryKey: ['/api/network-units'],
-            queryFn: async () => {
-              const response = await fetch('/api/network-units');
-              if (!response.ok) throw new Error('Failed to fetch network units');
-              return response.json();
-            },
-            staleTime: 5 * 60 * 1000, // 5 minutos
-          }),
-          queryClient.prefetchQuery({
-            queryKey: ['/api/faq'],
-            queryFn: async () => {
-              const response = await fetch('/api/faq');
-              if (!response.ok) throw new Error('Failed to fetch FAQ');
-              return response.json();
-            },
-            staleTime: 5 * 60 * 1000, // 5 minutos
-          }),
-          queryClient.prefetchQuery({
-            queryKey: ['site-settings'],
-            queryFn: async () => {
-              const response = await fetch('/api/site-settings');
-              if (!response.ok) throw new Error('Failed to fetch site settings');
-              return response.json();
-            },
-            staleTime: 5 * 60 * 1000, // 5 minutos
-          }),
-        ]);
-      } catch (error) {
-        console.warn('Erro ao fazer prefetch dos dados:', error);
-        // Não bloqueia a aplicação se o prefetch falhar
-      }
-    };
-
-    prefetchCriticalData();
-  }, []);
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <AdminAuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </AdminAuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AdminAuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </TooltipProvider>
+        </AdminAuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

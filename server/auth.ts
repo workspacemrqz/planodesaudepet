@@ -2,6 +2,7 @@ import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { AdminUser } from "@shared/schema";
 import rateLimit from "express-rate-limit";
+import { autoConfig } from "./config";
 
 declare module 'express-session' {
   interface SessionData {
@@ -42,15 +43,26 @@ interface LoginRequest extends Request {
 }
 
 function validateEnvironmentVariables(): { username: string; password: string } | null {
-  const adminUsername = process.env.ADMIN_USER || process.env.LOGIN;
-  const adminPassword = process.env.ADMIN_PASSWORD || process.env.SENHA;
+  // Use LOGIN and SENHA as primary variables
+  let adminUsername = autoConfig.get('LOGIN');
+  let adminPassword = autoConfig.get('SENHA');
+  
+  // Fallback to LOGIN and SENHA for legacy support if primary variables are not set
+  if (!adminUsername || !adminPassword) {
+    adminUsername = autoConfig.get('LOGIN');
+    adminPassword = autoConfig.get('SENHA');
+    
+    if (adminUsername && adminPassword) {
+      console.warn('⚠️ Using legacy LOGIN/SENHA variables. Consider migrating to LOGIN/SENHA');
+    }
+  }
   
   if (!adminUsername || !adminPassword) {
-    console.error('❌ ADMIN_USER and ADMIN_PASSWORD environment variables must be defined in .env file');
-    console.error('   Alternative: LOGIN and SENHA environment variables');
+    console.error('❌ LOGIN and SENHA (or LOGIN/SENHA) environment variables must be defined in .env file');
     return null;
   }
   
+  console.log('✅ Environment variables loaded successfully');
   return { username: adminUsername, password: adminPassword };
 }
 
@@ -95,17 +107,21 @@ export function setupAuth(app: Express) {
   }
 
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "unipet-admin-secret-key-change-in-production",
-    resave: false,
-    saveUninitialized: false,
+    secret: autoConfig.get('SESSION_SECRET'),
+    resave: true,
+    saveUninitialized: true, // Changed to true to ensure session is saved
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Always false for development
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: 'lax'
     },
+    name: 'connect.sid', // Explicitly set session name
+    store: undefined // Use default memory store for development
   };
 
-  app.set("trust proxy", 1);
+  // Remove trust proxy for local development
+  // app.set("trust proxy", 1);
   app.use(session(sessionSettings));
 
   // Admin login route with rate limiting and security
@@ -188,19 +204,8 @@ export function setupAuth(app: Express) {
     res.json(req.session.user);
   });
 
-  // Middleware to check admin authentication
-  app.use('/api/admin', (req: Request, res: Response, next: NextFunction) => {
-    // Skip authentication check for login and logout routes
-    if (req.path === '/login' || req.path === '/logout') {
-      return next();
-    }
-    
-    if (!req.session.user) {
-      return res.status(401).json({ error: "Acesso não autorizado" });
-    }
-    
-    next();
-  });
+  // Middleware to check admin authentication - REMOVED (handled in routes.ts)
+  // This was causing duplicate authentication checks
 }
 
 // Utility function to check if user is authenticated (for use in other parts of the app)

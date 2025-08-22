@@ -5,8 +5,8 @@ import { setupAuth } from '../auth';
 
 // Mock environment variables
 const mockEnv = {
-  ADMIN_USER: 'admin@test.com',
-  ADMIN_PASSWORD: 'secure-password-123',
+  LOGIN: 'admin@test.com',
+  SENHA: 'secure-password-123',
   SESSION_SECRET: 'test-secret',
   NODE_ENV: 'test'
 };
@@ -35,8 +35,8 @@ describe('Environment-based Authentication', () => {
   });
 
   describe('Environment Variables Validation', () => {
-    it('should fail to start if ADMIN_USER is missing', () => {
-      delete process.env.ADMIN_USER;
+    it('should fail to start if LOGIN is missing', () => {
+      delete process.env.LOGIN;
       delete process.env.LOGIN;
       
       expect(() => {
@@ -45,8 +45,8 @@ describe('Environment-based Authentication', () => {
       }).toThrow('Authentication setup failed: missing environment variables');
     });
 
-    it('should fail to start if ADMIN_PASSWORD is missing', () => {
-      delete process.env.ADMIN_PASSWORD;
+    it('should fail to start if SENHA is missing', () => {
+      delete process.env.SENHA;
       delete process.env.SENHA;
       
       expect(() => {
@@ -56,8 +56,8 @@ describe('Environment-based Authentication', () => {
     });
 
     it('should accept LOGIN/SENHA as alternative environment variables', () => {
-      delete process.env.ADMIN_USER;
-      delete process.env.ADMIN_PASSWORD;
+      delete process.env.LOGIN;
+      delete process.env.SENHA;
       process.env.LOGIN = 'admin@test.com';
       process.env.SENHA = 'secure-password-123';
       
@@ -73,13 +73,13 @@ describe('Environment-based Authentication', () => {
       const response = await request(app)
         .post('/api/admin/login')
         .send({
-          username: mockEnv.ADMIN_USER,
-          password: mockEnv.ADMIN_PASSWORD
+          username: mockEnv.LOGIN,
+          password: mockEnv.SENHA
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('id', 'admin');
-      expect(response.body).toHaveProperty('username', mockEnv.ADMIN_USER);
+      expect(response.body).toHaveProperty('username', mockEnv.LOGIN);
       expect(response.body).not.toHaveProperty('password');
     });
 
@@ -88,7 +88,7 @@ describe('Environment-based Authentication', () => {
         .post('/api/admin/login')
         .send({
           username: 'wrong@email.com',
-          password: mockEnv.ADMIN_PASSWORD
+          password: mockEnv.SENHA
         });
 
       expect(response.status).toBe(401);
@@ -99,7 +99,7 @@ describe('Environment-based Authentication', () => {
       const response = await request(app)
         .post('/api/admin/login')
         .send({
-          username: mockEnv.ADMIN_USER,
+          username: mockEnv.LOGIN,
           password: 'wrong-password'
         });
 
@@ -163,8 +163,8 @@ describe('Environment-based Authentication', () => {
         .post('/api/admin/login')
         .set('X-Forwarded-For', '192.168.1.100') // Use different IP to avoid rate limit
         .send({
-          username: mockEnv.ADMIN_USER,
-          password: mockEnv.ADMIN_PASSWORD
+          username: mockEnv.LOGIN,
+          password: mockEnv.SENHA
         });
 
       expect(loginResponse.status).toBe(200);
@@ -172,7 +172,7 @@ describe('Environment-based Authentication', () => {
       // Check session
       const userResponse = await agent.get('/api/admin/user');
       expect(userResponse.status).toBe(200);
-      expect(userResponse.body).toHaveProperty('username', mockEnv.ADMIN_USER);
+      expect(userResponse.body).toHaveProperty('username', mockEnv.LOGIN);
     });
 
     it('should clear session on logout', async () => {
@@ -183,8 +183,8 @@ describe('Environment-based Authentication', () => {
         .post('/api/admin/login')
         .set('X-Forwarded-For', '192.168.1.101') // Use different IP
         .send({
-          username: mockEnv.ADMIN_USER,
-          password: mockEnv.ADMIN_PASSWORD
+          username: mockEnv.LOGIN,
+          password: mockEnv.SENHA
         });
 
       // Logout
@@ -226,7 +226,7 @@ describe('Environment-based Authentication', () => {
         call.forEach(arg => {
           if (typeof arg === 'string') {
             expect(arg).not.toContain('secret-password');
-            expect(arg).not.toContain(mockEnv.ADMIN_PASSWORD);
+            expect(arg).not.toContain(mockEnv.SENHA);
           }
         });
       });
@@ -255,7 +255,7 @@ describe('Environment-based Authentication', () => {
           .post('/api/admin/login')
           .set('X-Forwarded-For', testIP)
           .send({
-            username: mockEnv.ADMIN_USER,
+            username: mockEnv.LOGIN,
             password: 'wrong-password'
           });
       }
@@ -265,7 +265,7 @@ describe('Environment-based Authentication', () => {
         .post('/api/admin/login')
         .set('X-Forwarded-For', testIP)
         .send({
-          username: mockEnv.ADMIN_USER,
+          username: mockEnv.LOGIN,
           password: 'wrong-password'
         });
 
@@ -288,7 +288,7 @@ describe('Environment-based Authentication', () => {
           .post('/api/admin/login')
           .set('X-Forwarded-For', testIP)
           .send({
-            username: mockEnv.ADMIN_USER,
+            username: mockEnv.LOGIN,
             password: 'wrong-password'
           });
       }
@@ -298,8 +298,8 @@ describe('Environment-based Authentication', () => {
         .post('/api/admin/login')
         .set('X-Forwarded-For', testIP)
         .send({
-          username: mockEnv.ADMIN_USER,
-          password: mockEnv.ADMIN_PASSWORD
+          username: mockEnv.LOGIN,
+          password: mockEnv.SENHA
         });
 
       expect(successResponse.status).toBe(200);
@@ -309,7 +309,7 @@ describe('Environment-based Authentication', () => {
         .post('/api/admin/login')
         .set('X-Forwarded-For', testIP)
         .send({
-          username: mockEnv.ADMIN_USER,
+          username: mockEnv.LOGIN,
           password: 'wrong-password'
         });
 
