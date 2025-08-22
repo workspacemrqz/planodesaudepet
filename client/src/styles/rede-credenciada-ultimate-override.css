@@ -1,0 +1,257 @@
+/* 
+ * ULTIMATE OVERRIDE CSS PARA O CAMPO DE BUSCA DA REDE CREDENCIADA
+ * Regras de máxima especificidade para sobrescrever qualquer conflito
+ * Garantir que a cor #2d2d2d seja sempre aplicada
+ */
+
+/* ========================================
+   REGRAS DE MÁXIMA ESPECIFICIDADE
+   ======================================== */
+
+/* Seletor com caminho completo do DOM - MÁXIMA ESPECIFICIDADE */
+html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input[data-testid="input-search-units"].search-field-text-color-fix {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Seletor com caminho completo do DOM para placeholder - MÁXIMA ESPECIFICIDADE */
+html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input[data-testid="input-search-units"].search-field-text-color-fix::placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER CLASSES CONFLITANTES
+   ======================================== */
+
+/* Sobrescrever classes Tailwind conflitantes */
+input[data-testid="input-search-units"].search-field-text-color-fix.text-white,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-100,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-200,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-300,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-400,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-500,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-600,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-700,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-800,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-gray-900,
+input[data-testid="input-search-units"].search-field-text-color-fix.text-black {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* Sobrescrever classes de cor específicas */
+input[data-testid="input-search-units"].search-field-text-color-fix[class*="text-"],
+input[data-testid="input-search-units"].search-field-text-color-fix[class*="color-"] {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER ESTILOS INLINE CONFLITANTES
+   ======================================== */
+
+/* Sobrescrever estilos inline com !important */
+input[data-testid="input-search-units"].search-field-text-color-fix[style*="color"] {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+input[data-testid="input-search-units"].search-field-text-color-fix[style*="text-fill-color"] {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER PSEUDO-ELEMENTOS
+   ======================================== */
+
+/* Sobrescrever todos os pseudo-elementos */
+input[data-testid="input-search-units"].search-field-text-color-fix::before,
+input[data-testid="input-search-units"].search-field-text-color-fix::after,
+input[data-testid="input-search-units"].search-field-text-color-fix::placeholder,
+input[data-testid="input-search-units"].search-field-text-color-fix::selection,
+input[data-testid="input-search-units"].search-field-text-color-fix::-moz-selection {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER ESTADOS E PSEUDO-CLASSES
+   ======================================== */
+
+/* Sobrescrever todos os estados */
+input[data-testid="input-search-units"].search-field-text-color-fix:focus,
+input[data-testid="input-search-units"].search-field-text-color-fix:active,
+input[data-testid="input-search-units"].search-field-text-color-fix:hover,
+input[data-testid="input-search-units"].search-field-text-color-fix:focus-visible,
+input[data-testid="input-search-units"].search-field-text-color-fix:focus-within,
+input[data-testid="input-search-units"].search-field-text-color-fix:enabled,
+input[data-testid="input-search-units"].search-field-text-color-fix:disabled,
+input[data-testid="input-search-units"].search-field-text-color-fix:read-only,
+input[data-testid="input-search-units"].search-field-text-color-fix:read-write {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER ATRIBUTOS E VALORES
+   ======================================== */
+
+/* Sobrescrever por atributos específicos */
+input[data-testid="input-search-units"].search-field-text-color-fix[type="search"],
+input[data-testid="input-search-units"].search-field-text-color-fix[type="text"],
+input[data-testid="input-search-units"].search-field-text-color-fix[type="email"],
+input[data-testid="input-search-units"].search-field-text-color-fix[type="tel"],
+input[data-testid="input-search-units"].search-field-text-color-fix[type="url"] {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER CONTEXTOS ESPECÍFICOS
+   ======================================== */
+
+/* Dentro de formulários */
+form input[data-testid="input-search-units"].search-field-text-color-fix,
+.contact-form-field input[data-testid="input-search-units"].search-field-text-color-fix,
+div[class*="form"] input[data-testid="input-search-units"].search-field-text-color-fix {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* Dentro de containers específicos */
+div[class*="search"] input[data-testid="input-search-units"].search-field-text-color-fix,
+div[class*="filter"] input[data-testid="input-search-units"].search-field-text-color-fix,
+div[class*="input"] input[data-testid="input-search-units"].search-field-text-color-fix {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SOBRESCREVER MEDIA QUERIES
+   ======================================== */
+
+/* Mobile - máxima especificidade */
+@media (max-width: 768px) {
+  html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input[data-testid="input-search-units"].search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Tablet - máxima especificidade */
+@media (min-width: 769px) and (max-width: 1024px) {
+  html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input[data-testid="input-search-units"].search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+  }
+}
+
+/* Desktop - máxima especificidade */
+@media (min-width: 1025px) {
+  html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input[data-testid="input-search-units"].search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+  }
+}
+
+/* ========================================
+   SOBRESCREVER PRINT E OUTROS MEDIA
+   ======================================== */
+
+/* Print - garantir que a cor seja mantida */
+@media print {
+  input[data-testid="input-search-units"].search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+  }
+}
+
+/* Prefers reduced motion - manter cor */
+@media (prefers-reduced-motion: reduce) {
+  input[data-testid="input-search-units"].search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+  }
+}
+
+/* ========================================
+   ULTIMATE OVERRIDE - NUCLEAR OPTION
+   ======================================== */
+
+/* Regra nuclear para garantir que NADA sobrescreva a cor */
+input[data-testid="input-search-units"].search-field-text-color-fix,
+input[data-testid="input-search-units"].search-field-text-color-fix *,
+input[data-testid="input-search-units"].search-field-text-color-fix::before,
+input[data-testid="input-search-units"].search-field-text-color-fix::after,
+input[data-testid="input-search-units"].search-field-text-color-fix::placeholder,
+input[data-testid="input-search-units"].search-field-text-color-fix::selection,
+input[data-testid="input-search-units"].search-field-text-color-fix::-moz-selection {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* ========================================
+   DOCUMENTAÇÃO DA SOLUÇÃO NUCLEAR
+   ======================================== */
+
+/*
+ * SOLUÇÃO NUCLEAR IMPLEMENTADA:
+ * 
+ * 1. MÁXIMA ESPECIFICIDADE:
+ *    - Seletor com caminho completo do DOM
+ *    - Uso de !important em todas as propriedades
+ *    - Sobrescrever TODOS os contextos possíveis
+ * 
+ * 2. SOBRESCREVER CONFLITOS:
+ *    - Classes Tailwind conflitantes
+ *    - Estilos inline conflitantes
+ *    - Pseudo-elementos e pseudo-classes
+ *    - Media queries e contextos específicos
+ * 
+ * 3. COBERTURA COMPLETA:
+ *    - Todos os estados do input
+ *    - Todos os tipos de input
+ *    - Todos os contextos de uso
+ *    - Todos os media queries
+ * 
+ * 4. PREVENÇÃO DE REGRESSÕES:
+ *    - Regras de máxima especificidade
+ *    - Sobrescrever qualquer possível conflito
+ *    - Garantir que a cor #2d2d2d seja sempre aplicada
+ * 
+ * ESTA É A SOLUÇÃO DEFINITIVA - NADA DEVE SOBRESCREVER ESTAS REGRAS
+ */

@@ -30,6 +30,9 @@ export default defineConfig({
             if (id.includes('@radix-ui') || id.includes('lucide-react')) {
               return 'ui';
             }
+            if (id.includes('date-fns')) {
+              return 'date-fns';
+            }
             return 'vendor';
           }
         }
@@ -68,4 +71,7 @@ export default defineConfig({
       allow: [".."]
     },
   },
+  optimizeDeps: {
+    include: ['date-fns', 'date-fns/locale/pt-BR']
+  }
 });

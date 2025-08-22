@@ -165,6 +165,23 @@ export const insertNetworkUnitSchema = createInsertSchema(networkUnits).omit({
 export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
   id: true,
   createdAt: true,
+}).extend({
+  question: z.string()
+    .min(1, "Pergunta é obrigatória")
+    .max(500, "Pergunta deve ter no máximo 500 caracteres")
+    .refine((val) => {
+      // Aceita quebras de linha, espaços e caracteres válidos
+      const cleanText = val.replace(/\r\n|\r|\n/g, '\n');
+      return cleanText.length <= 500;
+    }, "Pergunta deve ter no máximo 500 caracteres incluindo quebras de linha"),
+  answer: z.string()
+    .min(1, "Resposta é obrigatória")
+    .max(2000, "Resposta deve ter no máximo 2000 caracteres")
+    .refine((val) => {
+      // Aceita quebras de linha, espaços e caracteres válidos
+      const cleanText = val.replace(/\r\n|\r|\n/g, '\n');
+      return cleanText.length <= 2000;
+    }, "Resposta deve ter no máximo 2000 caracteres incluindo quebras de linha"),
 });
 
 export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({

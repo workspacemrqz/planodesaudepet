@@ -18,13 +18,18 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { NetworkUnit } from "@shared/schema";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useNetworkPageData } from "@/hooks/use-parallel-data";
 import { NetworkGridSkeleton } from "@/components/loading/network-skeleton";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { RobustImage } from "@/components/ui/image";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+
+// SOLUÇÃO NUCLEAR - ÚNICA E DEFINITIVA
+import "@/styles/NUCLEAR_OVERRIDE.css";
+import "@/scripts/NUCLEAR_ENFORCER.js";
+import "@/scripts/NUCLEAR_TEST.js";
 
 // Fallback image for network units
 const FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K';
@@ -164,7 +169,7 @@ export default function Network() {
                       placeholder="Buscar..."
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
-                      className="mobile-form-input pl-10 text-[#302e2b]"
+                      className="mobile-form-input pl-10"
                       data-testid="input-search-units"
                     />
                   </div>

@@ -9,13 +9,17 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
-    "build": "vite build --config vite.config.simple.ts && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "npm run prebuild && vite build --config vite.config.simple.ts && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build:client": "vite build --config vite.config.simple.ts",
+    "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build:fallback": "npm run build:client && npm run build:server",
     "start": "node server/start-production.js",
     "start:direct": "cross-env NODE_ENV=production node dist/index.js",
     "heroku-postbuild": "npm run build",
-    "postinstall": "npm run build",
+    "postinstall": "npm run build:fallback",
     "prebuild": "npm run check",
     "check": "tsc --noEmit --project tsconfig.build.json",
+    "check:strict": "tsc --noEmit --project tsconfig.json",
     "test": "vitest",
     "test:run": "vitest run",
     "test:auth": "vitest run server/tests/auth.test.ts",
@@ -30,7 +34,9 @@
     "deploy:docker": "docker build -t planodesaudepet:latest .",
     "deploy:run": "docker run -d --name planodesaudepet -p 8080:8080 -e NODE_ENV=production planodesaudepet:latest",
     "deploy:stop": "docker stop planodesaudepet && docker rm planodesaudepet",
-    "deploy:restart": "npm run deploy:stop && npm run deploy:run"
+    "deploy:restart": "npm run deploy:stop && npm run deploy:run",
+    "health:check": "node scripts/health-check.js",
+    "build:retry": "npm run clean && npm run build:fallback"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

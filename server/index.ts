@@ -11,8 +11,18 @@ if (autoConfig.get('NODE_ENV') === 'production') {
   app.set('trust proxy', true);
 }
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// Configure JSON parsing to preserve line breaks and special characters
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf) => {
+    // Store raw buffer for potential custom parsing
+    (req as any).rawBody = buf;
+  }
+}));
+app.use(express.urlencoded({ 
+  extended: false,
+  limit: '10mb'
+}));
 
 // Add CORS headers for production
 app.use((req, res, next) => {

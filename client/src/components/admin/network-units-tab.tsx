@@ -773,11 +773,11 @@ export default function NetworkUnitsTab() {
       <div className="space-y-4">
         {filteredUnits?.map((unit) => (
           <div key={unit.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#195d5e]">
-            <div className="flex items-center justify-between py-4">
-              <div className="flex-1">
+            <div className={`${isMobile ? 'block' : 'flex items-center justify-between'} py-4`}>
+              <div className={`${isMobile ? 'mb-3' : 'flex-1'}`}>
                 <h3 className="text-[#FBF9F7] font-medium">{unit.name}</h3>
               </div>
-              <div className="flex items-center gap-1">
+              <div className={`flex items-center gap-1 ${isMobile ? 'justify-start' : ''}`}>
                 <Button
                   size="sm"
                   onClick={() => handleEdit(unit)}

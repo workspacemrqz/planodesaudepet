@@ -226,7 +226,7 @@ export default function PlansTab() {
        
        {/* Modal de Edição */}
        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-         <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mx-auto rounded-lg md:rounded-xl">
+         <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mx-auto admin-dialog-content">
            <DialogHeader className="px-2 md:px-0">
              <DialogTitle className="text-[#ffffff] text-lg md:text-xl text-center md:text-left">
                Editar Plano: {editingPlan?.name}

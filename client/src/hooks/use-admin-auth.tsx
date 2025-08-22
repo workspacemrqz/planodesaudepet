@@ -11,7 +11,7 @@ type AdminAuthContextType = {
   logoutMutation: UseMutationResult<void, Error, void>;
 };
 
-type LoginData = {
+export type LoginData = {
   username: string;
   password: string;
 };

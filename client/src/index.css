@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Importar estilos específicos para suporte a quebras de linha no FAQ */
+@import './styles/faq-line-breaks.css';
+
 :root {
   --background: hsl(181, 51%, 31%);
   --foreground: hsl(0, 0%, 100%);
@@ -49,6 +52,28 @@
   
   /* Variável CSS customizada para o campo de busca específico da página admin aba Rede */
   --admin-rede-search-color: #FBF9F7;
+  
+  /* VARIÁVEIS CSS ÚNICAS PARA CADA CAMPO - SOLUÇÃO DEFINITIVA */
+  /* Campo de busca da rede credenciada (página pública) */
+  --rede-credenciada-search-text-color: #2d2d2d;
+  --rede-credenciada-search-placeholder-color: #2d2d2d;
+  --rede-credenciada-search-caret-color: #2d2d2d;
+  --rede-credenciada-search-bg-color: #ffffff;
+  --rede-credenciada-search-border-color: #e5e7eb;
+  
+  /* Campo de busca da rede credenciada (página admin) */
+  --admin-rede-search-text-color: #FBF9F7;
+  --admin-rede-search-placeholder-color: #aaaaaa;
+  --admin-rede-search-caret-color: #FBF9F7;
+  --admin-rede-search-bg-color: #145759;
+  --admin-rede-search-border-color: #3EBEC1;
+  
+  /* Campo de busca geral (outros contextos) */
+  --general-search-text-color: #ffffff;
+  --general-search-placeholder-color: #ffffff;
+  --general-search-caret-color: #ffffff;
+  --general-search-bg-color: #145759;
+  --general-search-border-color: #3EBEC1;
 }
 
 /* SCROLL SUAVE E ANIMAÇÕES */
@@ -56,6 +81,173 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px; /* Compensar header fixo */
+}
+
+/* Adicionar easing personalizado para o scroll */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* SOLUÇÃO DEFINITIVA PARA O CAMPO DE BUSCA DA REDE CREDENCIADA */
+/* Estilos específicos para o campo de busca da página pública de rede credenciada */
+/* Usando máxima especificidade e variáveis CSS para garantir consistência */
+
+/* Campo de busca da rede credenciada - PÁGINA PÚBLICA */
+/* Aplicar cor #2d2d2d para o texto digitado */
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
+  color: var(--rede-credenciada-search-text-color) !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
+  caret-color: var(--rede-credenciada-search-caret-color) !important;
+  background-color: var(--rede-credenciada-search-bg-color) !important;
+  border-color: var(--rede-credenciada-search-border-color) !important;
+}
+
+/* Placeholder específico para o campo de busca da rede credenciada - PÁGINA PÚBLICA */
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
+  color: var(--rede-credenciada-search-placeholder-color) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
+}
+
+/* Estilos específicos para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]),
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):active,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):hover,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-visible,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-within,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):not(:focus),
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):blur,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):visited,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):enabled,
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):disabled {
+  color: var(--rede-credenciada-search-text-color) !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
+  caret-color: var(--rede-credenciada-search-caret-color) !important;
+  background-color: var(--rede-credenciada-search-bg-color) !important;
+  border-color: var(--rede-credenciada-search-border-color) !important;
+}
+
+/* Placeholder específico para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
+input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"])::placeholder {
+  color: var(--rede-credenciada-search-placeholder-color) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
+}
+
+/* Estilos específicos para o campo de busca da rede credenciada dentro de contact-form-field - PÁGINA PÚBLICA */
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
+  color: var(--rede-credenciada-search-text-color) !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
+  caret-color: var(--rede-credenciada-search-caret-color) !important;
+  background-color: var(--rede-credenciada-search-bg-color) !important;
+  border-color: var(--rede-credenciada-search-border-color) !important;
+}
+
+/* Placeholder específico para o campo de busca da rede credenciada dentro de contact-form-field - PÁGINA PÚBLICA */
+.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
+  color: var(--rede-credenciada-search-placeholder-color) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
+}
+
+/* Estilos específicos para o campo de busca da rede credenciada com ambas as classes - PÁGINA PÚBLICA */
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]),
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):active,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):hover,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-visible,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-within,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):not(:focus),
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):blur,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):visited,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):enabled,
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):disabled {
+  color: var(--rede-credenciada-search-text-color) !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
+  caret-color: var(--rede-credenciada-search-caret-color) !important;
+  background-color: var(--rede-credenciada-search-bg-color) !important;
+  border-color: var(--rede-credenciada-search-border-color) !important;
+}
+
+/* Placeholder específico para o campo de busca da rede credenciada com ambas as classes - PÁGINA PÚBLICA */
+.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"])::placeholder {
+  color: var(--rede-credenciada-search-placeholder-color) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
+}
+
+/* Estilos específicos para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]),
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):active,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):hover,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus-visible,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus-within,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):not(:focus),
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):blur,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):visited,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):enabled,
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):disabled {
+  color: var(--rede-credenciada-search-text-color) !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
+  caret-color: var(--rede-credenciada-search-caret-color) !important;
+  background-color: var(--rede-credenciada-search-bg-color) !important;
+  border-color: var(--rede-credenciada-search-border-color) !important;
+}
+
+/* Placeholder específico para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
+input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"])::placeholder {
+  color: var(--rede-credenciada-search-placeholder-color) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
+}
+
+/* ULTIMATE OVERRIDE - Máxima especificidade para garantir que a cor #2d2d2d seja aplicada */
+/* Campo de busca da rede credenciada - PÁGINA PÚBLICA - FORÇAR COR #2d2d2d */
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* Placeholder específico para o campo de busca da rede credenciada - PÁGINA PÚBLICA - FORÇAR COR #2d2d2d */
+input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: #2d2d2d !important;
 }
 
 /* Adicionar easing personalizado para o scroll */

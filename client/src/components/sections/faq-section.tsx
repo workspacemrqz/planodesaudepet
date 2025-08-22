@@ -3,6 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { type FaqItem } from "@shared/schema";
 import { useFaqPageData } from "@/hooks/use-parallel-data";
 import { FaqSkeleton } from "@/components/loading/faq-skeleton";
+import { FormattedText } from "@/components/ui/formatted-text";
 
 interface FaqSectionProps {
   showTitle?: boolean;
@@ -61,7 +62,10 @@ export default function FaqSection({ showTitle = true, maxItems, className = "",
                         className="text-[#302e2b] pb-4 leading-relaxed"
                         data-testid={`faq-answer-${faq.id}`}
                       >
-                        {faq.answer}
+                        <FormattedText 
+                          text={faq.answer} 
+                          className="whitespace-pre-wrap leading-relaxed"
+                        />
                       </AccordionContent>
                     </AccordionItem>
                   ))}

@@ -9,6 +9,7 @@ import {
   insertSiteSettingsSchema,
   insertFileMetadataSchema 
 } from "@shared/schema";
+import { sanitizeText } from "./utils/text-sanitizer";
 import { setupAuth, requireAuth } from "./auth";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import multer from "multer";
@@ -542,7 +543,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("🔍 [ADMIN] Fetching all FAQ items...");
       const items = await storage.getAllFaqItems();
       console.log(`✅ [ADMIN] Found ${items.length} FAQ items`);
-      res.json(items);
+      
+      // Garantir que as quebras de linha sejam preservadas na resposta
+      const formattedItems = items.map(item => ({
+        ...item,
+        question: item.question || '',
+        answer: item.answer || ''
+      }));
+      
+      res.json(formattedItems);
     } catch (error) {
       console.error("❌ [ADMIN] Error fetching FAQ items:", error);
       res.status(500).json({ error: "Erro ao buscar itens do FAQ" });
@@ -592,7 +601,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
-      const validatedData = insertFaqItemSchema.parse(req.body);
+      // Sanitizar dados preservando quebras de linha
+      const sanitizedBody = {
+        ...req.body,
+        question: sanitizeText(req.body.question),
+        answer: sanitizeText(req.body.answer)
+      };
+      
+      const validatedData = insertFaqItemSchema.parse(sanitizedBody);
       const item = await storage.createFaqItem(validatedData);
       res.json(item);
     } catch (error) {
@@ -603,7 +619,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/faq/:id", requireAdmin, async (req, res) => {
     try {
       const { id } = req.params;
-      const validatedData = insertFaqItemSchema.partial().parse(req.body);
+      
+      // Sanitizar dados preservando quebras de linha
+      const sanitizedBody = {
+        ...req.body,
+        question: req.body.question ? sanitizeText(req.body.question) : undefined,
+        answer: req.body.answer ? sanitizeText(req.body.answer) : undefined
+      };
+      
+      const validatedData = insertFaqItemSchema.partial().parse(sanitizedBody);
       const item = await storage.updateFaqItem(id, validatedData);
       
       if (!item) {
@@ -825,7 +849,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/faq", async (req, res) => {
     try {
       const items = await storage.getFaqItems();
-      res.json(items);
+      
+      // Garantir que as quebras de linha sejam preservadas na resposta
+      const formattedItems = items.map(item => ({
+        ...item,
+        question: item.question || '',
+        answer: item.answer || ''
+      }));
+      
+      res.json(formattedItems);
     } catch (error) {
       console.error("Erro detalhado ao buscar FAQ:", error);
       const errorMessage = error instanceof Error ? error.message : String(error);

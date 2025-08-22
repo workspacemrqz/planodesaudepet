@@ -667,15 +667,7 @@ export default function SettingsTab() {
     }, 0);
   };
 
-  // Test function to check temp data state
-  const testTempDataState = () => {
-    console.log('🔍 [TEST] Current temp data state:');
-    console.log('🔍 [TEST] tempImageData:', tempImageData);
-    console.log('🔍 [TEST] mainImageUrl:', mainImageUrl);
-    console.log('🔍 [TEST] networkImageUrl:', networkImageUrl);
-    console.log('🔍 [TEST] aboutImageUrl:', aboutImageUrl);
-    console.log('🔍 [TEST] settings:', settings);
-  };
+
 
   if (error) {
     return (
@@ -731,7 +723,7 @@ export default function SettingsTab() {
                 Editar
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto">
+            <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto admin-dialog-content">
               <DialogHeader>
                 <DialogTitle className="text-[#FBF9F7]">Editar Informações de Contato</DialogTitle>
               </DialogHeader>
@@ -971,7 +963,7 @@ export default function SettingsTab() {
                 Editar
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto">
+            <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto admin-dialog-content">
               <DialogHeader>
                 <DialogTitle className="text-[#FBF9F7]">Editar Redes Sociais</DialogTitle>
               </DialogHeader>
@@ -1182,7 +1174,7 @@ export default function SettingsTab() {
                 Editar
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto">
+            <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto admin-dialog-content">
               <DialogHeader>
                 <DialogTitle className="text-[#FBF9F7]">Editar Gerenciamento de Imagens</DialogTitle>
               </DialogHeader>
@@ -1210,17 +1202,6 @@ export default function SettingsTab() {
                     <Step>
                       <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-[#FBF9F7] mb-4">Imagem Principal</h3>
-                        
-                        {/* Test button for debugging */}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="text-white hover:text-white hover:bg-white hover:text-blue-600"
-                          onClick={testTempDataState}
-                        >
-                          🔍 Test Temp Data State
-                        </Button>
                         
                         <FormField
                           control={form.control}

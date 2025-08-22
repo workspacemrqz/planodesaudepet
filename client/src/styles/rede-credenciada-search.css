@@ -1,0 +1,221 @@
+/* 
+ * SOLUÇÃO DEFINITIVA PARA O CAMPO DE BUSCA DA REDE CREDENCIADA
+ * Classe CSS específica e única: search-field-text-color-fix
+ * Máxima especificidade para forçar cor #2d2d2d
+ */
+
+/* ========================================
+   CLASSE CSS ESPECÍFICA E ÚNICA
+   ======================================== */
+
+/* Classe principal com máxima especificidade */
+.search-field-text-color-fix {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* Placeholder da classe específica */
+.search-field-text-color-fix::placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* ========================================
+   SELEÇÃO DE TEXTO
+   ======================================== */
+
+/* Cor do texto selecionado */
+.search-field-text-color-fix::selection {
+  background-color: #277677 !important;
+  color: #ffffff !important;
+}
+
+.search-field-text-color-fix::-moz-selection {
+  background-color: #277677 !important;
+  color: #ffffff !important;
+}
+
+/* ========================================
+   ESTADOS INTERATIVOS
+   ======================================== */
+
+/* Estado de foco */
+.search-field-text-color-fix:focus {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+  outline: 2px solid #277677 !important;
+  outline-offset: 2px !important;
+}
+
+/* Estado de hover */
+.search-field-text-color-fix:hover {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* Estado ativo */
+.search-field-text-color-fix:active {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* Estado de foco visível */
+.search-field-text-color-fix:focus-visible {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* ========================================
+   COMPATIBILIDADE COM NAVEGADORES
+   ======================================== */
+
+/* Webkit (Chrome, Safari, Edge) */
+.search-field-text-color-fix::-webkit-input-placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+}
+
+/* Firefox */
+.search-field-text-color-fix::-moz-placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+}
+
+/* IE/Edge */
+.search-field-text-color-fix::-ms-input-placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+/* Mobile */
+@media (max-width: 768px) {
+  .search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+    font-size: 16px !important; /* Prevenir zoom no iOS */
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .search-field-text-color-fix {
+    color: #2d2d2d !important;
+    -webkit-text-fill-color: #2d2d2d !important;
+    text-fill-color: #2d2d2d !important;
+    caret-color: #2d2d2d !important;
+  }
+}
+
+/* ========================================
+   ULTIMATE OVERRIDE - MÁXIMA ESPECIFICIDADE
+   ======================================== */
+
+/* Seletor com caminho completo do DOM para máxima especificidade */
+html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input.search-field-text-color-fix {
+  color: #2d2d2d !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+  caret-color: #2d2d2d !important;
+}
+
+/* Seletor com caminho completo do DOM para placeholder */
+html body main div.max-w-6xl div.text-center div.max-w-4xl div.grid div.contact-form-field input.search-field-text-color-fix::placeholder {
+  color: #2d2d2d !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: #2d2d2d !important;
+  text-fill-color: #2d2d2d !important;
+}
+
+/* ========================================
+   VARIÁVEIS CSS CUSTOMIZADAS
+   ======================================== */
+
+:root {
+  --search-input-color: #2d2d2d;
+  --search-input-placeholder-color: #2d2d2d;
+  --search-input-caret-color: #2d2d2d;
+}
+
+/* Aplicar variáveis CSS */
+.search-field-text-color-fix {
+  color: var(--search-input-color) !important;
+  -webkit-text-fill-color: var(--search-input-color) !important;
+  text-fill-color: var(--search-input-color) !important;
+  caret-color: var(--search-input-caret-color) !important;
+}
+
+.search-field-text-color-fix::placeholder {
+  color: var(--search-input-placeholder-color) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--search-input-placeholder-color) !important;
+  text-fill-color: var(--search-input-placeholder-color) !important;
+}
+
+/* ========================================
+   DOCUMENTAÇÃO DA SOLUÇÃO
+   ======================================== */
+
+/*
+ * SOLUÇÃO IMPLEMENTADA:
+ * 
+ * 1. CLASSE CSS ESPECÍFICA: search-field-text-color-fix
+ *    - Classe única e exclusiva para este campo
+ *    - Máxima especificidade possível
+ * 
+ * 2. PROPRIEDADES MÚLTIPLAS:
+ *    - color: #2d2d2d !important
+ *    - -webkit-text-fill-color: #2d2d2d !important
+ *    - text-fill-color: #2d2d2d !important
+ *    - caret-color: #2d2d2d !important
+ * 
+ * 3. ESTADOS COMPLETOS:
+ *    - :focus, :hover, :active, :focus-visible
+ *    - ::placeholder, ::selection
+ * 
+ * 4. COMPATIBILIDADE:
+ *    - Webkit, Firefox, IE/Edge
+ *    - Mobile, Tablet, Desktop
+ * 
+ * 5. VARIÁVEIS CSS:
+ *    - --search-input-color: #2d2d2d
+ *    - --search-input-placeholder-color: #2d2d2d
+ *    - --search-input-caret-color: #2d2d2d
+ * 
+ * 6. MÁXIMA ESPECIFICIDADE:
+ *    - Seletor com caminho completo do DOM
+ *    - Uso de !important em todas as propriedades
+ * 
+ * PREVENÇÃO DE REGRESSÕES:
+ * - Arquivo CSS separado e específico
+ * - Comentários detalhados
+ * - Múltiplas abordagens de especificidade
+ * - Variáveis CSS para manutenção
+ */

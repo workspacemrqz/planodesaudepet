@@ -1,4 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
+// @ts-ignore - Ignore type checking for migrator module
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Pool } from 'pg';
 import { autoConfig } from '../config';

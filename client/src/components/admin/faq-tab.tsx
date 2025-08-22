@@ -7,7 +7,9 @@ import { FaqItem, InsertFaqItem } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { AdvancedTextarea } from "@/components/ui/advanced-textarea";
+import { FormattedText } from "@/components/ui/formatted-text";
+import { CharacterCounter } from "@/components/ui/character-counter";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -54,6 +56,7 @@ function SortableFaqItem({
   onEdit: (item: FaqItem) => void; 
   onDelete: (item: FaqItem) => void; 
 }) {
+  const isMobile = useIsMobile();
   const {
     attributes,
     listeners,
@@ -77,8 +80,8 @@ function SortableFaqItem({
       value={item.id} 
       className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]"
     >
-      <div className="flex items-center justify-between pr-2">
-        <div className="flex items-center gap-2 flex-1">
+      <div className={`${isMobile ? 'block' : 'flex items-center justify-between'} pr-2`}>
+        <div className={`flex items-center gap-2 ${isMobile ? 'mb-3' : 'flex-1'}`}>
           <div
             {...attributes}
             {...listeners}
@@ -91,7 +94,7 @@ function SortableFaqItem({
           </AccordionTrigger>
         </div>
         
-        <div className="flex items-center gap-1 ml-4">
+        <div className={`flex items-center gap-1 ${isMobile ? 'justify-start ml-0' : 'ml-4'}`}>
           <Button
             size="sm"
             onClick={(e) => {
@@ -126,7 +129,10 @@ function SortableFaqItem({
       </div>
       <AccordionContent className="text-[#302e2b] pb-4">
         <div className="pl-9 text-[#9fb8b8]">
-          {item.answer}
+          <FormattedText 
+            text={item.answer} 
+            className="whitespace-pre-wrap leading-relaxed"
+          />
         </div>
       </AccordionContent>
     </AccordionItem>
@@ -429,11 +435,30 @@ export default function FaqTab() {
                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Pergunta</h3>
                      
                      <div>
-                       <Input
-                         value={form.watch("question")}
-                         onChange={(e) => form.setValue("question", e.target.value)}
-                         className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
-                         placeholder="Digite a pergunta..."
+                       <FormField
+                         control={form.control}
+                         name="question"
+                         render={({ field }) => (
+                           <FormItem>
+                             <FormControl>
+                               <AdvancedTextarea
+                                 {...field}
+                                 placeholder="Digite a pergunta..."
+                                 className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                                 previewClassName="bg-[#195d5e] text-[#FBF9F7] border-[#277677] w-full"
+                                 rows={3}
+                                 maxLength={500}
+                               />
+                               <CharacterCounter 
+                                 text={field.value || ''} 
+                                 maxLength={500}
+                                 className="mt-2 text-[#FBF9F7]/70"
+                                 showDetails={true}
+                               />
+                             </FormControl>
+                             <FormMessage />
+                           </FormItem>
+                         )}
                        />
                      </div>
                    </div>
@@ -444,12 +469,30 @@ export default function FaqTab() {
                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Resposta</h3>
                      
                      <div>
-                       <Textarea
-                         value={form.watch("answer")}
-                         onChange={(e) => form.setValue("answer", e.target.value)}
-                         rows={8}
-                         className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] resize-none w-full placeholder:text-[#FBF9F7]/60"
-                         placeholder="Digite a resposta..."
+                       <FormField
+                         control={form.control}
+                         name="answer"
+                         render={({ field }) => (
+                           <FormItem>
+                             <FormControl>
+                               <AdvancedTextarea
+                                 {...field}
+                                 placeholder="Digite a resposta..."
+                                 className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
+                                 previewClassName="bg-[#FBF9F7] text-[#FBF9F7] border-[#277677] w-full"
+                                 rows={8}
+                                 maxLength={2000}
+                               />
+                               <CharacterCounter 
+                                 text={field.value || ''} 
+                                 maxLength={2000}
+                                 className="mt-2 text-[#FBF9F7]/70"
+                                 showDetails={true}
+                               />
+                             </FormControl>
+                             <FormMessage />
+                           </FormItem>
+                         )}
                        />
                      </div>
                    </div>
@@ -462,14 +505,28 @@ export default function FaqTab() {
                      <div className="bg-[#145759] p-3 md:p-4 rounded-lg border border-[#277677]/20">
                        <h4 className="font-medium text-[#FBF9F7] mb-2 md:mb-3 text-left">Resumo da Pergunta:</h4>
                        
-                       <div className="text-sm leading-tight">
-                         <div className="text-[#FBF9F7] font-medium mb-1 text-left">
+                       <div className="text-sm leading-tight space-y-3">
+                         <div className="text-[#FBF9F7] font-medium text-left">
                            <span className="text-[#277677] mr-2">•</span>
-                           Pergunta: {form.watch("question")}
+                           <span className="block mb-2">Pergunta:</span>
+                           <div className="bg-[#277677]/20 p-3 rounded border-l-4 border-[#277677] ml-4">
+                             <FormattedText 
+                               text={form.watch("question") || ''} 
+                               className="text-[#FBF9F7]"
+                               emptyText="Nenhuma pergunta inserida"
+                             />
+                           </div>
                          </div>
-                         <div className="text-[#FBF9F7] font-medium mb-1 text-left">
+                         <div className="text-[#FBF9F7] font-medium text-left">
                            <span className="text-[#277677] mr-2">•</span>
-                           Resposta: {form.watch("answer")}
+                           <span className="block mb-2">Resposta:</span>
+                           <div className="bg-[#277677]/20 p-3 rounded border-l-4 border-[#277677] ml-4">
+                             <FormattedText 
+                               text={form.watch("answer") || ''} 
+                               className="text-[#FBF9F7]"
+                               emptyText="Nenhuma resposta inserida"
+                             />
+                           </div>
                          </div>
                        </div>
                        

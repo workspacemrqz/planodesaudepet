@@ -5,8 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Mail, Phone, MapPin, Calendar, ChevronDown } from "lucide-react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale/pt-BR";
+
+// Função temporária para formatação de data (substitui date-fns)
+const formatDate = (date: Date | string) => {
+  const d = new Date(date);
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const year = d.getFullYear();
+  const hours = d.getHours().toString().padStart(2, '0');
+  const minutes = d.getMinutes().toString().padStart(2, '0');
+  return `${day}/${month}/${year} às ${hours}:${minutes}`;
+};
 
 
 export default function ContactSubmissionsTab() {
@@ -90,7 +99,7 @@ export default function ContactSubmissionsTab() {
                     {submission.name}
                   </h3>
                   <p className="text-sm text-[#FBF9F7]/70">
-                    {format(new Date(submission.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                    {formatDate(submission.createdAt)}
                   </p>
                 </div>
               </div>

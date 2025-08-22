@@ -10,6 +10,9 @@ import { Lock, Shield, User, Eye, EyeOff } from "lucide-react";
 import { useAdminAuth } from "@/hooks/use-admin-auth";
 import { useLocation } from "wouter";
 
+// Importar o tipo LoginData do hook
+import type { LoginData } from "@/hooks/use-admin-auth";
+
 const loginSchema = z.object({
   username: z.string().min(1, "Nome de usuário é obrigatório"),
   password: z.string().min(1, "Senha é obrigatória"),
@@ -38,7 +41,25 @@ export default function AdminLogin() {
   }, [user, setLocation]);
 
   const onSubmit = async (data: LoginFormData) => {
-    loginMutation.mutate(data);
+    // Validação adicional para garantir que os campos obrigatórios estejam preenchidos
+    if (!data.username || !data.password) {
+      form.setError("username", { message: "Nome de usuário é obrigatório" });
+      form.setError("password", { message: "Senha é obrigatória" });
+      return;
+    }
+
+    // Garantir que os dados sejam do tipo correto
+    const loginData: LoginData = {
+      username: data.username.trim(),
+      password: data.password
+    };
+    
+    try {
+      await loginMutation.mutateAsync(loginData);
+    } catch (error) {
+      console.error("Erro no login:", error);
+      // O erro será tratado pelo hook useAdminAuth
+    }
   };
 
   // Don't render if already authenticated
