@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  RefreshCw, 
+  Refresh, 
   Trash2, 
   Database, 
   Clock, 
@@ -95,7 +95,7 @@ export function CacheDebugPanel({ isVisible = false, onToggle }: CacheDebugPanel
               onClick={updateCacheInfo}
               className="flex-1 text-xs h-8"
             >
-              <RefreshCw className="h-3 w-3 mr-1" />
+              <Refresh className="h-3 w-3 mr-1" />
               Refresh
             </Button>
             <Button
@@ -127,7 +127,7 @@ export function CacheDebugPanel({ isVisible = false, onToggle }: CacheDebugPanel
                       </span>
                       <div className="flex items-center gap-1">
                         {query.state.isFetching && (
-                          <RefreshCw className="h-3 w-3 animate-spin text-blue-500" />
+                          <Refresh className="h-3 w-3 animate-spin text-blue-500" />
                         )}
                         {query.state.error ? (
                           <AlertTriangle className="h-3 w-3 text-red-500" />

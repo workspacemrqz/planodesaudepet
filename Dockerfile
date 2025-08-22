@@ -14,7 +14,7 @@ RUN npm ci --only=production && npm cache clean --force
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application with production config
 RUN npm run build
 
 # Create production start script
