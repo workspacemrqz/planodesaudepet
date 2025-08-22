@@ -150,16 +150,35 @@ export default function FaqTab() {
   const { data: faqItems, isLoading, error } = useQuery<FaqItem[]>({
     queryKey: ["/api/admin/faq"],
     queryFn: async () => {
-      const response = await fetch("/api/admin/faq", {
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error("Falha ao carregar FAQ");
+      try {
+        const response = await fetch("/api/admin/faq", {
+          credentials: "include",
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error("FAQ API error:", response.status, errorData);
+          throw new Error(`Falha ao carregar FAQ: ${response.status} ${errorData.error || response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log("FAQ data loaded successfully:", data.length, "items");
+        return data;
+      } catch (error) {
+        console.error("FAQ fetch error:", error);
+        throw error;
       }
-      return response.json();
     },
     retry: 2,
     staleTime: 5 * 60 * 1000, // 5 minutos
+    onError: (error) => {
+      console.error("FAQ query error:", error);
+      toast({ 
+        title: "Erro ao carregar FAQ", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    }
   });
 
   const sensors = useSensors(
@@ -179,66 +198,153 @@ export default function FaqTab() {
 
   const createItemMutation = useMutation({
     mutationFn: async (data: InsertFaqItem) => {
-      // Determinar nova ordem baseado no número atual de itens
-      const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
-      const itemData = { ...data, displayOrder: maxOrder + 1, isActive: true };
-      
-      const response = await apiRequest("POST", "/api/admin/faq", itemData);
-      return response.json();
+      try {
+        // Determinar nova ordem baseado no número atual de itens
+        const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
+        const itemData = { ...data, displayOrder: maxOrder + 1, isActive: true };
+        
+        console.log("Creating FAQ item:", itemData);
+        const response = await apiRequest("POST", "/api/admin/faq", itemData);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`Erro ao criar FAQ: ${response.status} ${errorData.error || response.statusText}`);
+        }
+        
+        return response.json();
+      } catch (error) {
+        console.error("Create FAQ mutation error:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      // Notificação de sucesso removida
+      toast({ 
+        title: "Sucesso", 
+        description: "Pergunta criada com sucesso!",
+        variant: "default"
+      });
       clearFormAndClose();
     },
-    onError: () => {
-      toast({ title: "Erro ao adicionar pergunta", variant: "destructive" });
+    onError: (error) => {
+      console.error("Create FAQ error:", error);
+      toast({ 
+        title: "Erro ao adicionar pergunta", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 
   const updateItemMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertFaqItem> }) => {
-      const response = await apiRequest("PUT", `/api/admin/faq/${id}`, data);
-      return response.json();
+      try {
+        console.log("Updating FAQ item:", id, data);
+        const response = await apiRequest("PUT", `/api/admin/faq/${id}`, data);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`Erro ao atualizar FAQ: ${response.status} ${errorData.error || response.statusText}`);
+        }
+        
+        return response.json();
+      } catch (error) {
+        console.error("Update FAQ mutation error:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      // Notificação de sucesso removida
+      toast({ 
+        title: "Sucesso", 
+        description: "Pergunta atualizada com sucesso!",
+        variant: "default"
+      });
       clearFormAndClose();
     },
-    onError: () => {
-      toast({ title: "Erro ao atualizar pergunta", variant: "destructive" });
+    onError: (error) => {
+      console.error("Update FAQ error:", error);
+      toast({ 
+        title: "Erro ao atualizar pergunta", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 
   const deleteItemMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiRequest("DELETE", `/api/admin/faq/${id}`);
-      return response.json();
+      try {
+        console.log("Deleting FAQ item:", id);
+        const response = await apiRequest("DELETE", `/api/admin/faq/${id}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`Erro ao deletar FAQ: ${response.status} ${errorData.error || response.statusText}`);
+        }
+        
+        return response.json();
+      } catch (error) {
+        console.error("Delete FAQ mutation error:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      // Notificação de sucesso removida
+      toast({ 
+        title: "Sucesso", 
+        description: "Pergunta removida com sucesso!",
+        variant: "default"
+      });
     },
-    onError: () => {
-      toast({ title: "Erro ao remover pergunta", variant: "destructive" });
+    onError: (error) => {
+      console.error("Delete FAQ error:", error);
+      toast({ 
+        title: "Erro ao remover pergunta", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 
   // Mutation para reordenar itens
   const reorderMutation = useMutation({
     mutationFn: async (updates: { id: string; displayOrder: number }[]) => {
-      const promises = updates.map(update => 
-        apiRequest("PUT", `/api/admin/faq/${update.id}`, { displayOrder: update.displayOrder })
-      );
-      await Promise.all(promises);
+      try {
+        console.log("Reordering FAQ items:", updates);
+        const promises = updates.map(update => 
+          apiRequest("PUT", `/api/admin/faq/${update.id}`, { displayOrder: update.displayOrder })
+        );
+        
+        const responses = await Promise.all(promises);
+        
+        // Verificar se todas as respostas foram bem-sucedidas
+        for (let i = 0; i < responses.length; i++) {
+          if (!responses[i].ok) {
+            const errorData = await responses[i].json().catch(() => ({}));
+            throw new Error(`Erro ao reordenar item ${updates[i].id}: ${responses[i].status} ${errorData.error || responses[i].statusText}`);
+          }
+        }
+      } catch (error) {
+        console.error("Reorder FAQ mutation error:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/faq"] });
-      // Notificação de sucesso removida
+      toast({ 
+        title: "Sucesso", 
+        description: "Ordem das perguntas atualizada!",
+        variant: "default"
+      });
     },
-    onError: () => {
-      toast({ title: "Erro ao atualizar ordem", variant: "destructive" });
+    onError: (error) => {
+      console.error("Reorder FAQ error:", error);
+      toast({ 
+        title: "Erro ao atualizar ordem", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 

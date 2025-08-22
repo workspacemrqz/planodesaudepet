@@ -218,8 +218,76 @@ export function serveStatic(app: Express) {
       if (autoConfig.get('NODE_ENV') === 'development') {
         console.log(`Serving static file: ${filePath}`);
       }
+      
+      // Headers específicos para imagens
+      if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/i)) {
+        res.set({
+          'Cache-Control': 'public, max-age=86400', // 1 dia
+          'X-Image-Cache': 'medium-term',
+        });
+      }
+      
+      // Headers para assets CSS e JS
+      if (filePath.match(/\.(css|js)$/)) {
+        res.set({
+          'Cache-Control': 'public, max-age=31536000, immutable', // 1 ano
+          'X-Asset-Cache': 'long-term',
+        });
+      }
     }
   }));
+  
+  // Rota específica para servir imagens com melhor tratamento de erro
+  app.get('/assets/*', (req, res) => {
+    const imagePath = path.join(publicPath, req.path);
+    
+    console.log(`[IMAGE] Request for: ${req.path}`);
+    console.log(`[IMAGE] Full path: ${imagePath}`);
+    console.log(`[IMAGE] Path exists: ${fs.existsSync(imagePath)}`);
+    
+    if (fs.existsSync(imagePath)) {
+      const ext = path.extname(imagePath).toLowerCase();
+      if (ext.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
+        res.set({
+          'Cache-Control': 'public, max-age=86400',
+          'X-Image-Cache': 'medium-term',
+        });
+        res.sendFile(imagePath, (err) => {
+          if (err) {
+            console.error(`[IMAGE] Error sending file: ${imagePath}`, err);
+            res.status(500).send('Error serving image');
+          }
+        });
+      } else {
+        console.warn(`[IMAGE] Invalid format: ${ext}`);
+        res.status(400).send('Invalid image format');
+      }
+    } else {
+      console.warn(`[IMAGE] Not found: ${imagePath}`);
+      res.status(404).send('Image not found');
+    }
+  });
+  
+  // Rota específica para servir arquivos da pasta public
+  app.get('/public/*', (req, res) => {
+    const filePath = path.join(publicPath, req.path.replace('/public', ''));
+    
+    console.log(`[PUBLIC] Request for: ${req.path}`);
+    console.log(`[PUBLIC] Full path: ${filePath}`);
+    console.log(`[PUBLIC] Path exists: ${fs.existsSync(filePath)}`);
+    
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          console.error(`[PUBLIC] Error sending file: ${filePath}`, err);
+          res.status(500).send('Error serving file');
+        }
+      });
+    } else {
+      console.warn(`[PUBLIC] Not found: ${filePath}`);
+      res.status(404).send('File not found');
+    }
+  });
 
   // Serve index.html for all routes (SPA fallback)
   app.get("*", (req, res) => {

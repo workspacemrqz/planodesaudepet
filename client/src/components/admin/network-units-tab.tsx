@@ -693,7 +693,7 @@ export default function NetworkUnitsTab() {
                 placeholder="Buscar..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="pl-10 text-[#FBF9F7] bg-[#195d5e] placeholder:text-[#FBF9F7] admin-rede-search"
+                className="pl-10 text-[#FBF9F7] bg-[#195d5e] placeholder:text-[#FBF9F7] admin-rede-search border-[#277677] focus:ring-[#277677] focus:border-[#277677]"
                 data-testid="input-search-units"
               />
             </div>

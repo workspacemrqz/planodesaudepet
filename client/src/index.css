@@ -65,8 +65,8 @@
   --admin-rede-search-text-color: #FBF9F7;
   --admin-rede-search-placeholder-color: #aaaaaa;
   --admin-rede-search-caret-color: #FBF9F7;
-  --admin-rede-search-bg-color: #145759;
-  --admin-rede-search-border-color: #3EBEC1;
+  --admin-rede-search-bg-color: #195d5e;
+  --admin-rede-search-border-color: #277677;
   
   /* Campo de busca geral (outros contextos) */
   --general-search-text-color: #ffffff;
@@ -93,6 +93,25 @@ html {
 /* SOLUÇÃO DEFINITIVA PARA O CAMPO DE BUSCA DA REDE CREDENCIADA */
 /* Estilos específicos para o campo de busca da página pública de rede credenciada */
 /* Usando máxima especificidade e variáveis CSS para garantir consistência */
+
+/* Estilos específicos para o campo de busca da aba admin da rede */
+.admin-rede-search {
+  color: var(--admin-rede-search-text-color) !important;
+  background-color: var(--admin-rede-search-bg-color) !important;
+  border-color: var(--admin-rede-search-border-color) !important;
+  caret-color: var(--admin-rede-search-caret-color) !important;
+}
+
+.admin-rede-search::placeholder {
+  color: var(--admin-rede-search-placeholder-color) !important;
+  opacity: 0.7 !important;
+}
+
+.admin-rede-search:focus {
+  border-color: var(--admin-rede-search-border-color) !important;
+  box-shadow: 0 0 0 1px var(--admin-rede-search-border-color) !important;
+  outline: none !important;
+}
 
 /* Campo de busca da rede credenciada - PÁGINA PÚBLICA */
 /* Aplicar cor #2d2d2d para o texto digitado */

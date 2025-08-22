@@ -64,11 +64,17 @@ const upload = multer({
 
 // Middleware to check admin authentication
 const requireAdmin = (req: any, res: any, next: any) => {
-  console.log('🔐 [AUTH] requireAdmin middleware called');
-  console.log('🔐 [AUTH] Full request object:', {
-    session: req.session,
+  console.log('🔐 [AUTH] requireAdmin middleware called for:', req.path);
+  console.log('🔐 [AUTH] Request headers:', {
+    cookie: req.headers.cookie,
+    'user-agent': req.headers['user-agent'],
+    'x-forwarded-for': req.headers['x-forwarded-for'],
+    'x-real-ip': req.headers['x-real-ip']
+  });
+  console.log('🔐 [AUTH] Session info:', {
     sessionID: req.sessionID,
-    cookies: req.headers.cookie,
+    hasSession: !!req.session,
+    hasUser: !!(req.session?.user),
     user: req.session?.user
   });
   
@@ -82,7 +88,7 @@ const requireAdmin = (req: any, res: any, next: any) => {
     return res.status(401).json({ error: "Admin authentication required - no user" });
   }
   
-  console.log('✅ [AUTH] Admin authentication successful');
+  console.log('✅ [AUTH] Admin authentication successful for user:', req.session.user.username);
   next();
 };
 
@@ -541,6 +547,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
       console.log("🔍 [ADMIN] Fetching all FAQ items...");
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      
       const items = await storage.getAllFaqItems();
       console.log(`✅ [ADMIN] Found ${items.length} FAQ items`);
       
@@ -554,7 +562,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(formattedItems);
     } catch (error) {
       console.error("❌ [ADMIN] Error fetching FAQ items:", error);
-      res.status(500).json({ error: "Erro ao buscar itens do FAQ" });
+      console.error("❌ [ADMIN] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+      res.status(500).json({ 
+        error: "Erro ao buscar itens do FAQ",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
@@ -601,6 +613,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
+      console.log("🔍 [ADMIN] Creating new FAQ item...");
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      console.log("🔍 [ADMIN] Request body:", req.body);
+      
       // Sanitizar dados preservando quebras de linha
       const sanitizedBody = {
         ...req.body,
@@ -610,15 +626,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const validatedData = insertFaqItemSchema.parse(sanitizedBody);
       const item = await storage.createFaqItem(validatedData);
+      console.log("✅ [ADMIN] FAQ item created successfully:", item.id);
       res.json(item);
     } catch (error) {
-      res.status(400).json({ error: "Dados inválidos para criar item do FAQ" });
+      console.error("❌ [ADMIN] Error creating FAQ item:", error);
+      console.error("❌ [ADMIN] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+      res.status(400).json({ 
+        error: "Dados inválidos para criar item do FAQ",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
   app.put("/api/admin/faq/:id", requireAdmin, async (req, res) => {
     try {
       const { id } = req.params;
+      console.log("🔍 [ADMIN] Updating FAQ item:", id);
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      console.log("🔍 [ADMIN] Request body:", req.body);
       
       // Sanitizar dados preservando quebras de linha
       const sanitizedBody = {
@@ -631,27 +656,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const item = await storage.updateFaqItem(id, validatedData);
       
       if (!item) {
+        console.log("❌ [ADMIN] FAQ item not found:", id);
         return res.status(404).json({ error: "Item do FAQ não encontrado" });
       }
       
+      console.log("✅ [ADMIN] FAQ item updated successfully:", id);
       res.json(item);
     } catch (error) {
-      res.status(400).json({ error: "Dados inválidos para atualizar item do FAQ" });
+      console.error("❌ [ADMIN] Error updating FAQ item:", id, error);
+      console.error("❌ [ADMIN] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+      res.status(400).json({ 
+        error: "Dados inválidos para atualizar item do FAQ",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
   app.delete("/api/admin/faq/:id", requireAdmin, async (req, res) => {
     try {
       const { id } = req.params;
+      console.log("🔍 [ADMIN] Deleting FAQ item:", id);
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      
       const success = await storage.deleteFaqItem(id);
       
       if (!success) {
+        console.log("❌ [ADMIN] FAQ item not found for deletion:", id);
         return res.status(404).json({ error: "Item do FAQ não encontrado" });
       }
       
+      console.log("✅ [ADMIN] FAQ item deleted successfully:", id);
       res.json({ success: true });
     } catch (error) {
-      res.status(500).json({ error: "Erro ao deletar item do FAQ" });
+      console.error("❌ [ADMIN] Error deleting FAQ item:", id, error);
+      console.error("❌ [ADMIN] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+      res.status(500).json({ 
+        error: "Erro ao deletar item do FAQ",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 

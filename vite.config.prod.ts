@@ -34,8 +34,12 @@ export default defineConfig({
           }
         }
       }
-    }
+    },
+    // Configurações específicas para imagens
+    assetsInlineLimit: 4096, // 4KB - imagens menores que isso serão inline
+    chunkSizeWarningLimit: 1000, // Aumentar limite de warning para chunks
   },
+  // Configurações específicas para produção
   define: {
     // Garantir que as variáveis de ambiente estejam disponíveis
     'import.meta.env.VITE_DEFAULT_WHATSAPP': JSON.stringify(process.env.VITE_DEFAULT_WHATSAPP || "(11) 99999-9999"),
@@ -68,4 +72,17 @@ export default defineConfig({
       allow: [".."]
     },
   },
+  // Configurações específicas para otimização de imagens
+  optimizeDeps: {
+    include: ['react', 'react-dom']
+  },
+  // Configurações para CSS
+  css: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ]
+    }
+  }
 });

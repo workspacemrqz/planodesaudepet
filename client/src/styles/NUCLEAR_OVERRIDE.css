@@ -86,8 +86,8 @@ input[data-testid="input-search-units"].text-gray-700,
 input[data-testid="input-search-units"].text-gray-800,
 input[data-testid="input-search-units"].text-gray-900,
 input[data-testid="input-search-units"].text-black,
-input[data-testid="input-search-units"].text-[#302e2b],
-input[data-testid="input-search-units"].text-[#FBF9F7] {
+input[data-testid="input-search-units"].text-gray-800,
+input[data-testid="input-search-units"].text-white {
   color: #2d2d2d !important;
   -webkit-text-fill-color: #2d2d2d !important;
   text-fill-color: #2d2d2d !important;

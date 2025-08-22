@@ -7,8 +7,12 @@ import { autoConfig } from "./config";
 const app = express();
 
 // Trust proxy for proper IP handling in production
-if (autoConfig.get('NODE_ENV') === 'production') {
+// Only enable trust proxy if behind a reverse proxy (Heroku, EasyPanel, etc.)
+if (autoConfig.get('NODE_ENV') === 'production' && process.env.TRUST_PROXY === 'true') {
   app.set('trust proxy', true);
+  console.log('🔒 Trust proxy enabled for production behind reverse proxy');
+} else {
+  console.log('🔒 Trust proxy disabled - running directly or not behind reverse proxy');
 }
 
 // Configure JSON parsing to preserve line breaks and special characters
