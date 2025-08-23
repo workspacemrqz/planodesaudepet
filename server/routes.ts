@@ -7,7 +7,8 @@ import {
   insertNetworkUnitSchema, 
   insertFaqItemSchema,
   insertSiteSettingsSchema,
-  type InsertNetworkUnit
+  type InsertNetworkUnit,
+  type InsertSiteSettings
 } from "@shared/schema";
 import { sanitizeText } from "./utils/text-sanitizer.js";
 import { setupAuth, requireAuth } from "./auth.js";
@@ -162,7 +163,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (type === 'network') {
             await storage.updateNetworkUnit(id, { imageData: result.base64 });
           } else if (['main', 'network', 'about'].includes(type)) {
-            let updateData = {};
+            let updateData: Partial<InsertSiteSettings> = {};
             if (type === 'main') updateData = { mainImageData: result.base64 };
             else if (type === 'network') updateData = { networkImageData: result.base64 };
             else if (type === 'about') updateData = { aboutImageData: result.base64 };
@@ -199,12 +200,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { type, id } = req.params;
       
       if (type === 'network') {
-        await storage.updateNetworkUnit(id, { imageData: null });
+        await storage.updateNetworkUnit(id, { imageData: undefined });
       } else if (['main', 'network', 'about'].includes(type)) {
-        let updateData = {};
-        if (type === 'main') updateData = { mainImageData: null };
-        else if (type === 'network') updateData = { networkImageData: null };
-        else if (type === 'about') updateData = { aboutImageData: null };
+        let updateData: Partial<InsertSiteSettings> = {};
+        if (type === 'main') updateData = { mainImageData: undefined };
+        else if (type === 'network') updateData = { networkImageData: undefined };
+        else if (type === 'about') updateData = { aboutImageData: undefined };
         await storage.updateSiteSettings(updateData);
       } else {
         return res.status(400).json({ error: 'Invalid image type' });

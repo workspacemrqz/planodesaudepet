@@ -73,6 +73,9 @@ export class DatabaseStorage implements IStorage {
 
   // Contact Submissions
   async createContactSubmission(insertSubmission: InsertContactSubmission): Promise<ContactSubmission> {
+    if (!insertSubmission || Object.keys(insertSubmission).length === 0) {
+      throw new Error('Contact submission data cannot be empty');
+    }
     const [submission] = await db.insert(contactSubmissions).values(insertSubmission).returning();
     return submission;
   }
@@ -164,6 +167,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createPlan(insertPlan: InsertPlan): Promise<Plan> {
+    if (!insertPlan || Object.keys(insertPlan).length === 0) {
+      throw new Error('Plan data cannot be empty');
+    }
     const [plan] = await db.insert(plans).values(insertPlan).returning();
     return plan;
   }
@@ -197,11 +203,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createNetworkUnit(insertUnit: InsertNetworkUnit): Promise<NetworkUnit> {
+    if (!insertUnit || Object.keys(insertUnit).length === 0) {
+      throw new Error('Network unit data cannot be empty');
+    }
     const [unit] = await db.insert(networkUnits).values(insertUnit).returning();
     return unit;
   }
 
   async updateNetworkUnit(id: string, updateData: Partial<InsertNetworkUnit>): Promise<NetworkUnit | undefined> {
+    if (!updateData || Object.keys(updateData).length === 0) {
+      throw new Error('Update data cannot be empty');
+    }
     const [unit] = await db.update(networkUnits).set(updateData).where(eq(networkUnits.id, id)).returning();
     return unit || undefined;
   }
@@ -226,11 +238,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createFaqItem(insertItem: InsertFaqItem): Promise<FaqItem> {
+    if (!insertItem || Object.keys(insertItem).length === 0) {
+      throw new Error('FAQ item data cannot be empty');
+    }
     const [item] = await db.insert(faqItems).values(insertItem).returning();
     return item;
   }
 
   async updateFaqItem(id: string, updateData: Partial<InsertFaqItem>): Promise<FaqItem | undefined> {
+    if (!updateData || Object.keys(updateData).length === 0) {
+      throw new Error('Update data cannot be empty');
+    }
     const [item] = await db.update(faqItems).set(updateData).where(eq(faqItems.id, id)).returning();
     return item || undefined;
   }
@@ -247,6 +265,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateSiteSettings(updateData: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined> {
+    if (!updateData || Object.keys(updateData).length === 0) {
+      throw new Error('Update data cannot be empty');
+    }
+    
     const existingSettings = await this.getSiteSettings();
     
     if (existingSettings) {

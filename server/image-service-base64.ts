@@ -23,6 +23,8 @@ interface Base64Info {
   mimeType: string;
   size: number;
   extension: string;
+  sizeInKB: number;
+  sizeInMB: number;
 }
 
 interface CompressionResult {
@@ -39,7 +41,7 @@ class ImageServiceBase64 {
   private allowedMimeTypes: string[];
 
   constructor() {
-    this.maxFileSize = 5 * 1024 * 1024; // 5MB
+    this.maxFileSize = 10 * 1024 * 1024; // 10MB
     this.allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
   }
 
@@ -152,7 +154,9 @@ class ImageServiceBase64 {
       return {
         mimeType: `image/${mimeType}`,
         size: buffer.length,
-        extension: mimeType === 'jpeg' ? 'jpg' : mimeType
+        extension: mimeType === 'jpeg' ? 'jpg' : mimeType,
+        sizeInKB: Math.round(buffer.length / 1024),
+        sizeInMB: Math.round(buffer.length / (1024 * 1024) * 100) / 100
       };
     } catch (error) {
       console.error('❌ Error extracting Base64 info:', error instanceof Error ? error.message : 'Unknown error');

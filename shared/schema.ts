@@ -1,6 +1,5 @@
 import { sql } from "drizzle-orm";
 import { pgTable, text, varchar, timestamp, integer, boolean, json, pgEnum } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const contactSubmissions = pgTable("contact_submissions", {
@@ -17,7 +16,6 @@ export const contactSubmissions = pgTable("contact_submissions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// Enum para tipos de plano
 export const planTypeEnum = pgEnum("plan_type_enum", ["with_waiting_period", "without_waiting_period"]);
 
 export const plans = pgTable("plans", {
@@ -35,15 +33,15 @@ export const plans = pgTable("plans", {
 });
 
 export const networkUnits = pgTable("network_units", {
-  id: varchar("id").primaryKey().default(sql `gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
   address: text("address").notNull(),
   phone: text("phone").notNull(),
   whatsapp: text("whatsapp"),
   googleMapsUrl: text("google_maps_url"),
-  rating: integer("rating").notNull(), // stored as 48 for 4.8 rating
+  rating: integer("rating").notNull(),
   services: text("services").array().notNull(),
-  imageData: text("image_data"), // Base64 image data instead of imageUrl
+  imageData: text("image_data"),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -58,7 +56,7 @@ export const faqItems = pgTable("faq_items", {
 });
 
 export const siteSettings = pgTable("site_settings", {
-  id: varchar("id").primaryKey().default(sql `gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   whatsapp: text("whatsapp"),
   email: text("email"),
   phone: text("phone"),
@@ -72,9 +70,9 @@ export const siteSettings = pgTable("site_settings", {
   ourStory: text("our_story"),
   privacyPolicy: text("privacy_policy"),
   termsOfUse: text("terms_of_use"),
-  mainImageData: text("main_image_data"), // Base64 instead of mainImage
-  networkImageData: text("network_image_data"), // Base64 instead of networkImage
-  aboutImageData: text("about_image_data"), // Base64 instead of aboutImage
+  mainImageData: text("main_image_data"),
+  networkImageData: text("network_image_data"),
+  aboutImageData: text("about_image_data"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -84,9 +82,6 @@ export const session = pgTable("session", {
   sess: json("sess").notNull(),
   expire: timestamp("expire", { precision: 6 }).notNull(),
 });
-
-// Remover a tabela fileMetadata completamente
-// export const fileMetadata = pgTable("file_metadata", { ... });
 
 // Tabelas para a área do cliente
 export const clientes = pgTable("clientes", {
@@ -104,11 +99,11 @@ export const planosClientes = pgTable("planos_clientes", {
   clienteId: varchar("cliente_id").notNull().references(() => clientes.id),
   planoId: varchar("plano_id").notNull().references(() => plans.id),
   numeroApolice: varchar("numero_apolice").notNull().unique(),
-  mensalidade: integer("mensalidade").notNull(), // em centavos
-  vencimento: integer("vencimento").notNull(), // dia do mês
+  mensalidade: integer("mensalidade").notNull(),
+  vencimento: integer("vencimento").notNull(),
   formaPagamento: text("forma_pagamento").notNull(),
   coparticipacao: text("coparticipacao").notNull(),
-  status: text("status").default("ativo").notNull(), // ativo, cancelado, suspenso
+  status: text("status").default("ativo").notNull(),
   dataInicio: timestamp("data_inicio").notNull(),
   dataFim: timestamp("data_fim"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -118,8 +113,8 @@ export const planosClientes = pgTable("planos_clientes", {
 export const beneficiosPlanos = pgTable("beneficios_planos", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   planoId: varchar("plano_id").notNull().references(() => plans.id),
-  tipoBeneficio: text("tipo_beneficio").notNull(), // consultas, exames, cirurgias, emergencias
-  carencia: text("carencia").notNull(), // em dias ou "imediato"
+  tipoBeneficio: text("tipo_beneficio").notNull(),
+  carencia: text("carencia").notNull(),
   descricao: text("descricao").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -134,66 +129,105 @@ export const informacoesContato = pgTable("informacoes_contato", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Insert schemas
-export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
-  id: true,
-  createdAt: true,
+// SCHEMAS DE INSERÇÃO CORRIGIDOS - SEM createInsertSchema
+export const insertContactSubmissionSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  phone: z.string(),
+  city: z.string(),
+  petName: z.string(),
+  animalType: z.string(),
+  petAge: z.string(),
+  planInterest: z.string(),
+  message: z.string().optional(),
 });
 
-export const insertPlanSchema = createInsertSchema(plans).omit({
-  id: true,
-  createdAt: true,
+export const insertPlanSchema = z.object({
+  name: z.string(),
+  price: z.number(),
+  description: z.string(),
+  features: z.array(z.string()),
+  buttonText: z.string().default("Contratar Plano"),
+  redirectUrl: z.string().default("/contact"),
+  planType: z.enum(["with_waiting_period", "without_waiting_period"]),
+  isActive: z.boolean().default(true),
+  displayOrder: z.number().default(0),
 });
 
-export const insertNetworkUnitSchema = createInsertSchema(networkUnits).omit({
-  id: true,
-  createdAt: true,
-}).extend({
+export const insertNetworkUnitSchema = z.object({
+  name: z.string(),
+  address: z.string(),
+  phone: z.string(),
   whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos").optional(),
   googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
+  rating: z.number(),
+  services: z.array(z.string()),
+  imageData: z.string().optional(),
+  isActive: z.boolean().default(true),
 });
 
-export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
-  id: true,
-  createdAt: true,
-}).extend({
+export const insertFaqItemSchema = z.object({
   question: z.string()
     .min(1, "Pergunta é obrigatória")
     .max(500, "Pergunta deve ter no máximo 500 caracteres"),
   answer: z.string()
     .min(1, "Resposta é obrigatória")
     .max(2000, "Resposta deve ter no máximo 2000 caracteres"),
+  displayOrder: z.number(),
+  isActive: z.boolean().default(true),
 });
 
-export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertSiteSettingsSchema = z.object({
+  whatsapp: z.string().optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  instagramUrl: z.string().optional(),
+  facebookUrl: z.string().optional(),
+  linkedinUrl: z.string().optional(),
+  youtubeUrl: z.string().optional(),
+  cnpj: z.string().optional(),
+  businessHours: z.string().optional(),
+  ourStory: z.string().optional(),
+  privacyPolicy: z.string().optional(),
+  termsOfUse: z.string().optional(),
+  mainImageData: z.string().optional(),
+  networkImageData: z.string().optional(),
+  aboutImageData: z.string().optional(),
 });
 
 // Schemas para a área do cliente
-export const insertClienteSchema = createInsertSchema(clientes).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertClienteSchema = z.object({
+  nome: z.string(),
+  cpf: z.string(),
+  email: z.string(),
+  telefone: z.string(),
 });
 
-export const insertPlanoClienteSchema = createInsertSchema(planosClientes).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertPlanoClienteSchema = z.object({
+  clienteId: z.string(),
+  planoId: z.string(),
+  numeroApolice: z.string(),
+  mensalidade: z.number(),
+  vencimento: z.number(),
+  formaPagamento: z.string(),
+  coparticipacao: z.string(),
+  status: z.string().default("ativo"),
+  dataInicio: z.string(),
+  dataFim: z.string().optional(),
 });
 
-export const insertBeneficioPlanoSchema = createInsertSchema(beneficiosPlanos).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertBeneficioPlanoSchema = z.object({
+  planoId: z.string(),
+  tipoBeneficio: z.string(),
+  carencia: z.string(),
+  descricao: z.string(),
 });
 
-export const insertInformacaoContatoSchema = createInsertSchema(informacoesContato).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertInformacaoContatoSchema = z.object({
+  atendimento: z.string(),
+  app: z.string(),
+  site: z.string(),
 });
 
 // Types
@@ -218,7 +252,7 @@ export type BeneficioPlano = typeof beneficiosPlanos.$inferSelect;
 export type InsertInformacaoContato = z.infer<typeof insertInformacaoContatoSchema>;
 export type InformacaoContato = typeof informacoesContato.$inferSelect;
 
-// Admin user type for session management (no database table)
+// Admin user type
 export interface AdminUser {
   id: string;
   username: string;
