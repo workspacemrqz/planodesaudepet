@@ -18,7 +18,7 @@
     "build:simple": "npm run build:server && npm run build:client:simple",
     "build:client:simple": "cd client && vite build --minify esbuild",
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
-    "postinstall": "echo 'Build disabled for npm install'",
+    "postinstall": "npm run build:simple",
     "check": "tsc --noEmit --project tsconfig.json",
     "check:strict": "tsc --noEmit --project tsconfig.json"
   },
