@@ -4,9 +4,10 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  root: "./client", // Caminho relativo mais simples
   plugins: [react()],
   build: {
-    outDir: "dist/client",
+    outDir: "../dist/client", // Caminho relativo para o output
     emptyOutDir: true,
     sourcemap: false,
     minify: "terser",
@@ -22,8 +23,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@shared": path.resolve(__dirname, "../shared"),
+      "@": path.resolve(__dirname, "client/src"),
+      "@shared": path.resolve(__dirname, "shared"),
     },
   },
   define: {

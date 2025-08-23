@@ -12,8 +12,11 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --config vite.config.simple.ts",
     "build:server": "tsc --project tsconfig.server.json",
+    "build:easypanel": "npm run build:client && npm run build:server",
+    "build:heroku": "cd client && npm run build && cd .. && npm run build:server",
+    "build:buildpack": "npm run build:client && npm run build:server",
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
-    "postinstall": "npm run build",
+    "postinstall": "npm run build:buildpack",
     "check": "tsc --noEmit --project tsconfig.json",
     "check:strict": "tsc --noEmit --project tsconfig.json"
   },

@@ -5,33 +5,29 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  server: {
-    port: 5173,
-    host: true,
-    open: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
+  build: {
+    outDir: "../dist/client",
+    emptyOutDir: true,
+    sourcemap: false,
+    minify: "terser",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-select"],
+          utils: ["date-fns", "zod", "@hookform/resolvers"]
+        }
       }
     }
   },
-  build: {
-    outDir: "../dist/public",
-    emptyOutDir: true,
-    sourcemap: true,
-    minify: 'esbuild',
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@shared": path.resolve(__dirname, "../shared"),
+    },
   },
   define: {
-    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
-    __VERSION__: JSON.stringify('1.0.0'),
-  },
-  css: {
-    devSourcemap: true,
+    global: "globalThis",
   },
 });
+
