@@ -13,6 +13,7 @@ import {
 import { sanitizeText } from "./utils/text-sanitizer.js";
 import { setupAuth, requireAuth } from "./auth.js";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage.js";
+import { imageService } from "./image-service.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -104,11 +105,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // HEALTH CHECK ROUTE
   app.get("/api/health", (req, res) => {
-    res.status(200).json({ 
-      status: "healthy", 
+    res.status(200).json({
+      status: "healthy",
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development'
     });
+  });
+
+  // Image system health check
+  app.get("/api/images/health", requireAuth, async (req, res) => {
+    try {
+      const health = imageService.getSystemHealth();
+      res.json(health);
+    } catch (error) {
+      console.error("❌ Error getting image system health:", error);
+      res.status(500).json({ error: "Erro ao verificar saúde do sistema de imagens" });
+    }
+  });
+
+  // List available images
+  app.get("/api/images/list", requireAuth, async (req, res) => {
+    try {
+      const images = imageService.listAvailableImages();
+      res.json({
+        count: images.length,
+        images: images
+      });
+    } catch (error) {
+      console.error("❌ Error listing images:", error);
+      res.status(500).json({ error: "Erro ao listar imagens" });
+    }
+  });
+
+  // Migrate images endpoint
+  app.post("/api/images/migrate", requireAuth, async (req, res) => {
+    try {
+      const { sourceDir } = req.body;
+      const sourceDirectory = sourceDir || path.join(process.cwd(), 'uploads');
+      
+      console.log('🔄 [ADMIN] Image migration requested from:', sourceDirectory);
+      
+      const result = await imageService.migrateImages(sourceDirectory);
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Error migrating images:", error);
+      res.status(500).json({ error: "Erro ao migrar imagens" });
+    }
   });
 
   // Diagnostic endpoint for production debugging
@@ -693,89 +735,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // OBJECT STORAGE ROUTES
 
-  // Serve uploaded images
+  // Serve uploaded images with fallback
   app.get("/objects/uploads/:filename", async (req, res) => {
     try {
-      const filename = req.params.filename; // may or may not include extension
-      let filePath = path.join(uploadDir, filename);
+      const filename = req.params.filename;
+      console.log(`🖼️  [IMAGE SERVING] Request for: ${filename}`);
       
-      console.log(`[IMAGE SERVING] Request for: ${filename}`);
-      console.log(`[IMAGE SERVING] Looking at path: ${filePath}`);
-      console.log(`[IMAGE SERVING] Upload dir: ${uploadDir}`);
-
-      let ext = path.extname(filename).toLowerCase();
-      if (!fs.existsSync(filePath)) {
-        // Try common extensions if none or wrong extension
-        const base = path.join(uploadDir, path.basename(filename, ext));
-        const candidates = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].map(e => base + e);
-        const existing = candidates.find(p => fs.existsSync(p));
-        console.log(`[IMAGE SERVING] File not found: ${filePath}. Upload dir: ${uploadDir}, Candidates:`, candidates.map(p => path.basename(p)));
-        if (!existing) {
-          return res.status(404).json({ error: "File not found" });
-        }
-        filePath = existing;
-        ext = path.extname(existing).toLowerCase();
-      }
+      // Usar o serviço de imagens com fallback
+      imageService.serveImage(res, filename, 'default');
       
-      // Set proper content type
-      let contentType = 'application/octet-stream';
-      if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
-      else if (ext === '.png') contentType = 'image/png';
-      else if (ext === '.gif') contentType = 'image/gif';
-      else if (ext === '.webp') contentType = 'image/webp';
-      
-      res.setHeader('Content-Type', contentType);
-      res.setHeader('Cache-Control', 'public, max-age=31536000');
-      
-      console.log(`[IMAGE SERVING] Serving file: ${path.basename(filePath)} as ${contentType}`);
-      res.sendFile(path.resolve(filePath));
     } catch (error) {
-      console.error("Error serving file:", error);
-      res.status(500).json({ error: "Erro ao servir arquivo" });
+      console.error("❌ Error serving image:", error);
+      res.status(500).json({ error: "Erro ao servir imagem" });
     }
   });
 
-  // Legacy object serving route - now handles local storage
+  // Legacy object serving route - now uses image service with fallback
   app.get("/objects/:objectPath(*)", async (req, res) => {
     try {
       const objectPath = req.params.objectPath;
-      console.log('Legacy object serving route - objectPath:', objectPath);
+      console.log('🖼️  [LEGACY IMAGE] Request for:', objectPath);
       
       // Extract filename from path (uploads/filename)
       const pathParts = objectPath.split('/');
       if (pathParts.length >= 2 && pathParts[0] === 'uploads') {
         const filename = pathParts[1];
-        const filePath = path.join(uploadDir, filename);
+        console.log('🖼️  [LEGACY IMAGE] Extracted filename:', filename);
         
-        console.log('Looking for file at:', filePath);
-        
-        if (fs.existsSync(filePath)) {
-          console.log('File found, serving:', filename);
-          
-          // Get file stats for proper headers
-          const stats = fs.statSync(filePath);
-          const ext = path.extname(filename).toLowerCase();
-          
-          // Set content type based on extension
-          let contentType = 'application/octet-stream';
-          if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
-          else if (ext === '.png') contentType = 'image/png';
-          else if (ext === '.gif') contentType = 'image/gif';
-          else if (ext === '.webp') contentType = 'image/webp';
-          
-          res.setHeader('Content-Type', contentType);
-          res.setHeader('Content-Length', stats.size);
-          res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache
-          
-          return res.sendFile(path.resolve(filePath));
-        }
+        // Usar o serviço de imagens com fallback
+        imageService.serveImage(res, filename, 'default');
+        return;
       }
       
-      // If file not found, return 404
-      console.log('File not found for objectPath:', objectPath);
+      // If not an upload path, return 404
+      console.log('❌ [LEGACY IMAGE] Not an upload path:', objectPath);
       res.status(404).json({ error: "Objeto não encontrado" });
     } catch (error) {
-      console.error("Error serving object:", error);
+      console.error("❌ Error serving object:", error);
       res.status(500).json({ error: "Erro interno do servidor" });
     }
   });
