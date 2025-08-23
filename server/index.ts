@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { autoConfig } from "./config";
+import { registerRoutes } from "./routes.js";
+import { autoConfig } from "./config.js";
 import path from "path";
 
 const app = express();

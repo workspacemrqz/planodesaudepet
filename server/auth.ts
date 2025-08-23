@@ -2,7 +2,7 @@ import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { AdminUser } from "@shared/schema";
 import rateLimit from "express-rate-limit";
-import { autoConfig } from "./config";
+import { autoConfig } from "./config.js";
 
 declare module 'express-session' {
   interface SessionData {

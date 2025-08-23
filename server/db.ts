@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
-import { autoConfig } from "./config";
+import { autoConfig } from "./config.js";
 
 // Validate database environment variables
 if (!autoConfig.get('DATABASE_URL')) {

@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage.js";
 import { 
   insertContactSubmissionSchema, 
   insertPlanSchema, 
@@ -10,13 +10,13 @@ import {
   insertFileMetadataSchema,
   type InsertNetworkUnit
 } from "@shared/schema";
-import { sanitizeText } from "./utils/text-sanitizer";
-import { setupAuth, requireAuth } from "./auth";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { sanitizeText } from "./utils/text-sanitizer.js";
+import { setupAuth, requireAuth } from "./auth.js";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { autoConfig } from "./config";
+import { autoConfig } from "./config.js";
 import express from "express";
 
 // Configure multer for file uploads

@@ -1,7 +1,7 @@
 import { Storage, File } from "@google-cloud/storage";
 import { Response } from "express";
 import { randomUUID } from "crypto";
-import { autoConfig } from "./config";
+import { autoConfig } from "./config.js";
 
 const REPLIT_SIDECAR_ENDPOINT = autoConfig.get('REPLIT_SIDECAR_ENDPOINT') || "http://127.0.0.1:1106";
 
