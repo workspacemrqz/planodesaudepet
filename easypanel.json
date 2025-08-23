@@ -26,5 +26,9 @@
   "resources": {
     "cpu": "0.5",
     "memory": "512Mi"
+  },
+  "scripts": {
+    "build": "npm run build:easypanel",
+    "start": "npm start"
   }
 }

@@ -11,7 +11,10 @@
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --config vite.config.simple.ts",
-    "build:server": "tsc --project tsconfig.server.json",
+    "build:server": "tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json && npm run postbuild:server",
+    "postbuild:server": "npm run copy:shared && npm run patch:imports",
+    "copy:shared": "node scripts/copy-shared.js",
+    "patch:imports": "node scripts/patch-imports.js",
     "build:easypanel": "npm run build:client && npm run build:server",
     "build:heroku": "cd client && npm run build && cd .. && npm run build:server",
     "build:buildpack": "npm run build:client && npm run build:server",
@@ -84,7 +87,6 @@
     "drizzle-orm": "^0.39.1",
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.6.0",
-
     "express": "^4.21.2",
     "express-rate-limit": "8.0.1",
     "express-session": "^1.18.1",
@@ -140,9 +142,13 @@
     "@types/react-dom": "^18.3.1",
     "@types/supertest": "6.0.3",
     "supertest": "7.1.4",
+    "tsc-alias": "^1.8.16",
     "vitest": "^3.2.4"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
+  },
+  "imports": {
+    "@shared/*": "./dist/shared/*.js"
   }
 }
