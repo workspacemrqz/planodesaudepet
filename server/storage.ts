@@ -30,10 +30,13 @@ export interface IStorage {
   // Contact Submissions
   createContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission>;
   getContactSubmissions(): Promise<ContactSubmission[]>;
+  getAllContactSubmissions(): Promise<ContactSubmission[]>;
+  deleteContactSubmission(id: string): Promise<boolean>;
   
   // Plans
   getPlans(): Promise<Plan[]>;
   getAllPlans(): Promise<Plan[]>; // For admin - includes inactive plans
+  getAllActivePlans(): Promise<Plan[]>; // For public API
   getPlan(id: string): Promise<Plan | undefined>;
   createPlan(plan: InsertPlan): Promise<Plan>;
   updatePlan(id: string, plan: Partial<InsertPlan>): Promise<Plan | undefined>;
@@ -42,6 +45,7 @@ export interface IStorage {
   // Network Units
   getNetworkUnits(): Promise<NetworkUnit[]>;
   getAllNetworkUnits(): Promise<NetworkUnit[]>; // For admin
+  getAllActiveNetworkUnits(): Promise<NetworkUnit[]>; // For public API
   getNetworkUnit(id: string): Promise<NetworkUnit | undefined>;
   createNetworkUnit(unit: InsertNetworkUnit): Promise<NetworkUnit>;
   updateNetworkUnit(id: string, unit: Partial<InsertNetworkUnit>): Promise<NetworkUnit | undefined>;
@@ -61,9 +65,10 @@ export interface IStorage {
   
   // File Metadata
   getFileMetadata(objectId: string): Promise<FileMetadata | undefined>;
+  getFileMetadataByObjectId(objectId: string): Promise<FileMetadata | undefined>;
   createFileMetadata(metadata: InsertFileMetadata): Promise<FileMetadata>;
   updateFileMetadata(objectId: string, metadata: Partial<InsertFileMetadata>): Promise<FileMetadata | undefined>;
-  deleteFileMetadata(objectId: string): Promise<boolean>;
+  deleteFileMetadata(id: string): Promise<boolean>;
   
   // Session store
   sessionStore: session.Store;
@@ -84,6 +89,15 @@ export class DatabaseStorage implements IStorage {
 
   async getContactSubmissions(): Promise<ContactSubmission[]> {
     return await db.select().from(contactSubmissions).orderBy(desc(contactSubmissions.createdAt));
+  }
+
+  async getAllContactSubmissions(): Promise<ContactSubmission[]> {
+    return await db.select().from(contactSubmissions).orderBy(desc(contactSubmissions.createdAt));
+  }
+
+  async deleteContactSubmission(id: string): Promise<boolean> {
+    const result = await db.delete(contactSubmissions).where(eq(contactSubmissions.id, id));
+    return (result.rowCount || 0) > 0;
   }
 
   // Plans
@@ -138,6 +152,10 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async getAllActivePlans(): Promise<Plan[]> {
+    return await db.select().from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
+  }
+
   async getPlan(id: string): Promise<Plan | undefined> {
     const [plan] = await db.select({
       id: plans.id,
@@ -177,6 +195,10 @@ export class DatabaseStorage implements IStorage {
 
   async getAllNetworkUnits(): Promise<NetworkUnit[]> {
     return await db.select().from(networkUnits).orderBy(desc(networkUnits.createdAt));
+  }
+
+  async getAllActiveNetworkUnits(): Promise<NetworkUnit[]> {
+    return await db.select().from(networkUnits).where(eq(networkUnits.isActive, true)).orderBy(desc(networkUnits.createdAt));
   }
 
   async getNetworkUnit(id: string): Promise<NetworkUnit | undefined> {
@@ -253,6 +275,11 @@ export class DatabaseStorage implements IStorage {
 
   // File Metadata
   async getFileMetadata(objectId: string): Promise<FileMetadata | undefined> {
+    const [metadata] = await db.select().from(fileMetadata).where(eq(fileMetadata.objectId, objectId));
+    return metadata || undefined;
+  }
+
+  async getFileMetadataByObjectId(objectId: string): Promise<FileMetadata | undefined> {
     const [metadata] = await db.select().from(fileMetadata).where(eq(fileMetadata.objectId, objectId));
     return metadata || undefined;
   }

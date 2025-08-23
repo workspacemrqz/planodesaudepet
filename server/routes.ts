@@ -7,7 +7,8 @@ import {
   insertNetworkUnitSchema, 
   insertFaqItemSchema,
   insertSiteSettingsSchema,
-  insertFileMetadataSchema 
+  insertFileMetadataSchema,
+  type InsertNetworkUnit
 } from "@shared/schema";
 import { sanitizeText } from "./utils/text-sanitizer";
 import { setupAuth, requireAuth } from "./auth";
@@ -793,7 +794,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const objectPath = objectStorageService.normalizeObjectEntityPath(imageURL);
       
       // Update the network unit with the normalized object path
-      const unit = await storage.updateNetworkUnit(id, { imageUrl: objectPath });
+      const unit = await storage.updateNetworkUnit(id, { imageUrl: objectPath } as Partial<InsertNetworkUnit>);
       
       if (!unit) {
         return res.status(404).json({ error: "Unidade da rede não encontrada" });

@@ -144,17 +144,26 @@ export const informacoesContato = pgTable("informacoes_contato", {
 });
 
 // Insert schemas
-export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
+export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
 });
 
-export const insertPlanSchema = createInsertSchema(plans).omit({
+export const insertPlanSchema = createInsertSchema(plans, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
 });
 
-export const insertNetworkUnitSchema = createInsertSchema(networkUnits).omit({
+export const insertNetworkUnitSchema = createInsertSchema(networkUnits, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
 }).extend({
@@ -162,7 +171,10 @@ export const insertNetworkUnitSchema = createInsertSchema(networkUnits).omit({
   googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
 });
 
-export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
+export const insertFaqItemSchema = createInsertSchema(faqItems, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
 }).extend({
@@ -184,38 +196,62 @@ export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
     }, "Resposta deve ter no máximo 2000 caracteres incluindo quebras de linha"),
 });
 
-export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
+export const insertSiteSettingsSchema = createInsertSchema(siteSettings, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
+export const insertFileMetadataSchema = createInsertSchema(fileMetadata, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
 // Schemas para a área do cliente
-export const insertClienteSchema = createInsertSchema(clientes).omit({
+export const insertClienteSchema = createInsertSchema(clientes, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const insertPlanoClienteSchema = createInsertSchema(planosClientes).omit({
+export const insertPlanoClienteSchema = createInsertSchema(planosClientes, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const insertBeneficioPlanoSchema = createInsertSchema(beneficiosPlanos).omit({
+export const insertBeneficioPlanoSchema = createInsertSchema(beneficiosPlanos, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const insertInformacaoContatoSchema = createInsertSchema(informacoesContato).omit({
+export const insertInformacaoContatoSchema = createInsertSchema(informacoesContato, {
+  id: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+}).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
