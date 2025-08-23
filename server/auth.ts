@@ -111,10 +111,10 @@ export function setupAuth(app: Express) {
     resave: true,
     saveUninitialized: true, // Changed to true to ensure session is saved
     cookie: {
-      secure: autoConfig.get('NODE_ENV') === 'production', // Secure cookies in production
+      secure: false, // Secure cookies disabled for local development
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: autoConfig.get('NODE_ENV') === 'production' ? 'strict' : 'lax'
+      sameSite: 'lax'
     },
     name: 'connect.sid', // Explicitly set session name
     store: undefined // Use default memory store for development

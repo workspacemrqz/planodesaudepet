@@ -1,0 +1,30 @@
+{
+  "name": "unipet-plan",
+  "description": "Plataforma de planos de saúde pet",
+  "type": "application",
+  "build": {
+    "method": "buildpacks",
+    "builder": "heroku/builder:24",
+    "buildpacks": [
+      "heroku/nodejs"
+    ]
+  },
+  "deploy": {
+    "restartPolicy": "always",
+    "healthCheck": {
+      "path": "/api/health",
+      "interval": "30s",
+      "timeout": "10s",
+      "retries": 3
+    }
+  },
+  "environment": {
+    "NODE_ENV": "production",
+    "PORT": "8080",
+    "HOST": "0.0.0.0"
+  },
+  "resources": {
+    "cpu": "0.5",
+    "memory": "512Mi"
+  }
+}

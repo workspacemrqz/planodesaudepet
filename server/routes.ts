@@ -15,16 +15,13 @@ import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-// Removed file-type dependency for simpler image handling
 import { autoConfig } from "./config";
-import express from "express"; // Added missing import
-
+import express from "express";
 
 // Configure multer for file uploads
-// In production, use a persistent directory that survives deploys
-// Use writable directory in production
-const uploadDir = autoConfig.get('NODE_ENV') === 'production' 
-  ? path.join(process.cwd(), 'uploads')  // Use workspace uploads dir
+// Use uploads directory in production, temp directory as fallback
+const uploadDir = process.env.NODE_ENV === 'production' 
+  ? path.join(process.cwd(), 'uploads')
   : path.join(process.cwd(), 'uploads');
 
 // Ensure upload directory exists with proper error handling
@@ -100,23 +97,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   if (fs.existsSync(uploadsPath)) {
     app.use('/uploads', express.static(uploadsPath, {
       maxAge: '1y',
-      etag: true,
-      lastModified: true,
-      setHeaders: (res, filePath) => {
-        // Headers específicos para imagens
-        if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/i)) {
-          res.set({
-            'Cache-Control': 'public, max-age=86400', // 1 dia
-            'X-Image-Cache': 'medium-term',
-          });
-        }
-      }
+      etag: true
     }));
-    console.log('✅ [ROUTES] Serving uploads from workspace:', uploadsPath);
-  } else {
-    console.warn('⚠️ [ROUTES] Uploads directory not found:', uploadsPath);
   }
   
+  // HEALTH CHECK ROUTE
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ 
+      status: "healthy", 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  });
+
   // Diagnostic endpoint for production debugging
   app.get('/api/diagnostic', (req, res) => {
     const distPath = path.resolve(process.cwd(), 'dist');
@@ -547,7 +540,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
       console.log("🔍 [ADMIN] Fetching all FAQ items...");
-      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user?.username);
       
       const items = await storage.getAllFaqItems();
       console.log(`✅ [ADMIN] Found ${items.length} FAQ items`);
@@ -614,7 +607,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/faq", requireAdmin, async (req, res) => {
     try {
       console.log("🔍 [ADMIN] Creating new FAQ item...");
-      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user?.username);
       console.log("🔍 [ADMIN] Request body:", req.body);
       
       // Sanitizar dados preservando quebras de linha
@@ -642,7 +635,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       console.log("🔍 [ADMIN] Updating FAQ item:", id);
-      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user?.username);
       console.log("🔍 [ADMIN] Request body:", req.body);
       
       // Sanitizar dados preservando quebras de linha

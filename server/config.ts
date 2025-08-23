@@ -65,17 +65,7 @@ class AutoConfig {
       return process.env.NODE_ENV;
     }
     
-    // Detecta automaticamente baseado em variáveis de ambiente
-    if (process.env.PORT === '8080' || process.env.HEROKU_APP_ID || process.env.RAILWAY_ENVIRONMENT) {
-      return 'production';
-    }
-    
-    // Se estiver rodando em um processo do PM2 ou similar
-    if (process.env.PM2_HOME || process.env.PM2_INTERNAL_IP) {
-      return 'production';
-    }
-    
-    // Padrão para desenvolvimento
+    // Padrão para desenvolvimento local
     return 'development';
   }
 
@@ -87,7 +77,7 @@ class AutoConfig {
       return process.env.PORT;
     }
     
-    return this.config.NODE_ENV === 'production' ? '8080' : '3000';
+    return '3000';
   }
 
   /**

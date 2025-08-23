@@ -1,6 +1,9 @@
 {
-  "name": "unipetplan",
-  "description": "Sistema de plano de saúde para pets - Deploy limpo com autenticação por variáveis de ambiente",
+  "name": "unipet-plan",
+  "description": "Plataforma de planos de saúde pet",
+  "repository": "https://github.com/seu-usuario/planodesaudepet",
+  "logo": "https://via.placeholder.com/150x150/277677/FFFFFF?text=UNIPET",
+  "keywords": ["node", "express", "react", "typescript", "postgresql"],
   "buildpacks": [
     {
       "url": "heroku/nodejs"
@@ -8,39 +11,15 @@
   ],
   "env": {
     "NODE_ENV": {
-      "description": "Node environment",
+      "description": "Ambiente de execução",
       "value": "production"
     },
-    "DATABASE_URL": {
-      "description": "PostgreSQL database URL (required)",
-      "required": true
-    },
-    "LOGIN": {
-      "description": "Admin username/email for login",
-      "required": true
-    },
-    "SENHA": {
-      "description": "Admin password (minimum 12 characters)",
-      "required": true
-    },
-    "LOGIN": {
-      "description": "Alternative admin login (legacy support)",
-      "required": false
-    },
-    "SENHA": {
-      "description": "Alternative admin password (legacy support)",
-      "required": false
-    },
-    "SESSION_SECRET": {
-      "description": "Secret key for session management (minimum 32 characters)",
-      "generator": "secret"
-    },
     "PORT": {
-      "description": "Port number for the application",
-      "value": "80"
+      "description": "Porta onde a aplicação será executada",
+      "value": "8080"
     },
     "HOST": {
-      "description": "Host for the application",
+      "description": "Host da aplicação",
       "value": "0.0.0.0"
     }
   },
@@ -50,5 +29,9 @@
       "size": "basic"
     }
   },
-  "stack": "heroku-24"
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini"
+    }
+  ]
 }
