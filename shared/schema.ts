@@ -136,26 +136,26 @@ export const informacoesContato = pgTable("informacoes_contato", {
 
 // Insert schemas
 export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
-  // id: true, // LINHA 147 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 148 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
 });
 
 export const insertPlanSchema = createInsertSchema(plans).omit({
-  // id: true, // LINHA 152 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 153 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
 });
 
 export const insertNetworkUnitSchema = createInsertSchema(networkUnits).omit({
-  // id: true, // LINHA 157 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 158 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
 }).extend({
   whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos").optional(),
   googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
 });
 
 export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
-  // id: true, // LINHA 165 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 166 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
 }).extend({
   question: z.string()
     .min(1, "Pergunta é obrigatória")
@@ -166,41 +166,34 @@ export const insertFaqItemSchema = createInsertSchema(faqItems).omit({
 });
 
 export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
-  // id: true, // LINHA 177 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 178 - COMENTADA PARA DEPLOY
-  // updatedAt: true, // LINHA 179 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
-
-// Remover a tabela fileMetadata completamente
-// export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
-//   // id: true, // LINHA 183 - COMENTADA PARA DEPLOY
-//   // createdAt: true, // LINHA 184 - COMENTADA PARA DEPLOY
-//   // updatedAt: true, // LINHA 185 - COMENTADA PARA DEPLOY
-// });
 
 // Schemas para a área do cliente
 export const insertClienteSchema = createInsertSchema(clientes).omit({
-  // id: true, // LINHA 190 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 191 - COMENTADA PARA DEPLOY
-  // updatedAt: true, // LINHA 192 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const insertPlanoClienteSchema = createInsertSchema(planosClientes).omit({
-  // id: true, // LINHA 196 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 197 - COMENTADA PARA DEPLOY
-  // updatedAt: true, // LINHA 198 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const insertBeneficioPlanoSchema = createInsertSchema(beneficiosPlanos).omit({
-  // id: true, // LINHA 202 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 203 - COMENTADA PARA DEPLOY
-  // updatedAt: true, // LINHA 204 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const insertInformacaoContatoSchema = createInsertSchema(informacoesContato).omit({
-  // id: true, // LINHA 208 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 209 - COMENTADA PARA DEPLOY
-  // updatedAt: true, // LINHA 210 - COMENTADA PARA DEPLOY
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 // Types
@@ -214,9 +207,6 @@ export type InsertFaqItem = z.infer<typeof insertFaqItemSchema>;
 export type FaqItem = typeof faqItems.$inferSelect;
 export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type SiteSettings = typeof siteSettings.$inferSelect;
-// Remover a tabela fileMetadata completamente
-// export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
-// export type FileMetadata = typeof fileMetadata.$inferSelect;
 
 // Types para a área do cliente
 export type InsertCliente = z.infer<typeof insertClienteSchema>;

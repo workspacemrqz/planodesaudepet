@@ -9,14 +9,11 @@ import {
   type InsertFaqItem,
   type SiteSettings,
   type InsertSiteSettings,
-  type FileMetadata,
-  type InsertFileMetadata,
   contactSubmissions,
   plans,
   networkUnits,
   faqItems,
-  siteSettings,
-  fileMetadata
+  siteSettings
 } from "@shared/schema";
 import { db } from "./db.js";
 import { eq, desc, asc } from "drizzle-orm";
@@ -63,13 +60,6 @@ export interface IStorage {
   getSiteSettings(): Promise<SiteSettings | undefined>;
   updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined>;
   
-  // File Metadata
-  getFileMetadata(objectId: string): Promise<FileMetadata | undefined>;
-  getFileMetadataByObjectId(objectId: string): Promise<FileMetadata | undefined>;
-  createFileMetadata(metadata: InsertFileMetadata): Promise<FileMetadata>;
-  updateFileMetadata(objectId: string, metadata: Partial<InsertFileMetadata>): Promise<FileMetadata | undefined>;
-  deleteFileMetadata(id: string): Promise<boolean>;
-  
   // Session store
   sessionStore: session.Store;
 }
@@ -83,10 +73,8 @@ export class DatabaseStorage implements IStorage {
 
   // Contact Submissions
   async createContactSubmission(insertSubmission: InsertContactSubmission): Promise<ContactSubmission> {
-    // LINHA 86 - COMENTADA PARA DEPLOY
-    // const [submission] = await db.insert(contactSubmissions).values(insertSubmission).returning();
-    // return submission;
-    return null as any; // Retorno temporário para deploy
+    const [submission] = await db.insert(contactSubmissions).values(insertSubmission).returning();
+    return submission;
   }
 
   async getContactSubmissions(): Promise<ContactSubmission[]> {
@@ -176,10 +164,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createPlan(insertPlan: InsertPlan): Promise<Plan> {
-    // LINHA 177 - COMENTADA PARA DEPLOY
-    // const [plan] = await db.insert(plans).values(insertPlan).returning();
-    // return plan;
-    return null as any; // Retorno temporário para deploy
+    const [plan] = await db.insert(plans).values(insertPlan).returning();
+    return plan;
   }
 
   async updatePlan(id: string, updateData: Partial<InsertPlan>): Promise<Plan | undefined> {
@@ -211,17 +197,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createNetworkUnit(insertUnit: InsertNetworkUnit): Promise<NetworkUnit> {
-    // LINHA 210 - COMENTADA PARA DEPLOY (insert com objeto {whatsapp, googleMapsUrl})
-    // const [unit] = await db.insert(networkUnits).values(insertUnit).returning();
-    // return unit;
-    return null as any; // Retorno temporário para deploy
+    const [unit] = await db.insert(networkUnits).values(insertUnit).returning();
+    return unit;
   }
 
   async updateNetworkUnit(id: string, updateData: Partial<InsertNetworkUnit>): Promise<NetworkUnit | undefined> {
-    // LINHA 215 - COMENTADA PARA DEPLOY (update com tipo Partial problemático)
-    // const [unit] = await db.update(networkUnits).set(updateData).where(eq(networkUnits.id, id)).returning();
-    // return unit || undefined;
-    return null as any; // Retorno temporário para deploy
+    const [unit] = await db.update(networkUnits).set(updateData).where(eq(networkUnits.id, id)).returning();
+    return unit || undefined;
   }
 
   async deleteNetworkUnit(id: string): Promise<boolean> {
@@ -244,10 +226,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createFaqItem(insertItem: InsertFaqItem): Promise<FaqItem> {
-    // LINHA 239 - COMENTADA PARA DEPLOY (insert sem displayOrder)
-    // const [item] = await db.insert(faqItems).values(insertItem).returning();
-    // return item;
-    return null as any; // Retorno temporário para deploy
+    const [item] = await db.insert(faqItems).values(insertItem).returning();
+    return item;
   }
 
   async updateFaqItem(id: string, updateData: Partial<InsertFaqItem>): Promise<FaqItem | undefined> {
@@ -281,39 +261,6 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return settings;
     }
-  }
-
-  // File Metadata
-  async getFileMetadata(objectId: string): Promise<FileMetadata | undefined> {
-    const [metadata] = await db.select().from(fileMetadata).where(eq(fileMetadata.objectId, objectId));
-    return metadata || undefined;
-  }
-
-  async getFileMetadataByObjectId(objectId: string): Promise<FileMetadata | undefined> {
-    const [metadata] = await db.select().from(fileMetadata).where(eq(fileMetadata.objectId, objectId));
-    return metadata || undefined;
-  }
-
-  async createFileMetadata(insertMetadata: InsertFileMetadata): Promise<FileMetadata> {
-    // LINHA 288 - COMENTADA PARA DEPLOY (insert com argumento vazio {})
-    // const [metadata] = await db.insert(fileMetadata).values(insertMetadata).returning();
-    // return metadata;
-    return null as any; // Retorno temporário para deploy
-  }
-
-  async updateFileMetadata(objectId: string, updateData: Partial<InsertFileMetadata>): Promise<FileMetadata | undefined> {
-    // LINHA 294 - COMENTADA PARA DEPLOY (updatedAt problemático)
-    // const [metadata] = await db.update(fileMetadata)
-    //   .set({ ...updateData, updatedAt: new Date() })
-    //   .where(eq(fileMetadata.objectId, objectId))
-    //   .returning();
-    // return metadata || undefined;
-    return null as any; // Retorno temporário para deploy
-  }
-
-  async deleteFileMetadata(objectId: string): Promise<boolean> {
-    const result = await db.delete(fileMetadata).where(eq(fileMetadata.objectId, objectId));
-    return (result.rowCount || 0) > 0;
   }
 }
 

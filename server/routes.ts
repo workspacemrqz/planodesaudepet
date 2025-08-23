@@ -13,52 +13,7 @@ import { sanitizeText } from "./utils/text-sanitizer.js";
 import { setupAuth, requireAuth } from "./auth.js";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage.js";
 import { imageServiceBase64 } from "./image-service-base64.js";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { autoConfig } from "./config.js";
 import express from "express";
-
-// Configure multer for file uploads
-// Use uploads directory in production, temp directory as fallback
-const uploadDir = process.env.NODE_ENV === 'production' 
-  ? path.join(process.cwd(), 'uploads')
-  : path.join(process.cwd(), 'uploads');
-
-// Ensure upload directory exists with proper error handling
-try {
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-    console.log('Created upload directory:', uploadDir);
-  } else {
-    console.log('Upload directory exists:', uploadDir);
-  }
-} catch (error) {
-  console.error('Failed to create upload directory:', error);
-  console.log('Falling back to temp directory...');
-  // This shouldn't happen with workspace directory, but let's be safe
-}
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadDir,
-    filename: (req, file, cb) => {
-      const objectId = req.params.objectId;
-      const ext = path.extname(file.originalname);
-      cb(null, `${objectId}${ext}`);
-    }
-  }),
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed'));
-    }
-  }
-});
 
 // Middleware to check admin authentication
 const requireAdmin = (req: any, res: any, next: any) => {
@@ -94,14 +49,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // IMPORTANT: Configure static file serving for uploads BEFORE other routes
   // This ensures that image requests are handled before Vite's catch-all route
-  const uploadsPath = path.join(process.cwd(), 'uploads');
-  if (fs.existsSync(uploadsPath)) {
-    app.use('/uploads', express.static(uploadsPath, {
-      maxAge: '1y',
-      etag: true
-    }));
-  }
-  
+  // REMOVIDO - Sistema Base64 não precisa de arquivos estáticos
+
   // HEALTH CHECK ROUTE
   app.get("/api/health", (req, res) => {
     res.status(200).json({
@@ -120,7 +69,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (type === 'network') {
         // Buscar imagem de network unit
-        const networkUnit = await storage.getNetworkUnitById(id);
+        const networkUnit = await storage.getNetworkUnit(id);
         if (!networkUnit || !networkUnit.imageData) {
           return res.status(404).json({ error: 'Image not found' });
         }
@@ -187,18 +136,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Configurar multer para este upload
       const upload = imageServiceBase64.getUploadMiddleware().single('image');
       
-      upload(req, res, async (err) => {
+      upload(req, res, async (err: any) => {
         if (err) {
           return res.status(400).json({ error: err.message });
         }
         
-        if (!req.file) {
+        if (!(req as any).file) {
           return res.status(400).json({ error: 'No image file provided' });
         }
         
         try {
           // Processar imagem para Base64
-          const result = await imageServiceBase64.processImageToBase64(req.file.buffer, {
+          const result = await imageServiceBase64.processImageToBase64((req as any).file.buffer, {
             width: 800,
             height: 600,
             quality: 80,
@@ -211,9 +160,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Salvar no banco de dados
           if (type === 'network') {
-            await storage.updateNetworkUnitImage(id, result.base64);
+            await storage.updateNetworkUnit(id, { imageData: result.base64 });
           } else if (['main', 'network', 'about'].includes(type)) {
-            await storage.updateSiteSettingsImage(type, result.base64);
+            let updateData = {};
+            if (type === 'main') updateData = { mainImageData: result.base64 };
+            else if (type === 'network') updateData = { networkImageData: result.base64 };
+            else if (type === 'about') updateData = { aboutImageData: result.base64 };
+            await storage.updateSiteSettings(updateData);
           } else {
             return res.status(400).json({ error: 'Invalid image type' });
           }
@@ -246,9 +199,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { type, id } = req.params;
       
       if (type === 'network') {
-        await storage.updateNetworkUnitImage(id, null);
+        await storage.updateNetworkUnit(id, { imageData: null });
       } else if (['main', 'network', 'about'].includes(type)) {
-        await storage.updateSiteSettingsImage(type, null);
+        let updateData = {};
+        if (type === 'main') updateData = { mainImageData: null };
+        else if (type === 'network') updateData = { networkImageData: null };
+        else if (type === 'about') updateData = { aboutImageData: null };
+        await storage.updateSiteSettings(updateData);
       } else {
         return res.status(400).json({ error: 'Invalid image type' });
       }
@@ -263,33 +220,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Diagnostic endpoint for production debugging
   app.get('/api/diagnostic', (req, res) => {
-    const distPath = path.resolve(process.cwd(), 'dist');
-    const publicPath = path.resolve(distPath, 'public');
-    const uploadsPath = path.resolve(process.cwd(), 'uploads');
-    
     res.json({
       status: 'ok',
       env: {
-        NODE_ENV: autoConfig.get('NODE_ENV'),
-        PORT: autoConfig.get('PORT'),
-        DATABASE_URL: autoConfig.get('DATABASE_URL') ? 'CONFIGURED' : 'NOT CONFIGURED',
-        ADMIN_AUTH: autoConfig.get('LOGIN') && autoConfig.get('SENHA') ? 'CONFIGURED' : 'NOT CONFIGURED',
-      },
-      paths: {
-        cwd: process.cwd(),
-        dist: {
-          path: distPath,
-          exists: fs.existsSync(distPath)
-        },
-        public: {
-          path: publicPath,
-          exists: fs.existsSync(publicPath),
-          files: fs.existsSync(publicPath) ? fs.readdirSync(publicPath).slice(0, 10) : []
-        },
-        uploads: {
-          path: uploadsPath,
-          exists: fs.existsSync(uploadsPath)
-        }
+        NODE_ENV: process.env.NODE_ENV || 'development',
+        PORT: process.env.PORT || '8080',
+        DATABASE_URL: process.env.DATABASE_URL ? 'CONFIGURED' : 'NOT CONFIGURED',
+        ADMIN_AUTH: process.env.LOGIN && process.env.SENHA ? 'CONFIGURED' : 'NOT CONFIGURED',
       },
       server: {
         uptime: process.uptime(),
@@ -302,240 +239,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Simple upload routes (before auth setup to avoid session issues)
   app.post("/api/objects/upload", async (req, res) => {
-    console.log('POST /api/objects/upload - Starting upload process');
-    try {
-      // For local development, we'll use a simple file upload approach
-      // Generate a unique filename
-      const crypto = await import('crypto');
-      const objectId = crypto.randomUUID();
-      const objectPath = `/objects/uploads/${objectId}`;
-      
-      // Return relative upload URL that works in both dev and production
-      const uploadURL = `/api/objects/upload-file/${objectId}`;
-      
-      console.log('Generated upload URL:', uploadURL);
-      console.log('Generated object path:', objectPath);
-      
-      res.json({ uploadURL, objectPath });
-    } catch (error) {
-      console.error("Error getting upload URL:", error);
-      res.status(500).json({ error: "Erro ao obter URL de upload" });
-    }
+    res.status(410).json({ error: 'This endpoint is deprecated. Use /api/images/upload/:type/:id instead.' });
   });
 
   // Handle file upload (direct file in body)
   app.put("/api/objects/upload-file/:objectId", async (req, res) => {
-    try {
-      const objectId = req.params.objectId;
-      const contentType = req.headers['content-type'] || 'application/octet-stream';
-      
-      console.log('Starting file upload for objectId:', objectId);
-      console.log('Content-Type from header:', contentType);
-      
-      // Collect the entire request body into a buffer
-      const chunks: Buffer[] = [];
-      
-      req.on('data', (chunk: Buffer) => {
-        chunks.push(chunk);
-      });
-      
-      req.on('end', async () => {
-        try {
-          const fileBuffer = Buffer.concat(chunks);
-          console.log('File buffer size:', fileBuffer.length);
-          
-          // Simple file type detection based on content-type header
-          let extension = '.jpg';
-          let mimeType = 'image/jpeg';
-          
-          if (contentType.includes('image/png')) {
-            extension = '.png';
-            mimeType = 'image/png';
-          } else if (contentType.includes('image/jpeg') || contentType.includes('image/jpg')) {
-            extension = '.jpg';
-            mimeType = 'image/jpeg';
-          } else if (contentType.includes('image/gif')) {
-            extension = '.gif';
-            mimeType = 'image/gif';
-          } else if (contentType.includes('image/webp')) {
-            extension = '.webp';
-            mimeType = 'image/webp';
-          }
-          
-          const filename = `${objectId}${extension}`;
-          const filepath = path.join(uploadDir, filename);
-          
-          console.log('Final file details:', {
-            filename,
-            extension,
-            mimeType,
-            size: fileBuffer.length
-          });
-          
-          // Write file to disk
-          await fs.promises.writeFile(filepath, fileBuffer);
-          
-          // Try to save metadata to database, but don't fail if it doesn't work
-          try {
-            const fileMetadata = {
-              objectId,
-              originalName: filename,
-              mimeType,
-              extension,
-              filePath: filepath,
-              fileSize: fileBuffer.length
-            };
-            
-            await storage.createFileMetadata(fileMetadata);
-            console.log('Metadata saved to database successfully');
-          } catch (dbError) {
-            console.warn('Failed to save metadata to database, but file was saved:', dbError);
-            // Continue anyway - the file is saved and can be served
-          }
-          
-          console.log('File uploaded successfully:', filename);
-          
-          res.json({ 
-            success: true, 
-            objectPath: `/api/objects/${objectId}/image`,
-            filename: filename,
-            mimeType,
-            extension,
-            size: fileBuffer.length
-          });
-          
-        } catch (error) {
-          console.error('Error processing file upload:', error);
-          res.status(500).json({ error: 'Erro ao processar upload do arquivo' });
-        }
-      });
-      
-      req.on('error', (error) => {
-        console.error('Error receiving file data:', error);
-        res.status(500).json({ error: 'Erro ao receber dados do arquivo' });
-      });
-      
-    } catch (error) {
-      console.error('Error in upload endpoint:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
-    }
+    res.status(410).json({ error: 'This endpoint is deprecated. Use /api/images/upload/:type/:id instead.' });
   });
 
   // Canonical image serving route (before auth setup)
   app.get("/api/objects/:id/image", async (req, res) => {
-    try {
-      const objectId = req.params.id;
-      console.log(`[IMAGE SERVING API] Request for objectId: ${objectId}`);
-      console.log(`[IMAGE SERVING API] Headers: ${JSON.stringify(req.headers)}`);
-      console.log(`[IMAGE SERVING API] Upload dir: ${uploadDir}`);
-      
-      // Try to get file metadata from database first
-      let metadata: any = null;
-      try {
-        metadata = await storage.getFileMetadata(objectId);
-        console.log('Found file metadata from database:', metadata);
-      } catch (dbError) {
-        console.warn('Failed to get metadata from database, will try file system:', dbError);
-      }
-      
-      // If no metadata, try to find the file directly
-      if (!metadata) {
-        console.log('No metadata found, searching for file in upload directory');
-        
-        // Try common extensions
-        const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-        let foundFile = null;
-        let foundExtension = null;
-        
-        for (const ext of extensions) {
-          const testPath = path.join(uploadDir, `${objectId}${ext}`);
-          if (fs.existsSync(testPath)) {
-            foundFile = testPath;
-            foundExtension = ext;
-            break;
-          }
-        }
-        
-        if (foundFile) {
-          console.log(`Found file with extension ${foundExtension}: ${foundFile}`);
-          
-          // Determine MIME type from extension
-          let mimeType = 'image/jpeg';
-          if (foundExtension === '.png') mimeType = 'image/png';
-          else if (foundExtension === '.gif') mimeType = 'image/gif';
-          else if (foundExtension === '.webp') mimeType = 'image/webp';
-          
-          // Set headers and serve file
-          res.setHeader('Content-Type', mimeType);
-          res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache
-          res.setHeader('ETag', `"${objectId}-${Date.now()}"`);
-          
-          const fileStream = fs.createReadStream(foundFile);
-          fileStream.pipe(res);
-          
-          fileStream.on('error', (error) => {
-            console.error('Error streaming file:', error);
-            if (!res.headersSent) {
-              res.status(500).json({ error: 'Erro ao servir arquivo' });
-            }
-          });
-          
-          return;
-        } else {
-          console.log(`[IMAGE SERVING API] File not found in upload directory: ${uploadDir}`);
-          console.log(`[IMAGE SERVING API] Checked extensions:`, extensions);
-          return res.status(404).json({ error: 'Imagem não encontrada' });
-        }
-      }
-      
-      // If we have metadata, use it
-      console.log('Using metadata to serve file:', {
-        objectId: metadata.objectId,
-        mimeType: metadata.mimeType,
-        extension: metadata.extension,
-        filePath: metadata.filePath
-      });
-      
-      // Resolve file path. Always use the current upload directory
-      // The stored metadata might point to an old location, so we reconstruct the path
-      const expectedFileName = `${objectId}.${metadata.extension?.replace('.', '') || 'jpg'}`;
-      let filePath = path.join(uploadDir, expectedFileName);
-      
-      if (!fs.existsSync(filePath)) {
-        // Try common extensions if the exact file doesn't exist
-        const candidates = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
-          .map(ext => path.join(uploadDir, `${objectId}${ext}`));
-        const existing = candidates.find(p => fs.existsSync(p));
-        if (existing) {
-          filePath = existing;
-          console.log(`[IMAGE SERVING API] Found file with different extension: ${path.basename(existing)}`);
-        } else {
-          console.log(`[IMAGE SERVING API] File not found in upload directory: ${uploadDir}`);
-          console.log(`[IMAGE SERVING API] Expected: ${expectedFileName}, Candidates checked:`, candidates.map(p => path.basename(p)));
-          return res.status(404).json({ error: 'Arquivo não encontrado no disco' });
-        }
-      }
-      
-      // Set correct Content-Type and serve file
-      res.setHeader('Content-Type', metadata.mimeType);
-      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache
-      res.setHeader('ETag', `"${metadata.objectId}-${metadata.updatedAt.getTime()}"`);
-      
-      // Stream the file
-      const fileStream = fs.createReadStream(filePath);
-      fileStream.pipe(res);
-      
-      fileStream.on('error', (error) => {
-        console.error('Error streaming file:', error);
-        if (!res.headersSent) {
-          res.status(500).json({ error: 'Erro ao servir arquivo' });
-        }
-      });
-      
-    } catch (error) {
-      console.error('Error serving image:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
-    }
+    res.status(410).json({ error: 'This endpoint is deprecated. Use /api/images/:type/:id instead.' });
   });
 
   // Setup authentication
@@ -918,7 +632,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(500).json({ 
         error: "Erro ao buscar planos",
-        details: autoConfig.get('NODE_ENV') === 'development' ? errorMessage : undefined
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
       });
     }
   });
