@@ -35,7 +35,7 @@ export const plans = pgTable("plans", {
 });
 
 export const networkUnits = pgTable("network_units", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql `gen_random_uuid()`),
   name: text("name").notNull(),
   address: text("address").notNull(),
   phone: text("phone").notNull(),
@@ -43,7 +43,7 @@ export const networkUnits = pgTable("network_units", {
   googleMapsUrl: text("google_maps_url"),
   rating: integer("rating").notNull(), // stored as 48 for 4.8 rating
   services: text("services").array().notNull(),
-  imageUrl: text("image_url").notNull(),
+  imageData: text("image_data"), // Base64 image data instead of imageUrl
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -58,7 +58,7 @@ export const faqItems = pgTable("faq_items", {
 });
 
 export const siteSettings = pgTable("site_settings", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey().default(sql `gen_random_uuid()`),
   whatsapp: text("whatsapp"),
   email: text("email"),
   phone: text("phone"),
@@ -72,9 +72,9 @@ export const siteSettings = pgTable("site_settings", {
   ourStory: text("our_story"),
   privacyPolicy: text("privacy_policy"),
   termsOfUse: text("terms_of_use"),
-  mainImage: text("main_image"),
-  networkImage: text("network_image"),
-  aboutImage: text("about_image"),
+  mainImageData: text("main_image_data"), // Base64 instead of mainImage
+  networkImageData: text("network_image_data"), // Base64 instead of networkImage
+  aboutImageData: text("about_image_data"), // Base64 instead of aboutImage
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -85,17 +85,8 @@ export const session = pgTable("session", {
   expire: timestamp("expire", { precision: 6 }).notNull(),
 });
 
-export const fileMetadata = pgTable("file_metadata", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  objectId: varchar("object_id").notNull().unique(),
-  originalName: text("original_name").notNull(),
-  mimeType: varchar("mime_type").notNull(),
-  extension: varchar("extension").notNull(),
-  filePath: text("file_path").notNull(),
-  fileSize: integer("file_size").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+// Remover a tabela fileMetadata completamente
+// export const fileMetadata = pgTable("file_metadata", { ... });
 
 // Tabelas para a área do cliente
 export const clientes = pgTable("clientes", {
@@ -180,11 +171,12 @@ export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
   // updatedAt: true, // LINHA 179 - COMENTADA PARA DEPLOY
 });
 
-export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
-  // id: true, // LINHA 183 - COMENTADA PARA DEPLOY
-  // createdAt: true, // LINHA 184 - COMENTADA PARA DEPLOY
-  // updatedAt: true, // LINHA 185 - COMENTADA PARA DEPLOY
-});
+// Remover a tabela fileMetadata completamente
+// export const insertFileMetadataSchema = createInsertSchema(fileMetadata).omit({
+//   // id: true, // LINHA 183 - COMENTADA PARA DEPLOY
+//   // createdAt: true, // LINHA 184 - COMENTADA PARA DEPLOY
+//   // updatedAt: true, // LINHA 185 - COMENTADA PARA DEPLOY
+// });
 
 // Schemas para a área do cliente
 export const insertClienteSchema = createInsertSchema(clientes).omit({
@@ -222,8 +214,9 @@ export type InsertFaqItem = z.infer<typeof insertFaqItemSchema>;
 export type FaqItem = typeof faqItems.$inferSelect;
 export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type SiteSettings = typeof siteSettings.$inferSelect;
-export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
-export type FileMetadata = typeof fileMetadata.$inferSelect;
+// Remover a tabela fileMetadata completamente
+// export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
+// export type FileMetadata = typeof fileMetadata.$inferSelect;
 
 // Types para a área do cliente
 export type InsertCliente = z.infer<typeof insertClienteSchema>;

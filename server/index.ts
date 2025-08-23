@@ -2,7 +2,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes.js";
 import { autoConfig } from "./config.js";
 import path from "path";
-import fs from "fs";
 
 const app = express();
 
@@ -86,30 +85,6 @@ app.use((req, res, next) => {
       maxAge: '1y',
       etag: true
     }));
-    
-    // Serve uploaded images from dist/uploads
-    const uploadsPath = path.join(process.cwd(), 'dist', 'uploads');
-    if (fs.existsSync(uploadsPath)) {
-      app.use('/uploads', express.static(uploadsPath, {
-        maxAge: '1y',
-        etag: true
-      }));
-      console.log(`📁 Serving uploads from: ${uploadsPath}`);
-    } else {
-      console.log(`⚠️  Uploads directory not found: ${uploadsPath}`);
-    }
-    
-    // Serve fallback images from dist/assets/fallback
-    const fallbackPath = path.join(process.cwd(), 'dist', 'assets', 'fallback');
-    if (fs.existsSync(fallbackPath)) {
-      app.use('/fallback', express.static(fallbackPath, {
-        maxAge: '1y',
-        etag: true
-      }));
-      console.log(`📁 Serving fallback images from: ${fallbackPath}`);
-    } else {
-      console.log(`⚠️  Fallback directory not found: ${fallbackPath}`);
-    }
     
     // Serve the React app for all non-API routes
     app.get('*', (req, res) => {

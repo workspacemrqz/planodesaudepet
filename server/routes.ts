@@ -7,13 +7,12 @@ import {
   insertNetworkUnitSchema, 
   insertFaqItemSchema,
   insertSiteSettingsSchema,
-  insertFileMetadataSchema,
   type InsertNetworkUnit
 } from "@shared/schema";
 import { sanitizeText } from "./utils/text-sanitizer.js";
 import { setupAuth, requireAuth } from "./auth.js";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage.js";
-import { imageService } from "./image-service.js";
+import { imageServiceBase64 } from "./image-service-base64.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -112,44 +111,153 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // Image system health check
-  app.get("/api/images/health", requireAuth, async (req, res) => {
+  // NOVO SISTEMA DE IMAGENS BASE64
+
+  // Rota para servir imagens Base64
+  app.get("/api/images/:type/:id", async (req, res) => {
     try {
-      const health = imageService.getSystemHealth();
-      res.json(health);
+      const { type, id } = req.params;
+      
+      if (type === 'network') {
+        // Buscar imagem de network unit
+        const networkUnit = await storage.getNetworkUnitById(id);
+        if (!networkUnit || !networkUnit.imageData) {
+          return res.status(404).json({ error: 'Image not found' });
+        }
+        
+        // Extrair informações do Base64
+        const imageInfo = imageServiceBase64.getBase64Info(networkUnit.imageData);
+        if (!imageInfo) {
+          return res.status(400).json({ error: 'Invalid image data' });
+        }
+        
+        // Decodificar Base64 e servir
+        const base64Data = networkUnit.imageData.split(',')[1];
+        const imageBuffer = Buffer.from(base64Data, 'base64');
+        
+        res.setHeader('Content-Type', imageInfo.mimeType);
+        res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 ano
+        res.send(imageBuffer);
+        
+      } else if (['main', 'network', 'about'].includes(type)) {
+        // Buscar imagem de site settings
+        const siteSettings = await storage.getSiteSettings();
+        if (!siteSettings) {
+          return res.status(404).json({ error: 'Site settings not found' });
+        }
+        
+        let imageData;
+        if (type === 'main') imageData = siteSettings.mainImageData;
+        else if (type === 'network') imageData = siteSettings.networkImageData;
+        else if (type === 'about') imageData = siteSettings.aboutImageData;
+        
+        if (!imageData) {
+          return res.status(404).json({ error: 'Image not found' });
+        }
+        
+        // Extrair informações do Base64
+        const imageInfo = imageServiceBase64.getBase64Info(imageData);
+        if (!imageInfo) {
+          return res.status(400).json({ error: 'Invalid image data' });
+        }
+        
+        // Decodificar Base64 e servir
+        const base64Data = imageData.split(',')[1];
+        const imageBuffer = Buffer.from(base64Data, 'base64');
+        
+        res.setHeader('Content-Type', imageInfo.mimeType);
+        res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 ano
+        res.send(imageBuffer);
+        
+      } else {
+        return res.status(400).json({ error: 'Invalid image type' });
+      }
+      
     } catch (error) {
-      console.error("❌ Error getting image system health:", error);
-      res.status(500).json({ error: "Erro ao verificar saúde do sistema de imagens" });
+      console.error('❌ Error serving image:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
-  // List available images
-  app.get("/api/images/list", requireAuth, async (req, res) => {
+  // Rota para upload de imagens
+  app.post("/api/images/upload/:type/:id", requireAuth, async (req, res) => {
     try {
-      const images = imageService.listAvailableImages();
-      res.json({
-        count: images.length,
-        images: images
+      const { type, id } = req.params;
+      
+      // Configurar multer para este upload
+      const upload = imageServiceBase64.getUploadMiddleware().single('image');
+      
+      upload(req, res, async (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message });
+        }
+        
+        if (!req.file) {
+          return res.status(400).json({ error: 'No image file provided' });
+        }
+        
+        try {
+          // Processar imagem para Base64
+          const result = await imageServiceBase64.processImageToBase64(req.file.buffer, {
+            width: 800,
+            height: 600,
+            quality: 80,
+            format: 'jpeg'
+          });
+          
+          if (!result.success) {
+            return res.status(500).json({ error: result.error });
+          }
+          
+          // Salvar no banco de dados
+          if (type === 'network') {
+            await storage.updateNetworkUnitImage(id, result.base64);
+          } else if (['main', 'network', 'about'].includes(type)) {
+            await storage.updateSiteSettingsImage(type, result.base64);
+          } else {
+            return res.status(400).json({ error: 'Invalid image type' });
+          }
+          
+          res.json({
+            success: true,
+            message: 'Image uploaded successfully',
+            imageInfo: {
+              size: result.size,
+              format: result.format,
+              dimensions: result.dimensions
+            }
+          });
+          
+        } catch (error) {
+          console.error('❌ Error processing image:', error);
+          res.status(500).json({ error: 'Error processing image' });
+        }
       });
+      
     } catch (error) {
-      console.error("❌ Error listing images:", error);
-      res.status(500).json({ error: "Erro ao listar imagens" });
+      console.error('❌ Error in upload route:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
-  // Migrate images endpoint
-  app.post("/api/images/migrate", requireAuth, async (req, res) => {
+  // Rota para deletar imagens
+  app.delete("/api/images/:type/:id", requireAuth, async (req, res) => {
     try {
-      const { sourceDir } = req.body;
-      const sourceDirectory = sourceDir || path.join(process.cwd(), 'uploads');
+      const { type, id } = req.params;
       
-      console.log('🔄 [ADMIN] Image migration requested from:', sourceDirectory);
+      if (type === 'network') {
+        await storage.updateNetworkUnitImage(id, null);
+      } else if (['main', 'network', 'about'].includes(type)) {
+        await storage.updateSiteSettingsImage(type, null);
+      } else {
+        return res.status(400).json({ error: 'Invalid image type' });
+      }
       
-      const result = await imageService.migrateImages(sourceDirectory);
-      res.json(result);
+      res.json({ success: true, message: 'Image deleted successfully' });
+      
     } catch (error) {
-      console.error("❌ Error migrating images:", error);
-      res.status(500).json({ error: "Erro ao migrar imagens" });
+      console.error('❌ Error deleting image:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -733,72 +841,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // OBJECT STORAGE ROUTES
-
-  // Serve uploaded images with fallback
-  app.get("/objects/uploads/:filename", async (req, res) => {
-    try {
-      const filename = req.params.filename;
-      console.log(`🖼️  [IMAGE SERVING] Request for: ${filename}`);
-      
-      // Usar o serviço de imagens com fallback
-      imageService.serveImage(res, filename, 'default');
-      
-    } catch (error) {
-      console.error("❌ Error serving image:", error);
-      res.status(500).json({ error: "Erro ao servir imagem" });
-    }
-  });
-
-  // Legacy object serving route - now uses image service with fallback
-  app.get("/objects/:objectPath(*)", async (req, res) => {
-    try {
-      const objectPath = req.params.objectPath;
-      console.log('🖼️  [LEGACY IMAGE] Request for:', objectPath);
-      
-      // Extract filename from path (uploads/filename)
-      const pathParts = objectPath.split('/');
-      if (pathParts.length >= 2 && pathParts[0] === 'uploads') {
-        const filename = pathParts[1];
-        console.log('🖼️  [LEGACY IMAGE] Extracted filename:', filename);
-        
-        // Usar o serviço de imagens com fallback
-        imageService.serveImage(res, filename, 'default');
-        return;
-      }
-      
-      // If not an upload path, return 404
-      console.log('❌ [LEGACY IMAGE] Not an upload path:', objectPath);
-      res.status(404).json({ error: "Objeto não encontrado" });
-    } catch (error) {
-      console.error("❌ Error serving object:", error);
-      res.status(500).json({ error: "Erro interno do servidor" });
-    }
-  });
+  // OBJECT STORAGE ROUTES - REMOVIDO SISTEMA ANTIGO
 
   // Update network unit with uploaded image
   app.put("/api/admin/network-units/:id/image", requireAdmin, async (req, res) => {
     try {
       const { id } = req.params;
-      const { imageURL } = req.body;
+      const { imageData } = req.body; // Agora recebe Base64 diretamente
 
-      if (!imageURL) {
-        return res.status(400).json({ error: "imageURL é obrigatório" });
+      if (!imageData) {
+        return res.status(400).json({ error: "Image data is required" });
       }
 
-      const objectStorageService = new ObjectStorageService();
-      const objectPath = objectStorageService.normalizeObjectEntityPath(imageURL);
-      
-      // Update the network unit with the normalized object path
-      const unit = await storage.updateNetworkUnit(id, { imageUrl: objectPath } as Partial<InsertNetworkUnit>);
-      
-      if (!unit) {
-        return res.status(404).json({ error: "Unidade da rede não encontrada" });
+      // Validar Base64
+      if (!imageServiceBase64.validateBase64(imageData)) {
+        return res.status(400).json({ error: "Invalid image data format" });
       }
+
+      // Atualizar no banco
+      await storage.updateNetworkUnit(id, { imageData });
       
-      res.json({ objectPath });
+      res.json({ success: true, message: "Network unit image updated successfully" });
     } catch (error) {
-      console.error("Error updating network unit image:", error);
+      console.error("❌ Error updating network unit image:", error);
       res.status(500).json({ error: "Erro interno do servidor" });
     }
   });
