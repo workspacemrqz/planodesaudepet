@@ -18,7 +18,7 @@
     "build:simple": "npm run build:server && npm run build:client:simple",
     "build:client:simple": "cd client && vite build --minify esbuild",
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
-    "postinstall": "npm run build:simple",
+    "postinstall": "echo 'Build disabled for npm install'",
     "check": "tsc --noEmit --project tsconfig.json",
     "check:strict": "tsc --noEmit --project tsconfig.json"
   },
@@ -79,7 +79,6 @@
     "cmdk": "^1.1.1",
     "connect-pg-simple": "^10.0.0",
     "cross-env": "^10.0.0",
-    "date-fns": "^3.6.0",
     "dotenv": "^17.2.1",
     "drizzle-kit": "^0.30.4",
     "drizzle-orm": "^0.39.1",

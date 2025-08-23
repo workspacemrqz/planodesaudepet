@@ -632,8 +632,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.put("/api/admin/faq/:id", requireAdmin, async (req, res) => {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
       console.log("🔍 [ADMIN] Updating FAQ item:", id);
       console.log("🔍 [ADMIN] User authenticated:", req.session.user?.username);
       console.log("🔍 [ADMIN] Request body:", req.body);
@@ -666,10 +666,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.delete("/api/admin/faq/:id", requireAdmin, async (req, res) => {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
       console.log("🔍 [ADMIN] Deleting FAQ item:", id);
-      console.log("🔍 [ADMIN] User authenticated:", req.session.user.username);
+      console.log("🔍 [ADMIN] User authenticated:", req.session.user?.username);
       
       const success = await storage.deleteFaqItem(id);
       

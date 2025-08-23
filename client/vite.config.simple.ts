@@ -2,14 +2,14 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// Configuração simplificada para buildpack
+// Configuração ultra-simplificada para buildpack
 export default defineConfig({
   plugins: [react()],
   build: {
     outDir: "../dist/client",
     emptyOutDir: true,
     sourcemap: false,
-    minify: "esbuild", // Usar esbuild que é mais rápido e não requer dependências extras
+    minify: "esbuild",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -26,5 +26,5 @@ export default defineConfig({
   },
   define: {
     global: "globalThis",
-  },
+  }
 });
