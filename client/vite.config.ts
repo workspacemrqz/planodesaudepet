@@ -89,7 +89,8 @@ export default defineConfig({
       '@styles': resolve(__dirname, 'src/styles'),
       '@assets': resolve(__dirname, 'src/assets'),
       '@lib': resolve(__dirname, 'src/lib'),
-      '@config': resolve(__dirname, 'src/config')
+      '@config': resolve(__dirname, 'src/config'),
+      '@shared': resolve(__dirname, '../shared')
     }
   },
   

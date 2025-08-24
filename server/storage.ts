@@ -79,6 +79,7 @@ export class InMemoryStorage implements IStorage {
         price: 2000,
         description: "Cobertura básica para seu pet",
         features: ["Consultas", "Vacinas", "Exames básicos"],
+        image: "/BASICicon.svg", // Adicionar imagem do plano
         buttonText: "Contratar Plano",
         redirectUrl: "/contact",
         displayOrder: 1,
@@ -169,6 +170,7 @@ export class InMemoryStorage implements IStorage {
       name: plan.name,
       description: plan.description,
       features: plan.features,
+      image: plan.image, // Adicionar campo image
       isActive: plan.isActive,
       buttonText: plan.buttonText,
       redirectUrl: plan.redirectUrl,
@@ -343,6 +345,7 @@ export class DatabaseStorage implements IStorage {
         price: plans.price,
         description: plans.description,
         features: plans.features,
+        image: plans.image, // Adicionar campo image
         buttonText: plans.buttonText,
         redirectUrl: plans.redirectUrl,
         planType: plans.planType,
@@ -368,6 +371,7 @@ export class DatabaseStorage implements IStorage {
         price: plans.price,
         description: plans.description,
         features: plans.features,
+        image: plans.image, // Adicionar campo image
         buttonText: plans.buttonText,
         redirectUrl: plans.redirectUrl,
         planType: plans.planType,
@@ -394,6 +398,7 @@ export class DatabaseStorage implements IStorage {
       price: plans.price,
       description: plans.description,
       features: plans.features,
+      image: plans.image, // Adicionar campo image
       buttonText: plans.buttonText,
       redirectUrl: plans.redirectUrl,
       planType: plans.planType,

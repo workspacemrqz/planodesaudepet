@@ -177,13 +177,18 @@ export default function PlansSection() {
               
               <CardHeader className="text-center pb-4 sm:pb-6 p-4 sm:p-6 flex-shrink-0">
                 <div className="flex flex-col items-center gap-0 mb-0 icon-container" style={{pointerEvents: 'auto'}}>
-                  {plan.name === 'BASIC' && (
+                  {plan.image ? (
                     <img 
-                      src="/BASICicon.svg" 
-                      alt="Ícone BASIC" 
+                      src={plan.image} 
+                      alt={`Ícone ${plan.name}`} 
                       className="w-48 h-48 plan-icon-bottom" 
                       style={{ opacity: 1, visibility: 'visible' }}
                     />
+                  ) : (
+                    // Fallback para planos sem imagem
+                    <div className="w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                      <span className="text-gray-500 text-lg font-semibold">{plan.name}</span>
+                    </div>
                   )}
                   {plan.name === 'INFINITY' && (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5.0 -10.0 110.0 135.0" className="w-48 h-48 plan-icon-bottom" fill="#E1AC33">
