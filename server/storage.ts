@@ -17,7 +17,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db.js";
 import { eq, desc, asc } from "drizzle-orm";
-import session from "express-session";
+import * as session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db.js";
 
@@ -59,9 +59,6 @@ export interface IStorage {
   // Site Settings
   getSiteSettings(): Promise<SiteSettings | undefined>;
   updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined>;
-  
-  // Session store
-  sessionStore: session.Store;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -82,7 +79,7 @@ export class DatabaseStorage implements IStorage {
       animalType: insertSubmission.animalType,
       petAge: insertSubmission.petAge,
       planInterest: insertSubmission.planInterest,
-      message: insertSubmission.message || null
+      message: insertSubmission.message
     }).returning();
     return submission;
   }
@@ -118,8 +115,6 @@ export class DatabaseStorage implements IStorage {
         createdAt: plans.createdAt,
       }).from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
       console.log("Plans query result:", result);
-      
-
       
       return result;
     } catch (error) {
@@ -179,11 +174,11 @@ export class DatabaseStorage implements IStorage {
       price: insertPlan.price,
       description: insertPlan.description,
       features: insertPlan.features,
-      buttonText: insertPlan.buttonText || "Contratar Plano",
-      redirectUrl: insertPlan.redirectUrl || "/contact",
+      buttonText: insertPlan.buttonText,
+      redirectUrl: insertPlan.redirectUrl,
       planType: insertPlan.planType,
-      isActive: insertPlan.isActive !== undefined ? insertPlan.isActive : true,
-      displayOrder: insertPlan.displayOrder || 0
+      isActive: insertPlan.isActive,
+      displayOrder: insertPlan.displayOrder
     }).returning();
     return plan;
   }
@@ -221,12 +216,12 @@ export class DatabaseStorage implements IStorage {
       name: insertUnit.name,
       address: insertUnit.address,
       phone: insertUnit.phone,
-      whatsapp: insertUnit.whatsapp || null,
-      googleMapsUrl: insertUnit.googleMapsUrl || null,
+      whatsapp: insertUnit.whatsapp,
+      googleMapsUrl: insertUnit.googleMapsUrl,
       rating: insertUnit.rating,
       services: insertUnit.services,
-      imageData: insertUnit.imageData || null,
-      isActive: insertUnit.isActive !== undefined ? insertUnit.isActive : true
+      imageData: insertUnit.imageData,
+      isActive: insertUnit.isActive
     }).returning();
     return unit;
   }
@@ -263,7 +258,7 @@ export class DatabaseStorage implements IStorage {
       question: insertItem.question,
       answer: insertItem.answer,
       displayOrder: insertItem.displayOrder,
-      isActive: insertItem.isActive !== undefined ? insertItem.isActive : true
+      isActive: insertItem.isActive
     }).returning();
     return item;
   }
