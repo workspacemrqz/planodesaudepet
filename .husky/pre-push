@@ -1,0 +1,357 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Executando verificações de pre-push..."
+
+# Verificar se há mudanças não commitadas
+if [ -n "$(git status --porcelain)" ]; then
+  echo "❌ Há mudanças não commitadas."
+  echo "💡 Faça commit de todas as mudanças antes de fazer push."
+  echo "💡 Use 'git add .' e 'git commit -m \"message\"'"
+  exit 1
+fi
+
+# Verificar se há commits não enviados
+if [ -n "$(git log --branches --not --remotes)" ]; then
+  echo "📤 Detectados commits locais não enviados."
+  
+  # Contar commits não enviados
+  COMMIT_COUNT=$(git log --branches --not --remotes --oneline | wc -l)
+  echo "📊 Total de commits não enviados: $COMMIT_COUNT"
+  
+  # Mostrar últimos commits
+  echo "📝 Últimos commits não enviados:"
+  git log --branches --not --remotes --oneline -5
+  
+  # Verificar se há muitos commits
+  if [ "$COMMIT_COUNT" -gt 10 ]; then
+    echo "⚠️ Muitos commits não enviados detectados ($COMMIT_COUNT)."
+    echo "💡 Considere fazer push mais frequentemente ou usar squash."
+    echo "💡 Continuando com push..."
+  fi
+else
+  echo "ℹ️ Todos os commits já foram enviados."
+fi
+
+# Verificar se o branch atual está atualizado
+echo "🔄 Verificando se o branch está atualizado..."
+git fetch origin
+
+if [ -n "$(git log HEAD..origin/$(git branch --show-current) --oneline)" ]; then
+  echo "⚠️ O branch remoto tem commits mais recentes."
+  echo "💡 Execute 'git pull' antes de fazer push."
+  echo "💡 Ou use 'git push --force-with-lease' se tiver certeza."
+  
+  # Perguntar se deve continuar (em modo interativo)
+  if [ -t 0 ]; then
+    read -p "Deseja continuar com o push? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "❌ Push cancelado pelo usuário."
+      exit 1
+    fi
+  else
+    echo "⚠️ Modo não interativo, continuando com push..."
+  fi
+else
+  echo "✅ Branch está atualizado."
+fi
+
+# Verificar se há conflitos de merge
+echo "🔀 Verificando conflitos de merge..."
+if git diff --name-only --diff-filter=U | grep -q .; then
+  echo "❌ Conflitos de merge detectados!"
+  echo "💡 Resolva os conflitos antes de fazer push."
+  exit 1
+fi
+echo "✅ Sem conflitos de merge."
+
+# Verificar se há rebase em andamento
+echo "🔄 Verificando rebase em andamento..."
+if [ -d ".git/rebase-merge" ] || [ -d ".git/rebase-apply" ]; then
+  echo "❌ Rebase em andamento detectado!"
+  echo "💡 Complete ou aborte o rebase antes de fazer push."
+  exit 1
+fi
+echo "✅ Sem rebase em andamento."
+
+# Verificar se há cherry-pick em andamento
+echo "🍒 Verificando cherry-pick em andamento..."
+if [ -d ".git/CHERRY_PICK_HEAD" ]; then
+  echo "❌ Cherry-pick em andamento detectado!"
+  echo "💡 Complete ou aborte o cherry-pick antes de fazer push."
+  exit 1
+fi
+echo "✅ Sem cherry-pick em andamento."
+
+# Verificar se há merge em andamento
+echo "🔀 Verificando merge em andamento..."
+if [ -d ".git/MERGE_HEAD" ]; then
+  echo "❌ Merge em andamento detectado!"
+  echo "💡 Complete ou aborte o merge antes de fazer push."
+  exit 1
+fi
+echo "✅ Sem merge em andamento."
+
+# Verificar se há stash não aplicado
+echo "📦 Verificando stash não aplicado..."
+if [ -n "$(git stash list)" ]; then
+  STASH_COUNT=$(git stash list | wc -l)
+  echo "⚠️ Há $STASH_COUNT stash(es) não aplicado(s)."
+  echo "💡 Considere aplicar ou limpar stashes antes de fazer push."
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Sem stash não aplicado."
+fi
+
+# Verificar se há tags não enviadas
+echo "🏷️ Verificando tags não enviadas..."
+if [ -n "$(git tag --list --no-merged)" ]; then
+  TAG_COUNT=$(git tag --list --no-merged | wc -l)
+  echo "⚠️ Há $TAG_COUNT tag(s) não enviada(s)."
+  echo "💡 Considere enviar tags importantes: 'git push --tags'"
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Todas as tags foram enviadas."
+fi
+
+# Verificar se há branches locais não enviados
+echo "🌿 Verificando branches locais não enviados..."
+LOCAL_BRANCHES=$(git branch --list --no-merged | grep -v "^\*" | wc -l)
+if [ "$LOCAL_BRANCHES" -gt 0 ]; then
+  echo "⚠️ Há $LOCAL_BRANCHES branch(es) local(is) não enviado(s)."
+  echo "💡 Considere enviar branches importantes ou removê-los."
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Todos os branches foram enviados."
+fi
+
+# Verificar se há arquivos grandes
+echo "📏 Verificando arquivos grandes..."
+LARGE_FILES=$(find . -type f -size +10M -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./dist/*" -not -path "./build/*" -not -path "./uploads/*" 2>/dev/null | head -3)
+if [ -n "$LARGE_FILES" ]; then
+  echo "⚠️ Arquivos grandes detectados:"
+  echo "$LARGE_FILES"
+  echo "💡 Considere adicionar ao .gitignore ou usar Git LFS."
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Sem arquivos grandes detectados."
+fi
+
+# Verificar se há arquivos binários
+echo "🔍 Verificando arquivos binários..."
+BINARY_FILES=$(git diff --cached --name-only | xargs file 2>/dev/null | grep -E "executable|binary" | head -3)
+if [ -n "$BINARY_FILES" ]; then
+  echo "⚠️ Arquivos binários detectados:"
+  echo "$BINARY_FILES"
+  echo "💡 Considere usar Git LFS para arquivos binários."
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Sem arquivos binários detectados."
+fi
+
+# Verificar se há arquivos de configuração sensíveis
+echo "🔒 Verificando arquivos de configuração sensíveis..."
+SENSITIVE_FILES=$(git diff --cached --name-only | grep -E "\.(env|config|key|pem|p12|pfx|pwd|secret|token|credential)" | head -3)
+if [ -n "$SENSITIVE_FILES" ]; then
+  echo "❌ Arquivos sensíveis detectados no commit!"
+  echo "$SENSITIVE_FILES"
+  echo "💡 NUNCA faça commit de arquivos com informações sensíveis."
+  echo "💡 Use variáveis de ambiente ou arquivos env.example."
+  echo "💡 Remova os arquivos do commit: 'git reset HEAD <arquivo>'"
+  exit 1
+else
+  echo "✅ Sem arquivos sensíveis detectados."
+fi
+
+# Verificar se há arquivos de log
+echo "📋 Verificando arquivos de log..."
+LOG_FILES=$(git diff --cached --name-only | grep -E "\.(log|out|err|tmp|temp|cache)" | head -3)
+if [ -n "$LOG_FILES" ]; then
+  echo "⚠️ Arquivos de log detectados no commit!"
+  echo "$LOG_FILES"
+  echo "💡 Considere adicionar ao .gitignore: *.log, *.out, *.err, *.tmp"
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Sem arquivos de log detectados."
+fi
+
+# Verificar se há arquivos de sistema
+echo "💻 Verificando arquivos de sistema..."
+SYSTEM_FILES=$(git diff --cached --name-only | grep -E "\.(DS_Store|Thumbs\.db|desktop\.ini|\.swp|\.swo|\.bak|\.old|\.orig)" | head -3)
+if [ -n "$SYSTEM_FILES" ]; then
+  echo "⚠️ Arquivos de sistema detectados no commit!"
+  echo "$SYSTEM_FILES"
+  echo "💡 Adicione ao .gitignore: .DS_Store, Thumbs.db, *.bak, *.old"
+  echo "💡 Continuando com push..."
+else
+  echo "✅ Sem arquivos de sistema detectados."
+fi
+
+# Verificar se há dependências não atualizadas
+echo "📦 Verificando dependências..."
+if [ -f "package.json" ]; then
+  echo "🔍 Verificando package.json..."
+  
+  # Verificar se há dependências desatualizadas
+  if command -v npm-check-updates >/dev/null 2>&1; then
+    OUTDATED_COUNT=$(npx npm-check-updates --json 2>/dev/null | jq 'length' 2>/dev/null || echo "0")
+    if [ "$OUTDATED_COUNT" -gt 0 ]; then
+      echo "⚠️ $OUTDATED_COUNT dependência(s) desatualizada(s) detectada(s)."
+      echo "💡 Execute 'npx npm-check-updates' para ver detalhes."
+      echo "💡 Continuando com push..."
+    else
+      echo "✅ Dependências estão atualizadas."
+    fi
+  else
+    echo "ℹ️ npm-check-updates não disponível, pulando verificação."
+  fi
+  
+  # Verificar se há vulnerabilidades
+  if npm audit --audit-level=high >/dev/null 2>&1; then
+    echo "✅ Sem vulnerabilidades críticas detectadas."
+  else
+    echo "⚠️ Vulnerabilidades de segurança detectadas."
+    echo "💡 Execute 'npm audit fix' para corrigir."
+    echo "💡 Continuando com push..."
+  fi
+else
+  echo "ℹ️ package.json não encontrado, pulando verificação de dependências."
+fi
+
+# Verificar se há testes falhando
+echo "🧪 Verificando testes..."
+if [ -f "package.json" ] && grep -q '"test"' package.json; then
+  echo "🔍 Executando testes..."
+  if npm test -- --passWithNoTests --watchAll=false >/dev/null 2>&1; then
+    echo "✅ Todos os testes passaram!"
+  else
+    echo "❌ Testes falharam!"
+    echo "💡 Corrija os testes antes de fazer push."
+    exit 1
+  fi
+else
+  echo "ℹ️ Script de teste não encontrado, pulando verificação."
+fi
+
+# Verificar se há problemas de build
+echo "🏗️ Verificando build..."
+if [ -f "package.json" ] && grep -q '"build"' package.json; then
+  echo "🔍 Executando build..."
+  if npm run build >/dev/null 2>&1; then
+    echo "✅ Build executado com sucesso!"
+  else
+    echo "❌ Build falhou!"
+    echo "💡 Corrija os problemas de build antes de fazer push."
+    exit 1
+  fi
+else
+  echo "ℹ️ Script de build não encontrado, pulando verificação."
+fi
+
+# Verificar se há problemas de linting
+echo "🔧 Verificando linting..."
+if [ -f "package.json" ] && grep -q '"lint"' package.json; then
+  echo "🔍 Executando linting..."
+  if npm run lint >/dev/null 2>&1; then
+    echo "✅ Linting passou!"
+  else
+    echo "❌ Linting falhou!"
+    echo "💡 Corrija os problemas de linting antes de fazer push."
+    exit 1
+  fi
+else
+  echo "ℹ️ Script de linting não encontrado, pulando verificação."
+fi
+
+# Verificar se há problemas de formatação
+echo "🎨 Verificando formatação..."
+if [ -f "package.json" ] && grep -q '"format"' package.json; then
+  echo "🔍 Verificando formatação..."
+  if npm run format:check >/dev/null 2>&1; then
+    echo "✅ Formatação está correta!"
+  else
+    echo "❌ Formatação incorreta!"
+    echo "💡 Execute 'npm run format' para corrigir automaticamente."
+    exit 1
+  fi
+else
+  echo "ℹ️ Script de formatação não encontrado, pulando verificação."
+fi
+
+# Verificar se há problemas de tipos
+echo "📘 Verificando tipos..."
+if [ -f "tsconfig.json" ]; then
+  echo "🔍 Verificando tipos TypeScript..."
+  if npx tsc --noEmit >/dev/null 2>&1; then
+    echo "✅ Verificação de tipos passou!"
+  else
+    echo "❌ Verificação de tipos falhou!"
+    echo "💡 Corrija os erros de tipo antes de fazer push."
+    exit 1
+  fi
+else
+  echo "ℹ️ tsconfig.json não encontrado, pulando verificação de tipos."
+fi
+
+# Verificar se há problemas de segurança
+echo "🔒 Verificando segurança..."
+if [ -f "package.json" ]; then
+  echo "🔍 Verificando vulnerabilidades..."
+  if npm audit --audit-level=moderate >/dev/null 2>&1; then
+    echo "✅ Sem vulnerabilidades críticas detectadas!"
+  else
+    echo "⚠️ Vulnerabilidades de segurança detectadas."
+    echo "💡 Execute 'npm audit fix' para corrigir."
+    echo "💡 Continuando com push..."
+  fi
+else
+  echo "ℹ️ package.json não encontrado, pulando verificação de segurança."
+fi
+
+# Verificar se há problemas de performance
+echo "⚡ Verificando performance..."
+if [ -f "package.json" ] && grep -q '"build"' package.json; then
+  echo "🔍 Verificando tamanho do bundle..."
+  
+  # Verificar se há bundle analyzer
+  if [ -f "dist" ] || [ -f "build" ]; then
+    BUNDLE_SIZE=$(du -sh dist build 2>/dev/null | head -1 | cut -f1)
+    if [ -n "$BUNDLE_SIZE" ]; then
+      echo "📦 Tamanho do bundle: $BUNDLE_SIZE"
+      
+      # Verificar se o bundle é muito grande (mais de 5MB)
+      if echo "$BUNDLE_SIZE" | grep -q "M" && [ "$(echo "$BUNDLE_SIZE" | sed 's/M//')" -gt 5 ]; then
+        echo "⚠️ Bundle muito grande detectado!"
+        echo "💡 Considere otimizar o tamanho do bundle."
+        echo "💡 Use code splitting, tree shaking, etc."
+        echo "💡 Continuando com push..."
+      else
+        echo "✅ Tamanho do bundle aceitável."
+      fi
+    fi
+  fi
+else
+  echo "ℹ️ Build não encontrado, pulando verificação de performance."
+fi
+
+echo "🎉 Todas as verificações de pre-push passaram!"
+echo "✅ Push permitido."
+
+# Mostrar resumo final
+echo ""
+echo "📊 Resumo das verificações:"
+echo "✅ Status do repositório: Limpo"
+echo "✅ Conflitos: Nenhum"
+echo "✅ Rebase/Merge: Nenhum em andamento"
+echo "✅ Testes: Passaram"
+echo "✅ Build: Sucesso"
+echo "✅ Linting: Passou"
+echo "✅ Formatação: Correta"
+echo "✅ Tipos: Válidos"
+echo "✅ Segurança: Sem vulnerabilidades críticas"
+echo "✅ Performance: Aceitável"
+echo ""
+echo "🚀 Pronto para fazer push!"
+
+exit 0

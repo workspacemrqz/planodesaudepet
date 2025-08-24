@@ -8,6 +8,8 @@
   pointer-events: none !important;
   width: 192px !important;
   height: 192px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .icon-container {
@@ -24,6 +26,21 @@
 .plan-card-with-bottom-icon .icon-container {
   position: relative !important;
   min-height: 192px !important;
+}
+
+/* Garantir que todos os ícones sejam visíveis */
+.plan-icon-bottom img,
+.plan-icon-bottom svg {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Estilo específico para o ícone BASIC */
+.plan-icon-bottom[alt="Ícone BASIC"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
 }
 
 

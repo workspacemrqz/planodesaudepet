@@ -1,23 +1,26 @@
+# Dockerfile otimizado para Easypanel com Buildpack
 # Use the official Node.js runtime as the base image
-FROM node:18-alpine AS base
+FROM heroku/builder:24 AS base
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+COPY client/package*.json ./client/
 
 # Install dependencies
 RUN npm ci --only=production && npm cache clean --force
+RUN cd client && npm ci --only=production && npm cache clean --force
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN npm run build:simple
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:24-alpine AS production
 
 # Set working directory
 WORKDIR /app

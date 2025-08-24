@@ -6,7 +6,8 @@
   "keywords": ["node", "express", "react", "typescript", "postgresql"],
   "buildpacks": [
     {
-      "url": "heroku/nodejs"
+      "url": "heroku/nodejs",
+      "version": "24"
     }
   ],
   "env": {

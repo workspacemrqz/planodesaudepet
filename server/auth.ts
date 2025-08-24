@@ -43,26 +43,25 @@ interface LoginRequest extends Request {
 }
 
 function validateEnvironmentVariables(): { username: string; password: string } | null {
-  // Use LOGIN and SENHA as primary variables
-  let adminUsername = autoConfig.get('LOGIN');
-  let adminPassword = autoConfig.get('SENHA');
+  // Carregar diretamente do process.env para garantir que as variáveis sejam lidas
+  let adminUsername = process.env.LOGIN;
+  let adminPassword = process.env.SENHA;
   
-  // Fallback to LOGIN and SENHA for legacy support if primary variables are not set
-  if (!adminUsername || !adminPassword) {
-    adminUsername = autoConfig.get('LOGIN');
-    adminPassword = autoConfig.get('SENHA');
-    
-    if (adminUsername && adminPassword) {
-      console.warn('⚠️ Using legacy LOGIN/SENHA variables. Consider migrating to LOGIN/SENHA');
-    }
-  }
+  // Log para debug
+  console.log('🔍 Verificando variáveis de ambiente:');
+  console.log('   LOGIN:', adminUsername ? '✅ Configurado' : '❌ Não configurado');
+  console.log('   SENHA:', adminPassword ? '✅ Configurado' : '❌ Não configurado');
   
   if (!adminUsername || !adminPassword) {
-    console.error('❌ LOGIN and SENHA (or LOGIN/SENHA) environment variables must be defined in .env file');
+    console.error('❌ LOGIN e SENHA environment variables must be defined in .env file');
+    console.error('   LOGIN:', adminUsername);
+    console.error('   SENHA:', adminPassword ? '[HIDDEN]' : 'undefined');
     return null;
   }
   
   console.log('✅ Environment variables loaded successfully');
+  console.log('   Username:', adminUsername);
+  console.log('   Password:', '[HIDDEN]');
   return { username: adminUsername, password: adminPassword };
 }
 
@@ -130,6 +129,8 @@ export function setupAuth(app: Express) {
       const { username, password } = req.body;
       const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
       
+      console.log('🔐 Tentativa de login:', { username, clientIp });
+      
       // Validate input
       if (!username || !password) {
         return res.status(400).json({ error: "Username e senha são obrigatórios" });
@@ -150,6 +151,12 @@ export function setupAuth(app: Express) {
         return res.status(500).json({ error: "Erro de configuração do servidor" });
       }
       
+      console.log('🔑 Credenciais do ambiente carregadas:', { 
+        envUsername: envCredentials.username, 
+        inputUsername: username,
+        passwordsMatch: password === envCredentials.password 
+      });
+      
       // Validate credentials (timing-safe comparison would be ideal in production)
       if (username === envCredentials.username && password === envCredentials.password) {
         // Successful login
@@ -169,6 +176,8 @@ export function setupAuth(app: Express) {
         // Failed login
         recordFailedAttempt(clientIp);
         console.warn(`❌ Failed login attempt for username "${username}" from IP ${clientIp}`);
+        console.warn(`   Expected username: ${envCredentials.username}`);
+        console.warn(`   Password match: ${password === envCredentials.password}`);
         
         // Generic error message to prevent username enumeration
         res.status(401).json({ error: "Credenciais inválidas" });

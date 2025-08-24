@@ -1,0 +1,134 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Executando verificações de pre-commit..."
+
+# Verificar se há mudanças não commitadas
+if [ -n "$(git status --porcelain)" ]; then
+  echo "⚠️ Há mudanças não commitadas. Verificando arquivos modificados..."
+  
+  # Obter lista de arquivos modificados
+  STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx|json|css|scss|md)$')
+  
+  if [ -n "$STAGED_FILES" ]; then
+    echo "📝 Arquivos modificados detectados:"
+    echo "$STAGED_FILES"
+    
+    # 1. Verificar formatação com Prettier
+    echo "🎨 Verificando formatação com Prettier..."
+    if ! npx prettier --check $STAGED_FILES; then
+      echo "❌ Prettier encontrou problemas de formatação."
+      echo "💡 Execute 'npm run format' para corrigir automaticamente."
+      exit 1
+    fi
+    echo "✅ Prettier passou!"
+    
+    # 2. Verificar linting com ESLint
+    echo "🔧 Verificando linting com ESLint..."
+    if ! npx eslint $STAGED_FILES; then
+      echo "❌ ESLint encontrou problemas de código."
+      echo "💡 Execute 'npm run lint:fix' para corrigir automaticamente."
+      exit 1
+    fi
+    echo "✅ ESLint passou!"
+    
+    # 3. Verificar tipos com TypeScript
+    echo "📘 Verificando tipos com TypeScript..."
+    if ! npx tsc --noEmit; then
+      echo "❌ TypeScript encontrou erros de tipo."
+      echo "💡 Corrija os erros de tipo antes de fazer commit."
+      exit 1
+    fi
+    echo "✅ TypeScript passou!"
+    
+    # 4. Verificar testes unitários
+    echo "🧪 Executando testes unitários..."
+    if ! npm test -- --passWithNoTests --watchAll=false; then
+      echo "❌ Testes unitários falharam."
+      echo "💡 Corrija os testes antes de fazer commit."
+      exit 1
+    fi
+    echo "✅ Testes unitários passaram!"
+    
+    # 5. Verificar build
+    echo "🏗️ Verificando build..."
+    if ! npm run build:check; then
+      echo "❌ Build falhou."
+      echo "💡 Corrija os problemas de build antes de fazer commit."
+      exit 1
+    fi
+    echo "✅ Build passou!"
+    
+    # 6. Verificar dependências de segurança
+    echo "🔒 Verificando dependências de segurança..."
+    if ! npm audit --audit-level=moderate; then
+      echo "⚠️ Vulnerabilidades de segurança detectadas."
+      echo "💡 Execute 'npm audit fix' para corrigir automaticamente."
+      echo "💡 Ou execute 'npm audit' para ver detalhes."
+      # Não bloquear commit por vulnerabilidades menores
+      echo "⚠️ Continuando com commit (vulnerabilidades não críticas)..."
+    else
+      echo "✅ Sem vulnerabilidades de segurança detectadas!"
+    fi
+    
+    # 7. Verificar tamanho do bundle (opcional)
+    echo "📊 Verificando tamanho do bundle..."
+    if command -v npx >/dev/null 2>&1 && npx --yes bundle-analyzer --version >/dev/null 2>&1; then
+      BUNDLE_SIZE=$(npm run build:analyze 2>/dev/null | grep -o 'bundle size: [0-9.]* [KM]B' | tail -1)
+      if [ -n "$BUNDLE_SIZE" ]; then
+        echo "📦 Tamanho do bundle: $BUNDLE_SIZE"
+      fi
+    else
+      echo "ℹ️ Bundle analyzer não disponível, pulando verificação de tamanho."
+    fi
+    
+    # 8. Verificar commits convencionais
+    echo "📝 Verificando formato do commit..."
+    COMMIT_MSG=$(cat .git/COMMIT_EDITMSG 2>/dev/null || echo "")
+    if [ -n "$COMMIT_MSG" ]; then
+      if ! echo "$COMMIT_MSG" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+'; then
+        echo "⚠️ Formato de commit não segue convenções."
+        echo "💡 Use o formato: type(scope): description"
+        echo "💡 Exemplos: feat(auth): add login functionality"
+        echo "💡 Tipos válidos: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+        # Não bloquear commit por formato
+        echo "⚠️ Continuando com commit (formato não crítico)..."
+      else
+        echo "✅ Formato de commit válido!"
+      fi
+    fi
+    
+    # 9. Verificar arquivos grandes
+    echo "📏 Verificando tamanho dos arquivos..."
+    LARGE_FILES=$(find . -type f -size +1M -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./dist/*" -not -path "./build/*" 2>/dev/null | head -5)
+    if [ -n "$LARGE_FILES" ]; then
+      echo "⚠️ Arquivos grandes detectados:"
+      echo "$LARGE_FILES"
+      echo "💡 Considere otimizar ou adicionar ao .gitignore se apropriado."
+    else
+      echo "✅ Sem arquivos grandes detectados!"
+    fi
+    
+    # 10. Verificar merge conflicts
+    echo "🔀 Verificando conflitos de merge..."
+    if git diff --name-only --diff-filter=U | grep -q .; then
+      echo "❌ Conflitos de merge detectados!"
+      echo "💡 Resolva os conflitos antes de fazer commit."
+      exit 1
+    fi
+    echo "✅ Sem conflitos de merge!"
+    
+    echo "🎉 Todas as verificações de pre-commit passaram!"
+    echo "✅ Commit permitido."
+    
+  else
+    echo "ℹ️ Nenhum arquivo de código modificado detectado."
+    echo "✅ Commit permitido."
+  fi
+  
+else
+  echo "ℹ️ Nenhuma mudança detectada para commit."
+  echo "✅ Commit permitido."
+fi
+
+echo "🚀 Pre-commit hook concluído com sucesso!"

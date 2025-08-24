@@ -40,11 +40,13 @@ import {
 } from '@dnd-kit/utilities';
 
 const faqItemFormSchema = z.object({
-  question: z.string().min(1, "Pergunta é obrigatória"),
-  answer: z.string().min(1, "Resposta é obrigatória"),
+  question: z.string().min(1, "Pergunta é obrigatória").max(500, "Pergunta deve ter no máximo 500 caracteres"),
+  answer: z.string().min(1, "Resposta é obrigatória").max(2000, "Resposta deve ter no máximo 2000 caracteres"),
 });
 
 type FaqItemFormData = z.infer<typeof faqItemFormSchema>;
+
+
 
 // Componente sortable para cada item FAQ
 function SortableFaqItem({ 
@@ -94,7 +96,46 @@ function SortableFaqItem({
           </AccordionTrigger>
         </div>
         
-        <div className={`flex items-center gap-1 ${isMobile ? 'justify-start ml-0' : 'ml-4'}`}>
+        {/* Versão Desktop - botões ao lado direito */}
+        {!isMobile && (
+          <div className="flex items-center gap-1 ml-4">
+            <Button
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(item);
+              }}
+              className="text-[#fbf9f7]"
+              style={{
+                background: 'linear-gradient(to top, #1c6363, #277677)'
+              }}
+              data-testid={`button-edit-faq-${item.id}`}
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Editar
+            </Button>
+            <Button
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(item);
+              }}
+              className="text-[#fbf9f7] faq-delete-button"
+              style={{
+                background: 'linear-gradient(to top, #c99524, #E1AC33)'
+              }}
+              data-testid={`button-delete-faq-${item.id}`}
+            >
+              <Trash2 className="h-4 w-4 mr-2 text-[#fbf9f7]" />
+              Apagar
+            </Button>
+          </div>
+        )}
+      </div>
+      
+      {/* Versão Mobile - botões abaixo do título com mesmo espaçamento */}
+      {isMobile && (
+        <div className="flex items-center gap-2 mb-3 pl-9">
           <Button
             size="sm"
             onClick={(e) => {
@@ -126,7 +167,8 @@ function SortableFaqItem({
             Apagar
           </Button>
         </div>
-      </div>
+      )}
+      
       <AccordionContent className="text-[#302e2b] pb-4">
         <div className="pl-9 text-[#9fb8b8]">
           <FormattedText 
@@ -199,16 +241,34 @@ export default function FaqTab() {
   const createItemMutation = useMutation({
     mutationFn: async (data: InsertFaqItem) => {
       try {
-        // Determinar nova ordem baseado no número atual de itens
-        const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
-        const itemData = { ...data, displayOrder: maxOrder + 1, isActive: true };
+        console.log("Creating FAQ item with data:", data);
         
-        console.log("Creating FAQ item:", itemData);
-        const response = await apiRequest("POST", "/api/admin/faq", itemData);
+        // Validar dados antes de enviar
+        if (!data.question || data.question.trim() === '') {
+          throw new Error("Pergunta é obrigatória");
+        }
+        if (!data.answer || data.answer.trim() === '') {
+          throw new Error("Resposta é obrigatória");
+        }
+        if (data.question.length > 500) {
+          throw new Error("Pergunta deve ter no máximo 500 caracteres");
+        }
+        if (data.answer.length > 2000) {
+          throw new Error("Resposta deve ter no máximo 2000 caracteres");
+        }
+        
+        const response = await apiRequest("POST", "/api/admin/faq", data);
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(`Erro ao criar FAQ: ${response.status} ${errorData.error || response.statusText}`);
+          const errorText = await response.text().catch(() => '');
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText || response.statusText };
+          }
+          console.error("API Error Response:", errorData);
+          throw new Error(`Erro ao criar FAQ: ${response.status} - ${errorData.error || errorData.details || response.statusText}`);
         }
         
         return response.json();
@@ -240,11 +300,37 @@ export default function FaqTab() {
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertFaqItem> }) => {
       try {
         console.log("Updating FAQ item:", id, data);
+        
+        // Validar dados antes de enviar (apenas os campos que estão presentes)
+        if (data.question !== undefined) {
+          if (!data.question || data.question.trim() === '') {
+            throw new Error("Pergunta é obrigatória");
+          }
+          if (data.question.length > 500) {
+            throw new Error("Pergunta deve ter no máximo 500 caracteres");
+          }
+        }
+        if (data.answer !== undefined) {
+          if (!data.answer || data.answer.trim() === '') {
+            throw new Error("Resposta é obrigatória");
+          }
+          if (data.answer.length > 2000) {
+            throw new Error("Resposta deve ter no máximo 2000 caracteres");
+          }
+        }
+        
         const response = await apiRequest("PUT", `/api/admin/faq/${id}`, data);
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(`Erro ao atualizar FAQ: ${response.status} ${errorData.error || response.statusText}`);
+          const errorText = await response.text().catch(() => '');
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText || response.statusText };
+          }
+          console.error("API Error Response:", errorData);
+          throw new Error(`Erro ao atualizar FAQ: ${response.status} - ${errorData.error || errorData.details || response.statusText}`);
         }
         
         return response.json();
@@ -450,11 +536,24 @@ export default function FaqTab() {
   }, []);
 
   const onSubmit = (data: FaqItemFormData) => {
-    if (editingItem) {
-      updateItemMutation.mutate({ id: editingItem.id, data });
-    } else {
-      const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
-      createItemMutation.mutate({ ...data, displayOrder: maxOrder + 1, isActive: true });
+    try {
+      console.log('FAQ onSubmit called with data:', data);
+      if (editingItem) {
+        console.log('Updating FAQ item:', editingItem.id);
+        updateItemMutation.mutate({ id: editingItem.id, data });
+      } else {
+        const maxOrder = Math.max(...(faqItems?.map(i => i.displayOrder) || [0]), 0);
+        const itemData = { ...data, displayOrder: maxOrder + 1, isActive: true };
+        console.log('Creating new FAQ item with data:', itemData);
+        createItemMutation.mutate(itemData);
+      }
+    } catch (error) {
+      console.error('Error in FAQ onSubmit:', error);
+      toast({
+        title: "Erro",
+        description: "Erro ao processar formulário. Tente novamente.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -524,8 +623,19 @@ export default function FaqTab() {
                    console.log(`FAQ dialog: Step changed to ${step}`);
                  }}
                  onFinalStepCompleted={() => {
-                   console.log("FAQ dialog: Todos os steps completados!");
-                   form.handleSubmit(onSubmit)();
+                   try {
+                     console.log("FAQ dialog: Todos os steps completados!");
+                     const formData = form.getValues();
+                     console.log("FAQ dialog: Form data before submit:", formData);
+                     form.handleSubmit(onSubmit)();
+                   } catch (error) {
+                     console.error("Error in FAQ onFinalStepCompleted:", error);
+                     toast({
+                       title: "Erro",
+                       description: "Erro ao finalizar formulário. Tente novamente.",
+                       variant: "destructive",
+                     });
+                   }
                  }}
                  backButtonText="Anterior"
                  nextButtonText="Próximo"
@@ -554,6 +664,12 @@ export default function FaqTab() {
                                  previewClassName="bg-[#195d5e] text-[#FBF9F7] border-[#277677] w-full"
                                  rows={3}
                                  maxLength={500}
+                                 onChange={(e) => {
+                                   const value = e.target.value;
+                                   if (value.length <= 500) {
+                                     field.onChange(value);
+                                   }
+                                 }}
                                />
                                <CharacterCounter 
                                  text={field.value || ''} 
@@ -585,9 +701,15 @@ export default function FaqTab() {
                                  {...field}
                                  placeholder="Digite a resposta..."
                                  className="bg-[#195d5e] text-[#FBF9F7] border-[#277677] focus:ring-[#277677] w-full placeholder:text-[#FBF9F7]/60"
-                                 previewClassName="bg-[#FBF9F7] text-[#FBF9F7] border-[#277677] w-full"
+                                 previewClassName="bg-[#195d5e] text-[#FBF9F7] border-[#277677] w-full"
                                  rows={8}
                                  maxLength={2000}
+                                 onChange={(e) => {
+                                   const value = e.target.value;
+                                   if (value.length <= 2000) {
+                                     field.onChange(value);
+                                   }
+                                 }}
                                />
                                <CharacterCounter 
                                  text={field.value || ''} 
@@ -711,3 +833,4 @@ export default function FaqTab() {
     </div>
   );
 }
+

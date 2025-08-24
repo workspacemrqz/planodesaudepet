@@ -1,0 +1,189 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "📝 Validando mensagem de commit..."
+
+# Obter a mensagem de commit
+COMMIT_MSG=$(cat "$1")
+
+# Verificar se a mensagem está vazia
+if [ -z "$COMMIT_MSG" ]; then
+  echo "❌ Mensagem de commit não pode estar vazia."
+  exit 1
+fi
+
+# Verificar se a mensagem é muito longa
+if [ ${#COMMIT_MSG} -gt 100 ]; then
+  echo "❌ Mensagem de commit muito longa (máximo 100 caracteres)."
+  echo "💡 Mensagem atual: ${#COMMIT_MSG} caracteres"
+  echo "💡 Exemplo de formato: feat(auth): add login functionality"
+  exit 1
+fi
+
+# Verificar se a mensagem é muito curta
+if [ ${#COMMIT_MSG} -lt 10 ]; then
+  echo "❌ Mensagem de commit muito curta (mínimo 10 caracteres)."
+  echo "💡 Mensagem atual: ${#COMMIT_MSG} caracteres"
+  echo "💡 Exemplo de formato: feat(auth): add login functionality"
+  exit 1
+fi
+
+# Verificar formato convencional de commits
+if ! echo "$COMMIT_MSG" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|hotfix|security)(\([a-z0-9-]+\))?: .+'; then
+  echo "❌ Formato de commit inválido."
+  echo "💡 Use o formato: type(scope): description"
+  echo "💡 Exemplos válidos:"
+  echo "   - feat(auth): add login functionality"
+  echo "   - fix(api): resolve user authentication issue"
+  echo "   - docs(readme): update installation instructions"
+  echo "   - style(ui): improve button styling"
+  echo "   - refactor(utils): simplify date formatting"
+  echo "   - test(auth): add unit tests for login"
+  echo "   - chore(deps): update dependencies"
+  echo "   - perf(api): optimize database queries"
+  echo "   - ci(github): add automated testing"
+  echo "   - build(vite): configure production build"
+  echo "   - revert(auth): revert login changes"
+  echo "   - hotfix(api): fix critical authentication bug"
+  echo "   - security(auth): fix XSS vulnerability"
+  echo ""
+  echo "💡 Tipos válidos:"
+  echo "   - feat: nova funcionalidade"
+  echo "   - fix: correção de bug"
+  echo "   - docs: documentação"
+  echo "   - style: formatação de código"
+  echo "   - refactor: refatoração de código"
+  echo "   - test: testes"
+  echo "   - chore: tarefas de manutenção"
+  echo "   - perf: melhorias de performance"
+  echo "   - ci: integração contínua"
+  echo "   - build: build e deploy"
+  echo "   - revert: reverter mudanças"
+  echo "   - hotfix: correção urgente"
+  echo "   - security: correções de segurança"
+  echo ""
+  echo "💡 Escopo (opcional):"
+  echo "   - auth: autenticação"
+  echo "   - api: API backend"
+  echo "   - ui: interface do usuário"
+  echo "   - utils: utilitários"
+  echo "   - deps: dependências"
+  echo "   - github: configurações do GitHub"
+  echo "   - vite: configurações do Vite"
+  echo ""
+  echo "💡 Descrição:"
+  echo "   - Use imperativo (add, fix, update, etc.)"
+  echo "   - Seja claro e conciso"
+  echo "   - Use minúsculas"
+  echo "   - Não termine com ponto"
+  exit 1
+fi
+
+# Verificar se a descrição começa com maiúscula
+if ! echo "$COMMIT_MSG" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|hotfix|security)(\([a-z0-9-]+\))?: [A-Z].+'; then
+  echo "⚠️ Aviso: Descrição deve começar com maiúscula."
+  echo "💡 Exemplo: feat(auth): Add login functionality"
+  echo "💡 Continuando com commit..."
+fi
+
+# Verificar se a descrição termina com ponto
+if echo "$COMMIT_MSG" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|hotfix|security)(\([a-z0-9-]+\))?: .+\.$'; then
+  echo "⚠️ Aviso: Descrição não deve terminar com ponto."
+  echo "💡 Exemplo: feat(auth): Add login functionality"
+  echo "💡 Continuando com commit..."
+fi
+
+# Verificar se há palavras proibidas
+PROHIBITED_WORDS="WIP|TODO|FIXME|HACK|XXX|BUG|TEMP|DEBUG|CONSOLE|ALERT"
+if echo "$COMMIT_MSG" | grep -qiE "($PROHIBITED_WORDS)"; then
+  echo "⚠️ Aviso: Mensagem contém palavras que podem indicar trabalho incompleto."
+  echo "💡 Palavras detectadas: $(echo "$COMMIT_MSG" | grep -oiE "($PROHIBITED_WORDS)" | tr '\n' ' ')"
+  echo "💡 Considere usar um commit temporário ou completar o trabalho."
+  echo "💡 Continuando com commit..."
+fi
+
+# Verificar se há emojis (opcional)
+if echo "$COMMIT_MSG" | grep -qE '[🚀🔧🐛📝🎨♻️✅🔒🔥⚡🚨]'; then
+  echo "ℹ️ Emojis detectados na mensagem de commit."
+  echo "💡 Isso é opcional, mas pode tornar os commits mais legíveis."
+fi
+
+# Verificar se é um commit de merge ou revert
+if echo "$COMMIT_MSG" | grep -qE '^Merge|^Revert'; then
+  echo "ℹ️ Commit de merge ou revert detectado."
+  echo "✅ Pulando validações de formato para commits especiais."
+  exit 0
+fi
+
+# Verificar se é um commit de release
+if echo "$COMMIT_MSG" | grep -qE '^release|^v[0-9]+\.[0-9]+\.[0-9]+'; then
+  echo "ℹ️ Commit de release detectado."
+  echo "✅ Pulando validações de formato para releases."
+  exit 0
+fi
+
+# Verificar se é um commit de hotfix
+if echo "$COMMIT_MSG" | grep -qE '^hotfix'; then
+  echo "ℹ️ Commit de hotfix detectado."
+  echo "✅ Validando formato de hotfix..."
+  
+  # Validar formato específico de hotfix
+  if ! echo "$COMMIT_MSG" | grep -qE '^hotfix\([a-z0-9-]+\): [A-Z].+'; then
+    echo "❌ Formato de hotfix inválido."
+    echo "💡 Use: hotfix(scope): Description of the fix"
+    echo "💡 Exemplo: hotfix(auth): Fix critical login issue"
+    exit 1
+  fi
+fi
+
+# Verificar se é um commit de segurança
+if echo "$COMMIT_MSG" | grep -qE '^security'; then
+  echo "ℹ️ Commit de segurança detectado."
+  echo "✅ Validando formato de segurança..."
+  
+  # Validar formato específico de segurança
+  if ! echo "$COMMIT_MSG" | grep -qE '^security\([a-z0-9-]+\): [A-Z].+'; then
+    echo "❌ Formato de segurança inválido."
+    echo "💡 Use: security(scope): Description of the security fix"
+    echo "💡 Exemplo: security(auth): Fix XSS vulnerability in login form"
+    exit 1
+  fi
+fi
+
+# Verificar se há duplicação de palavras
+WORDS=$(echo "$COMMIT_MSG" | sed 's/^[^:]*: //' | tr ' ' '\n' | sort | uniq -d)
+if [ -n "$WORDS" ]; then
+  echo "⚠️ Aviso: Palavras duplicadas detectadas na descrição."
+  echo "💡 Palavras duplicadas: $(echo "$WORDS" | tr '\n' ' ')"
+  echo "💡 Considere reescrever para evitar repetição."
+  echo "💡 Continuando com commit..."
+fi
+
+# Verificar se há URLs ou caminhos de arquivo
+if echo "$COMMIT_MSG" | grep -qE 'https?://|\.(js|ts|tsx|jsx|css|scss|html|json|md|yml|yaml)$'; then
+  echo "⚠️ Aviso: URLs ou caminhos de arquivo detectados na mensagem."
+  echo "💡 Considere usar descrições mais genéricas."
+  echo "💡 Continuando com commit..."
+fi
+
+# Verificar se há números de issue ou PR
+if echo "$COMMIT_MSG" | grep -qE '#[0-9]+|#[0-9]+|issue #[0-9]+|PR #[0-9]+'; then
+  echo "ℹ️ Referências a issues ou PRs detectadas."
+  echo "💡 Isso é uma boa prática para rastreamento."
+fi
+
+# Verificar se há quebras de linha desnecessárias
+if echo "$COMMIT_MSG" | grep -qE '\n\n'; then
+  echo "⚠️ Aviso: Quebras de linha desnecessárias detectadas."
+  echo "💡 Use apenas uma linha para a mensagem principal."
+  echo "💡 Use o corpo do commit para detalhes adicionais."
+  echo "💡 Continuando com commit..."
+fi
+
+echo "✅ Mensagem de commit válida!"
+echo "🎉 Commit permitido."
+
+# Salvar mensagem de commit para uso em outros hooks
+echo "$COMMIT_MSG" > .git/COMMIT_EDITMSG
+
+exit 0

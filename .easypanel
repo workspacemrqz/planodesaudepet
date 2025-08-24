@@ -4,7 +4,7 @@
 # Build Configuration
 BUILD_METHOD=buildpacks
 BUILDER=heroku/builder:24
-BUILDPACKS=heroku/nodejs
+BUILDPACKS=heroku/nodejs#v24
 
 # Environment Variables
 NODE_ENV=production

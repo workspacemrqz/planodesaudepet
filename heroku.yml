@@ -1,5 +1,6 @@
 build:
-  buildpacks:
-    - url: heroku/nodejs
-  config:
-    NODE_ENV: production
+  docker:
+    builder: heroku/builder:24
+    buildpacks:
+      - url: heroku/nodejs
+        version: "24"

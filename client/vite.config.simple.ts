@@ -10,6 +10,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
     minify: "esbuild",
+    target: "es2015",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -26,5 +27,11 @@ export default defineConfig({
   },
   define: {
     global: "globalThis",
-  }
+  },
+  // Configurações específicas para buildpack
+  optimizeDeps: {
+    include: ["react", "react-dom"]
+  },
+  // Garantir que funcione em produção
+  mode: "production"
 });

@@ -21,7 +21,9 @@
     "types": ["node"],
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force"
   },
   "include": ["server/**/*", "shared/**/*"],
   "exclude": ["node_modules", "client/**/*", "dist/**/*", "*.config.ts", "*.config.js", "server/tests/**/*"]

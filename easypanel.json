@@ -28,7 +28,7 @@
     "memory": "512Mi"
   },
   "scripts": {
-    "build": "npm run build:easypanel",
+    "build": "npm run build:simple",
     "start": "npm start"
   }
 }
