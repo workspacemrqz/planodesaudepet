@@ -12,14 +12,8 @@ PORT=8080
 HOST=0.0.0.0
 
 # Build Commands
-BUILD_COMMAND=npm run build:simple
+BUILD_COMMAND=npm run build
 START_COMMAND=npm start
-
-# Health Check
-HEALTH_CHECK_PATH=/api/health
-HEALTH_CHECK_INTERVAL=30s
-HEALTH_CHECK_TIMEOUT=10s
-HEALTH_CHECK_RETRIES=3
 
 # Resources
 CPU_LIMIT=0.5

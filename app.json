@@ -4,16 +4,17 @@
   "repository": "https://github.com/seu-usuario/planodesaudepet",
   "logo": "https://via.placeholder.com/150x150/277677/FFFFFF?text=UNIPET",
   "keywords": ["node", "express", "react", "typescript", "postgresql"],
+  "stack": "heroku-24",
   "buildpacks": [
     {
-      "url": "heroku/nodejs",
-      "version": "24"
+      "url": "heroku/nodejs"
     }
   ],
   "env": {
     "NODE_ENV": {
       "description": "Ambiente de execução",
-      "value": "production"
+      "value": "production",
+      "required": true
     },
     "PORT": {
       "description": "Porta onde a aplicação será executada",
@@ -22,24 +23,32 @@
     "HOST": {
       "description": "Host da aplicação",
       "value": "0.0.0.0"
+    },
+    "DATABASE_URL": {
+      "description": "URL de conexão com PostgreSQL",
+      "required": true
+    },
+    "LOGIN": {
+      "description": "Email para login do admin",
+      "required": true
+    },
+    "SENHA": {
+      "description": "Senha para login do admin",
+      "required": true
+    },
+    "SESSION_SECRET": {
+      "description": "Chave secreta para sessões",
+      "generator": "secret"
     }
   },
   "formation": {
     "web": {
       "quantity": 1,
-      "size": "basic"
+      "size": "eco"
     }
   },
-  "addons": [
-    {
-      "plan": "heroku-postgresql:mini"
-    }
-  ],
+  "addons": [],
   "scripts": {
-    "postinstall": "npm run build:simple"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "postdeploy": "npm run build"
   }
 }

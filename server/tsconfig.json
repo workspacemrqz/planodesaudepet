@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.server.json",
+  "compilerOptions": {
+    "outDir": "../dist/server",
+    "rootDir": ".",
+    "noEmit": false,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["**/*", "../shared/**/*"],
+  "exclude": ["node_modules", "../client/**/*", "tests/**/*"]
+}

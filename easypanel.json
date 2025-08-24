@@ -4,19 +4,10 @@
   "type": "application",
   "build": {
     "method": "buildpacks",
-    "builder": "heroku/builder:24",
-    "buildpacks": [
-      "heroku/nodejs"
-    ]
+    "builder": "heroku/builder:24"
   },
   "deploy": {
-    "restartPolicy": "always",
-    "healthCheck": {
-      "path": "/api/health",
-      "interval": "30s",
-      "timeout": "10s",
-      "retries": 3
-    }
+    "restartPolicy": "always"
   },
   "environment": {
     "NODE_ENV": "production",
@@ -26,9 +17,5 @@
   "resources": {
     "cpu": "0.5",
     "memory": "512Mi"
-  },
-  "scripts": {
-    "build": "npm run build:simple",
-    "start": "npm start"
   }
 }

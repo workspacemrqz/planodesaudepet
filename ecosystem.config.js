@@ -51,7 +51,7 @@ module.exports = {
       ref: 'origin/main',
       repo: 'https://github.com/seu-usuario/planodesaudepet.git',
       path: '/app',
-      'post-deploy': 'npm install && npm run build:simple && pm2 reload ecosystem.config.js --env production'
+      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production'
     }
   }
 };

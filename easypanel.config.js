@@ -2,21 +2,12 @@ module.exports = {
   // Configuração do Build
   build: {
     method: 'buildpacks',
-    builder: 'heroku/builder:24',
-    buildpacks: ['heroku/nodejs#v24'],
-    buildCommand: 'npm run build:simple',
-    startCommand: 'npm start'
+    builder: 'heroku/builder:24'
   },
 
   // Configuração do Deploy
   deploy: {
-    restartPolicy: 'always',
-    healthCheck: {
-      path: '/api/health',
-      interval: '30s',
-      timeout: '10s',
-      retries: 3
-    }
+    restartPolicy: 'always'
   },
 
   // Variáveis de Ambiente
