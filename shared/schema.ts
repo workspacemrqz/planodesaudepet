@@ -21,15 +21,15 @@ export const planTypeEnum = pgEnum("plan_type_enum", ["with_waiting_period", "wi
 export const plans = pgTable("plans", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull().unique(),
-  price: integer("price").notNull(),
   description: text("description").notNull(),
   features: text("features").array().notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   buttonText: text("button_text").default("Contratar Plano").notNull(),
   redirectUrl: text("redirect_url").default("/contact").notNull(),
-  planType: planTypeEnum("plan_type").notNull(),
-  isActive: boolean("is_active").default(true).notNull(),
   displayOrder: integer("display_order").default(0).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  price: integer("price").default(0).notNull(),
+  planType: planTypeEnum("plan_type").default("with_waiting_period").notNull(),
 });
 
 export const networkUnits = pgTable("network_units", {
@@ -37,13 +37,13 @@ export const networkUnits = pgTable("network_units", {
   name: text("name").notNull(),
   address: text("address").notNull(),
   phone: text("phone").notNull(),
-  whatsapp: text("whatsapp"),
-  googleMapsUrl: text("google_maps_url"),
   rating: integer("rating").notNull(),
   services: text("services").array().notNull(),
-  imageData: text("image_data"),
+  imageUrl: text("image_url").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  whatsapp: text("whatsapp"),
+  googleMapsUrl: text("google_maps_url"),
 });
 
 export const faqItems = pgTable("faq_items", {
@@ -60,7 +60,6 @@ export const siteSettings = pgTable("site_settings", {
   whatsapp: text("whatsapp"),
   email: text("email"),
   phone: text("phone"),
-  address: text("address"),
   instagramUrl: text("instagram_url"),
   facebookUrl: text("facebook_url"),
   linkedinUrl: text("linkedin_url"),
@@ -68,19 +67,33 @@ export const siteSettings = pgTable("site_settings", {
   cnpj: text("cnpj"),
   businessHours: text("business_hours"),
   ourStory: text("our_story"),
-  privacyPolicy: text("privacy_policy"),
-  termsOfUse: text("terms_of_use"),
-  mainImageData: text("main_image_data"),
-  networkImageData: text("network_image_data"),
-  aboutImageData: text("about_image_data"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  privacyPolicy: text("privacy_policy"),
+  termsOfUse: text("terms_of_use"),
+  address: text("address"),
+  mainImage: text("main_image"),
+  networkImage: text("network_image"),
+  aboutImage: text("about_image"),
 });
 
 export const session = pgTable("session", {
   sid: varchar("sid").primaryKey(),
   sess: json("sess").notNull(),
-  expire: timestamp("expire", { precision: 6 }).notNull(),
+  expire: timestamp("expire").notNull(),
+});
+
+// Tabela file_metadata que existe no banco mas não estava no código
+export const fileMetadata = pgTable("file_metadata", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  objectId: varchar("object_id").notNull().unique(),
+  originalName: text("original_name").notNull(),
+  mimeType: varchar("mime_type").notNull(),
+  extension: varchar("extension").notNull(),
+  filePath: text("file_path").notNull(),
+  fileSize: integer("file_size").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Tabelas para a área do cliente
@@ -129,7 +142,7 @@ export const informacoesContato = pgTable("informacoes_contato", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// SCHEMAS DE INSERÇÃO CORRIGIDOS - SEM createInsertSchema
+// SCHEMAS DE INSERÇÃO CORRIGIDOS PARA CORRESPONDER AO BANCO
 export const insertContactSubmissionSchema = z.object({
   name: z.string(),
   email: z.string(),
@@ -144,26 +157,26 @@ export const insertContactSubmissionSchema = z.object({
 
 export const insertPlanSchema = z.object({
   name: z.string(),
-  price: z.number(),
   description: z.string(),
   features: z.array(z.string()),
-  buttonText: z.string(),
-  redirectUrl: z.string(),
-  planType: z.enum(["with_waiting_period", "without_waiting_period"]),
-  isActive: z.boolean(),
-  displayOrder: z.number(),
+  isActive: z.boolean().default(true),
+  buttonText: z.string().default("Contratar Plano"),
+  redirectUrl: z.string().default("/contact"),
+  displayOrder: z.number().default(0),
+  price: z.number().default(0),
+  planType: z.enum(["with_waiting_period", "without_waiting_period"]).default("with_waiting_period"),
 });
 
 export const insertNetworkUnitSchema = z.object({
   name: z.string(),
   address: z.string(),
   phone: z.string(),
-  whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos").optional(),
-  googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
   rating: z.number(),
   services: z.array(z.string()),
-  imageData: z.string().optional(),
-  isActive: z.boolean(),
+  imageUrl: z.string(),
+  isActive: z.boolean().default(true),
+  whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos").optional(),
+  googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
 });
 
 export const insertFaqItemSchema = z.object({
@@ -174,14 +187,13 @@ export const insertFaqItemSchema = z.object({
     .min(1, "Resposta é obrigatória")
     .max(2000, "Resposta deve ter no máximo 2000 caracteres"),
   displayOrder: z.number(),
-  isActive: z.boolean(),
+  isActive: z.boolean().default(true),
 });
 
 export const insertSiteSettingsSchema = z.object({
   whatsapp: z.string().optional(),
   email: z.string().optional(),
   phone: z.string().optional(),
-  address: z.string().optional(),
   instagramUrl: z.string().optional(),
   facebookUrl: z.string().optional(),
   linkedinUrl: z.string().optional(),
@@ -191,9 +203,20 @@ export const insertSiteSettingsSchema = z.object({
   ourStory: z.string().optional(),
   privacyPolicy: z.string().optional(),
   termsOfUse: z.string().optional(),
-  mainImageData: z.string().optional(),
-  networkImageData: z.string().optional(),
-  aboutImageData: z.string().optional(),
+  address: z.string().optional(),
+  mainImage: z.string().optional(),
+  networkImage: z.string().optional(),
+  aboutImage: z.string().optional(),
+});
+
+// Schema para file_metadata
+export const insertFileMetadataSchema = z.object({
+  objectId: z.string(),
+  originalName: z.string(),
+  mimeType: z.string(),
+  extension: z.string(),
+  filePath: z.string(),
+  fileSize: z.number(),
 });
 
 // Schemas para a área do cliente
@@ -241,6 +264,8 @@ export type InsertFaqItem = z.infer<typeof insertFaqItemSchema>;
 export type FaqItem = typeof faqItems.$inferSelect;
 export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type SiteSettings = typeof siteSettings.$inferSelect;
+export type InsertFileMetadata = z.infer<typeof insertFileMetadataSchema>;
+export type FileMetadata = typeof fileMetadata.$inferSelect;
 
 // Types para a área do cliente
 export type InsertCliente = z.infer<typeof insertClienteSchema>;

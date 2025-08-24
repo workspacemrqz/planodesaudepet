@@ -71,18 +71,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (type === 'network') {
         // Buscar imagem de network unit
         const networkUnit = await storage.getNetworkUnit(id);
-        if (!networkUnit || !networkUnit.imageData) {
+        if (!networkUnit || !networkUnit.imageUrl) {
           return res.status(404).json({ error: 'Image not found' });
         }
         
         // Extrair informações do Base64
-        const imageInfo = imageServiceBase64.getBase64Info(networkUnit.imageData);
+        const imageInfo = imageServiceBase64.getBase64Info(networkUnit.imageUrl);
         if (!imageInfo) {
           return res.status(400).json({ error: 'Invalid image data' });
         }
         
         // Decodificar Base64 e servir
-        const base64Data = networkUnit.imageData.split(',')[1];
+        const base64Data = networkUnit.imageUrl.split(',')[1];
         const imageBuffer = Buffer.from(base64Data, 'base64');
         
         res.setHeader('Content-Type', imageInfo.mimeType);
@@ -97,9 +97,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         
         let imageData;
-        if (type === 'main') imageData = siteSettings.mainImageData;
-        else if (type === 'network') imageData = siteSettings.networkImageData;
-        else if (type === 'about') imageData = siteSettings.aboutImageData;
+        if (type === 'main') imageData = siteSettings.mainImage;
+        else if (type === 'network') imageData = siteSettings.networkImage;
+        else if (type === 'about') imageData = siteSettings.aboutImage;
         
         if (!imageData) {
           return res.status(404).json({ error: 'Image not found' });
@@ -161,12 +161,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Salvar no banco de dados
           if (type === 'network') {
-            await storage.updateNetworkUnit(id, { imageData: result.base64 });
+            await storage.updateNetworkUnit(id, { imageUrl: result.base64 });
           } else if (['main', 'network', 'about'].includes(type)) {
             let updateData: Partial<InsertSiteSettings> = {};
-            if (type === 'main') updateData = { mainImageData: result.base64 };
-            else if (type === 'network') updateData = { networkImageData: result.base64 };
-            else if (type === 'about') updateData = { aboutImageData: result.base64 };
+            if (type === 'main') updateData = { mainImage: result.base64 };
+            else if (type === 'network') updateData = { networkImage: result.base64 };
+            else if (type === 'about') updateData = { aboutImage: result.base64 };
             await storage.updateSiteSettings(updateData);
           } else {
             return res.status(400).json({ error: 'Invalid image type' });
@@ -200,12 +200,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { type, id } = req.params;
       
       if (type === 'network') {
-        await storage.updateNetworkUnit(id, { imageData: undefined });
+        await storage.updateNetworkUnit(id, { imageUrl: undefined });
       } else if (['main', 'network', 'about'].includes(type)) {
         let updateData: Partial<InsertSiteSettings> = {};
-        if (type === 'main') updateData = { mainImageData: undefined };
-        else if (type === 'network') updateData = { networkImageData: undefined };
-        else if (type === 'about') updateData = { aboutImageData: undefined };
+        if (type === 'main') updateData = { mainImage: undefined };
+        else if (type === 'network') updateData = { networkImage: undefined };
+        else if (type === 'about') updateData = { aboutImage: undefined };
         await storage.updateSiteSettings(updateData);
       } else {
         return res.status(400).json({ error: 'Invalid image type' });
@@ -561,7 +561,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Atualizar no banco
-      await storage.updateNetworkUnit(id, { imageData });
+      await storage.updateNetworkUnit(id, { imageUrl: imageData });
       
       res.json({ success: true, message: "Network unit image updated successfully" });
     } catch (error) {
