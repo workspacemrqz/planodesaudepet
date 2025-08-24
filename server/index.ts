@@ -111,6 +111,13 @@ async function initializeServer(): Promise<void> {
         immutable: true
       }));
       
+      // Serve public files (imagens, favicon, etc.)
+      app.use('/public', express.static(path.join(clientBuildPath, 'public'), {
+        maxAge: '1y',
+        etag: true,
+        lastModified: true
+      }));
+      
       // Serve the React app for all non-API routes
       app.get('*', (req, res) => {
         if (!req.path.startsWith('/api')) {

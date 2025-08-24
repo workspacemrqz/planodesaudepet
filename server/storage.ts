@@ -339,22 +339,50 @@ export class DatabaseStorage implements IStorage {
   async getPlans(): Promise<Plan[]> {
     try {
       console.log("Executing getPlans query...");
-      const result = await db.select({
-        id: plans.id,
-        name: plans.name,
-        price: plans.price,
-        description: plans.description,
-        features: plans.features,
-        image: plans.image, // Adicionar campo image
-        buttonText: plans.buttonText,
-        redirectUrl: plans.redirectUrl,
-        planType: plans.planType,
-        isActive: plans.isActive,
-        displayOrder: plans.displayOrder,
-        createdAt: plans.createdAt,
-      }).from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
-      console.log("Plans query result:", result);
       
+      // Verificar se a coluna image existe antes de fazer a query
+      let result;
+      try {
+        result = await db.select({
+          id: plans.id,
+          name: plans.name,
+          price: plans.price,
+          description: plans.description,
+          features: plans.features,
+          image: plans.image,
+          buttonText: plans.buttonText,
+          redirectUrl: plans.redirectUrl,
+          planType: plans.planType,
+          isActive: plans.isActive,
+          displayOrder: plans.displayOrder,
+          createdAt: plans.createdAt,
+        }).from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
+      } catch (dbError: any) {
+        // Se a coluna image não existir, fazer query sem ela
+        if (dbError.message.includes('column') && dbError.message.includes('image')) {
+          console.log("⚠️ Coluna image não encontrada, fazendo query sem ela...");
+          result = await db.select({
+            id: plans.id,
+            name: plans.name,
+            price: plans.price,
+            description: plans.description,
+            features: plans.features,
+            buttonText: plans.buttonText,
+            redirectUrl: plans.redirectUrl,
+            planType: plans.planType,
+            isActive: plans.isActive,
+            displayOrder: plans.displayOrder,
+            createdAt: plans.createdAt,
+          }).from(plans).where(eq(plans.isActive, true)).orderBy(asc(plans.displayOrder));
+          
+          // Adicionar campo image vazio para compatibilidade
+          result = result.map(plan => ({ ...plan, image: null }));
+        } else {
+          throw dbError;
+        }
+      }
+      
+      console.log("Plans query result:", result);
       return result;
     } catch (error) {
       console.error("Error in getPlans:", error);
@@ -365,20 +393,48 @@ export class DatabaseStorage implements IStorage {
   async getAllPlans(): Promise<Plan[]> {
     try {
       console.log("Executing getAllPlans query (admin)...");
-      const result = await db.select({
-        id: plans.id,
-        name: plans.name,
-        price: plans.price,
-        description: plans.description,
-        features: plans.features,
-        image: plans.image, // Adicionar campo image
-        buttonText: plans.buttonText,
-        redirectUrl: plans.redirectUrl,
-        planType: plans.planType,
-        isActive: plans.isActive,
-        displayOrder: plans.displayOrder,
-        createdAt: plans.createdAt,
-      }).from(plans).orderBy(asc(plans.displayOrder));
+      
+      let result;
+      try {
+        result = await db.select({
+          id: plans.id,
+          name: plans.name,
+          price: plans.price,
+          description: plans.description,
+          features: plans.features,
+          image: plans.image,
+          buttonText: plans.buttonText,
+          redirectUrl: plans.redirectUrl,
+          planType: plans.planType,
+          isActive: plans.isActive,
+          displayOrder: plans.displayOrder,
+          createdAt: plans.createdAt,
+        }).from(plans).orderBy(asc(plans.displayOrder));
+      } catch (dbError: any) {
+        // Se a coluna image não existir, fazer query sem ela
+        if (dbError.message.includes('column') && dbError.message.includes('image')) {
+          console.log("⚠️ Coluna image não encontrada, fazendo query sem ela...");
+          result = await db.select({
+            id: plans.id,
+            name: plans.name,
+            price: plans.price,
+            description: plans.description,
+            features: plans.features,
+            buttonText: plans.buttonText,
+            redirectUrl: plans.redirectUrl,
+            planType: plans.planType,
+            isActive: plans.isActive,
+            displayOrder: plans.displayOrder,
+            createdAt: plans.createdAt,
+          }).from(plans).orderBy(asc(plans.displayOrder));
+          
+          // Adicionar campo image vazio para compatibilidade
+          result = result.map(plan => ({ ...plan, image: null }));
+        } else {
+          throw dbError;
+        }
+      }
+      
       console.log("All plans query result:", result);
       return result;
     } catch (error) {
@@ -392,21 +448,54 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPlan(id: string): Promise<Plan | undefined> {
-    const [plan] = await db.select({
-      id: plans.id,
-      name: plans.name,
-      price: plans.price,
-      description: plans.description,
-      features: plans.features,
-      image: plans.image, // Adicionar campo image
-      buttonText: plans.buttonText,
-      redirectUrl: plans.redirectUrl,
-      planType: plans.planType,
-      isActive: plans.isActive,
-      displayOrder: plans.displayOrder,
-      createdAt: plans.createdAt,
-    }).from(plans).where(eq(plans.id, id));
-    return plan || undefined;
+    try {
+      let plan;
+      try {
+        [plan] = await db.select({
+          id: plans.id,
+          name: plans.name,
+          price: plans.price,
+          description: plans.description,
+          features: plans.features,
+          image: plans.image,
+          buttonText: plans.buttonText,
+          redirectUrl: plans.redirectUrl,
+          planType: plans.planType,
+          isActive: plans.isActive,
+          displayOrder: plans.displayOrder,
+          createdAt: plans.createdAt,
+        }).from(plans).where(eq(plans.id, id));
+      } catch (dbError: any) {
+        // Se a coluna image não existir, fazer query sem ela
+        if (dbError.message.includes('column') && dbError.message.includes('image')) {
+          console.log("⚠️ Coluna image não encontrada, fazendo query sem ela...");
+          [plan] = await db.select({
+            id: plans.id,
+            name: plans.name,
+            price: plans.price,
+            description: plans.description,
+            features: plans.features,
+            buttonText: plans.buttonText,
+            redirectUrl: plans.redirectUrl,
+            planType: plans.planType,
+            isActive: plans.isActive,
+            displayOrder: plans.displayOrder,
+            createdAt: plans.createdAt,
+          }).from(plans).where(eq(plans.id, id));
+          
+          // Adicionar campo image vazio para compatibilidade
+          if (plan) {
+            plan = { ...plan, image: null };
+          }
+        } else {
+          throw dbError;
+        }
+      }
+      return plan || undefined;
+    } catch (error) {
+      console.error("Error in getPlan:", error);
+      throw error;
+    }
   }
 
   async createPlan(insertPlan: InsertPlan): Promise<Plan> {

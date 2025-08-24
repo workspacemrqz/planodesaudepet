@@ -6,43 +6,6 @@ import { resolve } from 'path';
 export default defineConfig({
   plugins: [react()],
   
-  // Configurações de build otimizadas
-  build: {
-    // Otimizações de produção
-    target: 'esnext',
-    minify: 'terser',
-    sourcemap: false,
-    
-    // Configurações de rollup
-    rollupOptions: {
-      output: {
-        // Separar vendor chunks para melhor cache
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
-          utils: ['clsx', 'tailwind-merge', 'class-variance-authority']
-        },
-        
-        // Nomes de arquivo consistentes
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
-      }
-    },
-    
-    // Otimizações de tamanho
-    chunkSizeWarningLimit: 1000,
-    
-    // Configurações de terser
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug']
-      }
-    }
-  },
-  
   // Configurações de servidor de desenvolvimento
   server: {
     port: 5173,
@@ -199,6 +162,46 @@ export default defineConfig({
   
   // Configurações de publicDir
   publicDir: 'public',
+  
+  // Configurações de build para copiar assets
+  build: {
+    // Otimizações de produção
+    target: 'esnext',
+    minify: 'terser',
+    sourcemap: false,
+    
+    // Configurações de rollup
+    rollupOptions: {
+      output: {
+        // Separar vendor chunks para melhor cache
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          utils: ['clsx', 'tailwind-merge', 'class-variance-authority']
+        },
+        
+        // Nomes de arquivo consistentes
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    },
+    
+    // Otimizações de tamanho
+    chunkSizeWarningLimit: 1000,
+    
+    // Configurações de terser
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug']
+      }
+    },
+    
+    // Garantir que arquivos da pasta public sejam copiados
+    copyPublicDir: true
+  },
   
   // Configurações de root
   root: process.cwd(),
