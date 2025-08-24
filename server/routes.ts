@@ -12,7 +12,6 @@ import {
 } from "../shared/schema.js";
 import { sanitizeText } from "./utils/text-sanitizer.js";
 import { setupAuth, requireAuth } from "./auth.js";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage.js";
 import { imageServiceBase64 } from "./image-service-base64.js";
 import express from "express";
 

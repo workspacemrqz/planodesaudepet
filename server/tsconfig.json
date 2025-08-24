@@ -7,6 +7,23 @@
     "allowImportingTsExtensions": false,
     "baseUrl": ".."
   },
-  "include": ["**/*", "../shared/**/*"],
-  "exclude": ["node_modules", "../client/**/*", "tests/**/*"]
+  "include": [
+    "index.ts",
+    "routes.ts", 
+    "db.ts",
+    "auth.ts",
+    "storage.ts",
+    "config.ts",
+    "image-service-base64.ts",
+    "middleware/**/*",
+    "utils/**/*",
+    "../shared/**/*"
+  ],
+  "exclude": [
+    "node_modules", 
+    "../client/**/*", 
+    "tests/**/*",
+    "objectStorage.ts",
+    "vite.ts"
+  ]
 }
