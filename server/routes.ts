@@ -238,21 +238,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
   
-  // Simple upload routes (before auth setup to avoid session issues)
-  app.post("/api/objects/upload", async (req, res) => {
-    res.status(410).json({ error: 'This endpoint is deprecated. Use /api/images/upload/:type/:id instead.' });
-  });
-
-  // Handle file upload (direct file in body)
-  app.put("/api/objects/upload-file/:objectId", async (req, res) => {
-    res.status(410).json({ error: 'This endpoint is deprecated. Use /api/images/upload/:type/:id instead.' });
-  });
-
-  // Canonical image serving route (before auth setup)
-  app.get("/api/objects/:id/image", async (req, res) => {
-    res.status(410).json({ error: 'This endpoint is deprecated. Use /api/images/:type/:id instead.' });
-  });
-
+  // REMOVIDO: Rotas deprecated de /api/objects/* completamente removidas
+  
   // Setup authentication
   setupAuth(app);
 

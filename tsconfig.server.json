@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2020",
     "outDir": "./dist",
-    "rootDir": "./",
-    "target": "ES2022",
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "rootDir": ".",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,25 +13,13 @@
     "isolatedModules": true,
     "noEmit": false,
     "declaration": false,
-    "sourceMap": false,
+    "strict": false,
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["./shared/*"]
     },
-    "allowImportingTsExtensions": false,
-    "moduleDetection": "force"
+    "types": ["node"]
   },
-  "include": [
-    "server/**/*",
-    "shared/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "client/**/*",
-    "dist/**/*",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.config.ts",
-    "**/*.config.js"
-  ]
+  "include": ["server/**/*", "shared/**/*"],
+  "exclude": ["node_modules", "client/**/*", "dist/**/*", "*.config.ts", "*.config.js", "server/tests/**/*"]
 }

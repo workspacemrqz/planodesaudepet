@@ -73,10 +73,17 @@ export class DatabaseStorage implements IStorage {
 
   // Contact Submissions
   async createContactSubmission(insertSubmission: InsertContactSubmission): Promise<ContactSubmission> {
-    if (!insertSubmission || Object.keys(insertSubmission).length === 0) {
-      throw new Error('Contact submission data cannot be empty');
-    }
-    const [submission] = await db.insert(contactSubmissions).values(insertSubmission).returning();
+    const [submission] = await db.insert(contactSubmissions).values({
+      name: insertSubmission.name,
+      email: insertSubmission.email,
+      phone: insertSubmission.phone,
+      city: insertSubmission.city,
+      petName: insertSubmission.petName,
+      animalType: insertSubmission.animalType,
+      petAge: insertSubmission.petAge,
+      planInterest: insertSubmission.planInterest,
+      message: insertSubmission.message || null
+    }).returning();
     return submission;
   }
 
@@ -167,10 +174,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createPlan(insertPlan: InsertPlan): Promise<Plan> {
-    if (!insertPlan || Object.keys(insertPlan).length === 0) {
-      throw new Error('Plan data cannot be empty');
-    }
-    const [plan] = await db.insert(plans).values(insertPlan).returning();
+    const [plan] = await db.insert(plans).values({
+      name: insertPlan.name,
+      price: insertPlan.price,
+      description: insertPlan.description,
+      features: insertPlan.features,
+      buttonText: insertPlan.buttonText || "Contratar Plano",
+      redirectUrl: insertPlan.redirectUrl || "/contact",
+      planType: insertPlan.planType,
+      isActive: insertPlan.isActive !== undefined ? insertPlan.isActive : true,
+      displayOrder: insertPlan.displayOrder || 0
+    }).returning();
     return plan;
   }
 
@@ -203,10 +217,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createNetworkUnit(insertUnit: InsertNetworkUnit): Promise<NetworkUnit> {
-    if (!insertUnit || Object.keys(insertUnit).length === 0) {
-      throw new Error('Network unit data cannot be empty');
-    }
-    const [unit] = await db.insert(networkUnits).values(insertUnit).returning();
+    const [unit] = await db.insert(networkUnits).values({
+      name: insertUnit.name,
+      address: insertUnit.address,
+      phone: insertUnit.phone,
+      whatsapp: insertUnit.whatsapp || null,
+      googleMapsUrl: insertUnit.googleMapsUrl || null,
+      rating: insertUnit.rating,
+      services: insertUnit.services,
+      imageData: insertUnit.imageData || null,
+      isActive: insertUnit.isActive !== undefined ? insertUnit.isActive : true
+    }).returning();
     return unit;
   }
 
@@ -238,10 +259,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createFaqItem(insertItem: InsertFaqItem): Promise<FaqItem> {
-    if (!insertItem || Object.keys(insertItem).length === 0) {
-      throw new Error('FAQ item data cannot be empty');
-    }
-    const [item] = await db.insert(faqItems).values(insertItem).returning();
+    const [item] = await db.insert(faqItems).values({
+      question: insertItem.question,
+      answer: insertItem.answer,
+      displayOrder: insertItem.displayOrder,
+      isActive: insertItem.isActive !== undefined ? insertItem.isActive : true
+    }).returning();
     return item;
   }
 
