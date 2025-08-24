@@ -474,6 +474,11 @@ export const rateLimitByIP = (options: {
     const ip = req.ip;
     const now = Date.now();
     
+    // Skip contagem para arquivos estáticos (CSS, JS, imagens)
+    if (req.path.match(/\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$/)) {
+      return next();
+    }
+    
     const requestData = requestCounts.get(ip);
     
     if (!requestData || now > requestData.resetTime) {
@@ -486,11 +491,25 @@ export const rateLimitByIP = (options: {
         securityManager.recordSuspiciousActivity(ip, `Rate limit excedido: ${requestData.count} requests`);
         
         res.status(429).json({ 
-          error: options.message || 'Muitas requisições',
+          error: options.message || 'Muitas tentativas, aguarde antes de tentar novamente',
           retryAfter: Math.ceil((requestData.resetTime - now) / 1000)
         });
         return;
       }
+    }
+    
+    // Middleware para decrementar contador em requisições bem-sucedidas
+    if (options.skipSuccessfulRequests) {
+      const originalSend = res.send;
+      res.send = function(body) {
+        if (res.statusCode >= 200 && res.statusCode < 400) {
+          const currentData = requestCounts.get(ip);
+          if (currentData && currentData.count > 0) {
+            currentData.count = Math.max(0, currentData.count - 1);
+          }
+        }
+        return originalSend.call(this, body);
+      };
     }
     
     next();
@@ -548,11 +567,19 @@ export const applySecurityMiddleware = (app: any, config?: Partial<SecurityConfi
   app.use(xssProtection);
   app.use(securityLogging);
   
-  // Rate limiting global
+  // Rate limiting global otimizado para produção
   app.use(rateLimitByIP({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100, // máximo 100 requests por IP
-    message: 'Muitas requisições deste IP'
+    max: 1000, // máximo 1000 requests por IP (10x mais permissivo)
+    message: 'Muitas tentativas, aguarde antes de tentar novamente',
+    skipSuccessfulRequests: true // Não conta requisições bem-sucedidas
+  }));
+  
+  // Rate limiting mais restritivo para rotas críticas (login, cadastro)
+  app.use('/api/auth', rateLimitByIP({
+    windowMs: 5 * 60 * 1000, // 5 minutos
+    max: 10, // máximo 10 tentativas de login por IP
+    message: 'Muitas tentativas de login, aguarde antes de tentar novamente'
   }));
   
   console.log('🔒 Middlewares de segurança aplicados com sucesso');
