@@ -54,32 +54,12 @@ export function getImageUrlSync(imagePath: string | null | undefined, fallback?:
     return imagePath;
   }
 
-  // If it doesn't start with /objects/ and /api/objects/, return as is (local static files)
-  if (!imagePath.startsWith('/objects/') && !imagePath.startsWith('/api/objects/')) {
-    // Ensure the path starts with / for public folder access
-    if (!imagePath.startsWith('/')) {
-      imagePath = '/' + imagePath;
-    }
-    return imagePath;
+  // For local static files, ensure they start with /
+  if (!imagePath.startsWith('/')) {
+    imagePath = '/' + imagePath;
   }
 
-  // If it's already a canonical API path, return as relative URL
-  if (imagePath.startsWith('/api/objects/') && imagePath.endsWith('/image')) {
-    return imagePath;
-  }
-
-  // Map legacy/object-style paths to the canonical API image endpoint
-  if (imagePath.startsWith('/objects/uploads/')) {
-    const objectId = imagePath.replace('/objects/uploads/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
-    return `/api/objects/${objectId}/image`;
-  }
-
-  if (imagePath.startsWith('/objects/')) {
-    const objectId = imagePath.replace('/objects/', '').replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
-    return `/api/objects/${objectId}/image`;
-  }
-
-  // Fallback to original path as relative
+  // Return the path as is for local files
   return imagePath;
 }
 
