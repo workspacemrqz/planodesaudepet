@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// Configuração ultra-simplificada para buildpack
+// Configuração otimizada para produção e buildpack
 export default defineConfig({
   plugins: [react()],
   build: {
@@ -10,7 +10,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
     minify: "esbuild",
-    target: "es2015",
+    target: "es2020",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -27,11 +27,11 @@ export default defineConfig({
   },
   define: {
     global: "globalThis",
+    'process.env.NODE_ENV': '"production"'
   },
-  // Configurações específicas para buildpack
   optimizeDeps: {
-    include: ["react", "react-dom"]
+    include: ["react", "react-dom"],
+    force: true
   },
-  // Garantir que funcione em produção
   mode: "production"
 });
