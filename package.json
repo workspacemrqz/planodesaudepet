@@ -6,7 +6,9 @@
   "main": "server/index.js",
   "scripts": {
     "dev": "tsx server/index.ts",
-    "build": "tsc --project server/tsconfig.json",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "tsc --project server/tsconfig.json",
+    "build:client": "cd client && npm run build",
     "start": "node dist/server/index.js",
     "db:migrate": "tsx drizzle/migrate.ts",
     "db:generate": "tsx drizzle/generate.ts",

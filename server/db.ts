@@ -5,19 +5,17 @@ import { autoConfig } from "./config.js";
 
 // Validate database environment variables
 if (!autoConfig.get('DATABASE_URL')) {
-  console.error("❌ DATABASE_URL environment variable is not set");
-  console.error("Please create a .env file with your database configuration");
-  console.error("Example: DATABASE_URL=postgresql://username:password@localhost:5432/database_name");
-  throw new Error(
-    "DATABASE_URL must be set in your .env file. Did you forget to configure the database connection?",
-  );
+  console.warn("⚠️ DATABASE_URL environment variable is not set");
+  console.warn("Database functionality will be disabled");
+  console.warn("To enable database, create a .env file with your database configuration");
+  console.warn("Example: DATABASE_URL=postgresql://username:password@localhost:5432/database_name");
 }
 
-console.log("✅ DATABASE_URL environment variable is configured");
+console.log("✅ Database configuration checked");
 
 // Configuração otimizada do pool de conexões
 const poolConfig = {
-  connectionString: autoConfig.get('DATABASE_URL'),
+  connectionString: autoConfig.get('DATABASE_URL') || 'postgresql://dummy:dummy@localhost:5432/dummy',
   // Configurações de estabilidade e performance
   max: 20, // Máximo de conexões simultâneas
   min: 5,  // Mínimo de conexões mantidas
@@ -235,6 +233,12 @@ export async function initializeDatabase(): Promise<void> {
   try {
     console.log('🔌 Inicializando conexão com banco de dados...');
     
+    // Se não houver DATABASE_URL, pular inicialização
+    if (!autoConfig.get('DATABASE_URL')) {
+      console.log('⚠️ DATABASE_URL não configurado, pulando inicialização do banco');
+      return;
+    }
+    
     // Testar conexão inicial
     const isConnected = await dbHealthManager.testConnection();
     if (!isConnected) {
@@ -246,7 +250,11 @@ export async function initializeDatabase(): Promise<void> {
     
   } catch (error) {
     console.error('❌ Falha na inicialização do banco de dados:', error);
-    throw error;
+    if (autoConfig.get('NODE_ENV') === 'production') {
+      throw error;
+    } else {
+      console.log('⚠️ Continuando sem banco de dados em modo desenvolvimento');
+    }
   }
 }
 

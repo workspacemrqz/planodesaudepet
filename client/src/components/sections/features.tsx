@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Rocket, DollarSign, CalendarCheck, Hospital, MapPin, UserCheck, Microscope, Ambulance } from "lucide-react";
+import { Rocket, DollarSign, CalendarCheck, Heart, MapPin, UserCheck, Microscope, Car } from "lucide-react";
 import { useLocation } from "wouter";
 import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
@@ -30,7 +30,7 @@ export default function Features() {
       description: "Atendimento rápido para agendar consultas com facilidade"
     },
     {
-      icon: Hospital,
+      icon: Heart,
       title: "Rede 24h",
       description: "Atendimento 24 h para urgencia e emergência"
     }
@@ -50,7 +50,7 @@ export default function Features() {
       text: "Equipamentos de última geração"
     },
     {
-      icon: Ambulance,
+      icon: Car,
       text: "Atendimento de emergência"
     }
   ];

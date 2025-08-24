@@ -20,6 +20,7 @@ import { eq, desc, asc } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db.js";
+import { autoConfig } from "./config.js";
 
 const PostgresSessionStore = connectPg(session);
 
@@ -59,6 +60,251 @@ export interface IStorage {
   // Site Settings
   getSiteSettings(): Promise<SiteSettings | undefined>;
   updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined>;
+}
+
+// Storage em memória para quando não houver banco de dados
+export class InMemoryStorage implements IStorage {
+  private contactSubmissions: ContactSubmission[] = [];
+  private plans: Plan[] = [];
+  private networkUnits: NetworkUnit[] = [];
+  private faqItems: FaqItem[] = [];
+  private siteSettings: SiteSettings | undefined;
+
+  constructor() {
+    // Dados de exemplo para desenvolvimento
+    this.plans = [
+      {
+        id: "1",
+        name: "Plano Básico",
+        price: 2000,
+        description: "Cobertura básica para seu pet",
+        features: ["Consultas", "Vacinas", "Exames básicos"],
+        buttonText: "Contratar Plano",
+        redirectUrl: "/contact",
+        displayOrder: 1,
+        isActive: true,
+        planType: "with_waiting_period",
+        createdAt: new Date()
+      }
+    ];
+
+    this.siteSettings = {
+      id: "1",
+      whatsapp: "+55 (11) 91234-5678",
+      email: "contato@unipetplan.com.br",
+      phone: "+55 (11) 1234-5678",
+      address: "AVENIDA DOM SEVERINO, 1372, FATIMA - Teresina/PI",
+      cnpj: "00.000.000/0001-00",
+      instagramUrl: "",
+      facebookUrl: "",
+      linkedinUrl: "",
+      youtubeUrl: "",
+      businessHours: "",
+      ourStory: "",
+      privacyPolicy: "",
+      termsOfUse: "",
+      mainImage: "",
+      networkImage: "",
+      aboutImage: "",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+  }
+
+  // Implementação dos métodos da interface
+  async createContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission> {
+    const newSubmission: ContactSubmission = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: submission.name,
+      email: submission.email,
+      phone: submission.phone,
+      city: submission.city,
+      petName: submission.petName,
+      animalType: submission.animalType,
+      petAge: submission.petAge,
+      planInterest: submission.planInterest,
+      message: submission.message || "",
+      createdAt: new Date()
+    };
+    this.contactSubmissions.push(newSubmission);
+    return newSubmission;
+  }
+
+  async getContactSubmissions(): Promise<ContactSubmission[]> {
+    return this.contactSubmissions;
+  }
+
+  async getAllContactSubmissions(): Promise<ContactSubmission[]> {
+    return this.contactSubmissions;
+  }
+
+  async deleteContactSubmission(id: string): Promise<boolean> {
+    const index = this.contactSubmissions.findIndex(s => s.id === id);
+    if (index > -1) {
+      this.contactSubmissions.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  async getPlans(): Promise<Plan[]> {
+    return this.plans.filter(p => p.isActive);
+  }
+
+  async getAllPlans(): Promise<Plan[]> {
+    return this.plans;
+  }
+
+  async getAllActivePlans(): Promise<Plan[]> {
+    return this.plans.filter(p => p.isActive);
+  }
+
+  async getPlan(id: string): Promise<Plan | undefined> {
+    return this.plans.find(p => p.id === id);
+  }
+
+  async createPlan(plan: InsertPlan): Promise<Plan> {
+    const newPlan: Plan = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: plan.name,
+      description: plan.description,
+      features: plan.features,
+      isActive: plan.isActive,
+      buttonText: plan.buttonText,
+      redirectUrl: plan.redirectUrl,
+      displayOrder: plan.displayOrder,
+      price: plan.price,
+      planType: plan.planType,
+      createdAt: new Date()
+    };
+    this.plans.push(newPlan);
+    return newPlan;
+  }
+
+  async updatePlan(id: string, plan: Partial<InsertPlan>): Promise<Plan | undefined> {
+    const index = this.plans.findIndex(p => p.id === id);
+    if (index > -1) {
+      this.plans[index] = { ...this.plans[index], ...plan };
+      return this.plans[index];
+    }
+    return undefined;
+  }
+
+  async deletePlan(id: string): Promise<boolean> {
+    const index = this.plans.findIndex(p => p.id === id);
+    if (index > -1) {
+      this.plans.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  async getNetworkUnits(): Promise<NetworkUnit[]> {
+    return this.networkUnits.filter(u => u.isActive);
+  }
+
+  async getAllNetworkUnits(): Promise<NetworkUnit[]> {
+    return this.networkUnits;
+  }
+
+  async getAllActiveNetworkUnits(): Promise<NetworkUnit[]> {
+    return this.networkUnits.filter(u => u.isActive);
+  }
+
+  async getNetworkUnit(id: string): Promise<NetworkUnit | undefined> {
+    return this.networkUnits.find(u => u.id === id);
+  }
+
+  async createNetworkUnit(unit: InsertNetworkUnit): Promise<NetworkUnit> {
+    const newUnit: NetworkUnit = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: unit.name,
+      phone: unit.phone,
+      isActive: unit.isActive,
+      address: unit.address,
+      rating: unit.rating,
+      services: unit.services,
+      imageUrl: unit.imageUrl,
+      whatsapp: unit.whatsapp || "",
+      googleMapsUrl: unit.googleMapsUrl || "",
+      createdAt: new Date()
+    };
+    this.networkUnits.push(newUnit);
+    return newUnit;
+  }
+
+  async updateNetworkUnit(id: string, unit: Partial<InsertNetworkUnit>): Promise<NetworkUnit | undefined> {
+    const index = this.networkUnits.findIndex(u => u.id === id);
+    if (index > -1) {
+      this.networkUnits[index] = { ...this.networkUnits[index], ...unit };
+      return this.networkUnits[index];
+    }
+    return undefined;
+  }
+
+  async deleteNetworkUnit(id: string): Promise<boolean> {
+    const index = this.networkUnits.findIndex(u => u.id === id);
+    if (index > -1) {
+      this.networkUnits.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  async getFaqItems(): Promise<FaqItem[]> {
+    return this.faqItems.filter(f => f.isActive);
+  }
+
+  async getAllFaqItems(): Promise<FaqItem[]> {
+    return this.faqItems;
+  }
+
+  async getFaqItem(id: string): Promise<FaqItem | undefined> {
+    return this.faqItems.find(f => f.id === id);
+  }
+
+  async createFaqItem(item: InsertFaqItem): Promise<FaqItem> {
+    const newItem: FaqItem = {
+      id: Math.random().toString(36).substr(2, 9),
+      isActive: item.isActive,
+      displayOrder: item.displayOrder,
+      question: item.question,
+      answer: item.answer,
+      createdAt: new Date()
+    };
+    this.faqItems.push(newItem);
+    return newItem;
+  }
+
+  async updateFaqItem(id: string, item: Partial<InsertFaqItem>): Promise<FaqItem | undefined> {
+    const index = this.faqItems.findIndex(f => f.id === id);
+    if (index > -1) {
+      this.faqItems[index] = { ...this.faqItems[index], ...item };
+      return this.faqItems[index];
+    }
+    return undefined;
+  }
+
+  async deleteFaqItem(id: string): Promise<boolean> {
+    const index = this.faqItems.findIndex(f => f.id === id);
+    if (index > -1) {
+      this.faqItems.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  async getSiteSettings(): Promise<SiteSettings | undefined> {
+    return this.siteSettings;
+  }
+
+  async updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SiteSettings | undefined> {
+    if (this.siteSettings) {
+      this.siteSettings = { ...this.siteSettings, ...settings, updatedAt: new Date() };
+      return this.siteSettings;
+    }
+    return undefined;
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -269,4 +515,7 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Usar storage em memória se não houver banco de dados configurado
+export const storage = autoConfig.get('DATABASE_URL') 
+  ? new DatabaseStorage() 
+  : new InMemoryStorage();

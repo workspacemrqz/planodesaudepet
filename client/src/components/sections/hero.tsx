@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, DollarSign, Clock, Hospital } from "lucide-react";
+import { CheckCircle, DollarSign, Clock, Heart } from "lucide-react";
 import { useLocation } from "wouter";
 import { useWhatsAppRedirect } from "@/hooks/use-whatsapp-redirect";
 import { AnimatedSection, AnimatedList } from "@/components/ui/animated-section";
@@ -28,7 +28,7 @@ export default function Hero() {
       text: "Agendamento rápido"
     },
     {
-      icon: Hospital,
+      icon: Heart,
       text: "Atendimento emergencial 24h"
     }
   ];

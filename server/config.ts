@@ -88,6 +88,11 @@ class AutoConfig {
       return process.env.HOST;
     }
     
+    // Em desenvolvimento, usar localhost para facilitar testes
+    if (this.config.NODE_ENV === 'development') {
+      return 'localhost';
+    }
+    
     return '0.0.0.0';
   }
 
@@ -164,7 +169,7 @@ class AutoConfig {
    * Valida se as configurações obrigatórias estão presentes
    */
   private validateRequiredConfig(): void {
-    const required = ['DATABASE_URL', 'LOGIN', 'SENHA'];
+    const required = ['LOGIN', 'SENHA'];
     const missing = required.filter(key => !process.env[key]);
 
     if (missing.length > 0) {
@@ -173,11 +178,15 @@ class AutoConfig {
         console.error(`   - ${key}`);
       });
       console.error('\n📝 Crie um arquivo .env com as seguintes variáveis:');
-      console.error('   DATABASE_URL=postgresql://username:password@localhost:5432/database_name');
       console.error('   LOGIN=seu-email@exemplo.com');
       console.error('   SENHA=sua-senha-segura');
       console.error('\n💡 Copie o arquivo env.example para .env e configure apenas essas variáveis!');
       throw new Error(`Configurações obrigatórias faltando: ${missing.join(', ')}`);
+    }
+
+    // DATABASE_URL é opcional em desenvolvimento
+    if (!process.env.DATABASE_URL && this.config.NODE_ENV === 'production') {
+      console.warn('⚠️ DATABASE_URL não configurado - funcionalidades de banco desabilitadas');
     }
 
     console.log('✅ Todas as configurações obrigatórias estão presentes');

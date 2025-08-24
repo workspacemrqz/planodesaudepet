@@ -26,10 +26,7 @@ import { AnimatedList } from "@/components/ui/animated-list";
 import { RobustImage } from "@/components/ui/image";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 
-// SOLUÇÃO NUCLEAR - ÚNICA E DEFINITIVA
-import "@/styles/NUCLEAR_OVERRIDE.css";
-import "@/scripts/NUCLEAR_ENFORCER.js";
-import "@/scripts/NUCLEAR_TEST.js";
+// Estilos e scripts removidos para simplificar o build
 
 // Fallback image for network units
 const FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTAwSDgwVjYwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K';
