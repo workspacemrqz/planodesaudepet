@@ -38,13 +38,23 @@ async function checkDatabase() {
 
     // Verificar se a coluna image existe na tabela plans
     const result = await pool.query(`
-      SELECT column_name 
+      SELECT column_name, is_nullable, column_default
       FROM information_schema.columns 
       WHERE table_name = 'plans' AND column_name = 'image'
     `);
     
     if (result.rows.length > 0) {
+      const column = result.rows[0];
       console.log('✅ Coluna image existe na tabela plans');
+      console.log(`   - Nullable: ${column.is_nullable}`);
+      console.log(`   - Default: ${column.column_default}`);
+      
+      // Verificar se a coluna é NOT NULL
+      if (column.is_nullable === 'NO') {
+        console.log('✅ Coluna image é NOT NULL (correto)');
+      } else {
+        console.log('⚠️ Coluna image permite NULL (deveria ser NOT NULL)');
+      }
     } else {
       console.log('❌ Coluna image NÃO existe na tabela plans');
       console.log('🔧 Execute: npm run db:init');

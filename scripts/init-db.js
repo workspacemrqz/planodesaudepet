@@ -49,7 +49,7 @@ async function addImageColumnToPlans() {
       console.log('🔧 Adicionando coluna image à tabela plans...');
       
       await pool.query(`
-        ALTER TABLE "plans" ADD COLUMN "image" text;
+        ALTER TABLE "plans" ADD COLUMN "image" text NOT NULL DEFAULT '/BASICicon.svg';
         COMMENT ON COLUMN "plans"."image" IS 'URL or path to the plan image';
       `);
       

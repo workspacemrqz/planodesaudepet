@@ -6,7 +6,7 @@ Este guia resolve os problemas críticos identificados no deployment do seu proj
 
 ### 1. **ERRO DE COLUNA NO BANCO DE DADOS**
 - **Problema**: A tabela `plans` não tinha a coluna `image` que o código estava tentando acessar
-- **Solução**: Criada migração automática e fallback no código
+- **Solução**: Criada migração automática que adiciona a coluna `image` como NOT NULL com valor padrão
 
 ### 2. **IMAGENS NÃO CARREGAM**
 - **Problema**: Arquivos estáticos não estavam sendo servidos corretamente em produção
@@ -145,10 +145,11 @@ dist/
 ## 🎯 Resultado Esperado
 
 Após aplicar essas correções:
-1. ✅ O banco de dados terá a coluna `image` na tabela `plans`
-2. ✅ As imagens serão servidas corretamente de `/public/`
-3. ✅ O site funcionará perfeitamente em produção
-4. ✅ Não haverá mais erros de coluna inexistente
+1. ✅ O banco de dados terá a coluna `image` na tabela `plans` como NOT NULL
+2. ✅ Todos os planos terão uma imagem válida (padrão: `/BASICicon.svg`)
+3. ✅ As imagens serão servidas corretamente de `/public/`
+4. ✅ O site funcionará perfeitamente em produção
+5. ✅ Não haverá mais erros de coluna inexistente ou valores NULL
 
 ## 🆘 Suporte
 

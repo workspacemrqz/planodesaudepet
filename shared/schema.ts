@@ -23,7 +23,7 @@ export const plans = pgTable("plans", {
   name: text("name").notNull().unique(),
   description: text("description").notNull(),
   features: text("features").array().notNull(),
-  image: text("image"), // Campo para imagem do plano
+  image: text("image").notNull(), // Campo obrigatório para imagem do plano
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   buttonText: text("button_text").default("Contratar Plano").notNull(),
@@ -160,7 +160,7 @@ export const insertPlanSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
   features: z.array(z.string()).min(1, "Features são obrigatórias"),
-  image: z.string().optional(), // Campo opcional para imagem
+  image: z.string().min(1, "Imagem é obrigatória"), // Campo obrigatório para imagem
   isActive: z.boolean().default(true),
   buttonText: z.string().default("Contratar Plano"),
   redirectUrl: z.string().default("/contact"),
