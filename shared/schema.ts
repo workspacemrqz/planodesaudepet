@@ -147,11 +147,11 @@ export const insertPlanSchema = z.object({
   price: z.number(),
   description: z.string(),
   features: z.array(z.string()),
-  buttonText: z.string().default("Contratar Plano"),
-  redirectUrl: z.string().default("/contact"),
+  buttonText: z.string(),
+  redirectUrl: z.string(),
   planType: z.enum(["with_waiting_period", "without_waiting_period"]),
-  isActive: z.boolean().default(true),
-  displayOrder: z.number().default(0),
+  isActive: z.boolean(),
+  displayOrder: z.number(),
 });
 
 export const insertNetworkUnitSchema = z.object({
@@ -163,7 +163,7 @@ export const insertNetworkUnitSchema = z.object({
   rating: z.number(),
   services: z.array(z.string()),
   imageData: z.string().optional(),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
 });
 
 export const insertFaqItemSchema = z.object({
@@ -174,7 +174,7 @@ export const insertFaqItemSchema = z.object({
     .min(1, "Resposta é obrigatória")
     .max(2000, "Resposta deve ter no máximo 2000 caracteres"),
   displayOrder: z.number(),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
 });
 
 export const insertSiteSettingsSchema = z.object({

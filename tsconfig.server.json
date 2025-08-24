@@ -18,7 +18,10 @@
     "paths": {
       "@shared/*": ["./shared/*"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitAny": false
   },
   "include": ["server/**/*", "shared/**/*"],
   "exclude": ["node_modules", "client/**/*", "dist/**/*", "*.config.ts", "*.config.js", "server/tests/**/*"]

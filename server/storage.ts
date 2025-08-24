@@ -17,7 +17,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db.js";
 import { eq, desc, asc } from "drizzle-orm";
-import * as session from "express-session";
+import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db.js";
 
@@ -70,17 +70,7 @@ export class DatabaseStorage implements IStorage {
 
   // Contact Submissions
   async createContactSubmission(insertSubmission: InsertContactSubmission): Promise<ContactSubmission> {
-    const [submission] = await db.insert(contactSubmissions).values({
-      name: insertSubmission.name,
-      email: insertSubmission.email,
-      phone: insertSubmission.phone,
-      city: insertSubmission.city,
-      petName: insertSubmission.petName,
-      animalType: insertSubmission.animalType,
-      petAge: insertSubmission.petAge,
-      planInterest: insertSubmission.planInterest,
-      message: insertSubmission.message
-    }).returning();
+    const [submission] = await db.insert(contactSubmissions).values(insertSubmission as any).returning();
     return submission;
   }
 
@@ -169,17 +159,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createPlan(insertPlan: InsertPlan): Promise<Plan> {
-    const [plan] = await db.insert(plans).values({
-      name: insertPlan.name,
-      price: insertPlan.price,
-      description: insertPlan.description,
-      features: insertPlan.features,
-      buttonText: insertPlan.buttonText,
-      redirectUrl: insertPlan.redirectUrl,
-      planType: insertPlan.planType,
-      isActive: insertPlan.isActive,
-      displayOrder: insertPlan.displayOrder
-    }).returning();
+    const [plan] = await db.insert(plans).values(insertPlan as any).returning();
     return plan;
   }
 
@@ -212,17 +192,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createNetworkUnit(insertUnit: InsertNetworkUnit): Promise<NetworkUnit> {
-    const [unit] = await db.insert(networkUnits).values({
-      name: insertUnit.name,
-      address: insertUnit.address,
-      phone: insertUnit.phone,
-      whatsapp: insertUnit.whatsapp,
-      googleMapsUrl: insertUnit.googleMapsUrl,
-      rating: insertUnit.rating,
-      services: insertUnit.services,
-      imageData: insertUnit.imageData,
-      isActive: insertUnit.isActive
-    }).returning();
+    const [unit] = await db.insert(networkUnits).values(insertUnit as any).returning();
     return unit;
   }
 
@@ -254,12 +224,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createFaqItem(insertItem: InsertFaqItem): Promise<FaqItem> {
-    const [item] = await db.insert(faqItems).values({
-      question: insertItem.question,
-      answer: insertItem.answer,
-      displayOrder: insertItem.displayOrder,
-      isActive: insertItem.isActive
-    }).returning();
+    const [item] = await db.insert(faqItems).values(insertItem as any).returning();
     return item;
   }
 

@@ -1,27 +1,26 @@
 # Easypanel Configuration
-# This file contains specific configurations for Easypanel deployment
+# This file contains configuration for Easypanel deployment
 
-# Build configuration
+# Build Configuration
 BUILD_METHOD=buildpacks
 BUILDER=heroku/builder:24
 BUILDPACKS=heroku/nodejs
 
-# Environment variables
+# Environment Variables
 NODE_ENV=production
 PORT=8080
 HOST=0.0.0.0
 
-# Health check configuration
+# Build Commands
+BUILD_COMMAND=npm run build:simple
+START_COMMAND=npm start
+
+# Health Check
 HEALTH_CHECK_PATH=/api/health
 HEALTH_CHECK_INTERVAL=30s
 HEALTH_CHECK_TIMEOUT=10s
 HEALTH_CHECK_RETRIES=3
 
-# Resource limits
+# Resources
 CPU_LIMIT=0.5
 MEMORY_LIMIT=512Mi
-
-# Build commands
-PRE_BUILD=npm ci --only=production
-BUILD=npm run build:easypanel
-START=npm start

@@ -1,5 +1,5 @@
 build:
-  docker:
-    web: Dockerfile
+  buildpacks:
+    - url: heroku/nodejs
   config:
     NODE_ENV: production
