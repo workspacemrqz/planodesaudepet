@@ -14,7 +14,7 @@ import {
   networkUnits,
   faqItems,
   siteSettings
-} from "@shared/schema";
+} from "../shared/schema.js";
 import { db } from "./db.js";
 import { eq, desc, asc } from "drizzle-orm";
 import session from "express-session";

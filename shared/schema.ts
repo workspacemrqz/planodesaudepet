@@ -144,21 +144,21 @@ export const informacoesContato = pgTable("informacoes_contato", {
 
 // SCHEMAS DE INSERÇÃO CORRIGIDOS PARA CORRESPONDER AO BANCO
 export const insertContactSubmissionSchema = z.object({
-  name: z.string(),
-  email: z.string(),
-  phone: z.string(),
-  city: z.string(),
-  petName: z.string(),
-  animalType: z.string(),
-  petAge: z.string(),
-  planInterest: z.string(),
+  name: z.string().min(1, "Nome é obrigatório"),
+  email: z.string().min(1, "Email é obrigatório"),
+  phone: z.string().min(1, "Telefone é obrigatório"),
+  city: z.string().min(1, "Cidade é obrigatória"),
+  petName: z.string().min(1, "Nome do pet é obrigatório"),
+  animalType: z.string().min(1, "Tipo de animal é obrigatório"),
+  petAge: z.string().min(1, "Idade do pet é obrigatória"),
+  planInterest: z.string().min(1, "Interesse no plano é obrigatório"),
   message: z.string().optional(),
 });
 
 export const insertPlanSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  features: z.array(z.string()),
+  name: z.string().min(1, "Nome é obrigatório"),
+  description: z.string().min(1, "Descrição é obrigatória"),
+  features: z.array(z.string()).min(1, "Features são obrigatórias"),
   isActive: z.boolean().default(true),
   buttonText: z.string().default("Contratar Plano"),
   redirectUrl: z.string().default("/contact"),
@@ -168,12 +168,12 @@ export const insertPlanSchema = z.object({
 });
 
 export const insertNetworkUnitSchema = z.object({
-  name: z.string(),
-  address: z.string(),
-  phone: z.string(),
-  rating: z.number(),
-  services: z.array(z.string()),
-  imageUrl: z.string(),
+  name: z.string().min(1, "Nome é obrigatório"),
+  address: z.string().min(1, "Endereço é obrigatório"),
+  phone: z.string().min(1, "Telefone é obrigatório"),
+  rating: z.number().min(0).max(5),
+  services: z.array(z.string()).min(1, "Serviços são obrigatórios"),
+  imageUrl: z.string().min(1, "URL da imagem é obrigatória"),
   isActive: z.boolean().default(true),
   whatsapp: z.string().regex(/^\d{11}$/, "WhatsApp deve conter exatamente 11 dígitos").optional(),
   googleMapsUrl: z.string().url("URL do Google Maps deve ser válida").optional(),
@@ -186,7 +186,7 @@ export const insertFaqItemSchema = z.object({
   answer: z.string()
     .min(1, "Resposta é obrigatória")
     .max(2000, "Resposta deve ter no máximo 2000 caracteres"),
-  displayOrder: z.number(),
+  displayOrder: z.number().min(0, "Ordem de exibição é obrigatória"),
   isActive: z.boolean().default(true),
 });
 

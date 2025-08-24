@@ -261,7 +261,7 @@ export const errorHandler = (
     appError = handleJsonError(error);
   } else if (error.name === 'TimeoutError') {
     appError = handleTimeoutError(error);
-  } else if (error.code && typeof error.code === 'string') {
+  } else if ('code' in error && typeof (error as any).code === 'string') {
     // Erro de banco de dados ou outro erro com código
     appError = handleDatabaseError(error);
   } else {

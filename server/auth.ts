@@ -1,6 +1,6 @@
 import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
-import { AdminUser } from "@shared/schema";
+import { AdminUser } from "../shared/schema.js";
 import rateLimit from "express-rate-limit";
 import { autoConfig } from "./config.js";
 

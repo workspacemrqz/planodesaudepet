@@ -1,6 +1,6 @@
 import { Pool, PoolClient } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from "@shared/schema";
+import * as schema from "../shared/schema.js";
 import { autoConfig } from "./config.js";
 
 // Validate database environment variables
@@ -79,7 +79,7 @@ class DatabaseHealthManager {
       console.log('🔌 Conexão adquirida do pool');
     });
 
-    pool.on('release', (client: PoolClient) => {
+    pool.on('release', () => {
       console.log('🔌 Conexão liberada de volta ao pool');
     });
   }
@@ -227,9 +227,7 @@ export async function executeTransactionWithRetry<T>(
 export const db = drizzle(pool, { 
   schema,
   // Configurações de performance
-  logger: process.env.NODE_ENV === 'development',
-  // Timeout para queries
-  queryTimeout: 30000, // 30 segundos
+  logger: process.env.NODE_ENV === 'development'
 });
 
 // Função de inicialização do banco

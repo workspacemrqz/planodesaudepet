@@ -9,7 +9,7 @@ import {
   insertSiteSettingsSchema,
   type InsertNetworkUnit,
   type InsertSiteSettings
-} from "@shared/schema";
+} from "../shared/schema.js";
 import { sanitizeText } from "./utils/text-sanitizer.js";
 import { setupAuth, requireAuth } from "./auth.js";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage.js";
@@ -96,23 +96,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: 'Site settings not found' });
         }
         
-        let imageData;
-        if (type === 'main') imageData = siteSettings.mainImage;
-        else if (type === 'network') imageData = siteSettings.networkImage;
-        else if (type === 'about') imageData = siteSettings.aboutImage;
+        let imageUrl;
+        if (type === 'main') imageUrl = siteSettings.mainImage;
+        else if (type === 'network') imageUrl = siteSettings.networkImage;
+        else if (type === 'about') imageUrl = siteSettings.aboutImage;
         
-        if (!imageData) {
+        if (!imageUrl) {
           return res.status(404).json({ error: 'Image not found' });
         }
         
         // Extrair informações do Base64
-        const imageInfo = imageServiceBase64.getBase64Info(imageData);
+        const imageInfo = imageServiceBase64.getBase64Info(imageUrl);
         if (!imageInfo) {
           return res.status(400).json({ error: 'Invalid image data' });
         }
         
         // Decodificar Base64 e servir
-        const base64Data = imageData.split(',')[1];
+        const base64Data = imageUrl.split(',')[1];
         const imageBuffer = Buffer.from(base64Data, 'base64');
         
         res.setHeader('Content-Type', imageInfo.mimeType);
@@ -549,19 +549,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/network-units/:id/image", requireAdmin, async (req, res) => {
     try {
       const { id } = req.params;
-      const { imageData } = req.body; // Agora recebe Base64 diretamente
+      const { imageUrl } = req.body; // Agora recebe Base64 diretamente
 
-      if (!imageData) {
+      if (!imageUrl) {
         return res.status(400).json({ error: "Image data is required" });
       }
 
       // Validar Base64
-      if (!imageServiceBase64.validateBase64(imageData)) {
+      if (!imageServiceBase64.validateBase64(imageUrl)) {
         return res.status(400).json({ error: "Invalid image data format" });
       }
 
       // Atualizar no banco
-      await storage.updateNetworkUnit(id, { imageUrl: imageData });
+      await storage.updateNetworkUnit(id, { imageUrl: imageUrl });
       
       res.json({ success: true, message: "Network unit image updated successfully" });
     } catch (error) {

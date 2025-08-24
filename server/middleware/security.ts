@@ -99,11 +99,18 @@ export const addRequestId = (req: Request, res: Response, next: NextFunction): v
 // Middleware para configurar proxy trust
 export const configureProxyTrust = (req: Request, res: Response, next: NextFunction): void => {
   // Configurar confiança em proxies para obter IP real
-  req.ip = req.headers['x-forwarded-for'] as string || 
-           req.headers['x-real-ip'] as string || 
-           req.connection.remoteAddress || 
-           req.socket.remoteAddress || 
-           'unknown';
+  const realIp = req.headers['x-forwarded-for'] as string || 
+                 req.headers['x-real-ip'] as string || 
+                 req.connection.remoteAddress || 
+                 req.socket.remoteAddress || 
+                 'unknown';
+  
+  // Usar Object.defineProperty para definir req.ip
+  Object.defineProperty(req, 'ip', {
+    value: realIp,
+    writable: false,
+    configurable: false
+  });
   
   next();
 };
@@ -160,7 +167,8 @@ export const corsValidation = (req: Request, res: Response, next: NextFunction):
   if (origin && !config.allowedOrigins.includes('*')) {
     if (!config.allowedOrigins.includes(origin)) {
       securityManager.recordSuspiciousActivity(req.ip, `Origem não permitida: ${origin}`);
-      return res.status(403).json({ error: 'Origem não permitida' });
+      res.status(403).json({ error: 'Origem não permitida' });
+      return;
     }
   }
 
@@ -171,7 +179,8 @@ export const corsValidation = (req: Request, res: Response, next: NextFunction):
   res.header('Access-Control-Allow-Credentials', 'true');
 
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+    res.sendStatus(200);
+    return;
   }
 
   next();
@@ -183,10 +192,11 @@ export const bruteForceProtection = (req: Request, res: Response, next: NextFunc
   
   // Verificar se IP está bloqueado
   if (securityManager.isIPBlocked(ip)) {
-    return res.status(403).json({ 
+    res.status(403).json({ 
       error: 'Acesso temporariamente bloqueado',
       retryAfter: 3600 // 1 hora
     });
+    return;
   }
 
   // Verificar atividades suspeitas
@@ -194,10 +204,11 @@ export const bruteForceProtection = (req: Request, res: Response, next: NextFunc
   if (suspicious && suspicious.count > 5) {
     const timeSinceLastAttempt = Date.now() - suspicious.lastAttempt;
     if (timeSinceLastAttempt < 300000) { // 5 minutos
-      return res.status(429).json({ 
+      res.status(429).json({ 
         error: 'Muitas tentativas, aguarde antes de tentar novamente',
         retryAfter: Math.ceil((300000 - timeSinceLastAttempt) / 1000)
       });
+      return;
     }
   }
 
@@ -219,7 +230,8 @@ export const inputValidation = (req: Request, res: Response, next: NextFunction)
     
     if (contentLength > maxSize) {
       securityManager.recordSuspiciousActivity(req.ip, `Requisição muito grande: ${contentLength} bytes`);
-      return res.status(413).json({ error: 'Requisição muito grande' });
+      res.status(413).json({ error: 'Requisição muito grande' });
+      return;
     }
 
     // Sanitizar parâmetros da URL
@@ -242,7 +254,7 @@ export const inputValidation = (req: Request, res: Response, next: NextFunction)
 
     // Sanitizar corpo da requisição (apenas strings)
     if (req.body && typeof req.body === 'object') {
-      this.sanitizeObject(req.body);
+      sanitizeObject(req.body);
     }
 
     next();
@@ -255,7 +267,8 @@ export const inputValidation = (req: Request, res: Response, next: NextFunction)
 // Função para sanitizar objetos recursivamente
 function sanitizeObject(obj: any): void {
   if (typeof obj === 'string') {
-    return sanitizeText(obj);
+    sanitizeText(obj);
+    return;
   }
   
   if (Array.isArray(obj)) {
@@ -318,19 +331,22 @@ export const sqlInjectionProtection = (req: Request, res: Response, next: NextFu
   // Verificar query parameters
   if (checkForSQLInjection(req.query)) {
     securityManager.recordSuspiciousActivity(req.ip, 'Tentativa de SQL Injection detectada');
-    return res.status(400).json({ error: 'Dados de entrada inválidos' });
+    res.status(400).json({ error: 'Dados de entrada inválidos' });
+    return;
   }
 
   // Verificar parâmetros da rota
   if (checkForSQLInjection(req.params)) {
     securityManager.recordSuspiciousActivity(req.ip, 'Tentativa de SQL Injection detectada');
-    return res.status(400).json({ error: 'Dados de entrada inválidos' });
+    res.status(400).json({ error: 'Dados de entrada inválidos' });
+    return;
   }
 
   // Verificar corpo da requisição
   if (checkForSQLInjection(req.body)) {
     securityManager.recordSuspiciousActivity(req.ip, 'Tentativa de SQL Injection detectada');
-    return res.status(400).json({ error: 'Dados de entrada inválidos' });
+    res.status(400).json({ error: 'Dados de entrada inválidos' });
+    return;
   }
 
   next();
@@ -388,19 +404,22 @@ export const xssProtection = (req: Request, res: Response, next: NextFunction): 
   // Verificar query parameters
   if (checkForXSS(req.query)) {
     securityManager.recordSuspiciousActivity(req.ip, 'Tentativa de XSS detectada');
-    return res.status(400).json({ error: 'Dados de entrada inválidos' });
+    res.status(400).json({ error: 'Dados de entrada inválidos' });
+    return;
   }
 
   // Verificar parâmetros da rota
   if (checkForXSS(req.params)) {
     securityManager.recordSuspiciousActivity(req.ip, 'Tentativa de XSS detectada');
-    return res.status(400).json({ error: 'Dados de entrada inválidos' });
+    res.status(400).json({ error: 'Dados de entrada inválidos' });
+    return;
   }
 
   // Verificar corpo da requisição
   if (checkForXSS(req.body)) {
     securityManager.recordSuspiciousActivity(req.ip, 'Tentativa de XSS detectada');
-    return res.status(400).json({ error: 'Dados de entrada inválidos' });
+    res.status(400).json({ error: 'Dados de entrada inválidos' });
+    return;
   }
 
   next();
@@ -466,10 +485,11 @@ export const rateLimitByIP = (options: {
         requestData.blocked = true;
         securityManager.recordSuspiciousActivity(ip, `Rate limit excedido: ${requestData.count} requests`);
         
-        return res.status(429).json({ 
+        res.status(429).json({ 
           error: options.message || 'Muitas requisições',
           retryAfter: Math.ceil((requestData.resetTime - now) / 1000)
         });
+        return;
       }
     }
     
@@ -483,13 +503,15 @@ export const contentTypeValidation = (allowedTypes: string[]) => {
     const contentType = req.headers['content-type'];
     
     if (!contentType) {
-      return res.status(400).json({ error: 'Content-Type é obrigatório' });
+      res.status(400).json({ error: 'Content-Type é obrigatório' });
+      return;
     }
     
     const isValidType = allowedTypes.some(type => contentType.includes(type));
     if (!isValidType) {
       securityManager.recordSuspiciousActivity(req.ip, `Content-Type não permitido: ${contentType}`);
-      return res.status(400).json({ error: 'Tipo de conteúdo não suportado' });
+      res.status(400).json({ error: 'Tipo de conteúdo não suportado' });
+      return;
     }
     
     next();
@@ -503,7 +525,8 @@ export const fileSizeValidation = (maxSize: number) => {
     
     if (contentLength > maxSize) {
       securityManager.recordSuspiciousActivity(req.ip, `Arquivo muito grande: ${contentLength} bytes`);
-      return res.status(413).json({ error: 'Arquivo muito grande' });
+      res.status(413).json({ error: 'Arquivo muito grande' });
+      return;
     }
     
     next();
