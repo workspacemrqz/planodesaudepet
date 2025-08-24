@@ -129,6 +129,7 @@ async function initializeServer(): Promise<void> {
       console.log('\n🎉 SERVIDOR INICIADO COM SUCESSO!');
       console.log('=====================================');
       console.log(`🌐 URL: http://${host}:${port}`);
+      console.log(`🏠 Host: ${host} (${host === '0.0.0.0' ? 'Aceita conexões externas' : 'Apenas localhost'})`);
       console.log(`🌍 Ambiente: ${autoConfig.get('NODE_ENV')}`);
       console.log(`📁 Diretório: ${process.cwd()}`);
       console.log(`🔌 Banco: Conectado e saudável`);

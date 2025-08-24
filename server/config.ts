@@ -65,6 +65,11 @@ class AutoConfig {
       return process.env.NODE_ENV;
     }
     
+    // Detecta automaticamente se está rodando no EasyPanel/Heroku
+    if (process.env.PORT === '80' || process.env.PORT === '443' || process.env.DYNO) {
+      return 'production';
+    }
+    
     // Padrão para desenvolvimento local
     return 'development';
   }
@@ -88,12 +93,13 @@ class AutoConfig {
       return process.env.HOST;
     }
     
-    // Em desenvolvimento, usar localhost para facilitar testes
-    if (this.config.NODE_ENV === 'development') {
-      return 'localhost';
+    // Em produção ou quando a porta for 80 (EasyPanel), usar 0.0.0.0
+    if (this.config.NODE_ENV === 'production' || this.config.PORT === '80') {
+      return '0.0.0.0';
     }
     
-    return '0.0.0.0';
+    // Em desenvolvimento, usar localhost para facilitar testes
+    return 'localhost';
   }
 
   /**
