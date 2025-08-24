@@ -70,9 +70,9 @@ export const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchOnMount: true,
-      staleTime: 5 * 60 * 1000, // 5 minutos
-      gcTime: 10 * 60 * 1000, // 10 minutos
+      refetchOnMount: false, // Evitar re-fetch desnecessário
+      staleTime: 10 * 60 * 1000, // 10 minutos - aumentar stale time
+      gcTime: 30 * 60 * 1000, // 30 minutos - aumentar garbage collection
       retry: 1, // Retry apenas 1 vez
       retryDelay: 1000,
       networkMode: 'online',

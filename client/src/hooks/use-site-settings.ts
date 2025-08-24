@@ -64,10 +64,11 @@ export function useSiteSettings() {
         return null;
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    gcTime: 10 * 60 * 1000, // 10 minutos (anteriormente cacheTime)
-    retry: 2, // Tentar apenas 2 vezes
-    retryDelay: 1000, // Esperar 1 segundo entre tentativas
+    staleTime: 15 * 60 * 1000, // 15 minutos - aumentar stale time
+    gcTime: 30 * 60 * 1000, // 30 minutos - aumentar garbage collection
+    retry: 1, // Tentar apenas 1 vez
+    retryDelay: 2000, // Esperar 2 segundos entre tentativas
+    refetchOnMount: false, // Evitar re-fetch desnecessário
   });
 }
 

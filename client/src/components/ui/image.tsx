@@ -55,20 +55,22 @@ export function RobustImage({
     }
   }, [onLoad]);
 
-  // Reset error state when src changes
+  // Reset error state when src changes - otimizado para evitar re-renderizações
   React.useEffect(() => {
     try {
       const newSrc = getImageUrlSync(src, fallback);
-      if (newSrc !== imgSrc) {
+      if (newSrc !== imgSrc && newSrc !== fallback) {
         setImgSrc(newSrc);
         setHasError(false);
       }
     } catch (error) {
       console.warn('Error processing new image URL:', error);
-      setImgSrc(fallback);
-      setHasError(true);
+      if (imgSrc !== fallback) {
+        setImgSrc(fallback);
+        setHasError(true);
+      }
     }
-  }, [src, fallback, imgSrc]);
+  }, [src, fallback]); // Removido imgSrc da dependência para evitar loops
 
   return (
     <img
