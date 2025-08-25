@@ -205,7 +205,7 @@ class ErrorHandler {
   /**
    * Tratar erro principal
    */
-  public handleError(error: Error | string, context?: Record<string, any>): void {
+  public handleError(error: Error | string | Event, context?: Record<string, any>): void {
     try {
       const appError = this.createAppError(error, context);
 
@@ -238,40 +238,59 @@ class ErrorHandler {
       }
 
     } catch (handlerError) {
-      // Evitar loops infinitos de erro
-      console.error('❌ Erro no Error Handler:', handlerError instanceof Error ? handlerError.message : 'Erro desconhecido');
-      // Fallback para console
-      console.error('Erro original:', error instanceof Error ? error.message : String(error));
+      // Se houver erro no próprio handler, registrar de forma mais simples
+      const handlerMessage = handlerError instanceof Error ? handlerError.message : 'Unknown error';
+      const originalMessage = originalError instanceof Error ? originalError.message :
+                           originalError instanceof Event ? `${originalError.type} event` :
+                           typeof originalError === 'string' ? originalError :
+                           'Unknown error';
+
+      console.error('❌ Erro no Error Handler:', handlerMessage);
+      console.error('Erro original:', originalMessage);
     }
   }
 
   /**
    * Criar objeto de erro padronizado
    */
-  private createAppError(error: Error | string, context?: Record<string, any>): AppError {
-    const errorMessage = typeof error === 'string' ? error : (error?.message || 'Erro desconhecido');
-    const originalError = typeof error === 'string' ? new Error(error) : error;
+  private createAppError(error: Error | string | Event, context?: Record<string, any>): AppError {
+    let errorMessage: string;
+    let originalErrorObject: Error | Event | string;
+
+    if (error instanceof Error) {
+      errorMessage = error.message || 'Erro desconhecido';
+      originalErrorObject = error;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+      originalErrorObject = error;
+    } else if (error instanceof Event && error.target) {
+      errorMessage = `Resource error: ${error.target.tagName}`;
+      originalErrorObject = error;
+    } else {
+      errorMessage = 'Erro desconhecido';
+      originalErrorObject = error;
+    }
 
     const now = new Date();
-    
+
     const appError: AppError = {
       id: this.generateErrorId(),
-      name: originalError?.name || 'AppError',
+      name: originalErrorObject instanceof Error ? originalErrorObject.name : 'AppError',
       message: errorMessage,
-      code: this.determineErrorCode(originalError),
-      severity: this.determineSeverity(originalError),
+      code: this.determineErrorCode(originalErrorObject),
+      severity: this.determineSeverity(originalErrorObject),
       context: {
         ...context,
-        originalError: originalError?.message || errorMessage,
-        stack: originalError?.stack
+        originalError: originalErrorObject instanceof Error ? originalErrorObject.message : String(originalErrorObject),
+        stack: originalErrorObject instanceof Error ? originalErrorObject.stack : undefined
       },
       timestamp: now,
       userId: this.getUserId(),
       sessionId: this.getSessionId(),
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-      stack: originalError?.stack,
-      isRecoverable: this.isErrorRecoverable(originalError),
+      stack: originalErrorObject instanceof Error ? originalErrorObject.stack : undefined,
+      isRecoverable: this.isErrorRecoverable(originalErrorObject),
       retryCount: 0,
       maxRetries: this.config.maxRetries
     };
@@ -282,15 +301,19 @@ class ErrorHandler {
   /**
    * Determinar código do erro
    */
-  private determineErrorCode(error: Error): string {
-    if (error.name === 'TypeError') return 'TYPE_ERROR';
-    if (error.name === 'ReferenceError') return 'REFERENCE_ERROR';
-    if (error.name === 'SyntaxError') return 'SYNTAX_ERROR';
-    if (error.name === 'RangeError') return 'RANGE_ERROR';
-    if (error.message.includes('Network')) return 'NETWORK_ERROR';
-    if (error.message.includes('fetch')) return 'FETCH_ERROR';
-    if (error.message.includes('timeout')) return 'TIMEOUT_ERROR';
-    if (error.message.includes('permission')) return 'PERMISSION_ERROR';
+  private determineErrorCode(error: Error | string | Event): string {
+    if (error instanceof Error) {
+      if (error.name === 'TypeError') return 'TYPE_ERROR';
+      if (error.name === 'ReferenceError') return 'REFERENCE_ERROR';
+      if (error.name === 'SyntaxError') return 'SYNTAX_ERROR';
+      if (error.name === 'RangeError') return 'RANGE_ERROR';
+      if (error.message.includes('Network')) return 'NETWORK_ERROR';
+      if (error.message.includes('fetch')) return 'FETCH_ERROR';
+      if (error.message.includes('timeout')) return 'TIMEOUT_ERROR';
+      if (error.message.includes('permission')) return 'PERMISSION_ERROR';
+    } else if (error instanceof Event && error.target) {
+      return 'RESOURCE_ERROR';
+    }
 
     return 'UNKNOWN_ERROR';
   }
@@ -298,11 +321,15 @@ class ErrorHandler {
   /**
    * Determinar severidade do erro
    */
-  private determineSeverity(error: Error): AppError['severity'] {
-    if (error.name === 'SyntaxError') return 'critical';
-    if (error.name === 'ReferenceError') return 'high';
-    if (error.message.includes('Network')) return 'medium';
-    if (error.message.includes('timeout')) return 'medium';
+  private determineSeverity(error: Error | string | Event): AppError['severity'] {
+    if (error instanceof Error) {
+      if (error.name === 'SyntaxError') return 'critical';
+      if (error.name === 'ReferenceError') return 'high';
+      if (error.message.includes('Network')) return 'medium';
+      if (error.message.includes('timeout')) return 'medium';
+    } else if (error instanceof Event && error.target) {
+      return 'high'; // Erros de recurso geralmente são mais sérios
+    }
 
     return 'low';
   }
@@ -310,12 +337,17 @@ class ErrorHandler {
   /**
    * Verificar se o erro é recuperável
    */
-  private isErrorRecoverable(error: Error): boolean {
-    if (error.name === 'SyntaxError') return false;
-    if (error.name === 'ReferenceError') return false;
-    if (error.message.includes('Network')) return true;
-    if (error.message.includes('timeout')) return true;
-    if (error.message.includes('fetch')) return true;
+  private isErrorRecoverable(error: Error | string | Event): boolean {
+    if (error instanceof Error) {
+      if (error.name === 'SyntaxError') return false;
+      if (error.name === 'ReferenceError') return false;
+      if (error.message.includes('Network')) return true;
+      if (error.message.includes('timeout')) return true;
+      if (error.message.includes('fetch')) return true;
+    } else if (error instanceof Event && error.target) {
+      // Erros de recurso podem ser recuperáveis se a URL for corrigida ou o fallback funcionar
+      return true;
+    }
 
     return true;
   }
@@ -324,7 +356,7 @@ class ErrorHandler {
    * Verificar se o erro deve ser ignorado
    */
   private shouldIgnoreError(error: AppError): boolean {
-    return this.config.ignoredErrors.some(ignored => 
+    return this.config.ignoredErrors.some(ignored =>
       error.message.includes(ignored) || error.code.includes(ignored)
     );
   }
@@ -456,6 +488,8 @@ class ErrorHandler {
         return 'Erro ao carregar dados. Verificando conexão...';
       case 'PERMISSION_ERROR':
         return 'Permissão negada. Verificando configurações...';
+      case 'RESOURCE_ERROR':
+        return 'Erro ao carregar um recurso (imagem, script, etc.). Verificando o link...';
       default:
         return 'Ocorreu um erro inesperado. Tentando resolver...';
     }
@@ -474,10 +508,10 @@ class ErrorHandler {
           stack: error.stack || null,
           context: error.context || {},
           timestamp: (error.timestamp || new Date()).toISOString(),
-          userAgent: error.userAgent || navigator.userAgent || '',
-          url: error.url || window.location.href || ''
+          userAgent: error.userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : ''),
+          url: error.url || (typeof window !== 'undefined' ? window.location.href : '')
         };
-        
+
         sendErrorToMonitoring(errorInfo);
         console.log('📊 Enviando erro para serviço de monitoramento:', error.code);
       }
@@ -603,13 +637,13 @@ class ErrorHandler {
 export const errorHandler = ErrorHandler.getInstance();
 
 // Funções utilitárias para uso direto
-export const handleError = (error: Error | string, context?: Record<string, any>) => 
+export const handleError = (error: Error | string | Event, context?: Record<string, any>) =>
   errorHandler.handleError(error, context);
 
-export const logInfo = (message: string, context?: Record<string, any>) => 
+export const logInfo = (message: string, context?: Record<string, any>) =>
   errorHandler.logInfo(message, context);
 
-export const logWarning = (message: string, context?: Record<string, any>) => 
+export const logWarning = (message: string, context?: Record<string, any>) =>
   errorHandler.logWarning(message, context);
 
 // Função para criar erros estruturados

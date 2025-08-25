@@ -41,15 +41,19 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     if (hasErrored) return; // Evita loops
 
     // Log mais silencioso para evitar spam no console
-    if (src && !src.includes('placeholder-image.svg')) {
+    if (src && !src.includes('placeholder-image.svg') && !src.includes('data:image')) {
       console.log(`Image failed to load: ${src}, using fallback: ${fallbackSrc}`);
     }
 
     setHasErrored(true);
     setIsLoading(false);
 
+    const errorMessage = typeof error === 'string' ? error : 
+                        error instanceof Event ? 'Falha ao carregar imagem' :
+                        'Falha ao carregar imagem';
+
     if (onError) {
-      onError(typeof error === 'string' ? error : 'Falha ao carregar imagem');
+      onError(errorMessage);
     }
 
     // Tentar carregar imagem de fallback

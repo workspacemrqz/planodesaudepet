@@ -27,8 +27,12 @@ export function RobustImage({
   style,
   ...props
 }: RobustImageProps) {
-  // Simplificar para usar diretamente o src, sem processamento complexo
-  const [imgSrc, setImgSrc] = useState<string>(src || fallback);
+  // Use getImageUrlSync to validate and process the src
+  const processedSrc = React.useMemo(() => {
+    return getImageUrlSync(src, fallback);
+  }, [src, fallback]);
+
+  const [imgSrc, setImgSrc] = useState<string>(processedSrc);
   const [hasError, setHasError] = useState(false);
 
   const handleError = useCallback(() => {
@@ -49,13 +53,14 @@ export function RobustImage({
     }
   }, [onLoad]);
 
-  // Atualizar src quando mudar, mas sem processamento complexo
+  // Atualizar src quando mudar, usando processamento seguro
   React.useEffect(() => {
-    if (src && src !== imgSrc) {
-      setImgSrc(src);
+    const newProcessedSrc = getImageUrlSync(src, fallback);
+    if (newProcessedSrc !== imgSrc) {
+      setImgSrc(newProcessedSrc);
       setHasError(false);
     }
-  }, [src]);
+  }, [src, fallback, imgSrc]);
 
   return (
     <img

@@ -45,13 +45,20 @@ export async function getImageUrl(imagePath: string | null | undefined, fallback
  * Synchronous version that returns relative URLs for production compatibility
  */
 export function getImageUrlSync(imagePath: string | null | undefined, fallback?: string): string {
-  if (!imagePath) {
+  if (!imagePath || imagePath.trim() === '') {
     return fallback || '/placeholder-image.svg';
   }
 
   // If it's already a complete URL (http/https), return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath;
+  }
+
+  // Handle invalid paths (names without proper path structure)
+  if (!imagePath.startsWith('/') && !imagePath.startsWith('.') && !imagePath.includes('/')) {
+    // This looks like a filename without path, use fallback
+    console.warn(`Invalid image path detected: ${imagePath}, using fallback`);
+    return fallback || '/placeholder-image.svg';
   }
 
   // For local static files, ensure they start with /
