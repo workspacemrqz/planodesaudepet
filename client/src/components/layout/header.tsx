@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from 'framer-motion';
+import { RobustImage } from "@/components/ui/image";
 
 export default function Header() {
   const [location, setLocation] = useLocation();
@@ -53,7 +54,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="/unipet-logo.png" alt="Unipet Plan" className="h-8 w-auto" />
+            <RobustImage 
+              src="/unipet-logo.png" 
+              alt="Unipet Plan" 
+              className="h-8 w-auto" 
+              fallback="/placeholder-image.svg"
+              onError={(error) => console.warn('Logo image error:', error)}
+            />
           </Link>
 
           {/* Desktop Navigation */}
