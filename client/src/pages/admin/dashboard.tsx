@@ -62,16 +62,16 @@ export default function AdminDashboard() {
           </h2>
         </div>
 
-        <Card className="shadow-lg border-none">
-          <CardContent className="p-0">
-            <CardHeader className="pb-0 p-0">
+        <Card className="shadow-lg border-none bg-[#277677]">
+          <CardContent className="p-0 bg-[#277677]">
+            <CardHeader className="pb-0 p-0 bg-[#277677]">
               <AdminChipTabs 
                 activeTab={activeTab}
                 onTabChange={handleTabChange}
               />
             </CardHeader>
 
-            <div className="p-6">
+            <div className="p-6 bg-[#277677]">
               {/* Renderização condicional simples e direta */}
               {activeTab === "contact" && (
                 <div className="bg-[#277677] rounded-lg p-4">
@@ -81,20 +81,20 @@ export default function AdminDashboard() {
               )}
               
               {activeTab === "plans" && (
-                <div>
+                <div className="bg-[#277677] rounded-lg p-4">
                   <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Gerenciamento de Planos</h3>
                   <PlansTab />
                 </div>
               )}
               
               {activeTab === "network" && (
-                <div>
+                <div className="bg-[#277677] rounded-lg p-4">
                   <NetworkUnitsTab />
                 </div>
               )}
               
               {activeTab === "faq" && (
-                <div>
+                <div className="bg-[#277677] rounded-lg p-4">
                   <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Perguntas Frequentes</h3>
                   <FaqTab />
                 </div>
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
 
               
               {activeTab === "settings" && (
-                <div>
+                <div className="bg-[#277677] rounded-lg p-4">
                   <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Configurações</h3>
                   <SettingsTab />
                 </div>

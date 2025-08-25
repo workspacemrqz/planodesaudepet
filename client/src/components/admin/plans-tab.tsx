@@ -198,8 +198,8 @@ export default function PlansTab() {
             {/* Grid de Planos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {plans.map((plan) => (
-          <Card key={plan.id} className="bg-[#145759] shadow-lg border border-[#277677]/20">
-            <CardContent className="p-6">
+                  <Card key={plan.id} className="bg-[#277677] shadow-lg border border-[#277677]/20">
+          <CardContent className="p-6 bg-[#277677]">
               <div className="flex items-center justify-between">
                 {/* Nome do Plano */}
                 <h3 className="text-lg font-semibold text-[#FBF9F7]">

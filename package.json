@@ -14,6 +14,7 @@
     "start": "node dist/server/index.js",
     "postinstall": "node scripts/init-db.js",
     "db:init": "node scripts/init-db.js",
+
     "check:deployment": "node scripts/deployment-check.js",
     "db:migrate": "tsx drizzle/migrate.ts",
     "db:generate": "tsx drizzle/generate.ts",

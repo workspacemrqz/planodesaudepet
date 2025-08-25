@@ -38,6 +38,7 @@ export interface IStorage {
   getPlan(id: string): Promise<Plan | undefined>;
   createPlan(plan: InsertPlan): Promise<Plan>;
   updatePlan(id: string, plan: Partial<InsertPlan>): Promise<Plan | undefined>;
+
   deletePlan(id: string): Promise<boolean>;
   
   // Network Units
@@ -191,6 +192,8 @@ export class InMemoryStorage implements IStorage {
     }
     return undefined;
   }
+
+
 
   async deletePlan(id: string): Promise<boolean> {
     const index = this.plans.findIndex(p => p.id === id);
@@ -425,6 +428,8 @@ export class DatabaseStorage implements IStorage {
     const [plan] = await db.update(plans).set(updateData).where(eq(plans.id, id)).returning();
     return plan || undefined;
   }
+
+
 
   async deletePlan(id: string): Promise<boolean> {
     const result = await db.delete(plans).where(eq(plans.id, id));

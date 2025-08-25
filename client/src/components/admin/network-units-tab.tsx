@@ -821,17 +821,17 @@ export default function NetworkUnitsTab() {
         ))}
       </div>
       {(!units || units.length === 0) && (
-        <Card>
-          <CardContent className="p-6 text-center">
-            <MapPin className="h-12 w-12 text-[#145759] mx-auto mb-4" />
+        <Card className="bg-[#277677]">
+          <CardContent className="p-6 text-center bg-[#277677]">
+            <MapPin className="h-12 w-12 text-[#FBF9F7] mx-auto mb-4" />
             <p className="text-[#FBF9F7]">Nenhuma unidade cadastrada ainda.</p>
           </CardContent>
         </Card>
       )}
       {units && units.length > 0 && filteredUnits.length === 0 && (
-        <Card>
-          <CardContent className="p-6 text-center">
-            <Search className="h-12 w-12 text-[#145759] mx-auto mb-4" />
+        <Card className="bg-[#277677]">
+          <CardContent className="p-6 text-center bg-[#277677]">
+            <Search className="h-12 w-12 text-[#FBF9F7] mx-auto mb-4" />
             <p className="text-[#FBF9F7]">Nenhuma unidade encontrada com os filtros aplicados.</p>
             
           </CardContent>

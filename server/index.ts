@@ -119,6 +119,13 @@ async function initializeServer(): Promise<void> {
         lastModified: true
       }));
       
+      // Serve images from public/images directory
+      app.use('/images', express.static(path.join(clientBuildPath, 'public', 'images'), {
+        maxAge: '1y',
+        etag: true,
+        lastModified: true
+      }));
+      
       // Serve the React app for all non-API routes
       app.get('*', (req, res) => {
         if (!req.path.startsWith('/api')) {
@@ -140,6 +147,9 @@ async function initializeServer(): Promise<void> {
         
         // Serve public files
         app.use('/public', express.static(path.join(clientBuildPath, 'public')));
+        
+        // Serve images from public/images directory
+        app.use('/images', express.static(path.join(clientBuildPath, 'public', 'images')));
         
         // Serve the React app for all non-API routes
         app.get('*', (req, res) => {

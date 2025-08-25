@@ -696,7 +696,7 @@ export default function SettingsTab() {
   return (
     <div className="space-y-4">
       {/* Contact Information Container */}
-      <Card className="bg-[#145759] rounded-lg px-4 py-4">
+      <Card className="bg-[#277677] rounded-lg px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Phone className="h-5 w-5 text-[#FBF9F7]" />
@@ -936,7 +936,7 @@ export default function SettingsTab() {
       </Card>
 
       {/* Social Media Container */}
-      <Card className="bg-[#145759] rounded-lg px-4 py-4">
+      <Card className="bg-[#277677] rounded-lg px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-[#FBF9F7]" />
@@ -1147,7 +1147,7 @@ export default function SettingsTab() {
       </Card>
 
       {/* Image Management Container */}
-      <Card className="bg-[#145759] rounded-lg px-4 py-4">
+      <Card className="bg-[#277677] rounded-lg px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Settings className="h-5 w-5 text-[#FBF9F7]" />
@@ -1394,7 +1394,7 @@ export default function SettingsTab() {
       </Card>
 
       {/* Company Information Container */}
-      <Card className="bg-[#145759] rounded-lg px-4 py-4">
+      <Card className="bg-[#277677] rounded-lg px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-[#FBF9F7]" />
@@ -1551,7 +1551,7 @@ export default function SettingsTab() {
       </Card>
 
       {/* Legal Pages Container */}
-      <Card className="bg-[#145759] rounded-lg px-4 py-4">
+      <Card className="bg-[#277677] rounded-lg px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-4 text-[#FBF9F7]" />

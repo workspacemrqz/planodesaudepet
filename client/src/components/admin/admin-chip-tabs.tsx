@@ -17,7 +17,7 @@ const tabs = [
 
 const AdminChipTabs = ({ activeTab, onTabChange }: AdminChipTabsProps) => {
   return (
-    <div className="px-4 py-6 bg-gradient-to-r from-[#277677]/5 to-[#E1AC33]/5 flex items-center flex-wrap gap-2">
+    <div className="px-4 py-6 bg-[#277677] flex items-center flex-wrap gap-2">
       {tabs.map((tab) => (
         <Chip
           key={tab.value}

@@ -48,8 +48,8 @@ export default function ContactSubmissionsTab() {
 
   if (error) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
+      <Card className="bg-[#277677]">
+        <CardContent className="p-6 text-center bg-[#277677]">
           <p className="text-red-600">Erro ao carregar formulários: {error.message}</p>
         </CardContent>
       </Card>

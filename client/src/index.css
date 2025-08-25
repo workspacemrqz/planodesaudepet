@@ -2118,3 +2118,100 @@ div[class*="bg-[#195d5e]"] * {
 .custom-checkbox:hover {
   border-color: #EAA42A;
 }
+
+/* === CORREÇÃO DE BACKGROUNDS TRANSPARENTES NO PAINEL ADMINISTRATIVO === */
+
+/* Força background #277677 em todos os dialogs do admin */
+[data-radix-dialog-content],
+[role="dialog"] > div,
+.admin-dialog-content,
+.admin-dialog-content > div {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background #277677 em todos os popups e modais do admin */
+[data-radix-dialog-overlay] + div,
+[data-radix-dialog-overlay] ~ div,
+[role="dialog"],
+[role="dialog"] * {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background #277677 em componentes específicos do admin */
+.admin-dialog-content [data-radix-dialog-content],
+.admin-dialog-content [role="dialog"],
+.admin-dialog-content .dialog-content,
+.admin-dialog-content .modal-content {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background #277677 em todos os containers de abas do admin */
+div[class*="bg-[#277677]"],
+div[class*="bg-[#145759]"],
+div[class*="bg-[#115051]"] {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background #277677 em todos os elementos dentro das abas admin */
+div[class*="bg-[#277677]"] *,
+div[class*="bg-[#145759]"] *,
+div[class*="bg-[#115051]"] * {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Override específico para dialogs do Radix UI */
+[data-radix-dialog-content] {
+  background-color: #277677 !important;
+  background: #277677 !important;
+  border-radius: 0.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Força background em todos os elementos de formulário do admin */
+.admin-dialog-content form,
+.admin-dialog-content .form,
+.admin-dialog-content .form-container {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background em todos os containers de conteúdo do admin */
+.admin-dialog-content .content,
+.admin-dialog-content .container,
+.admin-dialog-content .wrapper {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Override final para garantir que nenhum elemento fique transparente */
+.admin-dialog-content *,
+[data-radix-dialog-content] *,
+[role="dialog"] * {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background #277677 em todos os Cards do admin */
+.admin-dialog-content .card,
+.admin-dialog-content [class*="card"],
+.admin-dialog-content [class*="Card"],
+.admin-dialog-content .bg-card,
+.admin-dialog-content [class*="bg-card"] {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
+
+/* Força background #277677 em todos os elementos do Card no admin */
+.admin-dialog-content .card *,
+.admin-dialog-content [class*="card"] *,
+.admin-dialog-content [class*="Card"] *,
+.admin-dialog-content .bg-card *,
+.admin-dialog-content [class*="bg-card"] * {
+  background-color: #277677 !important;
+  background: #277677 !important;
+}
