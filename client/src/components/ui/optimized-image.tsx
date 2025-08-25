@@ -21,86 +21,93 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   loading = 'lazy',
   ...props
 }) => {
-  const [imageSrc, setImageSrc] = useState<string>(src);
-  const [hasError, setHasError] = useState<boolean>(false);
+  const [currentSrc, setCurrentSrc] = useState<string>(src);
+  const [hasErrored, setHasErrored] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [retryCount, setRetryCount] = useState<number>(0);
   const { recordImageEvent } = useImageMonitoring();
-
-  const handleError = useCallback((event?: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (!hasError && imageSrc !== fallbackSrc && retryCount < 2) {
-      console.warn(`Failed to load image (attempt ${retryCount + 1}): ${imageSrc}`);
-
-      // Record failure event
-      recordImageEvent({
-        url: imageSrc,
-        success: false,
-        error: `Failed to load image (attempt ${retryCount + 1})`,
-        timestamp: new Date()
-      });
-
-      // Retry with a small delay
-      setTimeout(() => {
-        setRetryCount(prev => prev + 1);
-        setImageSrc(src); // Reset to original source
-      }, 1000);
-
-      return;
-    }
-
-    if (imageSrc !== fallbackSrc) {
-      console.warn(`Switching to fallback image: ${fallbackSrc}`);
-      setImageSrc(fallbackSrc);
-      setHasError(true);
-      setRetryCount(0);
-      onError?.(`Failed to load: ${src}`);
-    } else {
-      // If fallback also fails, show error state
-      setIsLoading(false);
-      console.error(`Both image and fallback failed to load: ${src}`);
-
-      // Record fallback failure event
-      recordImageEvent({
-        url: fallbackSrc,
-        success: false,
-        error: 'Fallback image also failed to load',
-        timestamp: new Date()
-      });
-
-      onError?.(`Both image and fallback failed to load: ${src}`);
-    }
-  }, [src, fallbackSrc, hasError, onError, imageSrc, retryCount, recordImageEvent]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
-    setHasError(false);
-    setRetryCount(0);
-
+    setHasErrored(false);
     // Record successful load event
     recordImageEvent({
-      url: imageSrc,
+      url: currentSrc,
       success: true,
       timestamp: new Date()
     });
-  }, [imageSrc, recordImageEvent]);
+  }, [currentSrc, recordImageEvent]);
 
-  // Update image source when src prop changes
+  const handleError = useCallback((error?: string | Event) => {
+    if (hasErrored) return; // Evita loops
+
+    // Log mais silencioso para evitar spam no console
+    if (src && !src.includes('placeholder-image.svg')) {
+      console.log(`Image failed to load: ${src}, using fallback: ${fallbackSrc}`);
+    }
+
+    setHasErrored(true);
+    setIsLoading(false);
+
+    if (onError) {
+      onError(typeof error === 'string' ? error : 'Falha ao carregar imagem');
+    }
+
+    // Tentar carregar imagem de fallback
+    if (fallbackSrc && fallbackSrc !== src && fallbackSrc !== currentSrc) {
+      setCurrentSrc(fallbackSrc);
+    }
+  }, [src, fallbackSrc, onError, hasErrored, currentSrc]);
+
+  // Preload da imagem
   useEffect(() => {
-    if (src !== imageSrc) {
-      setImageSrc(src);
-      setHasError(false);
+    if (!src) {
+      if (fallbackSrc) {
+        setCurrentSrc(fallbackSrc);
+        setHasErrored(false);
+      } else {
+        setHasErrored(true);
+      }
+      return;
+    }
+
+    // Reset states when src changes
+    if (src !== currentSrc) {
       setIsLoading(true);
-      setRetryCount(0);
+      setHasErrored(false);
+      setCurrentSrc(src);
     }
-  }, [src, imageSrc]);
 
-  // Preload fallback image
-  useEffect(() => {
-    if (fallbackSrc && fallbackSrc !== '/placeholder-image.svg') {
-      const img = new Image();
-      img.src = fallbackSrc;
+    // Skip preloading for placeholder images
+    if (src.includes('placeholder-image.svg') || src.includes('data:image')) {
+      setIsLoading(false);
+      setHasErrored(false);
+      return;
     }
-  }, [fallbackSrc]);
+
+    const img = new Image();
+    const timeoutId = setTimeout(() => {
+      handleError('Timeout ao carregar imagem');
+    }, 10000); // 10 segundo timeout
+
+    img.onload = () => {
+      clearTimeout(timeoutId);
+      handleLoad();
+    };
+
+    img.onerror = () => {
+      clearTimeout(timeoutId);
+      handleError();
+    };
+
+    // Set src after event listeners are attached
+    img.src = src;
+
+    return () => {
+      clearTimeout(timeoutId);
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [src, currentSrc, fallbackSrc, handleLoad, handleError]);
 
   return (
     <div className={cn('relative', className)}>
@@ -111,7 +118,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
 
       <img
-        src={imageSrc}
+        src={currentSrc}
         alt={alt}
         loading={loading}
         onError={handleError}
@@ -124,7 +131,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         {...props}
       />
 
-      {hasError && imageSrc === fallbackSrc && (
+      {hasErrored && currentSrc === fallbackSrc && (
         <div className="absolute inset-0 bg-gray-100 rounded flex items-center justify-center">
           <div className="text-gray-400 text-sm text-center">
             <div>Imagem não disponível</div>

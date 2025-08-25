@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  MapPin, 
-  Clock, 
-  Phone, 
-  Star, 
-  Heart, 
-  Stethoscope, 
+import {
+  MapPin,
+  Clock,
+  Phone,
+  Star,
+  Heart,
+  Stethoscope,
   Ambulance,
   Search,
   X,
@@ -41,7 +41,7 @@ export default function Network() {
   const [searchText, setSearchText] = useState("");
   const [selectedCity, setSelectedCity] = useState("all");
   const [selectedService, setSelectedService] = useState("all");
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const unitsPerPage = 9;
@@ -66,15 +66,15 @@ export default function Network() {
   // Filter units based on selected criteria
   const filteredUnits = useMemo(() => {
     if (!networkUnits) return [];
-    
+
     return networkUnits.filter(unit => {
       // Text search (name or address)
-      const matchesSearch = searchText === "" || 
+      const matchesSearch = searchText === "" ||
         unit.name.toLowerCase().includes(searchText.toLowerCase()) ||
         unit.address.toLowerCase().includes(searchText.toLowerCase());
 
       // City filter - improved logic
-      const matchesCity = selectedCity === "all" || 
+      const matchesCity = selectedCity === "all" ||
         unit.address.toLowerCase().includes(selectedCity.toLowerCase());
 
       // Service filter
@@ -91,13 +91,13 @@ export default function Network() {
     setSelectedService("all");
     setCurrentPage(1); // Reset to first page when clearing filters
   };
-  
+
   // Calculate pagination
   const totalPages = Math.ceil(filteredUnits.length / unitsPerPage);
   const startIndex = (currentPage - 1) * unitsPerPage;
   const endIndex = startIndex + unitsPerPage;
   const currentUnits = filteredUnits.slice(startIndex, endIndex);
-  
+
   // Effect to reset pagination when filtered results change
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
@@ -108,11 +108,11 @@ export default function Network() {
   // Generate pagination buttons
   const generatePaginationButtons = () => {
     const buttons = [];
-    
+
     for (let page = 1; page <= totalPages; page++) {
-      const showPage = page === 1 || page === totalPages || 
+      const showPage = page === 1 || page === totalPages ||
                       (page >= currentPage - 1 && page <= currentPage + 1);
-      
+
       if (!showPage) {
         // Show ellipsis for gaps
         if (page === currentPage - 2 || page === currentPage + 2) {
@@ -124,15 +124,15 @@ export default function Network() {
         }
         continue;
       }
-      
+
       buttons.push(
         <Button
           key={page}
           variant={currentPage === page ? "default" : "outline"}
           size="sm"
           onClick={() => setCurrentPage(page)}
-          className={currentPage === page 
-            ? "bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90 rounded-full w-9 h-9 p-0" 
+          className={currentPage === page
+            ? "bg-[#277677] text-[#FBF9F7] hover:bg-[#277677]/90 rounded-full w-9 h-9 p-0"
             : "border-none bg-transparent text-[#277677] hover:bg-transparent hover:text-[#277677] rounded-full w-9 h-9 p-0"
           }
         >
@@ -140,7 +140,7 @@ export default function Network() {
         </Button>
       );
     }
-    
+
     return buttons;
   };
 
@@ -155,7 +155,7 @@ export default function Network() {
                 Principais Unidades
               </h1>
             </AnimatedSection>
-            
+
             {/* Filter Section */}
             <AnimatedSection animation="scale" delay={200}>
               <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg pt-10 pb-6 px-6 mb-8">
@@ -244,7 +244,7 @@ export default function Network() {
                   {currentUnits.map((unit) => (
                     <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden flex flex-col h-full">
                       <div className="relative">
-                        <Base64ImageDisplay 
+                        <Base64ImageDisplay
                           base64Data={unit.imageUrl}
                           alt={unit.name}
                           fallbackSrc={FALLBACK_IMAGE}
@@ -256,13 +256,13 @@ export default function Network() {
                           {(unit.rating / 10).toFixed(1)}
                         </Badge>
                       </div>
-                      
+
                       <CardHeader className="pb-4">
                         <CardTitle className="text-xl font-bold text-[#277677] leading-tight">
                           {unit.name}
                         </CardTitle>
                       </CardHeader>
-                      
+
                       <CardContent className="pt-0 flex flex-col flex-1">
                         <div className="space-y-3 mb-6">
                           <div className="flex items-start space-x-3">
@@ -281,7 +281,7 @@ export default function Network() {
                             {unit.services.slice(0, 2).map((service: string, serviceIndex: number) => (
                               <div key={serviceIndex} className="network-services-row">
                                 <div className="network-services-badge-wrapper">
-                                  <Badge 
+                                  <Badge
                                     className="network-services-badge bg-[#277677]/10 text-[#277677] border-[#277677]/20"
                                     title={service}
                                   >
@@ -293,7 +293,7 @@ export default function Network() {
                             {unit.services.length >= 3 && (
                               <div className="network-services-row-with-counter">
                                 <div className="network-services-badge-wrapper">
-                                  <Badge 
+                                  <Badge
                                     className="network-services-badge bg-[#277677]/10 text-[#277677] border-[#277677]/20"
                                     title={unit.services[2]}
                                   >
@@ -311,7 +311,7 @@ export default function Network() {
                         </div>
 
                         <div className="flex gap-3 mt-auto">
-                          <Button 
+                          <Button
                             className="flex-1 text-[#FBF9F7]"
                             style={{
                               background: 'linear-gradient(to top, #1c6363, #277677)'
@@ -327,7 +327,7 @@ export default function Network() {
                             <FaWhatsapp className="h-4 w-4 mr-2 text-[#FBF9F7]" />
                             Entrar em Contato
                           </Button>
-                          <Button 
+                          <Button
                             className="border-2 border-[#277677] text-[#277677] bg-[#E9F1F1] hover:bg-[#E9F1F1]/80"
                             onClick={() => {
                               if (unit.googleMapsUrl) {
@@ -345,7 +345,7 @@ export default function Network() {
                   ))}
                 </div>
               </AnimatedList>
-              
+
               {/* Pagination Controls */}
               {totalPages > 1 && (
                 <div className="mt-12 flex flex-col items-center space-y-4">
@@ -360,11 +360,11 @@ export default function Network() {
                       <ChevronLeft className="h-4 w-4" />
                       Anterior
                     </Button>
-                    
+
                     <div className="flex items-center space-x-1">
                       {generatePaginationButtons()}
                     </div>
-                    
+
                     <Button
                       variant="outline"
                       size="sm"

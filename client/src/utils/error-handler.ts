@@ -55,7 +55,10 @@ const defaultConfig: ErrorHandlerConfig = {
     'ResizeObserver loop limit exceeded',
     'Script error.',
     'Network Error',
-    'Failed to fetch'
+    'Failed to fetch',
+    'beacon.js',
+    'Resource error: [object HTML',
+    'Non-Error promise rejection captured'
   ],
   recoveryStrategies: {}
 };
@@ -246,26 +249,28 @@ class ErrorHandler {
    * Criar objeto de erro padronizado
    */
   private createAppError(error: Error | string, context?: Record<string, any>): AppError {
-    const errorMessage = typeof error === 'string' ? error : error.message;
+    const errorMessage = typeof error === 'string' ? error : (error?.message || 'Erro desconhecido');
     const originalError = typeof error === 'string' ? new Error(error) : error;
 
+    const now = new Date();
+    
     const appError: AppError = {
       id: this.generateErrorId(),
-      name: originalError.name || 'AppError',
+      name: originalError?.name || 'AppError',
       message: errorMessage,
       code: this.determineErrorCode(originalError),
       severity: this.determineSeverity(originalError),
       context: {
         ...context,
-        originalError: originalError.message,
-        stack: originalError.stack
+        originalError: originalError?.message || errorMessage,
+        stack: originalError?.stack
       },
-      timestamp: new Date(),
+      timestamp: now,
       userId: this.getUserId(),
       sessionId: this.getSessionId(),
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-      stack: originalError.stack,
+      stack: originalError?.stack,
       isRecoverable: this.isErrorRecoverable(originalError),
       retryCount: 0,
       maxRetries: this.config.maxRetries
@@ -463,7 +468,17 @@ class ErrorHandler {
     try {
       // Implementar envio para serviço de monitoramento
       if (getConfig().features.enableErrorReporting) {
-        // Exemplo: Sentry, LogRocket, etc.
+        const errorInfo: ErrorInfo = {
+          type: error.code || 'UNKNOWN_ERROR',
+          message: error.message || 'Erro desconhecido',
+          stack: error.stack || null,
+          context: error.context || {},
+          timestamp: (error.timestamp || new Date()).toISOString(),
+          userAgent: error.userAgent || navigator.userAgent || '',
+          url: error.url || window.location.href || ''
+        };
+        
+        sendErrorToMonitoring(errorInfo);
         console.log('📊 Enviando erro para serviço de monitoramento:', error.code);
       }
     } catch (reportError) {
@@ -666,17 +681,26 @@ export async function withRetry<T>(
 // Função auxiliar para enviar erros para monitoramento
 const sendErrorToMonitoring = (errorInfo: ErrorInfo): void => {
   try {
-    // Verificar se errorInfo tem timestamp válido
-    if (!errorInfo || !errorInfo.timestamp) {
-      errorInfo = {
-        ...errorInfo,
-        timestamp: new Date().toISOString()
-      };
+    // Garantir que errorInfo existe e tem propriedades válidas
+    if (!errorInfo) {
+      console.warn('⚠️ ErrorInfo inválido para monitoramento');
+      return;
     }
+
+    // Verificar e corrigir timestamp se necessário
+    const safeErrorInfo: ErrorInfo = {
+      type: errorInfo.type || 'UNKNOWN_ERROR',
+      message: errorInfo.message || 'Erro desconhecido',
+      stack: errorInfo.stack || null,
+      context: errorInfo.context || {},
+      timestamp: errorInfo.timestamp || new Date().toISOString(),
+      userAgent: errorInfo.userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : ''),
+      url: errorInfo.url || (typeof window !== 'undefined' ? window.location.href : '')
+    };
 
     // Em desenvolvimento, apenas logar
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 Enviando erro para serviço de monitoramento:', errorInfo.type);
+      console.log('📊 Enviando erro para serviço de monitoramento:', safeErrorInfo.type);
       return;
     }
 
@@ -686,7 +710,7 @@ const sendErrorToMonitoring = (errorInfo: ErrorInfo): void => {
     //   headers: {
     //     'Content-Type': 'application/json'
     //   },
-    //   body: JSON.stringify(errorInfo)
+    //   body: JSON.stringify(safeErrorInfo)
     // }).catch(console.error);
 
   } catch (error) {
