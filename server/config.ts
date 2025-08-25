@@ -93,7 +93,8 @@ class AutoConfig {
       return process.env.PORT;
     }
 
-    return '3000';
+    // Forçar porta 5000 para Replit preview
+    return '5000';
   }
 
   /**
@@ -104,13 +105,8 @@ class AutoConfig {
       return process.env.HOST;
     }
 
-    // Em produção ou quando a porta for 80 (EasyPanel), usar 0.0.0.0
-    if (this.config.NODE_ENV === 'production' || this.config.PORT === '80') {
-      return '0.0.0.0';
-    }
-
-    // Em desenvolvimento, usar localhost para facilitar testes
-    return 'localhost';
+    // Sempre usar 0.0.0.0 para aceitar conexões externas (Replit)
+    return '0.0.0.0';
   }
 
   /**
