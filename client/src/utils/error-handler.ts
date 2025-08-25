@@ -222,9 +222,10 @@ class ErrorHandler {
       }
 
     } catch (handlerError) {
-      console.error('❌ Erro no Error Handler:', handlerError);
+      // Evitar loops infinitos de erro
+      console.error('❌ Erro no Error Handler:', handlerError instanceof Error ? handlerError.message : 'Erro desconhecido');
       // Fallback para console
-      console.error('Erro original:', error);
+      console.error('Erro original:', error instanceof Error ? error.message : String(error));
     }
   }
 

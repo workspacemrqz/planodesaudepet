@@ -90,10 +90,10 @@ class ImageServiceBase64 {
 
       // Converter para buffer
       const processedBuffer = await processedImage.toBuffer();
-      
+
       // Converter para Base64
       const base64String = `data:image/${format};base64,${processedBuffer.toString('base64')}`;
-      
+
       return {
         success: true,
         base64: base64String,
@@ -132,7 +132,7 @@ class ImageServiceBase64 {
 
       // Tentar decodificar
       Buffer.from(base64Data, 'base64');
-      
+
       return true;
     } catch (error) {
       return false;
@@ -188,7 +188,7 @@ class ImageServiceBase64 {
 
       // Retornar novo Base64 comprimido
       const compressedBase64 = `data:image/jpeg;base64,${compressedBuffer.toString('base64')}`;
-      
+
       return {
         success: true,
         base64: compressedBase64,
@@ -208,3 +208,50 @@ class ImageServiceBase64 {
 }
 
 export const imageServiceBase64 = new ImageServiceBase64();
+
+export function isValidBase64Image(base64String: string): boolean {
+  if (!base64String || typeof base64String !== 'string') {
+    return false;
+  }
+
+  // Verificar se tem o formato correto de data URL
+  const dataUrlPattern = /^data:image\/(jpeg|jpg|png|gif|webp);base64,/;
+
+  // Se não tem o prefix, verificar se é Base64 válido
+  if (!dataUrlPattern.test(base64String)) {
+    // Verificar se é apenas o conteúdo Base64 sem prefix
+    try {
+      const base64Content = base64String.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+      // Verificar se é Base64 válido
+      const decoded = Buffer.from(base64Content, 'base64').toString('base64');
+      return decoded === base64Content && base64Content.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function processBase64Image(base64String: string): string {
+  if (!base64String) {
+    throw new Error('Base64 string is required');
+  }
+
+  // Se já está no formato correto, retornar como está
+  if (base64String.startsWith('data:image/')) {
+    return base64String;
+  }
+
+  // Se é apenas o conteúdo Base64, adicionar o prefix
+  try {
+    const base64Content = base64String.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+    // Verificar se é Base64 válido
+    Buffer.from(base64Content, 'base64');
+
+    // Adicionar prefix padrão (assumir JPEG se não especificado)
+    return `data:image/jpeg;base64,${base64Content}`;
+  } catch {
+    throw new Error('Invalid Base64 image format');
+  }
+}

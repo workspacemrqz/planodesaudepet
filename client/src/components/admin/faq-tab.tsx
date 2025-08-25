@@ -11,7 +11,7 @@ import { AdvancedTextarea } from "@/components/ui/advanced-textarea";
 import { FormattedText } from "@/components/ui/formatted-text";
 import { CharacterCounter } from "@/components/ui/character-counter";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Plus, Edit, Trash2, HelpCircle, GripVertical } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -95,7 +95,7 @@ function SortableFaqItem({
             {item.question}
           </AccordionTrigger>
         </div>
-        
+
         {/* Versão Desktop - botões ao lado direito */}
         {!isMobile && (
           <div className="flex items-center gap-1 ml-4">
@@ -132,7 +132,7 @@ function SortableFaqItem({
           </div>
         )}
       </div>
-      
+
       {/* Versão Mobile - botões abaixo do título com mesmo espaçamento */}
       {isMobile && (
         <div className="flex items-center gap-2 mb-3 pl-9">
@@ -168,7 +168,7 @@ function SortableFaqItem({
           </Button>
         </div>
       )}
-      
+
       <AccordionContent className="text-[#302e2b] pb-4">
         <div className="pl-9 text-[#9fb8b8]">
           <FormattedText 
@@ -196,13 +196,13 @@ export default function FaqTab() {
         const response = await fetch("/api/admin/faq", {
           credentials: "include",
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error("FAQ API error:", response.status, errorData);
           throw new Error(`Falha ao carregar FAQ: ${response.status} ${errorData.error || response.statusText}`);
         }
-        
+
         const data = await response.json();
         console.log("FAQ data loaded successfully:", data.length, "items");
         return data;
@@ -242,7 +242,7 @@ export default function FaqTab() {
     mutationFn: async (data: InsertFaqItem) => {
       try {
         console.log("Creating FAQ item with data:", data);
-        
+
         // Validar dados antes de enviar
         if (!data.question || data.question.trim() === '') {
           throw new Error("Pergunta é obrigatória");
@@ -256,9 +256,9 @@ export default function FaqTab() {
         if (data.answer.length > 2000) {
           throw new Error("Resposta deve ter no máximo 2000 caracteres");
         }
-        
+
         const response = await apiRequest("POST", "/api/admin/faq", data);
-        
+
         if (!response.ok) {
           const errorText = await response.text().catch(() => '');
           let errorData;
@@ -270,7 +270,7 @@ export default function FaqTab() {
           console.error("API Error Response:", errorData);
           throw new Error(`Erro ao criar FAQ: ${response.status} - ${errorData.error || errorData.details || response.statusText}`);
         }
-        
+
         return response.json();
       } catch (error) {
         console.error("Create FAQ mutation error:", error);
@@ -300,7 +300,7 @@ export default function FaqTab() {
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertFaqItem> }) => {
       try {
         console.log("Updating FAQ item:", id, data);
-        
+
         // Validar dados antes de enviar (apenas os campos que estão presentes)
         if (data.question !== undefined) {
           if (!data.question || data.question.trim() === '') {
@@ -318,9 +318,9 @@ export default function FaqTab() {
             throw new Error("Resposta deve ter no máximo 2000 caracteres");
           }
         }
-        
+
         const response = await apiRequest("PUT", `/api/admin/faq/${id}`, data);
-        
+
         if (!response.ok) {
           const errorText = await response.text().catch(() => '');
           let errorData;
@@ -332,7 +332,7 @@ export default function FaqTab() {
           console.error("API Error Response:", errorData);
           throw new Error(`Erro ao atualizar FAQ: ${response.status} - ${errorData.error || errorData.details || response.statusText}`);
         }
-        
+
         return response.json();
       } catch (error) {
         console.error("Update FAQ mutation error:", error);
@@ -363,12 +363,12 @@ export default function FaqTab() {
       try {
         console.log("Deleting FAQ item:", id);
         const response = await apiRequest("DELETE", `/api/admin/faq/${id}`);
-        
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(`Erro ao deletar FAQ: ${response.status} ${errorData.error || response.statusText}`);
         }
-        
+
         return response.json();
       } catch (error) {
         console.error("Delete FAQ mutation error:", error);
@@ -401,9 +401,9 @@ export default function FaqTab() {
         const promises = updates.map(update => 
           apiRequest("PUT", `/api/admin/faq/${update.id}`, { displayOrder: update.displayOrder })
         );
-        
+
         const responses = await Promise.all(promises);
-        
+
         // Verificar se todas as respostas foram bem-sucedidas
         for (let i = 0; i < responses.length; i++) {
           if (!responses[i].ok) {
@@ -440,15 +440,15 @@ export default function FaqTab() {
     if (active.id !== over?.id && faqItems) {
       const oldIndex = faqItems.findIndex(item => item.id === active.id);
       const newIndex = faqItems.findIndex(item => item.id === over?.id);
-      
+
       const reorderedItems = arrayMove(faqItems, oldIndex, newIndex);
-      
+
       // Atualizar displayOrder baseado na nova ordem
       const updates = reorderedItems.map((item, index) => ({
         id: item.id,
         displayOrder: index + 1,
       }));
-      
+
       reorderMutation.mutate(updates);
     }
   };
@@ -582,13 +582,19 @@ export default function FaqTab() {
 
   return (
     <div>
-      <div className={`${isMobile ? 'block space-y-4' : 'flex items-center justify-between'} mb-6`}>
-        <div>
-          <p className="text-sm text-[#fbf9f7]">
-            Arraste e solte para reordenar as perguntas
-          </p>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Gerenciar FAQ</h2>
+        <div className="flex gap-2">
+          <Button onClick={openNewQuestionDialog}
+            className="text-[#fbf9f7] bg-[#E1AC33] w-full sm:w-auto"
+            data-testid="button-add-faq"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Adicionar Pergunta
+          </Button>
         </div>
-        
+      </div>
+      
         <Dialog 
           open={isDialogOpen} 
           onOpenChange={(open) => {
@@ -599,23 +605,13 @@ export default function FaqTab() {
             }
           }}
         >
-          <DialogTrigger asChild>
-            <Button 
-              onClick={openNewQuestionDialog}
-              className="text-[#fbf9f7] bg-[#E1AC33] w-full sm:w-auto"
-              data-testid="button-add-faq"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Adicionar Pergunta
-            </Button>
-          </DialogTrigger>
           <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mx-auto rounded-lg md:rounded-xl">
             <DialogHeader className="px-2 md:px-0">
               <DialogTitle className="text-[#ffffff] text-lg md:text-xl text-center md:text-left">
                 {editingItem ? "Editar Pergunta" : "Nova Pergunta"}
               </DialogTitle>
             </DialogHeader>
-            
+
             <div className="mt-2 md:mt-4 px-2 md:px-0">
                              <Stepper
                  initialStep={1}
@@ -649,7 +645,7 @@ export default function FaqTab() {
                                  <Step>
                    <div className="space-y-3 md:space-y-4">
                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Pergunta</h3>
-                     
+
                      <div>
                        <FormField
                          control={form.control}
@@ -685,11 +681,11 @@ export default function FaqTab() {
                      </div>
                    </div>
                  </Step>
-                
+
                                  <Step>
                    <div className="space-y-3 md:space-y-4">
                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Resposta</h3>
-                     
+
                      <div>
                        <FormField
                          control={form.control}
@@ -725,14 +721,14 @@ export default function FaqTab() {
                      </div>
                    </div>
                  </Step>
-                 
+
                  <Step>
                    <div className="space-y-3 md:space-y-4">
                      <h3 className="text-base md:text-lg font-semibold text-[#FBF9F7] mb-3 md:mb-4 text-center md:text-left">Revisão e Confirmação</h3>
-                     
+
                      <div className="bg-[#145759] p-3 md:p-4 rounded-lg border border-[#277677]/20">
                        <h4 className="font-medium text-[#FBF9F7] mb-2 md:mb-3 text-left">Resumo da Pergunta:</h4>
-                       
+
                        <div className="text-sm leading-tight space-y-3">
                          <div className="text-[#FBF9F7] font-medium text-left">
                            <span className="text-[#277677] mr-2">•</span>
@@ -757,7 +753,7 @@ export default function FaqTab() {
                            </div>
                          </div>
                        </div>
-                       
+
                        <div className="mt-3 md:mt-4">
                          <h5 className="font-medium text-[#FBF9F7] mb-2 text-left">Detalhes:</h5>
                          <ul className="text-sm text-[#FBF9F7]/80 space-y-1">
@@ -778,7 +774,7 @@ export default function FaqTab() {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
+      
       {isLoading ? (
         <Card className="bg-[#277677]">
           <CardContent className="p-6 text-center bg-[#277677]">
@@ -817,7 +813,7 @@ export default function FaqTab() {
           </CardContent>
         </Card>
       )}
-      
+
       {/* Confirmation Modal */}
       <ConfirmationModal
         isOpen={deleteModalOpen}
@@ -833,4 +829,3 @@ export default function FaqTab() {
     </div>
   );
 }
-

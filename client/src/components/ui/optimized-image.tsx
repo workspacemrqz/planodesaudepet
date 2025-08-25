@@ -27,7 +27,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [retryCount, setRetryCount] = useState<number>(0);
   const { recordImageEvent } = useImageMonitoring();
 
-  const handleError = useCallback(() => {
+  const handleError = useCallback((event?: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (!hasError && imageSrc !== fallbackSrc && retryCount < 2) {
       console.warn(`Failed to load image (attempt ${retryCount + 1}): ${imageSrc}`);
       
