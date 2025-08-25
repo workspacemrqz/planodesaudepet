@@ -60,11 +60,33 @@ export default function Header() {
               className="h-8 w-auto" 
               onLoad={() => console.log('✅ Logo carregado com sucesso!')}
               onError={(e) => {
-                console.error('❌ Erro ao carregar logo:', e.currentTarget.src);
-                console.log('Tentando fallback...');
-                e.currentTarget.src = '/placeholder-image.svg';
+                const currentSrc = e.currentTarget.src;
+                console.error('❌ Erro ao carregar logo:', currentSrc);
+                
+                // Try different fallback sources
+                if (currentSrc.includes('unipet-logo.png')) {
+                  console.log('Tentando caminho alternativo...');
+                  e.currentTarget.src = './unipet-logo.png';
+                } else if (currentSrc.includes('./unipet-logo.png')) {
+                  console.log('Tentando placeholder...');
+                  e.currentTarget.src = '/placeholder-image.svg';
+                } else {
+                  console.log('Usando texto como fallback');
+                  // Hide image and show text fallback
+                  e.currentTarget.style.display = 'none';
+                  const textElement = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (textElement) {
+                    textElement.style.display = 'block';
+                  }
+                }
               }}
             />
+            <span 
+              className="text-[#FBF9F7] font-bold text-xl hidden"
+              style={{ display: 'none' }}
+            >
+              UNIPET PLAN
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
