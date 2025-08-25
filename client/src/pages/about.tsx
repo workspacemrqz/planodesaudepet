@@ -4,6 +4,7 @@ import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { RobustImage } from "@/components/ui/image";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import { Base64ImageDisplay } from "@/components/Base64ImageDisplay";
 
 export default function About() {
   const { settings, shouldShow } = useSiteSettingsWithDefaults();
@@ -41,13 +42,12 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           <AnimatedSection animation="slideRight" delay={200}>
             <div>
-              <OptimizedImage 
-                src={settings.aboutImage}
-                fallback="/inicio-sobre.jpg"
+              <Base64ImageDisplay 
+                base64Data={settings.aboutImage}
                 alt="Conceito de seguro pet com veterinário cuidando de animal"
                 fallbackSrc="/inicio-sobre.jpg"
                 className="rounded-2xl shadow-xl w-full h-auto sm:mt-0 mt-[-2rem]"
-                onError={(error) => console.warn('About page image error:', error)}
+                onError={() => console.warn('About page image error')}
               />
             </div>
           </AnimatedSection>

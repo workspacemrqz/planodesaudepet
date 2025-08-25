@@ -162,69 +162,73 @@ export default function SettingsTab() {
     },
   });
   
-  // Image upload functions
+  // Image upload functions with Base64 conversion
   const handleImageUpload = async (file: File, imageType: 'main' | 'network' | 'about') => {
     console.log(`🔍 handleImageUpload called for ${imageType} with file:`, file.name);
+    
     // Set uploading state
     if (imageType === 'main') setIsUploadingMain(true);
     else if (imageType === 'network') setIsUploadingNetwork(true);
     else setIsUploadingAbout(true);
     
     try {
-      // Step 1: Get upload URL from backend
-      const uploadUrlResponse = await fetch('/api/objects/upload', {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error('Tipo de arquivo não suportado. Use: JPEG, PNG ou WebP');
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Arquivo muito grande. Máximo: 5MB');
+      }
+      
+      // Create FormData for upload
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Upload to backend with Base64 conversion
+      const response = await fetch(`/api/images/upload/${imageType}/settings`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        body: formData,
+        credentials: 'include'
       });
       
-      if (!uploadUrlResponse.ok) {
-        throw new Error('Failed to get upload URL');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro no upload');
       }
       
-      const { uploadURL, objectPath } = await uploadUrlResponse.json();
-      console.log('🔍 Got upload URL:', uploadURL);
+      const result = await response.json();
       
-      // Step 2: Upload file to the provided URL
-      const uploadResponse = await fetch(uploadURL, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type
-        }
-      });
-      
-      if (!uploadResponse.ok) {
-        throw new Error('File upload failed');
+      if (!result.success) {
+        throw new Error('Upload falhou');
       }
       
-      console.log('🔍 File uploaded successfully');
+      console.log('🔍 Image uploaded and converted to Base64 successfully');
       
-      // Step 3: Update local state and temp data
-      const objectId = objectPath.split('/').pop();
-      const imageUrl = `/api/objects/${objectId}/image`;
-      console.log('🔍 Generated image URL:', imageUrl);
-      console.log('🔍 Object path:', objectPath);
-      console.log('🔍 Object ID:', objectId);
+      // Update local state and temp data with Base64 data
+      const base64Data = result.base64;
       
       if (imageType === 'main') {
-        setMainImageUrl(imageUrl);
-        updateTempData('image', { mainImage: imageUrl });
-        console.log('🔍 Main image updated:', imageUrl);
+        setMainImageUrl(base64Data);
+        updateTempData('image', { mainImage: base64Data });
+        console.log('🔍 Main image updated with Base64');
       } else if (imageType === 'network') {
-        setNetworkImageUrl(imageUrl);
-        updateTempData('image', { networkImage: imageUrl });
-        console.log('🔍 Network image updated:', imageUrl);
+        setNetworkImageUrl(base64Data);
+        updateTempData('image', { networkImage: base64Data });
+        console.log('🔍 Network image updated with Base64');
       } else {
-        setAboutImageUrl(imageUrl);
-        updateTempData('image', { aboutImage: imageUrl });
-        console.log('🔍 About image updated:', imageUrl);
+        setAboutImageUrl(base64Data);
+        updateTempData('image', { aboutImage: base64Data });
+        console.log('🔍 About image updated with Base64');
       }
       
-      // CRÍTICO: Aguardar um momento para garantir que o estado foi atualizado
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Verificar se o tempImageData foi atualizado
-      console.log('🔍 Current tempImageData after upload:', tempImageData);
+      // Show success toast
+      toast({
+        title: "Sucesso",
+        description: "Imagem carregada e convertida com sucesso!",
+      });
       
       console.log('🔍 Image upload completed successfully for:', imageType);
       
@@ -232,7 +236,7 @@ export default function SettingsTab() {
       console.error('🔍 Upload error:', error);
       toast({
         title: "Erro no upload",
-        description: "Falha no upload da imagem",
+        description: error instanceof Error ? error.message : "Falha no upload da imagem",
         variant: "destructive",
       });
     } finally {

@@ -1,8 +1,19 @@
 import { randomBytes } from 'crypto';
 import { config } from 'dotenv';
+import path from 'path';
 
 // Carrega as variáveis de ambiente do arquivo .env
-config();
+const envPath = path.resolve(process.cwd(), '.env');
+console.log('🔍 Carregando arquivo .env de:', envPath);
+
+const result = config({ path: envPath });
+console.log('📄 Resultado do carregamento do .env:', result);
+
+// Log das variáveis carregadas para debug
+console.log('🔍 Variáveis de ambiente carregadas:');
+console.log('   LOGIN:', process.env.LOGIN ? '✅ Presente' : '❌ Ausente');
+console.log('   SENHA:', process.env.SENHA ? '✅ Presente' : '❌ Ausente');
+console.log('   NODE_ENV:', process.env.NODE_ENV || 'undefined');
 
 /**
  * Sistema de configuração automática que detecta o ambiente

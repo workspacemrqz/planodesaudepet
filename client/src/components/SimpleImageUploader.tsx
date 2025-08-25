@@ -30,24 +30,24 @@ export function SimpleImageUploader({
       console.log('Tamanho:', file.size, 'bytes');
       console.log('Última modificação:', new Date(file.lastModified));
       
-      // Validate file type (PNG, JPEG, JPG)
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+      // Validate file type (PNG, JPEG, JPG, WebP)
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
       console.log('Tipos permitidos:', allowedTypes);
       console.log('Tipo do arquivo está na lista?', allowedTypes.includes(file.type));
       
       // Also check file extension as fallback
       const fileName = file.name.toLowerCase();
-      const hasValidExtension = fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.jpeg');
+      const hasValidExtension = fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') || fileName.endsWith('.webp');
       console.log('Extensão do arquivo é válida?', hasValidExtension);
       
       if (!allowedTypes.includes(file.type) && !hasValidExtension) {
         console.log('ERRO: Tipo de arquivo não permitido');
-        alert(`Por favor, selecione apenas arquivos PNG, JPEG ou JPG. Tipo detectado: ${file.type}, Nome: ${file.name}`);
+        alert(`Por favor, selecione apenas arquivos PNG, JPEG, JPG ou WebP. Tipo detectado: ${file.type}, Nome: ${file.name}`);
         return;
       }
       
       // Validate file size (5MB limit)
-      if (file.size > 5242880) {
+      if (file.size > 5 * 1024 * 1024) {
         console.log('ERRO: Arquivo muito grande');
         alert('O arquivo deve ter no máximo 5MB.');
         return;
@@ -65,7 +65,7 @@ export function SimpleImageUploader({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/png,image/jpeg,image/jpg,.png,.jpg,.jpeg"
+        accept="image/png,image/jpeg,image/jpg,image/webp,.png,.jpg,.jpeg,.webp"
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />

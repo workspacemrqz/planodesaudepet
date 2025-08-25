@@ -8,6 +8,7 @@ import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 import { RobustImage } from "@/components/ui/image";
 import { Typewriter } from "@/components/ui/typewriter";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import { Base64ImageDisplay } from "@/components/Base64ImageDisplay";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
@@ -112,13 +113,12 @@ export default function Hero() {
             <AnimatedSection animation="slideLeft" delay={150}>
               {/* Happy pets with owners image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <OptimizedImage 
-                  src={settings.mainImage}
-                  fallback="/Cachorros.jpg"
+                <Base64ImageDisplay 
+                  base64Data={settings.mainImage}
                   alt="Família brasileira feliz com seus pets" 
                   fallbackSrc="/Cachorros.jpg"
                   className="w-full h-auto max-h-[400px] sm:max-h-[500px] lg:max-h-none object-cover" 
-                  onError={(error) => console.warn('Hero image error:', error)}
+                  onError={() => console.warn('Hero image error')}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
               </div>

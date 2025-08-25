@@ -1,6 +1,7 @@
 import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 import { RobustImage } from "@/components/ui/image";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import { Base64ImageDisplay } from "@/components/Base64ImageDisplay";
 
 export default function AboutSection() {
   const { settings } = useSiteSettingsWithDefaults();
@@ -30,13 +31,12 @@ export default function AboutSection() {
 
             <div>
               {/* Pet insurance concept image */}
-              <OptimizedImage 
-                src={settings.aboutImage}
-                fallback="/inicio-sobre.jpg"
+              <Base64ImageDisplay 
+                base64Data={settings.aboutImage}
                 alt="Conceito de seguro pet com veterinário cuidando de animal" 
                 fallbackSrc="/inicio-sobre.jpg"
                 className="rounded-2xl shadow-xl w-full h-auto sm:mt-0 mt-[-2rem]" 
-                onError={(error) => console.warn('About section image error:', error)}
+                onError={() => console.warn('About section image error')}
               />
             </div>
           </div>

@@ -25,6 +25,7 @@ import { AnimatedSection } from "@/components/ui/animated-section";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { RobustImage } from "@/components/ui/image";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import { Base64ImageDisplay } from "@/components/Base64ImageDisplay";
 
 // Estilos e scripts removidos para simplificar o build
 
@@ -243,13 +244,12 @@ export default function Network() {
                   {currentUnits.map((unit) => (
                     <Card key={unit.id} className="shadow-lg rounded-xl border-none bg-white overflow-hidden flex flex-col h-full">
                       <div className="relative">
-                        <OptimizedImage 
-                          src={unit.imageUrl}
-                          fallback={FALLBACK_IMAGE}
+                        <Base64ImageDisplay 
+                          base64Data={unit.imageUrl}
                           alt={unit.name}
                           fallbackSrc={FALLBACK_IMAGE}
                           className="w-full aspect-square object-cover"
-                          onError={(error) => console.warn(`Network unit image error for ${unit.name}:`, error)}
+                          onError={() => console.warn(`Network unit image error for ${unit.name}`)}
                         />
                         <Badge className="absolute top-4 right-4 font-semibold text-[#121212] bg-[#e6a622]">
                           <Star className="h-3 w-3 mr-1" />

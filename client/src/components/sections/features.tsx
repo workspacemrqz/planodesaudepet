@@ -8,6 +8,7 @@ import { useSiteSettingsWithDefaults } from "@/hooks/use-site-settings";
 import { RobustImage } from "@/components/ui/image";
 import { cn } from "@/lib/utils";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import { Base64ImageDisplay } from "@/components/Base64ImageDisplay";
 
 export default function Features() {
   const [, setLocation] = useLocation();
@@ -89,13 +90,12 @@ export default function Features() {
           <div className="order-2 lg:order-1">
             <AnimatedSection animation="slideRight" delay={500}>
               {/* Network credentialed image */}
-              <OptimizedImage 
-                src={settings.networkImage}
-                fallback="https://images.unsplash.com/logo.png"
+              <Base64ImageDisplay 
+                base64Data={settings.networkImage}
                 alt="Rede credenciada de hospitais veterinários" 
                 fallbackSrc="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600"
                 className="rounded-2xl shadow-xl w-full h-auto max-h-[300px] sm:max-h-[400px] lg:max-h-none object-cover" 
-                onError={(error) => console.warn('Features network image error:', error)}
+                onError={() => console.warn('Features network image error')}
               />
             </AnimatedSection>
           </div>

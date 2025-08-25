@@ -128,10 +128,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Rota para upload de imagens
-  app.post("/api/images/upload/:type/:id", requireAuth, async (req, res) => {
+  // Rota para upload de imagens de site settings (main, network, about)
+  app.post("/api/images/upload/:type/settings", requireAuth, async (req, res) => {
     try {
-      const { type, id } = req.params;
+      const { type } = req.params;
+      
+      // Validar tipo de imagem
+      if (!['main', 'network', 'about'].includes(type)) {
+        return res.status(400).json({ error: 'Invalid image type. Use: main, network, or about' });
+      }
       
       // Configurar multer para este upload
       const upload = imageServiceBase64.getUploadMiddleware().single('image');
@@ -159,21 +164,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
           
           // Salvar no banco de dados
-          if (type === 'network') {
-            await storage.updateNetworkUnit(id, { imageUrl: result.base64 });
-          } else if (['main', 'network', 'about'].includes(type)) {
-            let updateData: Partial<InsertSiteSettings> = {};
-            if (type === 'main') updateData = { mainImage: result.base64 };
-            else if (type === 'network') updateData = { networkImage: result.base64 };
-            else if (type === 'about') updateData = { aboutImage: result.base64 };
-            await storage.updateSiteSettings(updateData);
-          } else {
-            return res.status(400).json({ error: 'Invalid image type' });
-          }
+          let updateData: Partial<InsertSiteSettings> = {};
+          if (type === 'main') updateData = { mainImage: result.base64 };
+          else if (type === 'network') updateData = { networkImage: result.base64 };
+          else if (type === 'about') updateData = { aboutImage: result.base64 };
+          
+          await storage.updateSiteSettings(updateData);
           
           res.json({
             success: true,
             message: 'Image uploaded successfully',
+            base64: result.base64,
+            imageInfo: {
+              size: result.size,
+              format: result.format,
+              dimensions: result.dimensions
+            }
+          });
+          
+        } catch (error) {
+          console.error('❌ Error processing image:', error);
+          res.status(500).json({ error: 'Error processing image' });
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ Error in upload route:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  // Rota para upload de imagens de network units
+  app.post("/api/images/upload/network/unit", requireAuth, async (req, res) => {
+    try {
+      // Configurar multer para este upload
+      const upload = imageServiceBase64.getUploadMiddleware().single('image');
+      
+      upload(req, res, async (err: any) => {
+        if (err) {
+          return res.status(400).json({ error: err.message });
+        }
+        
+        if (!(req as any).file) {
+          return res.status(400).json({ error: 'No image file provided' });
+        }
+        
+        try {
+          // Processar imagem para Base64
+          const result = await imageServiceBase64.processImageToBase64((req as any).file.buffer, {
+            width: 800,
+            height: 600,
+            quality: 80,
+            format: 'jpeg'
+          });
+          
+          if (!result.success) {
+            return res.status(500).json({ error: result.error });
+          }
+          
+          // Retornar apenas o Base64 para ser salvo pelo frontend
+          res.json({
+            success: true,
+            message: 'Image uploaded successfully',
+            base64: result.base64,
             imageInfo: {
               size: result.size,
               format: result.format,

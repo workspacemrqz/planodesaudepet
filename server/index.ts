@@ -5,6 +5,7 @@ import { initializeDatabase, closeDatabase } from "./db.js";
 import { applySecurityMiddleware } from "./middleware/security.js";
 import { errorHandler, unhandledErrorHandler, healthCheck } from "./middleware/error-handler.js";
 import path from "path";
+import { existsSync } from "fs";
 
 const app = express();
 
@@ -98,9 +99,9 @@ async function initializeServer(): Promise<void> {
       errorHandler(err, _req, res, _next);
     });
     
-    // 4. Configurar arquivos estáticos em produção
+    // 4. Configurar arquivos estáticos
     if (process.env.NODE_ENV === 'production') {
-      console.log('📁 Configurando arquivos estáticos...');
+      console.log('📁 Configurando arquivos estáticos para produção...');
       const clientBuildPath = path.join(process.cwd(), 'dist', 'client');
       
       // Serve static assets com cache otimizado
@@ -125,7 +126,33 @@ async function initializeServer(): Promise<void> {
         }
       });
       
-      console.log('✅ Arquivos estáticos configurados');
+      console.log('✅ Arquivos estáticos configurados para produção');
+    } else {
+      // Em desenvolvimento, servir arquivos estáticos se existirem
+      console.log('📁 Configurando arquivos estáticos para desenvolvimento...');
+      const clientBuildPath = path.join(process.cwd(), 'dist', 'client');
+      
+      // Verificar se os arquivos de build existem
+      const indexPath = path.join(clientBuildPath, 'index.html');
+      if (existsSync(indexPath)) {
+        // Serve static assets
+        app.use('/assets', express.static(path.join(clientBuildPath, 'assets')));
+        
+        // Serve public files
+        app.use('/public', express.static(path.join(clientBuildPath, 'public')));
+        
+        // Serve the React app for all non-API routes
+        app.get('*', (req, res) => {
+          if (!req.path.startsWith('/api')) {
+            res.sendFile(indexPath);
+          }
+        });
+        
+        console.log('✅ Arquivos estáticos configurados para desenvolvimento');
+      } else {
+        console.log('⚠️ Arquivos de build não encontrados. Execute "npm run build" primeiro.');
+        console.log('📝 Para desenvolvimento com hot reload, use o Vite dev server separadamente.');
+      }
     }
     
     // 5. Iniciar servidor

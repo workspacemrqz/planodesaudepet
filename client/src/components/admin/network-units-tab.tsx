@@ -210,42 +210,55 @@ export default function NetworkUnitsTab() {
   const handleImageUpload = async (file: File) => {
     setIsUploading(true);
     try {
-      // Step 1: Get upload URL from backend
-      const uploadUrlResponse = await fetch('/api/objects/upload', {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error('Tipo de arquivo não suportado. Use: JPEG, PNG ou WebP');
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Arquivo muito grande. Máximo: 5MB');
+      }
+      
+      // Create FormData for upload
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Upload to backend with Base64 conversion
+      const response = await fetch('/api/images/upload/network/unit', {
         method: 'POST',
+        body: formData,
+        credentials: 'include'
       });
       
-      if (!uploadUrlResponse.ok) {
-        throw new Error('Failed to get upload URL');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro no upload');
       }
       
-      const { uploadURL, objectPath } = await uploadUrlResponse.json();
-      console.log('Got upload URL:', uploadURL);
-      console.log('Object path:', objectPath);
+      const result = await response.json();
       
-      // Step 2: Upload file to the provided URL
-      const uploadResponse = await fetch(uploadURL, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
+      if (!result.success) {
+        throw new Error('Upload falhou');
+      }
+      
+      console.log('Image uploaded and converted to Base64 successfully');
+      
+      // Update local state with Base64 data
+      setUploadedImageUrl(result.base64);
+      
+      // Show success toast
+      toast({
+        title: "Sucesso",
+        description: "Imagem carregada e convertida com sucesso!",
       });
-      
-      if (!uploadResponse.ok) {
-        throw new Error('File upload failed');
-      }
-      
-      console.log('File uploaded successfully');
-      
-      // Use the canonical URL returned by the backend
-      setUploadedImageUrl(objectPath);
       
     } catch (error) {
       console.error('Upload error:', error);
       toast({
-        title: "Erro",
-        description: "Falha no upload da imagem",
+        title: "Erro no upload",
+        description: error instanceof Error ? error.message : "Falha no upload da imagem",
         variant: "destructive",
       });
     } finally {

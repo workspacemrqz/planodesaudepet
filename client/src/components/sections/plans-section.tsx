@@ -1,5 +1,5 @@
 import { useState } from "react";
-mazinimport { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Plan } from "@shared/schema";
 import { useLocation } from "wouter";
