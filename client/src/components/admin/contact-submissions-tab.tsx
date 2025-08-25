@@ -39,7 +39,7 @@ export default function ContactSubmissionsTab() {
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className="h-48 bg-gray-200 rounded-lg"></div>
+            <div className="h-48 bg-[#277677] rounded-lg"></div>
           </div>
         ))}
       </div>
@@ -58,12 +58,10 @@ export default function ContactSubmissionsTab() {
 
   if (!submissions || submissions.length === 0) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <Mail className="h-12 w-12 text-[#145759] mx-auto mb-4" />
-          <p className="text-[#FBF9F7]">Nenhum formulário de contato encontrado.</p>
-        </CardContent>
-      </Card>
+      <div className="p-6 text-center bg-[#277677] rounded-lg">
+        <Mail className="h-12 w-12 text-[#FBF9F7] mx-auto mb-4" />
+        <p className="text-[#FBF9F7]">Nenhum formulário de contato encontrado.</p>
+      </div>
     );
   }
 
@@ -87,10 +85,10 @@ export default function ContactSubmissionsTab() {
   return (
     <div className="space-y-4">
       {submissions.map((submission) => (
-        <div key={submission.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#145759]">
+        <div key={submission.id} className="rounded-lg px-4 mt-[10px] mb-[10px] bg-[#277677]">
           <Collapsible>
             <CollapsibleTrigger 
-              className="flex w-full items-center justify-between py-4 hover:bg-[#145759]/90 transition-colors"
+              className="flex w-full items-center justify-between py-4 hover:bg-[#277677]/90 transition-colors"
               data-testid={`collapsible-form-trigger-${submission.id}`}
             >
               <div className="flex items-center gap-3">

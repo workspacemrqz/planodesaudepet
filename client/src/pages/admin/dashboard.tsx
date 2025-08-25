@@ -74,7 +74,7 @@ export default function AdminDashboard() {
             <div className="p-6">
               {/* Renderização condicional simples e direta */}
               {activeTab === "contact" && (
-                <div>
+                <div className="bg-[#277677] rounded-lg p-4">
                   <h3 className="text-lg font-semibold mb-4 text-[#FBF9F7]">Formulários de Contato</h3>
                   <ContactSubmissionsTab />
                 </div>
