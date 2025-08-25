@@ -54,39 +54,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img 
+            <RobustImage 
               src="/unipet-logo.png" 
               alt="Unipet Plan" 
               className="h-8 w-auto" 
-              onLoad={() => console.log('✅ Logo carregado com sucesso!')}
-              onError={(e) => {
-                const currentSrc = e.currentTarget.src;
-                console.error('❌ Erro ao carregar logo:', currentSrc);
-                
-                // Try different fallback sources
-                if (currentSrc.includes('unipet-logo.png')) {
-                  console.log('Tentando caminho alternativo...');
-                  e.currentTarget.src = './unipet-logo.png';
-                } else if (currentSrc.includes('./unipet-logo.png')) {
-                  console.log('Tentando placeholder...');
-                  e.currentTarget.src = '/placeholder-image.svg';
-                } else {
-                  console.log('Usando texto como fallback');
-                  // Hide image and show text fallback
-                  e.currentTarget.style.display = 'none';
-                  const textElement = e.currentTarget.nextElementSibling as HTMLElement;
-                  if (textElement) {
-                    textElement.style.display = 'block';
-                  }
-                }
-              }}
+              fallback="/placeholder-image.svg"
+              onError={(error) => console.warn('Logo image error:', error)}
             />
-            <span 
-              className="text-[#FBF9F7] font-bold text-xl hidden"
-              style={{ display: 'none' }}
-            >
-              UNIPET PLAN
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
