@@ -40,29 +40,29 @@ class AutoConfig {
   private initializeConfig(): void {
     // 1. Detectar ambiente automaticamente
     this.config.NODE_ENV = this.detectEnvironment();
-    
+
     // 2. Configurar porta e host automaticamente
     this.config.PORT = this.getPort();
     this.config.HOST = this.getHost();
-    
+
     // 3. Gerar chave secreta automaticamente se não fornecida
     this.config.SESSION_SECRET = this.getSessionSecret();
-    
+
     // 4. Configurar armazenamento automaticamente
     this.config.STORAGE_TYPE = this.detectStorageType();
-    
+
     // 5. Configurar valores padrão de contato automaticamente
     this.setupDefaultContactInfo();
-    
+
     // 6. Configurar variáveis do cliente automaticamente
     this.setupClientVariables();
-    
+
     // 7. Validar configurações obrigatórias
     this.validateRequiredConfig();
-    
+
     // 8. Aplicar configurações ao process.env
     this.applyConfig();
-    
+
     // 9. Log das configurações aplicadas
     this.logConfiguration();
   }
@@ -75,12 +75,12 @@ class AutoConfig {
     if (process.env.NODE_ENV) {
       return process.env.NODE_ENV;
     }
-    
+
     // Detecta automaticamente se está rodando no EasyPanel/Heroku
     if (process.env.PORT === '80' || process.env.PORT === '443' || process.env.DYNO) {
       return 'production';
     }
-    
+
     // Padrão para desenvolvimento local
     return 'development';
   }
@@ -92,7 +92,7 @@ class AutoConfig {
     if (process.env.PORT) {
       return process.env.PORT;
     }
-    
+
     return '3000';
   }
 
@@ -103,12 +103,12 @@ class AutoConfig {
     if (process.env.HOST) {
       return process.env.HOST;
     }
-    
+
     // Em produção ou quando a porta for 80 (EasyPanel), usar 0.0.0.0
     if (this.config.NODE_ENV === 'production' || this.config.PORT === '80') {
       return '0.0.0.0';
     }
-    
+
     // Em desenvolvimento, usar localhost para facilitar testes
     return 'localhost';
   }
@@ -120,7 +120,7 @@ class AutoConfig {
     if (process.env.SESSION_SECRET) {
       return process.env.SESSION_SECRET;
     }
-    
+
     // Gera uma chave secreta aleatória de 64 bytes
     const secret = randomBytes(64).toString('hex');
     console.log('🔑 Chave secreta de sessão gerada automaticamente');
@@ -134,11 +134,11 @@ class AutoConfig {
     if (process.env.GOOGLE_CLOUD_PROJECT_ID && process.env.PRIVATE_OBJECT_DIR) {
       return 'google-cloud';
     }
-    
+
     if (process.env.REPLIT_SIDECAR_ENDPOINT) {
       return 'replit';
     }
-    
+
     return 'local';
   }
 

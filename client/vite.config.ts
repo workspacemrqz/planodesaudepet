@@ -15,7 +15,7 @@ export default defineConfig({
     // Configurações de proxy para desenvolvimento
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
         timeout: 10000,

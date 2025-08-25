@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server/index.js",
   "scripts": {
-    "dev": "tsx server/index.ts",
+    "dev": "npm run build:client && tsx server/index.ts",
     "heroku-prebuild": "cd client && npm ci",
     "build": "npm run build:server && npm run build:client && npm run copy:assets",
     "build:server": "tsc --project server/tsconfig.json",
