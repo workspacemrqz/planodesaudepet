@@ -54,12 +54,16 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <RobustImage 
+            <img 
               src="/unipet-logo.png" 
               alt="Unipet Plan" 
               className="h-8 w-auto" 
-              fallback="/placeholder-image.svg"
-              onError={(error) => console.warn('Logo image error:', error)}
+              onLoad={() => console.log('✅ Logo carregado com sucesso!')}
+              onError={(e) => {
+                console.error('❌ Erro ao carregar logo:', e.currentTarget.src);
+                console.log('Tentando fallback...');
+                e.currentTarget.src = '/placeholder-image.svg';
+              }}
             />
           </Link>
 
