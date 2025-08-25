@@ -1,16 +1,61 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 
 interface Base64ImageDisplayProps {
-  base64Data: string | null | undefined;
+  base64String: string;
   alt: string;
   className?: string;
   fallbackSrc?: string;
-  onError?: () => void;
+  onError?: (error: string) => void;
   onLoad?: () => void;
 }
 
+const isValidBase64Image = (base64String: string): boolean => {
+  if (!base64String || typeof base64String !== 'string') {
+    return false;
+  }
+
+  // Verificar se tem o formato correto de data URL
+  const dataUrlPattern = /^data:image\/(jpeg|jpg|png|gif|webp);base64,/;
+
+  // Se não tem o prefix, verificar se é Base64 válido
+  if (!dataUrlPattern.test(base64String)) {
+    try {
+      const base64Content = base64String.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+      const decoded = btoa(atob(base64Content));
+      return decoded === base64Content && base64Content.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const processBase64Image = (base64String: string): string => {
+  if (!base64String) {
+    throw new Error('Base64 string is required');
+  }
+
+  // Se já está no formato correto, retornar como está
+  if (base64String.startsWith('data:image/')) {
+    return base64String;
+  }
+
+  // Se é apenas o conteúdo Base64, adicionar o prefix
+  try {
+    const base64Content = base64String.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+    // Verificar se é Base64 válido
+    atob(base64Content);
+
+    // Adicionar prefix padrão (assumir JPEG se não especificado)
+    return `data:image/jpeg;base64,${base64Content}`;
+  } catch {
+    throw new Error('Invalid Base64 image format');
+  }
+};
+
 export const Base64ImageDisplay: React.FC<Base64ImageDisplayProps> = ({
-  base64Data,
+  base64String,
   alt,
   className = '',
   fallbackSrc = '/placeholder-image.svg',
@@ -18,75 +63,64 @@ export const Base64ImageDisplay: React.FC<Base64ImageDisplayProps> = ({
   onLoad
 }) => {
   const [imageSrc, setImageSrc] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [error, setError] = useState<string | null>(null); // Estado para armazenar mensagens de erro
+  const [isLoading, setIsLoading] = useState(true);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  // Simulação de type e id para o useCallback, pois não estão disponíveis diretamente no escopo desta função.
-  // Em um cenário real, esses valores precisariam ser passados como props ou obtidos de outra forma.
-  const type = 'default';
-  const id = 'default';
-
-  const handleError = useCallback((errorMessage?: string) => {
-    console.error(`Erro ao carregar imagem ${type}:${id}`, errorMessage);
-    setError(errorMessage || 'Falha ao carregar imagem');
-    setIsLoading(false);
-    setHasError(true); // Marcar que houve um erro
-    if (onError) {
-      onError();
-    }
-  }, [type, id, onError]); // Adicionado onError às dependências
-
-  useEffect(() => {
-    setIsLoading(true); // Reiniciar o estado de loading a cada mudança de base64Data
-    setError(null); // Limpar erros anteriores
-    setHasError(false); // Resetar o flag de erro
-
-    if (base64Data && base64Data.startsWith('data:image/')) {
-      setImageSrc(base64Data);
-      setIsLoading(false);
-      if (onLoad) {
-        onLoad();
-      }
-    } else if (base64Data) {
-      // Tentar adicionar prefix Base64 se estiver faltando, assumindo jpeg como padrão
-      const base64Image = `data:image/jpeg;base64,${base64Data}`;
-      // Uma verificação mais robusta para a validade do base64 seria ideal aqui
-      setImageSrc(base64Image);
-      setIsLoading(false);
-      if (onLoad) {
-        onLoad();
-      }
-    } else {
-      // Sem dados, usar fallback
+  const processImage = useCallback(async () => {
+    if (!base64String) {
+      setHasError(true);
       setImageSrc(fallbackSrc);
       setIsLoading(false);
+      onError?.('Base64 string is empty');
+      return;
     }
-  }, [base64Data, fallbackSrc, onLoad, onError]);
 
-  const handleLoad = () => {
+    try {
+      // Verificar se é uma imagem Base64 válida
+      if (!isValidBase64Image(base64String)) {
+        throw new Error('Invalid Base64 image format');
+      }
+
+      // Processar a string Base64
+      const processedImage = processBase64Image(base64String);
+      setImageSrc(processedImage);
+      setHasError(false);
+    } catch (error) {
+      console.error('Error processing Base64 image:', error);
+      setHasError(true);
+      setImageSrc(fallbackSrc);
+      onError?.(error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [base64String, fallbackSrc, onError]);
+
+  useEffect(() => {
+    processImage();
+  }, [processImage]);
+
+  const handleImageLoad = useCallback(() => {
     setIsLoading(false);
     setHasError(false);
-    setError(null);
-    if (onLoad) {
-      onLoad();
+    onLoad?.();
+  }, [onLoad]);
+
+  const handleImageError = useCallback(() => {
+    if (!hasError) {
+      console.warn(`Base64 image failed to load, using fallback: ${fallbackSrc}`);
+      setHasError(true);
+      setImageSrc(fallbackSrc);
+      setIsLoading(false);
+      onError?.('Failed to load processed Base64 image');
     }
-  };
+  }, [hasError, fallbackSrc, onError]);
 
   if (isLoading) {
     return (
-      <div className={`${className} bg-gray-200 animate-pulse rounded flex items-center justify-center`}>
-        <div className="text-gray-400 text-sm">Carregando...</div>
-      </div>
-    );
-  }
-
-  if (hasError) {
-    return (
-      <div className={`${className} bg-gray-100 rounded flex items-center justify-center`}>
-        <div className="text-gray-400 text-sm text-center">
-          <div>{error || 'Erro ao carregar imagem'}</div>
-          <div className="text-xs">{alt}</div>
+      <div className={`bg-gray-200 animate-pulse ${className}`}>
+        <div className="w-full h-full flex items-center justify-center">
+          <span className="text-gray-400 text-sm">Carregando...</span>
         </div>
       </div>
     );
@@ -94,13 +128,13 @@ export const Base64ImageDisplay: React.FC<Base64ImageDisplayProps> = ({
 
   return (
     <img
+      ref={imgRef}
       src={imageSrc}
       alt={alt}
       className={className}
-      onError={handleError}
-      onLoad={handleLoad}
+      onLoad={handleImageLoad}
+      onError={handleImageError}
+      loading="lazy"
     />
   );
 };
-
-export default Base64ImageDisplay;

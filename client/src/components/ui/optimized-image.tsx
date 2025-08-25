@@ -30,7 +30,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const handleError = useCallback((event?: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (!hasError && imageSrc !== fallbackSrc && retryCount < 2) {
       console.warn(`Failed to load image (attempt ${retryCount + 1}): ${imageSrc}`);
-      
+
       // Record failure event
       recordImageEvent({
         url: imageSrc,
@@ -38,16 +38,16 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         error: `Failed to load image (attempt ${retryCount + 1})`,
         timestamp: new Date()
       });
-      
+
       // Retry with a small delay
       setTimeout(() => {
         setRetryCount(prev => prev + 1);
         setImageSrc(src); // Reset to original source
       }, 1000);
-      
+
       return;
     }
-    
+
     if (imageSrc !== fallbackSrc) {
       console.warn(`Switching to fallback image: ${fallbackSrc}`);
       setImageSrc(fallbackSrc);
@@ -58,7 +58,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       // If fallback also fails, show error state
       setIsLoading(false);
       console.error(`Both image and fallback failed to load: ${src}`);
-      
+
       // Record fallback failure event
       recordImageEvent({
         url: fallbackSrc,
@@ -66,7 +66,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         error: 'Fallback image also failed to load',
         timestamp: new Date()
       });
-      
+
       onError?.(`Both image and fallback failed to load: ${src}`);
     }
   }, [src, fallbackSrc, hasError, onError, imageSrc, retryCount, recordImageEvent]);
@@ -75,7 +75,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     setIsLoading(false);
     setHasError(false);
     setRetryCount(0);
-    
+
     // Record successful load event
     recordImageEvent({
       url: imageSrc,
@@ -109,7 +109,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           <div className="text-gray-400 text-sm">Carregando...</div>
         </div>
       )}
-      
+
       <img
         src={imageSrc}
         alt={alt}
@@ -123,7 +123,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         )}
         {...props}
       />
-      
+
       {hasError && imageSrc === fallbackSrc && (
         <div className="absolute inset-0 bg-gray-100 rounded flex items-center justify-center">
           <div className="text-gray-400 text-sm text-center">

@@ -2,6 +2,7 @@ import { getConfig } from '../config/app-config';
 
 // Interface para erros estruturados
 interface AppError extends Error {
+  id: string;
   code: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   context?: Record<string, any>;
@@ -73,10 +74,10 @@ class ErrorHandler {
     try {
       // Capturar erros globais não tratados
       this.setupGlobalErrorHandlers();
-      
+
       // Configurar listeners para diferentes tipos de erro
       this.setupEventListeners();
-      
+
       // Configurar recovery automático
       if (this.config.enableRecovery) {
         this.setupRecoveryStrategies();
@@ -100,7 +101,7 @@ class ErrorHandler {
       });
     });
 
-    // Capturar erros de Promise não tratados
+    // Capturar erros de Promise não tratadas
     window.addEventListener('unhandledrejection', (event) => {
       this.handleError(new Error(event.reason), {
         type: 'promise',
@@ -192,7 +193,7 @@ class ErrorHandler {
   public handleError(error: Error | string, context?: Record<string, any>): void {
     try {
       const appError = this.createAppError(error, context);
-      
+
       // Verificar se o erro deve ser ignorado
       if (this.shouldIgnoreError(appError)) {
         return;
@@ -230,13 +231,14 @@ class ErrorHandler {
   }
 
   /**
-   * Criar erro estruturado
+   * Criar objeto de erro padronizado
    */
   private createAppError(error: Error | string, context?: Record<string, any>): AppError {
     const errorMessage = typeof error === 'string' ? error : error.message;
     const originalError = typeof error === 'string' ? new Error(error) : error;
 
     const appError: AppError = {
+      id: this.generateErrorId(),
       name: originalError.name || 'AppError',
       message: errorMessage,
       code: this.determineErrorCode(originalError),
@@ -249,8 +251,8 @@ class ErrorHandler {
       timestamp: new Date(),
       userId: this.getUserId(),
       sessionId: this.getSessionId(),
-      url: window.location.href,
-      userAgent: navigator.userAgent,
+      url: typeof window !== 'undefined' ? window.location.href : '',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       stack: originalError.stack,
       isRecoverable: this.isErrorRecoverable(originalError),
       retryCount: 0,
@@ -272,7 +274,7 @@ class ErrorHandler {
     if (error.message.includes('fetch')) return 'FETCH_ERROR';
     if (error.message.includes('timeout')) return 'TIMEOUT_ERROR';
     if (error.message.includes('permission')) return 'PERMISSION_ERROR';
-    
+
     return 'UNKNOWN_ERROR';
   }
 
@@ -284,7 +286,7 @@ class ErrorHandler {
     if (error.name === 'ReferenceError') return 'high';
     if (error.message.includes('Network')) return 'medium';
     if (error.message.includes('timeout')) return 'medium';
-    
+
     return 'low';
   }
 
@@ -297,7 +299,7 @@ class ErrorHandler {
     if (error.message.includes('Network')) return true;
     if (error.message.includes('timeout')) return true;
     if (error.message.includes('fetch')) return true;
-    
+
     return true;
   }
 
@@ -359,10 +361,10 @@ class ErrorHandler {
   private showUserNotification(error: AppError): void {
     // Implementar notificação baseada na severidade
     const notification = this.createNotificationElement(error);
-    
+
     if (notification) {
       document.body.appendChild(notification);
-      
+
       // Remover automaticamente após 5 segundos
       setTimeout(() => {
         if (notification.parentNode) {
@@ -520,6 +522,21 @@ class ErrorHandler {
   }
 
   /**
+   * Gerar um ID único para o erro
+   */
+  private generateErrorId(): string {
+    let d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      d += performance.now(); //use high-precision timer if available
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
+  /**
    * Obter estatísticas de erro
    */
   public getErrorStats(): Record<string, number> {
@@ -583,7 +600,8 @@ export function createAppError(
   error.isRecoverable = true;
   error.retryCount = 0;
   error.maxRetries = 3;
-  
+  error.id = errorHandler.generateErrorId(); // Ensure ID is generated
+
   return error;
 }
 
@@ -606,30 +624,30 @@ export async function withRetry<T>(
   context?: Record<string, any>
 ): Promise<T> {
   let lastError: Error;
-  
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await asyncFn();
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
-      
+
       if (attempt === maxRetries) {
         handleError(lastError, { ...context, attempt, maxRetries });
         throw lastError;
       }
-      
+
       logWarning(`Tentativa ${attempt} falhou, tentando novamente em ${delay}ms`, {
         error: lastError.message,
         attempt,
         maxRetries,
         ...context
       });
-      
+
       await new Promise(resolve => setTimeout(resolve, delay));
       delay *= 2; // Backoff exponencial
     }
   }
-  
+
   throw lastError!;
 }
 
