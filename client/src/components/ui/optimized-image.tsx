@@ -38,14 +38,13 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   }, [currentSrc, recordImageEvent]);
 
   const handleError = useCallback((error?: string | Event) => {
-    if (hasErrored) return; // Evita loops
+    if (hasErrored && currentSrc === fallbackSrc) return; // Evita loops
 
     // Log mais silencioso para evitar spam no console
     if (src && !src.includes('placeholder-image.svg') && !src.includes('data:image')) {
       console.log(`Image failed to load: ${src}, using fallback: ${fallbackSrc}`);
     }
 
-    setHasErrored(true);
     setIsLoading(false);
 
     const errorMessage = typeof error === 'string' ? error : 
@@ -59,6 +58,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     // Tentar carregar imagem de fallback
     if (fallbackSrc && fallbackSrc !== src && fallbackSrc !== currentSrc) {
       setCurrentSrc(fallbackSrc);
+      setHasErrored(false); // Reset error state para tentar o fallback
+    } else {
+      setHasErrored(true);
     }
   }, [src, fallbackSrc, onError, hasErrored, currentSrc]);
 
@@ -68,14 +70,16 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       if (fallbackSrc) {
         setCurrentSrc(fallbackSrc);
         setHasErrored(false);
+        setIsLoading(false);
       } else {
         setHasErrored(true);
+        setIsLoading(false);
       }
       return;
     }
 
     // Reset states when src changes
-    if (src !== currentSrc) {
+    if (src !== currentSrc && !hasErrored) {
       setIsLoading(true);
       setHasErrored(false);
       setCurrentSrc(src);
@@ -91,27 +95,31 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     const img = new Image();
     const timeoutId = setTimeout(() => {
       handleError('Timeout ao carregar imagem');
-    }, 10000); // 10 segundo timeout
+    }, 8000); // 8 segundo timeout
 
     img.onload = () => {
       clearTimeout(timeoutId);
-      handleLoad();
+      if (img.src === currentSrc) { // Verificar se ainda é a imagem atual
+        handleLoad();
+      }
     };
 
     img.onerror = () => {
       clearTimeout(timeoutId);
-      handleError();
+      if (img.src === currentSrc) { // Verificar se ainda é a imagem atual
+        handleError();
+      }
     };
 
     // Set src after event listeners are attached
-    img.src = src;
+    img.src = currentSrc;
 
     return () => {
       clearTimeout(timeoutId);
       img.onload = null;
       img.onerror = null;
     };
-  }, [src, currentSrc, fallbackSrc, handleLoad, handleError]);
+  }, [src, currentSrc, fallbackSrc, handleLoad, handleError, hasErrored]);
 
   return (
     <div className={cn('relative', className)}>

@@ -240,9 +240,9 @@ class ErrorHandler {
     } catch (handlerError) {
       // Se houver erro no próprio handler, registrar de forma mais simples
       const handlerMessage = handlerError instanceof Error ? handlerError.message : 'Unknown error';
-      const originalMessage = originalError instanceof Error ? originalError.message :
-                           originalError instanceof Event ? `${originalError.type} event` :
-                           typeof originalError === 'string' ? originalError :
+      const originalMessage = error instanceof Error ? error.message :
+                           error instanceof Event ? `${error.type} event` :
+                           typeof error === 'string' ? error :
                            'Unknown error';
 
       console.error('❌ Erro no Error Handler:', handlerMessage);
@@ -382,8 +382,9 @@ class ErrorHandler {
    * Log do erro
    */
   private logError(error: AppError): void {
+    const timestamp = error.timestamp instanceof Date ? error.timestamp : new Date();
     const logData = {
-      timestamp: error.timestamp.toISOString(),
+      timestamp: timestamp.toISOString(),
       level: 'ERROR',
       code: error.code,
       severity: error.severity,

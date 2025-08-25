@@ -54,15 +54,21 @@ export function getImageUrlSync(imagePath: string | null | undefined, fallback?:
     return imagePath;
   }
 
+  // Handle data URLs
+  if (imagePath.startsWith('data:')) {
+    return imagePath;
+  }
+
   // Handle invalid paths (names without proper path structure)
   if (!imagePath.startsWith('/') && !imagePath.startsWith('.') && !imagePath.includes('/')) {
-    // This looks like a filename without path, use fallback
-    console.warn(`Invalid image path detected: ${imagePath}, using fallback`);
-    return fallback || '/placeholder-image.svg';
+    // This looks like a filename without path, try to construct a valid path
+    const validImagePath = `/${imagePath}`;
+    console.warn(`Invalid image path detected: ${imagePath}, converting to: ${validImagePath}`);
+    return validImagePath;
   }
 
   // For local static files, ensure they start with /
-  if (!imagePath.startsWith('/')) {
+  if (!imagePath.startsWith('/') && !imagePath.startsWith('.')) {
     imagePath = '/' + imagePath;
   }
 
