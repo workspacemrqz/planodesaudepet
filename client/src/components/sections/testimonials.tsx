@@ -54,7 +54,7 @@ export default function Testimonials() {
                 <CardContent className="pt-6 sm:pt-8 p-4 sm:p-6 flex flex-col flex-1">
                   <div className="flex items-center mb-4 sm:mb-6 flex-shrink-0">
                     <RobustImage
-                      src={testimonial.image}
+                      src={testimonial.image ? encodeURI(testimonial.image) : '/placeholder-image.svg'}
                       alt={`${testimonial.name} com seu pet`}
                       fallback="/placeholder-image.svg"
                       className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
