@@ -30,6 +30,18 @@ interface ErrorHandlerConfig {
   recoveryStrategies: Record<string, () => void>;
 }
 
+// Interface para informações de erro a serem enviadas para monitoramento
+interface ErrorInfo {
+  type: string;
+  message: string;
+  stack?: string | null;
+  context?: any;
+  timestamp: string;
+  userAgent: string;
+  url: string;
+}
+
+
 // Configuração padrão do handler de erros
 const defaultConfig: ErrorHandlerConfig = {
   enableLogging: true,
@@ -651,6 +663,38 @@ export async function withRetry<T>(
   throw lastError!;
 }
 
+// Função auxiliar para enviar erros para monitoramento
+const sendErrorToMonitoring = (errorInfo: ErrorInfo): void => {
+  try {
+    // Verificar se errorInfo tem timestamp válido
+    if (!errorInfo || !errorInfo.timestamp) {
+      errorInfo = {
+        ...errorInfo,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    // Em desenvolvimento, apenas logar
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📊 Enviando erro para serviço de monitoramento:', errorInfo.type);
+      return;
+    }
+
+    // Em produção, enviar para serviço real (comentado por enquanto)
+    // fetch('/api/errors', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(errorInfo)
+    // }).catch(console.error);
+
+  } catch (error) {
+    console.error('❌ Erro ao enviar para monitoramento:', error);
+  }
+};
+
+
 // Exportar tipos
-export type { AppError, ErrorHandlerConfig };
+export type { AppError, ErrorHandlerConfig, ErrorInfo };
 export { ErrorHandler };

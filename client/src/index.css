@@ -41,603 +41,12 @@
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.5rem;
-  
+
   /* UNIPET PLAN Custom Colors */
   --unipet-dark: hsl(181, 51%, 31%);
   --unipet-primary: hsl(42, 74%, 54%);
   --unipet-white: #FBF9F7;
   --unipet-light: hsl(0, 0%, 95%);
-  
-  /* Variável CSS customizada para o campo de busca específico da página admin aba Rede */
-  --admin-rede-search-color: #FBF9F7;
-  
-  /* VARIÁVEIS CSS ÚNICAS PARA CADA CAMPO - SOLUÇÃO DEFINITIVA */
-  /* Campo de busca da rede credenciada (página pública) */
-  --rede-credenciada-search-text-color: #2d2d2d;
-  --rede-credenciada-search-placeholder-color: #2d2d2d;
-  --rede-credenciada-search-caret-color: #2d2d2d;
-  --rede-credenciada-search-bg-color: #ffffff;
-  --rede-credenciada-search-border-color: #e5e7eb;
-  
-  /* Campo de busca da rede credenciada (página admin) */
-  --admin-rede-search-text-color: #FBF9F7;
-  --admin-rede-search-placeholder-color: #aaaaaa;
-  --admin-rede-search-caret-color: #FBF9F7;
-  --admin-rede-search-bg-color: #195d5e;
-  --admin-rede-search-border-color: #277677;
-  
-  /* Campo de busca geral (outros contextos) */
-  --general-search-text-color: #ffffff;
-  --general-search-placeholder-color: #ffffff;
-  --general-search-caret-color: #ffffff;
-  --general-search-bg-color: #145759;
-  --general-search-border-color: #3EBEC1;
-}
-
-/* SCROLL SUAVE E ANIMAÇÕES */
-/* Melhorar a transição de scroll em toda a aplicação */
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Compensar header fixo */
-}
-
-/* Adicionar easing personalizado para o scroll */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-/* SOLUÇÃO DEFINITIVA PARA O CAMPO DE BUSCA DA REDE CREDENCIADA */
-/* Estilos específicos para o campo de busca da página pública de rede credenciada */
-/* Usando máxima especificidade e variáveis CSS para garantir consistência */
-
-/* Estilos específicos para o campo de busca da aba admin da rede */
-.admin-rede-search {
-  color: var(--admin-rede-search-text-color) !important;
-  background-color: var(--admin-rede-search-bg-color) !important;
-  border-color: var(--admin-rede-search-border-color) !important;
-  caret-color: var(--admin-rede-search-caret-color) !important;
-}
-
-.admin-rede-search::placeholder {
-  color: var(--admin-rede-search-placeholder-color) !important;
-  opacity: 0.7 !important;
-}
-
-.admin-rede-search:focus {
-  border-color: var(--admin-rede-search-border-color) !important;
-  box-shadow: 0 0 0 1px var(--admin-rede-search-border-color) !important;
-  outline: none !important;
-}
-
-/* Campo de busca da rede credenciada - PÁGINA PÚBLICA */
-/* Aplicar cor #2d2d2d para o texto digitado */
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
-  color: var(--rede-credenciada-search-text-color) !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
-  caret-color: var(--rede-credenciada-search-caret-color) !important;
-  background-color: var(--rede-credenciada-search-bg-color) !important;
-  border-color: var(--rede-credenciada-search-border-color) !important;
-}
-
-/* Placeholder específico para o campo de busca da rede credenciada - PÁGINA PÚBLICA */
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
-  color: var(--rede-credenciada-search-placeholder-color) !important;
-  opacity: 0.7 !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
-}
-
-/* Estilos específicos para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]),
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):active,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):hover,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-visible,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-within,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):not(:focus),
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):blur,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):visited,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):enabled,
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):disabled {
-  color: var(--rede-credenciada-search-text-color) !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
-  caret-color: var(--rede-credenciada-search-caret-color) !important;
-  background-color: var(--rede-credenciada-search-bg-color) !important;
-  border-color: var(--rede-credenciada-search-border-color) !important;
-}
-
-/* Placeholder específico para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
-input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"])::placeholder {
-  color: var(--rede-credenciada-search-placeholder-color) !important;
-  opacity: 0.7 !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
-}
-
-/* Estilos específicos para o campo de busca da rede credenciada dentro de contact-form-field - PÁGINA PÚBLICA */
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
-  color: var(--rede-credenciada-search-text-color) !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
-  caret-color: var(--rede-credenciada-search-caret-color) !important;
-  background-color: var(--rede-credenciada-search-bg-color) !important;
-  border-color: var(--rede-credenciada-search-border-color) !important;
-}
-
-/* Placeholder específico para o campo de busca da rede credenciada dentro de contact-form-field - PÁGINA PÚBLICA */
-.contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
-  color: var(--rede-credenciada-search-placeholder-color) !important;
-  opacity: 0.7 !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
-}
-
-/* Estilos específicos para o campo de busca da rede credenciada com ambas as classes - PÁGINA PÚBLICA */
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]),
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):active,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):hover,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-visible,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-within,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):not(:focus),
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):blur,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):visited,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):enabled,
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):disabled {
-  color: var(--rede-credenciada-search-text-color) !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
-  caret-color: var(--rede-credenciada-search-caret-color) !important;
-  background-color: var(--rede-credenciada-search-bg-color) !important;
-  border-color: var(--rede-credenciada-search-border-color) !important;
-}
-
-/* Placeholder específico para o campo de busca da rede credenciada com ambas as classes - PÁGINA PÚBLICA */
-.contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"])::placeholder {
-  color: var(--rede-credenciada-search-placeholder-color) !important;
-  opacity: 0.7 !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
-}
-
-/* Estilos específicos para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]),
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):active,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):hover,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus-visible,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus-within,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):not(:focus),
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):blur,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):visited,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):enabled,
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):disabled {
-  color: var(--rede-credenciada-search-text-color) !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-text-color) !important;
-  caret-color: var(--rede-credenciada-search-caret-color) !important;
-  background-color: var(--rede-credenciada-search-bg-color) !important;
-  border-color: var(--rede-credenciada-search-border-color) !important;
-}
-
-/* Placeholder específico para o campo de busca da rede credenciada com classe mobile-form-input - PÁGINA PÚBLICA */
-input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"])::placeholder {
-  color: var(--rede-credenciada-search-placeholder-color) !important;
-  opacity: 0.7 !important;
-  -webkit-text-fill-color: var(--rede-credenciada-search-placeholder-color) !important;
-}
-
-/* ULTIMATE OVERRIDE - Máxima especificidade para garantir que a cor #2d2d2d seja aplicada */
-/* Campo de busca da rede credenciada - PÁGINA PÚBLICA - FORÇAR COR #2d2d2d */
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
-  color: #2d2d2d !important;
-  -webkit-text-fill-color: #2d2d2d !important;
-  caret-color: #2d2d2d !important;
-}
-
-/* Placeholder específico para o campo de busca da rede credenciada - PÁGINA PÚBLICA - FORÇAR COR #2d2d2d */
-input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
-  color: #2d2d2d !important;
-  opacity: 0.7 !important;
-  -webkit-text-fill-color: #2d2d2d !important;
-}
-
-/* Adicionar easing personalizado para o scroll */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  /* Melhorar transições de botões */
-  .btn-ver-detalhes {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .btn-ver-detalhes:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-  }
-  
-  /* Animações de ícones */
-  .icon-arrow {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .btn-ver-detalhes:hover .icon-arrow {
-    transform: translateX(4px) scale(1.1);
-  }
-}
-
-
-/* ADMIN CLEAN DESIGN - Remove ALL borders and outlines */
-
-/* Remove all borders from admin area components */
-.admin-no-focus input,
-.admin-no-focus textarea,
-.admin-no-focus select,
-.admin-no-focus button,
-.admin-no-focus [role="combobox"],
-.admin-dialog-content input,
-.admin-dialog-content textarea,
-.admin-dialog-content select,
-.admin-dialog-content button,
-.admin-dialog-content [role="combobox"],
-input[data-testid^="input-"],
-textarea[data-testid^="textarea-"],
-button[data-testid^="button-"],
-select[data-testid^="select-"] {
-  border: none !important;
-  outline: none !important;
-  ring: none !important;
-  box-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-/* Remove borders from all states (focus, hover, active) */
-.admin-no-focus input:focus,
-.admin-no-focus input:hover,
-.admin-no-focus input:active,
-.admin-no-focus textarea:focus,
-.admin-no-focus textarea:hover,
-.admin-no-focus textarea:active,
-.admin-no-focus select:focus,
-.admin-no-focus select:hover,
-.admin-no-focus select:active,
-.admin-no-focus button:focus,
-.admin-no-focus button:hover,
-.admin-no-focus button:active,
-.admin-no-focus input:focus-visible,
-.admin-no-focus textarea:focus-visible,
-.admin-no-focus select:focus-visible,
-.admin-no-focus button:focus-visible,
-.admin-no-focus [role="combobox"]:focus,
-.admin-no-focus [role="combobox"]:hover,
-.admin-no-focus [role="combobox"]:active,
-.admin-no-focus [role="combobox"]:focus-visible,
-.admin-dialog-content input:focus,
-.admin-dialog-content input:hover,
-.admin-dialog-content input:active,
-.admin-dialog-content textarea:focus,
-.admin-dialog-content textarea:hover,
-.admin-dialog-content textarea:active,
-.admin-dialog-content select:focus,
-.admin-dialog-content select:hover,
-.admin-dialog-content select:active,
-.admin-dialog-content button:focus,
-.admin-dialog-content button:hover,
-.admin-dialog-content button:active,
-.admin-dialog-content [role="combobox"]:focus,
-.admin-dialog-content [role="combobox"]:hover,
-.admin-dialog-content [role="combobox"]:active,
-input[data-testid^="input-"]:focus,
-input[data-testid^="input-"]:hover,
-input[data-testid^="input-"]:active,
-textarea[data-testid^="textarea-"]:focus,
-textarea[data-testid^="textarea-"]:hover,
-textarea[data-testid^="textarea-"]:active,
-button[data-testid^="button-"]:focus,
-button[data-testid^="button-"]:hover,
-button[data-testid^="button-"]:active,
-select[data-testid^="select-"]:focus,
-select[data-testid^="select-"]:hover,
-select[data-testid^="select-"]:active {
-  border: none !important;
-  outline: none !important;
-  ring: none !important;
-  box-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-/* Remove borders from admin containers, cards, and layout elements */
-.admin-no-focus .border,
-.admin-no-focus [class*="border"],
-.admin-dialog-content .border,
-.admin-dialog-content [class*="border"],
-.admin-no-focus .rounded-lg,
-.admin-no-focus .rounded-md,
-.admin-dialog-content .rounded-lg,
-.admin-dialog-content .rounded-md,
-div[class*="bg-[#145759]"],
-div[class*="bg-[#115051]"],
-.admin-no-focus div,
-.admin-dialog-content div {
-  border: none !important;
-  border-width: 0 !important;
-  border-style: none !important;
-}
-
-/* Remove borders from specific admin components */
-.admin-no-focus .grid,
-.admin-no-focus .flex,
-.admin-no-focus .space-y-4,
-.admin-no-focus .space-y-6,
-.admin-dialog-content .grid,
-.admin-dialog-content .flex,
-.admin-dialog-content .space-y-4,
-.admin-dialog-content .space-y-6 {
-  border: none !important;
-}
-
-/* Remove borders from Radix UI components in admin */
-.admin-no-focus [data-radix-select-trigger],
-.admin-no-focus [data-radix-select-content],
-.admin-no-focus [data-radix-dialog-content],
-.admin-no-focus [data-radix-accordion-content],
-.admin-dialog-content [data-radix-select-trigger],
-.admin-dialog-content [data-radix-select-content],
-.admin-dialog-content [data-radix-dialog-content],
-.admin-dialog-content [data-radix-accordion-content] {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Remove borders from slider components */
-.admin-no-focus .relative,
-.admin-no-focus [role="slider"],
-.admin-dialog-content .relative,
-.admin-dialog-content [role="slider"] {
-  border: none !important;
-  outline: none !important;
-}
-
-.admin-no-focus input:hover,
-.admin-no-focus textarea:hover,
-.admin-no-focus select:hover {
-  border: none !important;
-}
-
-/* FINAL OVERRIDE - Remove ALL borders in admin context */
-.admin-no-focus *,
-.admin-dialog-content *,
-[data-testid^="input-"] *,
-[data-testid^="textarea-"] *,
-[data-testid^="button-"] *,
-[data-testid^="select-"] * {
-  border: none !important;
-  border-width: 0 !important;
-  border-style: none !important;
-  border-color: transparent !important;
-}
-
-/* Specific admin page context - remove borders from everything in admin dashboard */
-div[class*="bg-[#145759]"] *,
-div[class*="bg-[#115051]"] *,
-div[class*="bg-[#195d5e]"] * {
-  border: none !important;
-  border-width: 0 !important;
-}
-
-/* Exception: Keep ring for popular plans indicator */
-.admin-no-focus .ring-2,
-.admin-dialog-content .ring-2 {
-  border: none !important;
-}
-
-/* Remove yellow outline from admin dropdown buttons */
-[data-radix-dropdown-menu-trigger],
-[data-radix-dropdown-menu-trigger]:focus,
-[data-radix-dropdown-menu-trigger]:focus-visible,
-[data-radix-dropdown-menu-trigger]:active {
-  outline: none !important;
-  ring: none !important;
-  box-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-/* Global admin dialog outline removal */
-.admin-dialog-content input,
-.admin-dialog-content textarea,
-.admin-dialog-content select,
-.admin-dialog-content [role="combobox"] {
-  outline: none !important;
-  ring: none !important;
-  box-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  border: 1px solid #FBF9F7 !important;
-}
-
-.admin-dialog-content input:focus,
-.admin-dialog-content textarea:focus,
-.admin-dialog-content select:focus,
-.admin-dialog-content [role="combobox"]:focus,
-.admin-dialog-content input:focus-visible,
-.admin-dialog-content textarea:focus-visible,
-.admin-dialog-content select:focus-visible,
-.admin-dialog-content [role="combobox"]:focus-visible,
-.admin-dialog-content input:active,
-.admin-dialog-content textarea:active,
-.admin-dialog-content select:active,
-.admin-dialog-content [role="combobox"]:active {
-  outline: none !important;
-  ring: none !important;
-  box-shadow: none !important;
-  border-color: #FBF9F7 !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-/* Additional overrides for Shadcn UI components */
-.admin-dialog-content .relative input,
-.admin-dialog-content .relative textarea,
-.admin-no-focus input,
-.admin-no-focus textarea {
-  outline: none !important;
-  box-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-.admin-dialog-content .relative input:focus,
-.admin-dialog-content .relative textarea:focus,
-.admin-no-focus input:focus,
-.admin-no-focus textarea:focus,
-.admin-dialog-content .relative input:focus-visible,
-.admin-dialog-content .relative textarea:focus-visible,
-.admin-no-focus input:focus-visible,
-.admin-no-focus textarea:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: #FBF9F7 !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-/* Extra forceful override for all possible input/textarea focus states */
-*[data-testid^="input-"],
-*[data-testid^="textarea-"] {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-*[data-testid^="input-"]:focus,
-*[data-testid^="textarea-"]:focus,
-*[data-testid^="input-"]:focus-visible,
-*[data-testid^="textarea-"]:focus-visible,
-*[data-testid^="input-"]:active,
-*[data-testid^="textarea-"]:active {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: #FBF9F7 !important;
-  --tw-ring-shadow: none !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-opacity: 0 !important;
-}
-
-
-
-[data-testid^="button-delete-faq"],
-[data-testid^="button-delete-faq"]:hover,
-[data-testid^="button-delete-faq"]:focus,
-[data-testid^="button-delete-faq"]:active {
-  background: linear-gradient(to top, #c99524, #E1AC33) !important;
-  color: #fbf9f7 !important;
-  transform: none !important;
-  opacity: 1 !important;
-  transition: none !important;
-}
-
-/* Forçar cor do texto e ícone nos botões de deletar do FAQ */
-[data-testid^="button-delete-faq"] *,
-[data-testid^="button-delete-faq"]:hover *,
-[data-testid^="button-delete-faq"]:focus *,
-[data-testid^="button-delete-faq"]:active * {
-  color: #fbf9f7 !important;
-}
-
-/* Override específico para botões de deletar do FAQ */
-[data-testid^="button-delete-faq"] {
-  background: linear-gradient(to top, #c99524, #E1AC33) !important;
-  color: #fbf9f7 !important;
-}
-
-[data-testid^="button-delete-faq"]:hover {
-  background: linear-gradient(to top, #b88a1f, #d19a2e) !important;
-  color: #fbf9f7 !important;
-}
-
-[data-testid^="button-delete-faq"]:focus {
-  background: linear-gradient(to top, #c99524, #E1AC33) !important;
-  color: #fbf9f7 !important;
-  outline: 2px solid #fbf9f7 !important;
-  outline-offset: 2px !important;
-}
-
-[data-testid^="button-delete-faq"]:active {
-  background: linear-gradient(to top, #a67d1a, #c99524) !important;
-  color: #fbf9f7 !important;
-}
-
-/* Classe específica para botões de deletar do FAQ */
-.faq-delete-button,
-.faq-delete-button:hover,
-.faq-delete-button:focus,
-.faq-delete-button:active {
-  background: linear-gradient(to top, #c99524, #E1AC33) !important;
-  color: #fbf9f7 !important;
-}
-
-.faq-delete-button:hover {
-  background: linear-gradient(to top, #b88a1f, #d19a2e) !important;
-}
-
-.faq-delete-button:focus {
-  outline: 2px solid #fbf9f7 !important;
-  outline-offset: 2px !important;
-}
-
-.faq-delete-button:active {
-  background: linear-gradient(to top, #a67d1a, #c99524) !important;
-}
-
-/* Forçar cor do texto e ícone nos botões de deletar do FAQ */
-.faq-delete-button *,
-.faq-delete-button:hover *,
-.faq-delete-button:focus *,
-.faq-delete-button:active * {
-  color: #fbf9f7 !important;
 }
 
 .dark {
@@ -668,31 +77,20 @@ div[class*="bg-[#195d5e]"] * {
   --sidebar-accent-foreground: hsl(42, 74%, 54%);
   --sidebar-border: hsl(181, 51%, 50%);
   --sidebar-ring: hsl(42, 74%, 54%);
-  
-
 }
 
 @layer base {
   * {
     margin: 0;
     padding: 0;
-  }
-  
-  *,
-  *::before,
-  *::after {
     box-sizing: border-box;
   }
 
-  /* Estilos base robustos para prevenir deslocamento lateral */
   html {
     overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
     scroll-behavior: smooth;
-    scrollbar-gutter: stable;
-    background-color: #FBF9F7 !important; /* Force white/cream background */
+    scroll-padding-top: 80px;
+    background-color: #FBF9F7 !important;
   }
 
   body {
@@ -702,118 +100,12 @@ div[class*="bg-[#195d5e]"] * {
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
-    background-color: #FBF9F7 !important; /* Force white/cream background */
-    /* Remover qualquer transição que possa causar flickering */
+    background-color: #FBF9F7 !important;
   }
 
-  /* Override global para neutralizar margin-right aplicado pelo Radix UI
-   * Previne conflito com scrollbar-gutter e nossa compensação via padding
-   * Garante que margin-right seja sempre 0 durante overlays */
-  body[style] {
-    margin-right: 0 !important;
-  }
-
-  /* Desabilitar completamente a compensação de scrollbar do Radix UI */
-  /* Isso previne que o Radix UI aplique qualquer estilo ao body */
-  body[data-scroll-locked],
-  body[style*="margin-right"],
-  body[style*="padding-right"] {
-    margin-right: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  /* CORREÇÃO DEFINITIVA: Forçar overflow visível sempre no body */
-  /* Isso desabilita completamente o scroll lock do react-remove-scroll usado pelo Radix UI */
-  body,
-  body[data-scroll-locked],
-  body[style*="overflow"],
-  body[style*="overflow: hidden"] {
-    overflow: auto !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-  }
-
-  /* Forçar que todos os componentes Radix UI não apliquem scroll lock */
-  [data-radix-select-content],
-  [data-radix-dropdown-menu-content],
-  [data-radix-popover-content],
-  [data-radix-tooltip-content] {
-    /* Garantir que o conteúdo não cause scroll lock */
-    position: fixed !important;
-  }
-
-  /* Prevenir que o Radix UI modifique o body durante a abertura de dropdowns */
-  body {
-    /* REMOVIDO: scrollbar-gutter pode causar espaço em branco indevido */
-    /* scrollbar-gutter: stable; */
-  }
-  
-  /* Prevent horizontal scrolling on all devices */
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* CORREÇÃO DEFINITIVA: Prevenir espaço em branco no canto direito */
-  html, body {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-  }
-  
-  /* Garantir que nenhum elemento cause overflow horizontal */
+  /* Prevent horizontal scrolling */
   body * {
     max-width: 100%;
-  }
-  
-  /* Remover transições de padding-right que causam flickering */
-  .fixed-element-compensation {
-    /* Sem transições para evitar efeitos visuais indesejados */
-  }
-  
-  /* Garantir que elementos fixos não causem overflow horizontal */
-  [data-fixed="true"],
-  .fixed,
-  .sticky {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Ensure container responsiveness */
-  .container {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  /* Mobile text scaling */
-  @media (max-width: 640px) {
-    .text-responsive-sm {
-      font-size: 1.25rem !important; /* 20px */
-      line-height: 1.75rem !important; /* 28px */
-    }
-    
-    .text-responsive-md {
-      font-size: 1.5rem !important; /* 24px */
-      line-height: 2rem !important; /* 32px */
-    }
-    
-    .text-responsive-lg {
-      font-size: 1.875rem !important; /* 30px */
-      line-height: 2.25rem !important; /* 36px */
-    }
-    
-    .text-responsive-xl {
-      font-size: 2.25rem !important; /* 36px */
-      line-height: 2.5rem !important; /* 40px */
-    }
-    
-    .text-responsive-2xl {
-      font-size: 2.5rem !important; /* 40px */
-      line-height: 2.75rem !important; /* 44px */
-    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -838,19 +130,19 @@ div[class*="bg-[#195d5e]"] * {
   .unipet-gradient {
     background: linear-gradient(135deg, var(--unipet-dark) 0%, hsl(181, 51%, 35%) 100%);
   }
-  
+
   .unipet-card {
     background-color: hsl(181, 51%, 40%);
     background-opacity: 0.5;
     border-radius: 1rem;
     border: 1px solid #277677;
   }
-  
+
   .unipet-button-primary {
     background-color: hsl(42, 74%, 54%);
     color: #1a5a5c;
   }
-  
+
   .unipet-button-secondary {
     @apply border-2 border-primary;
   }
@@ -862,961 +154,130 @@ div[class*="bg-[#195d5e]"] * {
   .contact-form-field [data-radix-select-trigger] {
     background-color: #DED8CE !important;
     color: #302e2b !important;
-    border-color: #c7c1b7 !important;
+    border: 1px solid #c7c1b7 !important;
     outline: none !important;
     box-shadow: none !important;
-    ring: none !important;
   }
 
   .contact-form-field input:focus,
   .contact-form-field textarea:focus,
   .contact-form-field button[role="combobox"]:focus,
-  .contact-form-field [data-radix-select-trigger]:focus,
-  .contact-form-field input:focus-visible,
-  .contact-form-field textarea:focus-visible,
-  .contact-form-field button[role="combobox"]:focus-visible,
-  .contact-form-field [data-radix-select-trigger]:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-    ring: none !important;
-    border-color: #c7c1b7 !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
-  }
-
-  .contact-form-field input::placeholder,
-  .contact-form-field textarea::placeholder,
-  .contact-form-field button[role="combobox"][data-placeholder] {
-    color: #302e2b !important;
-    opacity: 0.7;
-  }
-
-  /* Select dropdown content styling */
-  .contact-form-field [data-radix-select-content],
-  [data-radix-select-content] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-    border-color: #c7c1b7 !important;
-  }
-
-  /* Select item styling */
-  .contact-form-field [data-radix-select-item],
-  [data-radix-select-item] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-
-  /* Mobile-only styling for Nova Unidade popup inputs */
-  @media (max-width: 768px) {
-    [data-testid="input-unit-name"],
-    [data-testid="input-unit-address"],
-    [data-testid="input-unit-phone"],
-    [data-testid="input-unit-whatsapp"],
-    [data-testid="input-unit-google-maps"],
-    [data-testid="textarea-unit-services"] {
-      background-color: #195d5e !important;
-      color: #FBF9F7 !important;
-      border-color: #9ca3af !important;
-    }
-    
-    [data-testid="input-unit-name"]::placeholder,
-    [data-testid="input-unit-address"]::placeholder,
-    [data-testid="input-unit-phone"]::placeholder,
-    [data-testid="input-unit-whatsapp"]::placeholder,
-    [data-testid="input-unit-google-maps"]::placeholder,
-    [data-testid="textarea-unit-services"]::placeholder {
-      color: #aaaaaa !important;
-    }
-    
-    [data-testid="input-unit-name"]:focus,
-    [data-testid="input-unit-address"]:focus,
-    [data-testid="input-unit-phone"]:focus,
-    [data-testid="input-unit-whatsapp"]:focus,
-    [data-testid="input-unit-google-maps"]:focus,
-    [data-testid="textarea-unit-services"]:focus {
-      border-color: #9ca3af !important;
-      outline: none !important;
-      box-shadow: none !important;
-      ring: none !important;
-     }
-   }
-
-  /* Mobile-only styling for Editar Plano popup inputs */
-  @media (max-width: 768px) {
-    [data-testid="input-plan-name"],
-    [data-testid="input-plan-description"],
-    [data-testid="input-plan-button-text"],
-    [data-testid="input-plan-redirect-url"],
-    [data-testid="input-plan-price-normal"],
-    [data-testid="input-plan-price-copay"],
-    [data-testid="textarea-plan-features"] {
-      background-color: #195d5e !important;
-      color: #FBF9F7 !important;
-      border-color: #9ca3af !important;
-    }
-    
-    [data-testid="input-plan-name"]::placeholder,
-    [data-testid="input-plan-description"]::placeholder,
-    [data-testid="input-plan-button-text"]::placeholder,
-    [data-testid="input-plan-redirect-url"]::placeholder,
-    [data-testid="input-plan-price-normal"]::placeholder,
-    [data-testid="input-plan-price-copay"]::placeholder,
-    [data-testid="textarea-plan-features"]::placeholder {
-      color: #aaaaaa !important;
-    }
-    
-    [data-testid="input-plan-name"]:focus,
-    [data-testid="input-plan-description"]:focus,
-    [data-testid="input-plan-button-text"]:focus,
-    [data-testid="input-plan-redirect-url"]:focus,
-    [data-testid="input-plan-price-normal"]:focus,
-    [data-testid="input-plan-price-copay"]:focus,
-    [data-testid="textarea-plan-features"]:focus {
-      border-color: #9ca3af !important;
-      outline: none !important;
-      box-shadow: none !important;
-      ring: none !important;
-    }
-  }
-
-  /* Select item hover styling */
-  .contact-form-field [data-radix-select-item]:hover,
-  .contact-form-field [data-radix-select-item][data-highlighted],
-  [data-radix-select-item]:hover,
-  [data-radix-select-item][data-highlighted] {
-    background-color: #c7c1b7 !important;
-    color: #302e2b !important;
-  }
-
-  /* Additional selectors for Radix Select components */
-  [data-radix-popper-content-wrapper] [role="listbox"] {
-    background-color: #DED8CE !important;
-    border-color: #c7c1b7 !important;
-  }
-
-  /* More specific selectors for Select triggers */
-  .contact-form-field.mobile-form-input,
-  .contact-form-field.mobile-form-input button,
-  .contact-form-field.mobile-form-input [data-radix-select-trigger],
-  button.contact-form-field.mobile-form-input {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-    border: 1px solid #c7c1b7 !important;
-    outline: none !important;
-    box-shadow: none !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
-  }
-
-  .contact-form-field.mobile-form-input:focus,
-  .contact-form-field.mobile-form-input button:focus,
-  .contact-form-field.mobile-form-input [data-radix-select-trigger]:focus,
-  button.contact-form-field.mobile-form-input:focus {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
+  .contact-form-field [data-radix-select-trigger]:focus {
     border-color: #c7c1b7 !important;
     outline: none !important;
     box-shadow: none !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
   }
 
-  /* Mobile responsive button sizing */
-  @media (max-width: 640px) {
-    .mobile-touch-target {
-      min-height: 44px !important;
-      min-width: 44px !important;
-      padding: 0.75rem 1rem !important;
-    }
-    
-    .mobile-form-input {
-      min-height: 44px !important;
-      padding: 0.75rem !important;
-      font-size: 1rem !important;
-    }
-    
-    /* Ajuste específico para o campo de pesquisa da rede credenciada */
-    .mobile-form-input[data-testid="input-search-units"] {
-      padding-left: 2.75rem !important;
-    }
-    
-    /* Prevent zoom on input focus on iOS */
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    textarea,
-    select {
-      font-size: 16px !important;
-    }
-  }
-
-  /* Mobile dialog button centering */
-  @media (max-width: 640px) {
-    .admin-dialog-content .flex.flex-col {
-      gap: 1rem;
-    }
-    
-    .admin-dialog-content .flex.justify-center {
-      width: 100%;
-    }
-  }
-
-  /* Mobile spacing adjustments */
-  @media (max-width: 640px) {
-    .mobile-spacing-tight {
-      padding: 1rem !important;
-    }
-    
-    .mobile-spacing-normal {
-      padding: 1.5rem !important;
-    }
-    
-    .mobile-spacing-loose {
-      padding: 2rem !important;
-    }
-    
-    .mobile-gap-sm {
-      gap: 0.5rem !important;
-    }
-    
-    .mobile-gap-md {
-      gap: 1rem !important;
-    }
-    
-    .mobile-gap-lg {
-      gap: 1.5rem !important;
-    }
-  }
-
-  /* Desktop text wrapping control - disable text breaking on desktop only */
-  @media (min-width: 768px) {
-    .desktop-no-text-wrap {
-      word-break: normal !important;
-      overflow-wrap: normal !important;
-      hyphens: none !important;
-      white-space: nowrap !important;
-    }
-    
-    /* Global desktop text behavior - prevent aggressive text breaking */
-    p, span, div, h1, h2, h3, h4, h5, h6 {
-      word-break: normal;
-      overflow-wrap: normal;
-      hyphens: none;
-    }
-  }
-
-  /* Admin dialog border-radius for all screen sizes */
-  .admin-dialog-content {
-    border-radius: 1rem !important;
-    overflow: hidden !important;
-  }
-
-  /* Slider rating styling for Editar/Nova Unidade popups - Multiple selectors for better coverage */
-  [data-testid="slider-unit-rating"] [data-radix-slider-thumb],
-  [data-testid="slider-unit-rating"] span[role="slider"],
-  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full {
-    background-color: #E1AC33 !important;
-    border: 2px solid #E1AC33 !important;
-    box-shadow: 0 0 0 1px #E1AC33 !important;
-  }
-
-  /* Ensure consistent styling across all states */
-  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:hover,
-  [data-testid="slider-unit-rating"] span[role="slider"]:hover,
-  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:hover {
-    background-color: #E1AC33 !important;
-    border: 2px solid #E1AC33 !important;
-    box-shadow: 0 0 0 2px #E1AC33 !important;
-  }
-
-  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:focus,
-  [data-testid="slider-unit-rating"] span[role="slider"]:focus,
-  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:focus {
-    background-color: #E1AC33 !important;
-    border: 2px solid #E1AC33 !important;
-    box-shadow: 0 0 0 2px #E1AC33 !important;
-    outline: none !important;
-  }
-
-  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:active,
-  [data-testid="slider-unit-rating"] span[role="slider"]:active,
-  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:active {
-    background-color: #E1AC33 !important;
-    border: 2px solid #E1AC33 !important;
-    box-shadow: 0 0 0 2px #E1AC33 !important;
-  }
-
-  /* Disabled state styling */
-  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:disabled,
-  [data-testid="slider-unit-rating"] span[role="slider"]:disabled,
-  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:disabled {
-    background-color: #E1AC33 !important;
-    border: 2px solid #E1AC33 !important;
-    box-shadow: 0 0 0 1px #E1AC33 !important;
-    opacity: 0.6 !important;
-  }
-
-  /* Focus-visible state for better accessibility */
-  [data-testid="slider-unit-rating"] [data-radix-slider-thumb]:focus-visible,
-  [data-testid="slider-unit-rating"] span[role="slider"]:focus-visible,
-  [data-testid="slider-unit-rating"] .block.h-5.w-5.rounded-full:focus-visible {
-    background-color: #E1AC33 !important;
-    border: 2px solid #E1AC33 !important;
-    box-shadow: 0 0 0 3px rgba(225, 172, 51, 0.3) !important;
-    outline: none !important;
-  }
-
-  /* Additional fallback selectors for slider thumb */
-  [data-testid="slider-unit-rating"] [data-radix-collection-item] {
-    background-color: #E1AC33 !important;
-    border-color: #E1AC33 !important;
-  }
-
-  /* Admin login input text color - Force color in ALL states */
-  [data-testid="input-username"],
-  [data-testid="input-password"] {
-    color: #302E2B !important;
-  }
-
-  /* Ensure consistent text color in all states */
-  [data-testid="input-username"]:focus,
-  [data-testid="input-password"]:focus,
-  [data-testid="input-username"]:active,
-  [data-testid="input-password"]:active,
-  [data-testid="input-username"]:hover,
-  [data-testid="input-password"]:hover,
-  [data-testid="input-username"]:focus-visible,
-  [data-testid="input-password"]:focus-visible,
-  [data-testid="input-username"]:focus-within,
-  [data-testid="input-password"]:focus-within,
-  [data-testid="input-username"]:not(:focus),
-  [data-testid="input-password"]:not(:focus),
-  [data-testid="input-username"]:blur,
-  [data-testid="input-password"]:blur {
-    color: #302E2B !important;
-  }
-
-  /* Additional fallback for input value text */
-  input[data-testid="input-username"],
-  input[data-testid="input-password"] {
-    color: #302E2B !important;
-    -webkit-text-fill-color: #302E2B !important;
-  }
-
-  /* Remove outline from admin network filter selects */
-  [data-testid="select-service-filter"] {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Ensure no outline in all states */
-  [data-testid="select-service-filter"]:focus,
-  [data-testid="select-service-filter"]:active,
-  [data-testid="select-service-filter"]:hover {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Mobile admin optimizations */
-  @media (max-width: 768px) {
-    /* Admin dialog specific styles */
-    .admin-dialog-content {
-      position: fixed !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
-      width: calc(100% - 2rem) !important;
-      max-width: calc(100% - 2rem) !important;
-      max-height: calc(100vh - 2rem) !important;
-      margin: 0 !important;
-      box-sizing: border-box !important;
-      border-radius: 1rem !important;
-      overflow: hidden !important;
-    }
-    
-    /* Admin dialog content scrolling */
-    .admin-dialog-content > div {
-      max-height: calc(100vh - 4rem) !important;
-      overflow-y: auto !important;
-      padding: 1.5rem !important;
-      box-sizing: border-box !important;
-      scrollbar-width: none !important; /* Firefox */
-      -ms-overflow-style: none !important; /* IE and Edge */
-    }
-
-    /* Hide scrollbar for WebKit browsers */
-    .admin-dialog-content > div::-webkit-scrollbar {
-      display: none !important;
-    }
-
-    /* Ensure dialog doesn't overflow horizontally */
-    .admin-dialog-content * {
-      box-sizing: border-box !important;
-      max-width: 100% !important;
-    }
-
-    /* Form inputs in dialogs */
-    .admin-dialog-content input,
-    .admin-dialog-content textarea,
-    .admin-dialog-content select {
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    /* Button container in dialogs */
-    .admin-dialog-content .flex.gap-2,
-    .admin-dialog-content .flex.justify-end {
-      flex-wrap: wrap !important;
-      gap: 0.5rem !important;
-    }
-
-    .admin-dialog-content .flex.gap-2 > *,
-    .admin-dialog-content .flex.justify-end > * {
-      flex: 1 !important;
-      min-width: 0 !important;
-    }
-    
-    /* Dialog header mobile */
-    [role="dialog"] h2 {
-      font-size: 1.125rem !important;
-      line-height: 1.5 !important;
-      margin-bottom: 1rem !important;
-    }
-    
-    /* Form inputs mobile */
-    [role="dialog"] input,
-    [role="dialog"] textarea,
-    [role="dialog"] select {
-      font-size: 16px !important;
-      padding: 0.75rem !important;
-      min-height: 44px !important;
-    }
-    
-    /* Button improvements */
-    [role="dialog"] button {
-      min-height: 44px !important;
-      padding: 0.75rem 1rem !important;
-      font-size: 1rem !important;
-    }
-    
-    /* Form spacing mobile */
-    [role="dialog"] .space-y-4 > * + * {
-      margin-top: 1rem !important;
-    }
-    
-    /* Progress bar mobile */
-    [role="dialog"] .w-full.bg-gray-200 {
-      margin: 0.5rem 0 1rem 0 !important;
-    }
-  }
-
-  /* Image responsiveness fixes */
-  img {
-    height: auto;
-    max-width: 100%;
-    object-fit: cover;
-  }
-
-  /* Grid responsive behavior */
-  @media (max-width: 768px) {
-    .grid-mobile-stack > * {
-      grid-column: 1 / -1;
-    }
-  }
-
-  [data-radix-popper-content-wrapper] [role="option"] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-
-  [data-radix-popper-content-wrapper] [role="option"]:hover,
-  [data-radix-popper-content-wrapper] [role="option"][data-highlighted] {
-    background-color: #c7c1b7 !important;
-    color: #302e2b !important;
-  }
-
-  /* Force all select dropdown styling */
-  div[data-radix-select-content] {
-    background: #DED8CE !important;
-    border: 1px solid #c7c1b7 !important;
-  }
-  
-  div[data-radix-select-item] {
-    background: #DED8CE !important;
-    color: #302e2b !important;
-  }
-  
-  div[data-radix-select-item]:hover,
-  div[data-radix-select-item][data-highlighted] {
-    background: #c7c1b7 !important;
-    color: #302e2b !important;
-  }
-
-  /* Specific targeting for contact form selects */
-  .contact-form-field div[role="listbox"],
-  .contact-form-field div[data-radix-select-content] {
-    background: #DED8CE !important;
-    border: 1px solid #c7c1b7 !important;
-  }
-
-  .contact-form-field div[role="option"],
-  .contact-form-field div[data-radix-select-item] {
-    background: #DED8CE !important;
-    color: #302e2b !important;
-  }
-
-  .contact-form-field div[role="option"]:hover,
-  .contact-form-field div[role="option"][data-highlighted],
-  .contact-form-field div[data-radix-select-item]:hover,
-  .contact-form-field div[data-radix-select-item][data-highlighted] {
-    background: #DED8CE !important;
-    color: #302e2b !important;
-  }
-
-  /* Global override for ALL select dropdowns - removed universal selector */
-  :root {
-    --radix-select-content-bg: #DED8CE !important;
-    --radix-select-item-bg: #DED8CE !important;
-    --radix-select-item-hover-bg: #c7c1b7 !important;
-  }
-  
-  /* Universal selectors for any select content */
-  [data-radix-popper-content-wrapper] > div,
-  [data-radix-select-viewport],
-  [data-radix-select-content] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-  
-  /* Apply background only to select item containers */
-  [data-radix-select-item] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-  
-  [data-radix-select-viewport] > [data-radix-select-item] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-  
-  /* Hover and highlighted states for select items only */
-  [data-radix-select-item]:hover,
-  [data-radix-select-item][data-highlighted],
-  [data-radix-select-viewport] > [data-radix-select-item]:hover,
-  [data-radix-select-viewport] > [data-radix-select-item][data-highlighted] {
-    background-color: #c7c1b7 !important;
-    color: #302e2b !important;
-  }
-
-  /* Final override - target by attribute selectors */
-  div[data-radix-collection-item] {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-
-  div[data-radix-collection-item]:hover,
-  div[data-radix-collection-item][data-state="checked"],
-  div[data-radix-collection-item][aria-selected="true"] {
-    background-color: #c7c1b7 !important;
-    color: #302e2b !important;
-  }
-
-  /* Target the specific Radix Select structure */
-  [data-radix-popper-content-wrapper] {
-    --bg-popover: #DED8CE !important;
-    --text-popover-foreground: #302e2b !important;
-  }
-
-  /* Only apply background to container elements, not text elements */
-  [data-radix-popper-content-wrapper] > div {
-    background-color: #DED8CE !important;
-    color: #302e2b !important;
-  }
-
-  [data-radix-popper-content-wrapper] [data-highlighted] {
-    background-color: #c7c1b7 !important;
-  }
-
-  /* Remove check icons from select items */
-  .contact-form-field [data-radix-select-item-indicator] {
-    display: none !important;
-  }
-
-  .contact-form-field svg[data-radix-select-item-indicator] {
-    display: none !important;
-  }
-
-  .contact-form-field [role="option"]::before {
-    display: none !important;
-  }
-
-  .contact-form-field [data-radix-select-item]::before {
-    display: none !important;
-  }
-
-  /* Hide any check mark or selection indicator */
-  .contact-form-field [data-state="checked"] svg,
-  .contact-form-field [aria-selected="true"] svg {
-    display: none !important;
-  }
-
-  /* More specific selectors to hide check icons */
-  .contact-form-field [data-radix-select-content] svg,
-  .contact-form-field [data-radix-select-item] svg {
-    display: none !important;
-  }
-
-  /* Override Radix UI default styling completely */
-  [data-radix-select-content] [data-radix-select-item] span:last-child {
-    display: none !important;
-  }
-
-  /* Ensure consistent styling for all select dropdown states */
-  [data-radix-select-item]:focus,
-  [data-radix-select-item]:active,
-  [data-radix-select-viewport] > [data-radix-select-item]:focus,
-  [data-radix-select-viewport] > [data-radix-select-item]:active {
-    background-color: #c7c1b7 !important;
-    color: #302e2b !important;
-    outline: none !important;
-  }
-
-  /* Form labels in contact form */
-  .contact-form-field label {
-    color: #302e2b !important;
-  }
-
-  /* Global placeholder styling - applies to all inputs except contact form and login form */
-  input:not(.contact-form-field input):not([data-testid^="input-"]):not(.admin-no-focus input):not(.admin-dialog-content input)::placeholder,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):not(.admin-no-focus textarea):not(.admin-dialog-content textarea)::placeholder {
-    color: #9fb8b8 !important;
-  }
-
-  /* Override for contact form placeholders to maintain existing styling */
   .contact-form-field input::placeholder,
   .contact-form-field textarea::placeholder {
     color: #302e2b !important;
     opacity: 0.7;
   }
 
-  /* Prevent background fragmentation on text elements in dropdowns */
-  [data-radix-select-item] span,
-  [data-radix-select-item] [data-radix-select-item-text],
-  [data-radix-select-content] span,
-  [data-radix-popper-content-wrapper] span {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-clip: initial !important;
-    text-decoration: none !important;
-    text-shadow: none !important;
-    box-decoration-break: initial !important;
-  }
-
-  /* Global input and select styling - applies to all except contact form and login form */
-  input:not(.contact-form-field input):not([data-testid^="input-"]),
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]),
-  select:not(.contact-form-field select),
-  button[role="combobox"]:not(.contact-form-field button[role="combobox"]) {
-    background-color: #145759 !important;
-    border: 1px solid #3EBEC1 !important;
-    color: #FFFFFF !important;
-  }
-
-  /* Global input and select styling - fixed states without changes */
-  input:not(.contact-form-field input):not([data-testid^="input-"]):hover,
-  input:not(.contact-form-field input):not([data-testid^="input-"]):focus,
-  input:not(.contact-form-field input):not([data-testid^="input-"]):focus-visible,
-  input:not(.contact-form-field input):not([data-testid^="input-"]):active,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):hover,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):focus,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):focus-visible,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):active,
-  select:not(.contact-form-field select):hover,
-  select:not(.contact-form-field select):focus,
-  select:not(.contact-form-field select):focus-visible,
-  select:not(.contact-form-field select):active,
-  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):hover,
-  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):focus,
-  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):focus-visible,
-  button[role="combobox"]:not(.contact-form-field button[role="combobox"]):active {
-    background-color: #145759 !important;
-    border: 1px solid #3EBEC1 !important;
-    color: #FFFFFF !important;
-    outline: none !important;
-    box-shadow: none !important;
-    ring: none !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-offset-shadow: none !important;
-  }
-
-  /* Admin panel input styling - applies to all admin fields */
+  /* Admin panel styling */
   .admin-no-focus input,
   .admin-no-focus textarea,
   .admin-dialog-content input,
   .admin-dialog-content textarea,
   input[data-testid^="input-"],
-  textarea[data-testid^="textarea-"],
-  input[data-testid="input-faq-question"],
-  textarea[data-testid="textarea-faq-answer"] {
+  textarea[data-testid^="textarea-"] {
     color: #FBF9F7 !important;
+    background-color: #145759 !important;
+    border: 1px solid #277677 !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
-  /* Override for search input to use correct color based on context */
-  /* Admin page (dark background) - white text */
-  input[data-testid="input-search-units"][class*="bg-[#145759]"],
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:active,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:hover,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-visible,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-within,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:not(:focus),
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:blur {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text */
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]) {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Ensure search input text color in all states based on context */
-  /* Admin page (dark background) - white text in all states */
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:active,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:hover,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-visible,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-within,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:not(:focus),
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:blur {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text in all states */
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Maximum specificity override for search input - force color in all scenarios */
-  /* Admin page (dark background) - white text */
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"],
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus,
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:active,
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:hover,
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-visible,
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-within,
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:not(:focus),
-  .contact-form-field input[data-testid="input-search-units"][class*="bg-[#145759]"]:blur {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text */
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
-  .contact-form-field input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Ultimate specificity override - force color with maximum priority */
-  /* Admin page (dark background) - white text */
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"],
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:focus,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:active,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:hover,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:focus-visible,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:focus-within,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:not(:focus),
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:blur {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text */
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]),
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):active,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):hover,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-visible,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-within,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):not(:focus),
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):blur {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Final override - use attribute selector with maximum specificity */
-  /* Admin page (dark background) - white text */
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"],
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:focus,
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:active,
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:hover,
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:focus-visible,
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:focus-within,
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:not(:focus),
-  input[data-testid="input-search-units"][class*="mobile-form-input"][class*="bg-[#145759]"]:blur {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text */
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]),
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus,
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):active,
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):hover,
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus-visible,
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):focus-within,
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):not(:focus),
-  input[data-testid="input-search-units"][class*="mobile-form-input"]:not([class*="bg-[#145759]"]):blur {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Ultimate override - force color with maximum specificity and !important */
-  /* Admin page (dark background) - white text */
-  input[data-testid="input-search-units"][class*="bg-[#145759]"],
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:active,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:hover,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-visible,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:focus-within,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:not(:focus),
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:blur,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:visited,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:enabled,
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]:disabled {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text */
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]),
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):active,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):hover,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-visible,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):focus-within,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):not(:focus),
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):blur,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):visited,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):enabled,
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"]):disabled {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Final nuclear option - use maximum specificity with all possible selectors */
-  /* Admin page (dark background) - white text */
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"],
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:focus,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:active,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:hover,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:focus-visible,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:focus-within,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:not(:focus),
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:blur,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:visited,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:enabled,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input[class*="bg-[#145759]"]:disabled {
-    color: #FBF9F7 !important;
-    -webkit-text-fill-color: #FBF9F7 !important;
-    caret-color: #FBF9F7 !important;
-  }
-
-  /* Public page (light background) - dark text */
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]),
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):active,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):hover,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-visible,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):focus-within,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):not(:focus),
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):blur,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):visited,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):enabled,
-  .contact-form-field input[data-testid="input-search-units"].mobile-form-input:not([class*="bg-[#145759]"]):disabled {
-    color: #2d2d2d !important;
-    -webkit-text-fill-color: #2d2d2d !important;
-    caret-color: #2d2d2d !important;
-  }
-
-  /* Admin panel placeholder styling - applies to all admin fields */
   .admin-no-focus input::placeholder,
   .admin-no-focus textarea::placeholder,
   .admin-dialog-content input::placeholder,
   .admin-dialog-content textarea::placeholder,
   input[data-testid^="input-"]::placeholder,
-  textarea[data-testid^="textarea-"]::placeholder,
-  input[data-testid="input-faq-question"]::placeholder,
-  textarea[data-testid="textarea-faq-answer"]::placeholder {
+  textarea[data-testid^="textarea-"]::placeholder {
     color: #aaaaaa !important;
     opacity: 1 !important;
   }
 
-  /* Override for search input placeholder to use correct color based on context */
-  /* Admin page (dark background) - same color as Nome da Unidade placeholder */
-  input[data-testid="input-search-units"][class*="bg-[#145759]"]::placeholder {
-    color: #aaaaaa !important;
-    opacity: 1 !important;
+  /* Admin login input text color */
+  input[data-testid="input-username"],
+  input[data-testid="input-password"] {
+    color: #302E2B !important;
+    background-color: #DED8CE !important;
   }
 
-  /* Public page (light background) - dark placeholder */
-  input[data-testid="input-search-units"]:not([class*="bg-[#145759]"])::placeholder {
-    color: #2d2d2d !important;
-    opacity: 0.7 !important;
-  }
-
-  /* Global placeholder styling - white color for all except contact form and admin form */
-  input:not(.contact-form-field input):not([data-testid^="input-"]):not(.admin-no-focus input):not(.admin-dialog-content input)::placeholder,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):not(.admin-no-focus textarea):not(.admin-dialog-content textarea)::placeholder {
+  /* Global input styling for non-admin/non-contact forms */
+  input:not(.contact-form-field input):not([data-testid^="input-"]),
+  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]),
+  select:not(.contact-form-field select) {
+    background-color: #145759 !important;
+    border: 1px solid #3EBEC1 !important;
     color: #FFFFFF !important;
-    opacity: 1 !important;
   }
 
-  /* Override existing global placeholder styling to be more specific */
-  input:not(.contact-form-field input):not([data-testid^="input-"]):not(.admin-no-focus input):not(.admin-dialog-content input)::placeholder,
-  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"]):not(.admin-no-focus textarea):not(.admin-dialog-content textarea)::placeholder {
+  input:not(.contact-form-field input):not([data-testid^="input-"])::placeholder,
+  textarea:not(.contact-form-field textarea):not([data-testid^="textarea-"])::placeholder {
     color: #FFFFFF !important;
+    opacity: 0.7;
+  }
+
+  /* Mobile responsive styling */
+  @media (max-width: 640px) {
+    .mobile-touch-target {
+      min-height: 44px !important;
+      min-width: 44px !important;
+      padding: 0.75rem 1rem !important;
+    }
+
+    .mobile-form-input {
+      min-height: 44px !important;
+      padding: 0.75rem !important;
+      font-size: 16px !important;
+    }
+  }
+
+  /* Select dropdown styling */
+  [data-radix-select-content] {
+    background: #DED8CE !important;
+    border: 1px solid #c7c1b7 !important;
+  }
+
+  [data-radix-select-item] {
+    background: #DED8CE !important;
+    color: #302e2b !important;
+  }
+
+  [data-radix-select-item]:hover,
+  [data-radix-select-item][data-highlighted] {
+    background: #c7c1b7 !important;
+    color: #302e2b !important;
+  }
+
+  /* Admin dialog backgrounds */
+  [data-radix-dialog-content],
+  .admin-dialog-content {
+    background-color: #277677 !important;
+    border-radius: 0.5rem !important;
+  }
+
+  /* FAQ delete button styling */
+  [data-testid^="button-delete-faq"] {
+    background: linear-gradient(to top, #c99524, #E1AC33) !important;
+    color: #fbf9f7 !important;
+  }
+
+  [data-testid^="button-delete-faq"]:hover {
+    background: linear-gradient(to top, #b88a1f, #d19a2e) !important;
+  }
+
+  /* Slider styling */
+  [data-testid="slider-unit-rating"] [data-radix-slider-thumb] {
+    background-color: #E1AC33 !important;
+    border: 2px solid #E1AC33 !important;
   }
 }
 
-/* Scroll Animation Utilities */
+/* Animation utilities */
 @layer utilities {
-  /* Smooth scroll behavior */
-  .scroll-smooth {
-    scroll-behavior: smooth;
-  }
-
-  /* Animation keyframes */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -1828,129 +289,28 @@ div[class*="bg-[#195d5e]"] * {
     }
   }
 
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes fadeInRight {
-    from {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes rotateIn {
-    from {
-      opacity: 0;
-      transform: rotate(-10deg) scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: rotate(0deg) scale(1);
-    }
-  }
-
-  /* Animation classes */
   .animate-fade-in-up {
     animation: fadeInUp 0.3s ease-out forwards;
   }
 
-  .animate-fade-in-down {
-    animation: fadeInDown 0.3s ease-out forwards;
-  }
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
 
-  .animate-fade-in-left {
-    animation: fadeInLeft 0.3s ease-out forwards;
-  }
-
-  .animate-fade-in-right {
-    animation: fadeInRight 0.3s ease-out forwards;
-  }
-
-  .animate-scale-in {
-    animation: scaleIn 0.3s ease-out forwards;
-  }
-
-  .animate-rotate-in {
-    animation: rotateIn 0.3s ease-out forwards;
-  }
-
-  /* Stagger delays */
-  .animate-delay-100 {
-    animation-delay: 50ms;
-  }
-
-  .animate-delay-200 {
-    animation-delay: 100ms;
-  }
-
-  .animate-delay-300 {
-    animation-delay: 150ms;
-  }
-
-  .animate-delay-400 {
-    animation-delay: 200ms;
-  }
-
-  .animate-delay-500 {
-    animation-delay: 250ms;
-  }
-
-  /* Initial hidden state for animations */
   .animate-hidden {
     opacity: 0;
   }
 
-  /* Smooth transitions */
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
-  .transition-bounce {
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
 }
 
-/* Estilos para tags de serviços disponíveis na rede credenciada */
+/* Network services badges */
 .network-services-badge {
   display: inline-block;
-  max-width: none;
-  overflow: visible;
-  text-overflow: unset;
-  white-space: normal;
   padding: 0.375rem 0.75rem;
   border-radius: 0.5rem;
   font-size: 0.75rem;
@@ -1965,128 +325,7 @@ div[class*="bg-[#195d5e]"] * {
   transform: translateY(-1px);
 }
 
-.network-services-container {
-  width: 100%;
-}
-
-.network-services-row {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 0.75rem;
-}
-
-.network-services-badge-wrapper {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: visible;
-}
-
-.network-services-counter {
-  flex-shrink: 0;
-  margin-left: 0.25rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1;
-  text-align: center;
-  vertical-align: bottom;
-  align-self: flex-end;
-}
-
-.network-services-row-with-counter {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  gap: 0.25rem;
-}
-
-/* Responsividade para dispositivos móveis */
-@media (max-width: 640px) {
-  .network-services-badge {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.7rem;
-  }
-  
-  .network-services-counter {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.7rem;
-    margin-left: 0.125rem;
-  }
-  
-  .network-services-row {
-    gap: 0.5rem;
-  }
-  
-  .network-services-row-with-counter {
-    gap: 0.125rem;
-  }
-}
-
-/* --- ANIMAÇÕES PARA SIGN-IN PAGE --- */
-
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0px);
-  }
-}
-
-@keyframes slideRightIn {
-  to {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateX(0px);
-  }
-}
-
-@keyframes testimonialIn {
-  to {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0px) scale(1);
-  }
-}
-
-/* Animações de elementos */
-.animate-element {
-  animation: fadeSlideIn 0.6s ease-out forwards;
-  opacity: 0;
-  filter: blur(4px);
-  transform: translateY(20px);
-}
-
-.animate-slide-right {
-  animation: slideRightIn 0.8s ease-out forwards;
-  opacity: 0;
-  filter: blur(4px);
-  transform: translateX(40px);
-}
-
-.animate-testimonial {
-  animation: testimonialIn 0.8s ease-out forwards;
-  opacity: 0;
-  filter: blur(4px);
-  transform: translateY(20px) scale(0.9);
-}
-
-/* Delays para animações sequenciais */
-.animate-delay-100 { animation-delay: 100ms; }
-.animate-delay-200 { animation-delay: 200ms; }
-.animate-delay-300 { animation-delay: 300ms; }
-.animate-delay-400 { animation-delay: 400ms; }
-.animate-delay-500 { animation-delay: 500ms; }
-.animate-delay-600 { animation-delay: 600ms; }
-.animate-delay-700 { animation-delay: 700ms; }
-.animate-delay-800 { animation-delay: 800ms; }
-.animate-delay-900 { animation-delay: 900ms; }
-.animate-delay-1000 { animation-delay: 1000ms; }
-.animate-delay-1200 { animation-delay: 1200ms; }
-.animate-delay-1400 { animation-delay: 1400ms; }
-
-/* Estilos para checkbox customizado */
+/* Custom checkbox */
 .custom-checkbox {
   appearance: none;
   width: 1rem;
@@ -2119,99 +358,18 @@ div[class*="bg-[#195d5e]"] * {
   border-color: #EAA42A;
 }
 
-/* === CORREÇÃO DE BACKGROUNDS TRANSPARENTES NO PAINEL ADMINISTRATIVO === */
-
-/* Força background #277677 em todos os dialogs do admin */
-[data-radix-dialog-content],
-[role="dialog"] > div,
-.admin-dialog-content,
-.admin-dialog-content > div {
-  background-color: #277677 !important;
-  background: #277677 !important;
+/* Sign-in page animations */
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0px);
+  }
 }
 
-/* Força background #277677 em todos os popups e modais do admin */
-[data-radix-dialog-overlay] + div,
-[data-radix-dialog-overlay] ~ div,
-[role="dialog"],
-[role="dialog"] * {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Força background #277677 em componentes específicos do admin */
-.admin-dialog-content [data-radix-dialog-content],
-.admin-dialog-content [role="dialog"],
-.admin-dialog-content .dialog-content,
-.admin-dialog-content .modal-content {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Força background #277677 em todos os containers de abas do admin */
-div[class*="bg-[#277677]"],
-div[class*="bg-[#145759]"],
-div[class*="bg-[#115051]"] {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Força background #277677 em todos os elementos dentro das abas admin */
-div[class*="bg-[#277677]"] *,
-div[class*="bg-[#145759]"] *,
-div[class*="bg-[#115051]"] * {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Override específico para dialogs do Radix UI */
-[data-radix-dialog-content] {
-  background-color: #277677 !important;
-  background: #277677 !important;
-  border-radius: 0.5rem !important;
-  padding: 1.5rem !important;
-}
-
-/* Força background em todos os elementos de formulário do admin */
-.admin-dialog-content form,
-.admin-dialog-content .form,
-.admin-dialog-content .form-container {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Força background em todos os containers de conteúdo do admin */
-.admin-dialog-content .content,
-.admin-dialog-content .container,
-.admin-dialog-content .wrapper {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Override final para garantir que nenhum elemento fique transparente */
-.admin-dialog-content *,
-[data-radix-dialog-content] *,
-[role="dialog"] * {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Força background #277677 em todos os Cards do admin */
-.admin-dialog-content .card,
-.admin-dialog-content [class*="card"],
-.admin-dialog-content [class*="Card"],
-.admin-dialog-content .bg-card,
-.admin-dialog-content [class*="bg-card"] {
-  background-color: #277677 !important;
-  background: #277677 !important;
-}
-
-/* Força background #277677 em todos os elementos do Card no admin */
-.admin-dialog-content .card *,
-.admin-dialog-content [class*="card"] *,
-.admin-dialog-content [class*="Card"] *,
-.admin-dialog-content .bg-card *,
-.admin-dialog-content [class*="bg-card"] * {
-  background-color: #277677 !important;
-  background: #277677 !important;
+.animate-element {
+  animation: fadeSlideIn 0.6s ease-out forwards;
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(20px);
 }
